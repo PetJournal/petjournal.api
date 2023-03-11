@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf dist && tsc"
+    "start": "node dist/main/api",
+    "build": "rimraf dist && tsc -p tsconfig-build.json",
+    "lint": "eslint .",
+    "lint:fix": "yarn run lint -- --fix"
   },
   "repository": {
     "type": "git",
@@ -20,6 +23,12 @@
   "devDependencies": {
     "@types/module-alias": "^2.0.1",
     "@types/node": "^18.15.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "eslint": "^8.0.1",
+    "eslint-config-standard-with-typescript": "^34.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
     "typescript": "^4.9.5"
   },
   "engines": {
