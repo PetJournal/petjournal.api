@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rimraf dist && tsc"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,17 @@
   "bugs": {
     "url": "https://github.com/PetJournal/petjournal.api/issues"
   },
-  "homepage": "https://github.com/PetJournal/petjournal.api#readme"
+  "homepage": "https://github.com/PetJournal/petjournal.api#readme",
+  "devDependencies": {
+    "@types/module-alias": "^2.0.1",
+    "@types/node": "^18.15.0",
+    "typescript": "^4.9.5"
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "dependencies": {
+    "module-alias": "^2.2.2",
+    "rimraf": "^4.4.0"
+  }
 }
