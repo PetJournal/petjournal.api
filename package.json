@@ -26,6 +26,8 @@
   },
   "homepage": "https://github.com/PetJournal/petjournal.api#readme",
   "devDependencies": {
+    "@commitlint/cli": "^17.4.4",
+    "@commitlint/config-conventional": "^17.4.4",
     "@types/jest": "^29.4.0",
     "@types/module-alias": "^2.0.1",
     "@types/node": "^18.15.0",
