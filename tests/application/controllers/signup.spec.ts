@@ -1,9 +1,13 @@
 import { MissingParamError } from '../../../src/application/errors/missing-param-error'
 import { SignUpController } from '../../../src/application/controllers/signup'
 
+const makeSut = (): SignUpController => {
+  return new SignUpController()
+}
+
 describe('SignUp Controller', () => {
   it('Should return 400 if no firstName is provided', () => {
-    const sut = new SignUpController()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         lastName: 'any_last_name',
@@ -20,7 +24,7 @@ describe('SignUp Controller', () => {
   })
 
   it('Should return 400 if no lastName is provided', () => {
-    const sut = new SignUpController()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         firstName: 'any_first_name',
@@ -37,7 +41,7 @@ describe('SignUp Controller', () => {
   })
 
   it('Should return 400 if no email is provided', () => {
-    const sut = new SignUpController()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         firstName: 'any_first_name',
@@ -54,7 +58,7 @@ describe('SignUp Controller', () => {
   })
 
   it('Should return 400 if no password is provided', () => {
-    const sut = new SignUpController()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         firstName: 'any_first_name',
@@ -71,7 +75,7 @@ describe('SignUp Controller', () => {
   })
 
   it('Should return 400 if no password confirmation is provided', () => {
-    const sut = new SignUpController()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         firstName: 'any_first_name',
@@ -88,7 +92,7 @@ describe('SignUp Controller', () => {
   })
 
   it('Should return 400 if isProvicyPolicyAccepted is not provided', () => {
-    const sut = new SignUpController()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         firstName: 'any_first_name',
