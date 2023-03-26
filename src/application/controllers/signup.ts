@@ -1,8 +1,16 @@
 export class SignUpController {
   handle (httpRequest: any): any {
-    return {
-      statusCode: 400,
-      body: new Error('Missing param: name')
+    if (!httpRequest.body.firstName) {
+      return {
+        statusCode: 400,
+        body: new Error('Missing param: firstName')
+      }
+    }
+    if (!httpRequest.body.lastName) {
+      return {
+        statusCode: 400,
+        body: new Error('Missing param: lastName')
+      }
     }
   }
 }
