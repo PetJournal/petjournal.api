@@ -8,6 +8,6 @@ module.exports = {
     '<rootDir>/tests'
   ],
   transform: {
-    '.+\\.ts$': 'ts-jest'
+    '.+\\.ts$': 'babel-jest'
   }
 }
