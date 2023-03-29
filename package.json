@@ -6,11 +6,12 @@
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "lint": "eslint .",
-    "lint:fix": "yarn run lint -- --fix",
-    "test": "jest --passWithNoTests --no-cache --runInBand",
-    "test:watch": "yarn test -- --watch",
-    "test:staged": "yarn test -- --findRelatedTests",
-    "test:coverage": "yarn test -- --coverage",
+    "lint:fix": "yarn run lint --fix",
+    "test": "jest --passWithNoTests --no-cache --runInBand --silent --noStackTrace",
+    "test:watch": "yarn test --watch",
+    "test:verbose": "jest --passWithNoTests --no-cache --runInBand",
+    "test:staged": "yarn test --findRelatedTests",
+    "test:coverage": "yarn test:verbose --coverage",
     "prepare": "husky install"
   },
   "keywords": [],
