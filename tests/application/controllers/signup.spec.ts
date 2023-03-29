@@ -55,7 +55,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
+        isProvicyPolicyAccepted: true
       }
     }
     const httpResponse = sut.handle(httpRequest)
@@ -72,7 +72,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
+        isProvicyPolicyAccepted: true
       }
     }
     const httpResponse = sut.handle(httpRequest)
@@ -89,7 +89,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
+        isProvicyPolicyAccepted: true
       }
     }
     const httpResponse = sut.handle(httpRequest)
@@ -106,7 +106,7 @@ describe('SignUp Controller', () => {
         email: 'any_email@mail.com',
         phone: 'any_phone',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
+        isProvicyPolicyAccepted: true
       }
     }
     const httpResponse = sut.handle(httpRequest)
@@ -123,7 +123,7 @@ describe('SignUp Controller', () => {
         email: 'any_email@mail.com',
         phone: 'any_phone',
         password: 'any_password',
-        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
+        isProvicyPolicyAccepted: true
       }
     }
     const httpResponse = sut.handle(httpRequest)
@@ -141,7 +141,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'invalid_password',
-        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
+        isProvicyPolicyAccepted: true
       }
     }
     const httpResponse = sut.handle(httpRequest)
@@ -166,6 +166,24 @@ describe('SignUp Controller', () => {
     expect(httpResponse.body).toEqual(new MissingParamError('isProvicyPolicyAccepted'))
   })
 
+  it('Should return 400 if isProvicyPolicyAccepted is false', () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        firstName: 'any_first_name',
+        lastName: 'any_last_name',
+        email: 'any_email@mail.com',
+        phone: 'any_phone',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
+        isProvicyPolicyAccepted: false
+      }
+    }
+    const httpResponse = sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new MissingParamError('isProvicyPolicyAccepted'))
+  })
+
   it('Should return 400 if an invalid email is provided', () => {
     const { sut, emailValidatorStub } = makeSut()
     jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
@@ -177,7 +195,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
+        isProvicyPolicyAccepted: true
       }
     }
     const httpResponse = sut.handle(httpRequest)
@@ -196,7 +214,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
+        isProvicyPolicyAccepted: true
       }
     }
     sut.handle(httpRequest)
@@ -216,7 +234,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: 'any_boolean'
+        isProvicyPolicyAccepted: true
       }
     }
     const httpResponse = sut.handle(httpRequest)
@@ -237,7 +255,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: 'any_boolean'
+        isProvicyPolicyAccepted: true
       }
     }
     const httpResponse = sut.handle(httpRequest)
@@ -256,7 +274,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
+        isProvicyPolicyAccepted: true
       }
     }
     sut.handle(httpRequest)
@@ -266,7 +284,7 @@ describe('SignUp Controller', () => {
       email: 'any_email@mail.com',
       phone: 'any_phone',
       password: 'any_password',
-      isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
+      isProvicyPolicyAccepted: true
     })
   })
 
@@ -280,7 +298,7 @@ describe('SignUp Controller', () => {
         phone: 'valid_phone',
         password: 'valid_password',
         passwordConfirmation: 'valid_password',
-        isProvicyPolicyAccepted: 'valid_is_provicy_policy_accepted'
+        isProvicyPolicyAccepted: true
       }
     }
     const httpResponse = sut.handle(httpRequest)
