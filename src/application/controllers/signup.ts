@@ -29,7 +29,7 @@ export class SignUpController implements Controller {
       if (!isValid) {
         return badRequest(new InvalidParamError('email'))
       }
-      this.addGuardian.add({
+      const guardian = this.addGuardian.add({
         firstName,
         lastName,
         email,
@@ -37,6 +37,10 @@ export class SignUpController implements Controller {
         password,
         isProvicyPolicyAccepted
       })
+      return {
+        statusCode: 200,
+        body: guardian
+      }
     } catch (error) {
       return serverError()
     }
