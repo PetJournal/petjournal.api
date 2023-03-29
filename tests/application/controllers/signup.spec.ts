@@ -224,6 +224,27 @@ describe('SignUp Controller', () => {
     expect(httpResponse.body).toEqual(new ServerError())
   })
 
+  it('Should return 500 if AddGuardian throws', () => {
+    const { sut, addGuardianStub } = makeSut()
+    jest.spyOn(addGuardianStub, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpRequest = {
+      body: {
+        firstName: 'any_first_name',
+        lastName: 'any_last_name',
+        email: 'any_email@mail.com',
+        phone: 'any_phone',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
+        isProvicyPolicyAccepted: 'any_boolean'
+      }
+    }
+    const httpResponse = sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
+  })
+
   it('Should call AddGuardian with correct values', () => {
     const { sut, addGuardianStub } = makeSut()
     const addGuardianSpy = jest.spyOn(addGuardianStub, 'add')
