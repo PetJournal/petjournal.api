@@ -269,4 +269,30 @@ describe('SignUp Controller', () => {
       isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
     })
   })
+
+  it('Should return 200 if valid data is provided', () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        firstName: 'valid_first_name',
+        lastName: 'valid_last_name',
+        email: 'valid_email@mail.com',
+        phone: 'valid_phone',
+        password: 'valid_password',
+        passwordConfirmation: 'valid_password',
+        isProvicyPolicyAccepted: 'valid_is_provicy_policy_accepted'
+      }
+    }
+    const httpResponse = sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(200)
+    expect(httpResponse.body).toEqual({
+      id: 1,
+      firstName: 'valid_first_name',
+      lastName: 'valid_last_name',
+      email: 'valid_email@mail.com',
+      phone: 'valid_phone',
+      password: 'valid_password',
+      isProvicyPolicyAccepted: true
+    })
+  })
 })
