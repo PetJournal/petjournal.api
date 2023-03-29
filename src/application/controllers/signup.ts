@@ -1,6 +1,6 @@
 import { InvalidParamError, MissingParamError } from '../errors'
 import { type EmailValidator } from 'application/validation/email-validator'
-import { badRequest, serverError, type HttpRequest, type HttpResponse } from '../helpers/http'
+import { badRequest, serverError, success, type HttpRequest, type HttpResponse } from '../helpers/http'
 import { type Controller } from './controller'
 import { type AddGuardian } from 'domain/use-cases/add-guardian'
 
@@ -37,10 +37,7 @@ export class SignUpController implements Controller {
         password,
         isProvicyPolicyAccepted
       })
-      return {
-        statusCode: 200,
-        body: guardian
-      }
+      return success(guardian)
     } catch (error) {
       return serverError()
     }
