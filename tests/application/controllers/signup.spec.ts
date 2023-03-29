@@ -1,11 +1,8 @@
-import { InvalidParamError, MissingParamError, ServerError } from '../../../src/application/errors'
+import { InvalidParamError, MissingParamError } from '../../../src/application/errors'
 import { SignUpController } from '../../../src/application/controllers/signup'
 import { type EmailValidator } from 'application/validation/email-validator'
-
-interface SutTypes {
-  sut: SignUpController
-  emailValidatorStub: EmailValidator
-}
+import { type AddGuardian, type IAddGuardian } from 'domain/use-cases/add-guardian'
+import { type Guardian } from 'domain/entities/guardian'
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
@@ -16,10 +13,36 @@ const makeEmailValidator = (): EmailValidator => {
   return new EmailValidatorStub()
 }
 
+const makeAddGuardian = (): AddGuardian => {
+  class AddGuardianStub implements AddGuardian {
+    add (guardian: IAddGuardian): Guardian {
+      const fakeGuardian = {
+        id: 1,
+        firstName: 'valid_first_name',
+        lastName: 'valid_last_name',
+        email: 'valid_email@mail.com',
+        phone: 'valid_phone',
+        password: 'valid_password',
+        isProvicyPolicyAccepted: true
+      }
+
+      return fakeGuardian
+    }
+  }
+  return new AddGuardianStub()
+}
+
+interface SutTypes {
+  sut: SignUpController
+  emailValidatorStub: EmailValidator
+  addGuardianStub: AddGuardian
+}
+
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
-  const sut = new SignUpController(emailValidatorStub)
-  return { sut, emailValidatorStub }
+  const addGuardianStub = makeAddGuardian()
+  const sut = new SignUpController(emailValidatorStub, addGuardianStub)
+  return { sut, emailValidatorStub, addGuardianStub }
 }
 
 describe('SignUp Controller', () => {
@@ -32,7 +55,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: 'any_boolean'
+        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
       }
     }
     const httpResponse = sut.handle(httpRequest)
@@ -49,7 +72,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: 'any_boolean'
+        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
       }
     }
     const httpResponse = sut.handle(httpRequest)
@@ -66,7 +89,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: 'any_boolean'
+        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
       }
     }
     const httpResponse = sut.handle(httpRequest)
@@ -83,7 +106,7 @@ describe('SignUp Controller', () => {
         email: 'any_email@mail.com',
         phone: 'any_phone',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: 'any_boolean'
+        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
       }
     }
     const httpResponse = sut.handle(httpRequest)
@@ -100,7 +123,7 @@ describe('SignUp Controller', () => {
         email: 'any_email@mail.com',
         phone: 'any_phone',
         password: 'any_password',
-        isProvicyPolicyAccepted: 'any_boolean'
+        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
       }
     }
     const httpResponse = sut.handle(httpRequest)
@@ -118,7 +141,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'invalid_password',
-        isProvicyPolicyAccepted: 'any_boolean'
+        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
       }
     }
     const httpResponse = sut.handle(httpRequest)
@@ -154,7 +177,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: 'any_boolean'
+        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
       }
     }
     const httpResponse = sut.handle(httpRequest)
@@ -173,18 +196,16 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: 'any_boolean'
+        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
       }
     }
     sut.handle(httpRequest)
     expect(isValidSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
-  it('Should return 500 if EmailValidator throws', () => {
-    const { sut, emailValidatorStub } = makeSut()
-    jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
-      throw new Error()
-    })
+  it('Should call AddGuardian with correct values', () => {
+    const { sut, addGuardianStub } = makeSut()
+    const addGuardianSpy = jest.spyOn(addGuardianStub, 'add')
     const httpRequest = {
       body: {
         firstName: 'any_first_name',
@@ -193,11 +214,17 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: 'any_boolean'
+        isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
       }
     }
-    const httpResponse = sut.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
+    sut.handle(httpRequest)
+    expect(addGuardianSpy).toHaveBeenCalledWith({
+      firstName: 'any_first_name',
+      lastName: 'any_last_name',
+      email: 'any_email@mail.com',
+      phone: 'any_phone',
+      password: 'any_password',
+      isProvicyPolicyAccepted: 'any_is_provicy_policy_accepted'
+    })
   })
 })
