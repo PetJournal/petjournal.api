@@ -10,5 +10,5 @@ export interface IAddGuardian {
 }
 
 export interface AddGuardian {
-  add: (guardian: IAddGuardian) => Guardian
+  add: (guardian: IAddGuardian) => Promise<Guardian>
 }

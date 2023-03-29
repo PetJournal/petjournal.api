@@ -13,7 +13,7 @@ export class SignUpController implements Controller {
     this.addGuardian = addGuardian
   }
 
-  handle (httpRequest: HttpRequest): HttpResponse {
+  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const requiredFields = ['firstName', 'lastName', 'email', 'password', 'passwordConfirmation', 'isProvicyPolicyAccepted']
       for (const field of requiredFields) {
@@ -32,7 +32,7 @@ export class SignUpController implements Controller {
       if (!isValid) {
         return badRequest(new InvalidParamError('email'))
       }
-      const guardian = this.addGuardian.add({
+      const guardian = await this.addGuardian.add({
         firstName,
         lastName,
         email,
