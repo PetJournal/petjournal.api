@@ -25,6 +25,9 @@ export class SignUpController implements Controller {
       if (passwordConfirmation !== password) {
         return badRequest(new InvalidParamError('passwordConfirmation'))
       }
+      if (!isProvicyPolicyAccepted) {
+        return badRequest(new InvalidParamError('isProvicyPolicyAccepted'))
+      }
       const isValid = this.emailValidator.isValid(email)
       if (!isValid) {
         return badRequest(new InvalidParamError('email'))
