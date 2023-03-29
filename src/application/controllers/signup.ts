@@ -17,7 +17,7 @@ export class SignUpController implements Controller {
     try {
       const requiredFields = ['firstName', 'lastName', 'email', 'password', 'passwordConfirmation', 'isProvicyPolicyAccepted']
       for (const field of requiredFields) {
-        if (!httpRequest.body[field]) {
+        if (httpRequest.body[field] === undefined) {
           return badRequest(new MissingParamError(field))
         }
       }

@@ -181,7 +181,7 @@ describe('SignUp Controller', () => {
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('isProvicyPolicyAccepted'))
+    expect(httpResponse.body).toEqual(new InvalidParamError('isProvicyPolicyAccepted'))
   })
 
   it('Should return 400 if an invalid email is provided', async () => {
