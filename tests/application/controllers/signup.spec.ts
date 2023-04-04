@@ -1,8 +1,17 @@
 import { InvalidParamError, MissingParamError, ServerError } from '../../../src/application/errors'
 import { SignUpController } from '../../../src/application/controllers/signup'
-import { type EmailValidator } from '../../../src/application/validation/protocols/email-validator'
+import { type EmailValidator, type NameValidator } from '../../../src/application/validation/protocols'
 import { type AddGuardian, type IAddGuardian } from 'domain/use-cases/add-guardian'
 import { type Guardian } from 'domain/entities/guardian'
+
+const makeNameValidator = (): NameValidator => {
+  class NameValidatorStub implements NameValidator {
+    isValid (name: string): boolean {
+      return true
+    }
+  }
+  return new NameValidatorStub()
+}
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
@@ -34,15 +43,17 @@ const makeAddGuardian = (): AddGuardian => {
 
 interface SutTypes {
   sut: SignUpController
-  emailValidatorStub: EmailValidator
   addGuardianStub: AddGuardian
+  emailValidatorStub: EmailValidator
+  nameValidatorStub: NameValidator
 }
 
 const makeSut = (): SutTypes => {
-  const emailValidatorStub = makeEmailValidator()
   const addGuardianStub = makeAddGuardian()
-  const sut = new SignUpController(emailValidatorStub, addGuardianStub)
-  return { sut, emailValidatorStub, addGuardianStub }
+  const emailValidatorStub = makeEmailValidator()
+  const nameValidatorStub = makeNameValidator()
+  const sut = new SignUpController(addGuardianStub, emailValidatorStub, nameValidatorStub)
+  return { sut, addGuardianStub, emailValidatorStub, nameValidatorStub }
 }
 
 describe('SignUp Controller', () => {
@@ -182,6 +193,25 @@ describe('SignUp Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidParamError('isProvicyPolicyAccepted'))
+  })
+
+  it('Should return 400 if an invalid firstName is provided', async () => {
+    const { sut, nameValidatorStub } = makeSut()
+    jest.spyOn(nameValidatorStub, 'isValid').mockReturnValueOnce(false)
+    const httpRequest = {
+      body: {
+        firstName: 'invalid_first_name',
+        lastName: 'any_last_name',
+        email: 'invalid_email@mail.com',
+        phone: 'any_phone',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
+        isProvicyPolicyAccepted: true
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidParamError('firstName'))
   })
 
   it('Should return 400 if an invalid email is provided', async () => {
