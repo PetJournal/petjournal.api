@@ -1,7 +1,8 @@
 import { type EmailValidator } from '../protocols/email-validator'
+import validator from 'validator'
 
 export class EmailValidatorAdapter implements EmailValidator {
   isValid (email: string): boolean {
-    return false
+    return validator.isEmail(email)
   }
 }

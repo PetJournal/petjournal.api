@@ -1,6 +1,6 @@
 import { InvalidParamError, MissingParamError, ServerError } from '../../../src/application/errors'
 import { SignUpController } from '../../../src/application/controllers/signup'
-import { type EmailValidator } from 'application/validation/email-validator'
+import { type EmailValidator } from '../../../src/application/validation/protocols/email-validator'
 import { type AddGuardian, type IAddGuardian } from 'domain/use-cases/add-guardian'
 import { type Guardian } from 'domain/entities/guardian'
 
