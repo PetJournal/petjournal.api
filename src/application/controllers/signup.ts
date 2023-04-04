@@ -1,16 +1,18 @@
 import { InvalidParamError, MissingParamError } from '../errors'
-import { type EmailValidator } from 'application/validation/email-validator'
+import { type EmailValidator, type NameValidator } from '../validation/protocols'
 import { badRequest, serverError, success, type HttpRequest, type HttpResponse } from '../helpers/http'
 import { type Controller } from './controller'
 import { type AddGuardian } from 'domain/use-cases/add-guardian'
 
 export class SignUpController implements Controller {
-  private readonly emailValidator: EmailValidator
   private readonly addGuardian: AddGuardian
+  private readonly emailValidator: EmailValidator
+  private readonly nameValidator: NameValidator
 
-  constructor (emailValidator: EmailValidator, addGuardian: AddGuardian) {
+  constructor (addGuardian: AddGuardian, emailValidator: EmailValidator, nameValidator: NameValidator) {
     this.emailValidator = emailValidator
     this.addGuardian = addGuardian
+    this.nameValidator = nameValidator
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -28,8 +30,12 @@ export class SignUpController implements Controller {
       if (!isProvicyPolicyAccepted) {
         return badRequest(new InvalidParamError('isProvicyPolicyAccepted'))
       }
-      const isValid = this.emailValidator.isValid(email)
-      if (!isValid) {
+      const isValidFirstName = this.nameValidator.isValid(firstName)
+      if (!isValidFirstName) {
+        return badRequest(new InvalidParamError('firstName'))
+      }
+      const isValidEmail = this.emailValidator.isValid(email)
+      if (!isValidEmail) {
         return badRequest(new InvalidParamError('email'))
       }
       const guardian = await this.addGuardian.add({
