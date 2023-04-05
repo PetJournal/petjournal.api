@@ -1,3 +1,3 @@
 export interface NameValidator {
-  isValid: (name: string) => boolean
+  isValid: (firstName: string, lastName: string) => boolean
 }

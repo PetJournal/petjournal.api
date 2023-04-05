@@ -195,7 +195,7 @@ describe('SignUp Controller', () => {
     expect(httpResponse.body).toEqual(new InvalidParamError('isProvicyPolicyAccepted'))
   })
 
-  it('Should return 400 if an invalid firstName is provided', async () => {
+  it('Should return 400 if an invalid name is provided', async () => {
     const { sut, nameValidatorStub } = makeSut()
     jest.spyOn(nameValidatorStub, 'isValid').mockReturnValueOnce(false)
     const httpRequest = {
@@ -211,10 +211,10 @@ describe('SignUp Controller', () => {
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new InvalidParamError('firstName'))
+    expect(httpResponse.body).toEqual(new InvalidParamError('name'))
   })
 
-  it('Should call NameValidator with correct firstName', async () => {
+  it('Should call NameValidator with correct name', async () => {
     const { sut, nameValidatorStub } = makeSut()
     const isValidSpy = jest.spyOn(nameValidatorStub, 'isValid')
     const httpRequest = {
@@ -229,7 +229,7 @@ describe('SignUp Controller', () => {
       }
     }
     await sut.handle(httpRequest)
-    expect(isValidSpy).toHaveBeenCalledWith('any_first_name')
+    expect(isValidSpy).toHaveBeenCalledWith('any_first_name', 'any_last_name')
   })
 
   it('Should return 500 if NameValidator throws', async () => {
