@@ -39,4 +39,19 @@ describe('DbAddGuardian use case', () => {
     await sut.add(guardianData)
     expect(encryptSpy).toHaveBeenCalledWith('valid_password')
   })
+
+  it('Should throw if encrypter throws', async () => {
+    const { sut, encrypterStub } = makeSut()
+    jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    const guardianData = {
+      firstName: 'valid_first_name',
+      lastName: 'valid_last_name',
+      email: 'valid_email',
+      phone: 'valid_phone',
+      password: 'valid_password',
+      isProvicyPolicyAccepted: true
+    }
+    const promise = sut.add(guardianData)
+    await expect(promise).rejects.toThrow()
+  })
 })
