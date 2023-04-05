@@ -1,14 +1,28 @@
+import { type Encrypter } from '../../../src/data/protocols/encrypter'
 import { DbAddGuardian } from '../../../src/data/use-cases'
+
+interface SutTypes {
+  sut: DbAddGuardian
+  encrypterStub: Encrypter
+}
+
+const makeSut = (): SutTypes => {
+  class EncrypterStub {
+    async encrypt (value: string): Promise<string> {
+      return await new Promise(resolve => { resolve('hashed_password') })
+    }
+  }
+  const encrypterStub = new EncrypterStub()
+  const sut = new DbAddGuardian(encrypterStub)
+  return {
+    sut,
+    encrypterStub
+  }
+}
 
 describe('DbAddGuardian use case', () => {
   it('Should call encrypter with correct password', async () => {
-    class EncrypterStub {
-      async encrypt (value: string): Promise<string> {
-        return await new Promise(resolve => { resolve('hashed_password') })
-      }
-    }
-    const encrypterStub = new EncrypterStub()
-    const sut = new DbAddGuardian(encrypterStub)
+    const { sut, encrypterStub } = makeSut()
     const encryptSpy = jest.spyOn(encrypterStub, 'encrypt')
     const guardianData = {
       firstName: 'valid_first_name',
