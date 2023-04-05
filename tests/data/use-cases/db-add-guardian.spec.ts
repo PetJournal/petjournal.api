@@ -114,4 +114,26 @@ describe('DbAddGuardian use case', () => {
     const promise = sut.add(guardianData)
     await expect(promise).rejects.toThrow()
   })
+
+  it('Should return an guardian on success', async () => {
+    const { sut } = makeSut()
+    const guardianData = {
+      firstName: 'valid_first_name',
+      lastName: 'valid_last_name',
+      email: 'valid_email',
+      phone: 'valid_phone',
+      password: 'valid_password',
+      isProvicyPolicyAccepted: true
+    }
+    const guardian = await sut.add(guardianData)
+    expect(guardian).toEqual({
+      id: 1,
+      firstName: 'valid_first_name',
+      lastName: 'valid_last_name',
+      email: 'valid_email',
+      phone: 'valid_phone',
+      password: 'hashed_password',
+      isProvicyPolicyAccepted: true
+    })
+  })
 })
