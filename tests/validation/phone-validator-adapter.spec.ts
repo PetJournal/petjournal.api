@@ -24,4 +24,11 @@ describe('PhoneValidator Adapter', () => {
     const isValid = sut.isValid('valid_phone')
     expect(isValid).toBe(true)
   })
+
+  it('Should call validator with correct phone', () => {
+    const sut = makeSut()
+    const isMobilePhone = jest.spyOn(validator, 'isMobilePhone')
+    sut.isValid('any_phone')
+    expect(isMobilePhone).toHaveBeenCalledWith('any_phone', 'pt-BR')
+  })
 })
