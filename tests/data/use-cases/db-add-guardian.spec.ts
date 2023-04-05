@@ -1,5 +1,7 @@
-import { type Encrypter } from '../../../src/data/protocols/encrypter'
+import { type AddGuardianRepository, type Encrypter } from '../../../src/data/protocols'
 import { DbAddGuardian } from '../../../src/data/use-cases'
+import { type Guardian } from '../../../src/domain/entities'
+import { type IAddGuardian } from '../../../src/domain/use-cases'
 
 const makeEncrypter = (): Encrypter => {
   class EncrypterStub implements Encrypter {
@@ -10,16 +12,37 @@ const makeEncrypter = (): Encrypter => {
   return new EncrypterStub()
 }
 
+const makeAddGuardianRepository = (): AddGuardianRepository => {
+  class AddGuardianRepositoryStub implements AddGuardianRepository {
+    async add (guardian: IAddGuardian): Promise<Guardian> {
+      const fakeGuardian = {
+        id: 1,
+        firstName: 'valid_first_name',
+        lastName: 'valid_last_name',
+        email: 'valid_email',
+        phone: 'valid_phone',
+        password: 'hashed_password',
+        isProvicyPolicyAccepted: true
+      }
+      return await new Promise(resolve => { resolve(fakeGuardian) })
+    }
+  }
+  return new AddGuardianRepositoryStub()
+}
+
 interface SutTypes {
   sut: DbAddGuardian
   encrypterStub: Encrypter
+  addGuardianRepositoryStub: AddGuardianRepository
 }
 
 const makeSut = (): SutTypes => {
+  const addGuardianRepositoryStub = makeAddGuardianRepository()
   const encrypterStub = makeEncrypter()
-  const sut = new DbAddGuardian(encrypterStub)
+  const sut = new DbAddGuardian(addGuardianRepositoryStub, encrypterStub)
   return {
     sut,
+    addGuardianRepositoryStub,
     encrypterStub
   }
 }
@@ -53,5 +76,27 @@ describe('DbAddGuardian use case', () => {
     }
     const promise = sut.add(guardianData)
     await expect(promise).rejects.toThrow()
+  })
+
+  it('Should call AddGuardianRepository with correct values', async () => {
+    const { sut, addGuardianRepositoryStub } = makeSut()
+    const addSpy = jest.spyOn(addGuardianRepositoryStub, 'add')
+    const guardianData = {
+      firstName: 'valid_first_name',
+      lastName: 'valid_last_name',
+      email: 'valid_email',
+      phone: 'valid_phone',
+      password: 'valid_password',
+      isProvicyPolicyAccepted: true
+    }
+    await sut.add(guardianData)
+    expect(addSpy).toHaveBeenCalledWith({
+      firstName: 'valid_first_name',
+      lastName: 'valid_last_name',
+      email: 'valid_email',
+      phone: 'valid_phone',
+      password: 'hashed_password',
+      isProvicyPolicyAccepted: true
+    })
   })
 })
