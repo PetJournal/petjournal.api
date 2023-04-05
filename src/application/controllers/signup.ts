@@ -1,5 +1,5 @@
 import { InvalidParamError, MissingParamError } from '../errors'
-import { type PhoneValidator, type EmailValidator, type NameValidator } from '../validation/protocols'
+import { type EmailValidator, type NameValidator, type PasswordValidator, type PhoneValidator } from '../validation/protocols'
 import { badRequest, serverError, success, type HttpRequest, type HttpResponse } from '../helpers/http'
 import { type Controller } from './controller'
 import { type AddGuardian } from 'domain/use-cases/add-guardian'
@@ -8,12 +8,14 @@ export class SignUpController implements Controller {
   private readonly addGuardian: AddGuardian
   private readonly emailValidator: EmailValidator
   private readonly nameValidator: NameValidator
+  private readonly passwordValidator: PasswordValidator
   private readonly phoneValidator: PhoneValidator
 
-  constructor (addGuardian: AddGuardian, emailValidator: EmailValidator, nameValidator: NameValidator, phoneValidator: PhoneValidator) {
+  constructor (addGuardian: AddGuardian, emailValidator: EmailValidator, nameValidator: NameValidator, passwordValidator: PasswordValidator, phoneValidator: PhoneValidator) {
     this.emailValidator = emailValidator
     this.addGuardian = addGuardian
     this.nameValidator = nameValidator
+    this.passwordValidator = passwordValidator
     this.phoneValidator = phoneValidator
   }
 
@@ -39,6 +41,10 @@ export class SignUpController implements Controller {
       const isValidEmail = this.emailValidator.isValid(email)
       if (!isValidEmail) {
         return badRequest(new InvalidParamError('email'))
+      }
+      const isValidPassword = this.passwordValidator.isValid(password)
+      if (!isValidPassword) {
+        return badRequest(new InvalidParamError('password'))
       }
       const isValidPhone = this.phoneValidator.isValid(phone)
       if (!isValidPhone) {
