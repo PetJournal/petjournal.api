@@ -30,8 +30,8 @@ export class SignUpController implements Controller {
       if (!isProvicyPolicyAccepted) {
         return badRequest(new InvalidParamError('isProvicyPolicyAccepted'))
       }
-      const isValidFirstName = this.nameValidator.isValid(firstName, lastName)
-      if (!isValidFirstName) {
+      const isValidName = this.nameValidator.isValid(firstName, lastName)
+      if (!isValidName) {
         return badRequest(new InvalidParamError('name'))
       }
       const isValidEmail = this.emailValidator.isValid(email)
