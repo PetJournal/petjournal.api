@@ -13,8 +13,6 @@ export class DbAddGuardian implements AddGuardian {
 
   async add (guardianData: IAddGuardian): Promise<Guardian> {
     const hashedPassword = await this.encrypter.encrypt(guardianData.password)
-    await this.addGuardianRepository.add(Object.assign({}, guardianData, { password: hashedPassword }))
-
-    return await new Promise(resolve => { resolve(null) })
+    return await this.addGuardianRepository.add(Object.assign({}, guardianData, { password: hashedPassword }))
   }
 }
