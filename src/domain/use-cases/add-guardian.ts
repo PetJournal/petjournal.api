@@ -4,7 +4,7 @@ export interface IAddGuardian {
   firstName: string
   lastName: string
   email: string
-  phone?: string
+  phone: string
   password: string
   isProvicyPolicyAccepted: boolean
 }

@@ -1,5 +1,5 @@
 import { InvalidParamError, MissingParamError } from '../errors'
-import { type EmailValidator, type NameValidator } from '../validation/protocols'
+import { type PhoneValidator, type EmailValidator, type NameValidator } from '../validation/protocols'
 import { badRequest, serverError, success, type HttpRequest, type HttpResponse } from '../helpers/http'
 import { type Controller } from './controller'
 import { type AddGuardian } from 'domain/use-cases/add-guardian'
@@ -8,11 +8,13 @@ export class SignUpController implements Controller {
   private readonly addGuardian: AddGuardian
   private readonly emailValidator: EmailValidator
   private readonly nameValidator: NameValidator
+  private readonly phoneValidator: PhoneValidator
 
-  constructor (addGuardian: AddGuardian, emailValidator: EmailValidator, nameValidator: NameValidator) {
+  constructor (addGuardian: AddGuardian, emailValidator: EmailValidator, nameValidator: NameValidator, phoneValidator: PhoneValidator) {
     this.emailValidator = emailValidator
     this.addGuardian = addGuardian
     this.nameValidator = nameValidator
+    this.phoneValidator = phoneValidator
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -37,6 +39,10 @@ export class SignUpController implements Controller {
       const isValidEmail = this.emailValidator.isValid(email)
       if (!isValidEmail) {
         return badRequest(new InvalidParamError('email'))
+      }
+      const isValidPhone = this.phoneValidator.isValid(phone)
+      if (!isValidPhone) {
+        return badRequest(new InvalidParamError('phone'))
       }
       const guardian = await this.addGuardian.add({
         firstName,

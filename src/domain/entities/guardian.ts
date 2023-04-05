@@ -3,7 +3,7 @@ export interface Guardian {
   firstName: string
   lastName: string
   email: string
-  phone?: string
+  phone: string
   password: string
   isProvicyPolicyAccepted: boolean
 }
