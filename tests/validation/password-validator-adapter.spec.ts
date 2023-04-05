@@ -24,4 +24,11 @@ describe('PasswordValidator Adapter', () => {
     const isValid = sut.isValid('valid_password')
     expect(isValid).toBe(true)
   })
+
+  it('Should call validator with correct password', () => {
+    const sut = makeSut()
+    const isValid = jest.spyOn(validator, 'isStrongPassword')
+    sut.isValid('any_password')
+    expect(isValid).toHaveBeenCalledWith('any_password')
+  })
 })
