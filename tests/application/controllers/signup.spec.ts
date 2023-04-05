@@ -322,6 +322,25 @@ describe('SignUp Controller', () => {
     expect(httpResponse.body).toEqual(new ServerError())
   })
 
+  it('Should return 400 if an invalid phone is provided', async () => {
+    const { sut, phoneValidatorStub } = makeSut()
+    jest.spyOn(phoneValidatorStub, 'isValid').mockReturnValueOnce(false)
+    const httpRequest = {
+      body: {
+        firstName: 'invalid_first_name',
+        lastName: 'any_last_name',
+        email: 'invalid_email@mail.com',
+        phone: 'any_phone',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
+        isProvicyPolicyAccepted: true
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidParamError('phone'))
+  })
+
   it('Should call PhoneValidator with correct phone', async () => {
     const { sut, phoneValidatorStub } = makeSut()
     const isValidSpy = jest.spyOn(phoneValidatorStub, 'isValid')
