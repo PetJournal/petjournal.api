@@ -3,6 +3,7 @@ import { SignUpController } from '../../../src/application/controllers/signup'
 import { type PhoneValidator, type EmailValidator, type NameValidator } from '../../../src/application/validation/protocols'
 import { type AddGuardian, type IAddGuardian } from 'domain/use-cases/add-guardian'
 import { type Guardian } from 'domain/entities/guardian'
+import { type PasswordValidator } from 'application/validation/protocols/password-validator'
 
 const makeNameValidator = (): NameValidator => {
   class NameValidatorStub implements NameValidator {
@@ -31,6 +32,15 @@ const makePhoneValidator = (): PhoneValidator => {
   return new PhoneValidatorStub()
 }
 
+const makePasswordValidator = (): PasswordValidator => {
+  class PasswordValidatorStub implements PasswordValidator {
+    isValid (phone: string): boolean {
+      return true
+    }
+  }
+  return new PasswordValidatorStub()
+}
+
 const makeAddGuardian = (): AddGuardian => {
   class AddGuardianStub implements AddGuardian {
     async add (guardian: IAddGuardian): Promise<Guardian> {
@@ -55,6 +65,7 @@ interface SutTypes {
   addGuardianStub: AddGuardian
   emailValidatorStub: EmailValidator
   nameValidatorStub: NameValidator
+  passwordValidatorStub: PasswordValidator
   phoneValidatorStub: PhoneValidator
 }
 
@@ -62,9 +73,10 @@ const makeSut = (): SutTypes => {
   const addGuardianStub = makeAddGuardian()
   const emailValidatorStub = makeEmailValidator()
   const nameValidatorStub = makeNameValidator()
+  const passwordValidatorStub = makePasswordValidator()
   const phoneValidatorStub = makePhoneValidator()
-  const sut = new SignUpController(addGuardianStub, emailValidatorStub, nameValidatorStub, phoneValidatorStub)
-  return { sut, addGuardianStub, emailValidatorStub, nameValidatorStub, phoneValidatorStub }
+  const sut = new SignUpController(addGuardianStub, emailValidatorStub, nameValidatorStub, passwordValidatorStub, phoneValidatorStub)
+  return { sut, addGuardianStub, emailValidatorStub, nameValidatorStub, passwordValidatorStub, phoneValidatorStub }
 }
 
 describe('SignUp Controller', () => {
@@ -378,6 +390,43 @@ describe('SignUp Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
+  })
+
+  it('Should return 400 if an invalid password is provided', async () => {
+    const { sut, passwordValidatorStub } = makeSut()
+    jest.spyOn(passwordValidatorStub, 'isValid').mockReturnValueOnce(false)
+    const httpRequest = {
+      body: {
+        firstName: 'invalid_first_name',
+        lastName: 'any_last_name',
+        email: 'invalid_email@mail.com',
+        phone: 'any_phone',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
+        isProvicyPolicyAccepted: true
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidParamError('password'))
+  })
+
+  it('Should call PasswordValidator with correct password', async () => {
+    const { sut, passwordValidatorStub } = makeSut()
+    const isValidSpy = jest.spyOn(passwordValidatorStub, 'isValid')
+    const httpRequest = {
+      body: {
+        firstName: 'any_first_name',
+        lastName: 'any_last_name',
+        email: 'any_email@mail.com',
+        phone: 'any_phone',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
+        isProvicyPolicyAccepted: true
+      }
+    }
+    await sut.handle(httpRequest)
+    expect(isValidSpy).toHaveBeenCalledWith('any_password')
   })
 
   it('Should return 500 if AddGuardian throws', async () => {
