@@ -1,18 +1,22 @@
 import { type Encrypter } from '../../../src/data/protocols/encrypter'
 import { DbAddGuardian } from '../../../src/data/use-cases'
 
+const makeEncrypter = (): Encrypter => {
+  class EncrypterStub implements Encrypter {
+    async encrypt (value: string): Promise<string> {
+      return await new Promise(resolve => { resolve('hashed_password') })
+    }
+  }
+  return new EncrypterStub()
+}
+
 interface SutTypes {
   sut: DbAddGuardian
   encrypterStub: Encrypter
 }
 
 const makeSut = (): SutTypes => {
-  class EncrypterStub {
-    async encrypt (value: string): Promise<string> {
-      return await new Promise(resolve => { resolve('hashed_password') })
-    }
-  }
-  const encrypterStub = new EncrypterStub()
+  const encrypterStub = makeEncrypter()
   const sut = new DbAddGuardian(encrypterStub)
   return {
     sut,
