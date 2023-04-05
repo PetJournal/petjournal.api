@@ -1,6 +1,6 @@
 import { InvalidParamError, MissingParamError, ServerError } from '../../../src/application/errors'
 import { SignUpController } from '../../../src/application/controllers/signup'
-import { type EmailValidator, type NameValidator } from '../../../src/application/validation/protocols'
+import { type PhoneValidator, type EmailValidator, type NameValidator } from '../../../src/application/validation/protocols'
 import { type AddGuardian, type IAddGuardian } from 'domain/use-cases/add-guardian'
 import { type Guardian } from 'domain/entities/guardian'
 
@@ -20,6 +20,15 @@ const makeEmailValidator = (): EmailValidator => {
     }
   }
   return new EmailValidatorStub()
+}
+
+const makePhoneValidator = (): PhoneValidator => {
+  class PhoneValidatorStub implements PhoneValidator {
+    isValid (phone: string): boolean {
+      return true
+    }
+  }
+  return new PhoneValidatorStub()
 }
 
 const makeAddGuardian = (): AddGuardian => {
@@ -46,14 +55,16 @@ interface SutTypes {
   addGuardianStub: AddGuardian
   emailValidatorStub: EmailValidator
   nameValidatorStub: NameValidator
+  phoneValidatorStub: PhoneValidator
 }
 
 const makeSut = (): SutTypes => {
   const addGuardianStub = makeAddGuardian()
   const emailValidatorStub = makeEmailValidator()
   const nameValidatorStub = makeNameValidator()
-  const sut = new SignUpController(addGuardianStub, emailValidatorStub, nameValidatorStub)
-  return { sut, addGuardianStub, emailValidatorStub, nameValidatorStub }
+  const phoneValidatorStub = makePhoneValidator()
+  const sut = new SignUpController(addGuardianStub, emailValidatorStub, nameValidatorStub, phoneValidatorStub)
+  return { sut, addGuardianStub, emailValidatorStub, nameValidatorStub, phoneValidatorStub }
 }
 
 describe('SignUp Controller', () => {
@@ -309,6 +320,24 @@ describe('SignUp Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
+  })
+
+  it('Should call PhoneValidator with correct phone', async () => {
+    const { sut, phoneValidatorStub } = makeSut()
+    const isValidSpy = jest.spyOn(phoneValidatorStub, 'isValid')
+    const httpRequest = {
+      body: {
+        firstName: 'any_first_name',
+        lastName: 'any_last_name',
+        email: 'any_email@mail.com',
+        phone: 'any_phone',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
+        isProvicyPolicyAccepted: true
+      }
+    }
+    await sut.handle(httpRequest)
+    expect(isValidSpy).toHaveBeenCalledWith('any_phone')
   })
 
   it('Should return 500 if AddGuardian throws', async () => {
