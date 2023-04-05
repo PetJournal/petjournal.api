@@ -1,7 +1,8 @@
 import { type PhoneValidator } from '../protocols'
+import validator from 'validator'
 
 export class PhoneValidatorAdapter implements PhoneValidator {
   isValid (phone: string): boolean {
-    return false
+    return validator.isMobilePhone(phone, 'pt-BR')
   }
 }
