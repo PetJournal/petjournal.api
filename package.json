@@ -23,6 +23,7 @@
     "@babel/preset-typescript": "^7.21.0",
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
+    "@types/bcrypt": "^5.0.0",
     "@types/jest": "^29.5.0",
     "@types/node": "^18.15.5",
     "@types/validator": "^13.7.14",
@@ -39,6 +40,7 @@
     "typescript": "^5.0.2"
   },
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "rimraf": "^4.4.0",
     "validator": "^13.9.0"
   }
