@@ -43,5 +43,6 @@
     "bcrypt": "^5.1.0",
     "rimraf": "^4.4.0",
     "validator": "^13.9.0"
-  }
+  },
+  "packageManager": "yarn@3.5.0"
 }
