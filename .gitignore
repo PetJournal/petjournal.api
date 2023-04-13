@@ -7,3 +7,4 @@
 !.yarn/versions
 dist
 coverage
+node_modules
