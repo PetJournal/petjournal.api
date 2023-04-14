@@ -6,7 +6,7 @@ export interface IAddGuardian {
   email: string
   phone: string
   password: string
-  isProvicyPolicyAccepted: boolean
+  isPrivacyPolicyAccepted: boolean
 }
 
 export interface AddGuardian {

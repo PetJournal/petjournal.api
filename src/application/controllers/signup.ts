@@ -21,18 +21,18 @@ export class SignUpController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const requiredFields = ['firstName', 'lastName', 'email', 'password', 'passwordConfirmation', 'isProvicyPolicyAccepted']
+      const requiredFields = ['firstName', 'lastName', 'email', 'password', 'passwordConfirmation', 'isPrivacyPolicyAccepted']
       for (const field of requiredFields) {
         if (httpRequest.body[field] === undefined) {
           return badRequest(new MissingParamError(field))
         }
       }
-      const { firstName, lastName, email, phone, password, passwordConfirmation, isProvicyPolicyAccepted } = httpRequest.body
+      const { firstName, lastName, email, phone, password, passwordConfirmation, isPrivacyPolicyAccepted } = httpRequest.body
       if (passwordConfirmation !== password) {
         return badRequest(new InvalidParamError('passwordConfirmation'))
       }
-      if (!isProvicyPolicyAccepted) {
-        return badRequest(new InvalidParamError('isProvicyPolicyAccepted'))
+      if (!isPrivacyPolicyAccepted) {
+        return badRequest(new InvalidParamError('isPrivacyPolicyAccepted'))
       }
       const isValidName = this.nameValidator.isValid(firstName, lastName)
       if (!isValidName) {
@@ -56,7 +56,7 @@ export class SignUpController implements Controller {
         email,
         phone,
         password,
-        isProvicyPolicyAccepted
+        isPrivacyPolicyAccepted
       })
       return success(guardian)
     } catch (error) {

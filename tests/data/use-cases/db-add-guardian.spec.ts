@@ -22,7 +22,7 @@ const makeAddGuardianRepository = (): AddGuardianRepository => {
         email: 'valid_email',
         phone: 'valid_phone',
         password: 'hashed_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
       return await new Promise(resolve => { resolve(fakeGuardian) })
     }
@@ -57,7 +57,7 @@ describe('DbAddGuardian use case', () => {
       email: 'valid_email',
       phone: 'valid_phone',
       password: 'valid_password',
-      isProvicyPolicyAccepted: true
+      isPrivacyPolicyAccepted: true
     }
     await sut.add(guardianData)
     expect(encryptSpy).toHaveBeenCalledWith('valid_password')
@@ -72,7 +72,7 @@ describe('DbAddGuardian use case', () => {
       email: 'valid_email',
       phone: 'valid_phone',
       password: 'valid_password',
-      isProvicyPolicyAccepted: true
+      isPrivacyPolicyAccepted: true
     }
     const promise = sut.add(guardianData)
     await expect(promise).rejects.toThrow()
@@ -87,7 +87,7 @@ describe('DbAddGuardian use case', () => {
       email: 'valid_email',
       phone: 'valid_phone',
       password: 'valid_password',
-      isProvicyPolicyAccepted: true
+      isPrivacyPolicyAccepted: true
     }
     await sut.add(guardianData)
     expect(addSpy).toHaveBeenCalledWith({
@@ -96,7 +96,7 @@ describe('DbAddGuardian use case', () => {
       email: 'valid_email',
       phone: 'valid_phone',
       password: 'hashed_password',
-      isProvicyPolicyAccepted: true
+      isPrivacyPolicyAccepted: true
     })
   })
 
@@ -109,7 +109,7 @@ describe('DbAddGuardian use case', () => {
       email: 'valid_email',
       phone: 'valid_phone',
       password: 'valid_password',
-      isProvicyPolicyAccepted: true
+      isPrivacyPolicyAccepted: true
     }
     const promise = sut.add(guardianData)
     await expect(promise).rejects.toThrow()
@@ -123,7 +123,7 @@ describe('DbAddGuardian use case', () => {
       email: 'valid_email',
       phone: 'valid_phone',
       password: 'valid_password',
-      isProvicyPolicyAccepted: true
+      isPrivacyPolicyAccepted: true
     }
     const guardian = await sut.add(guardianData)
     expect(guardian).toEqual({
@@ -133,7 +133,7 @@ describe('DbAddGuardian use case', () => {
       email: 'valid_email',
       phone: 'valid_phone',
       password: 'hashed_password',
-      isProvicyPolicyAccepted: true
+      isPrivacyPolicyAccepted: true
     })
   })
 })

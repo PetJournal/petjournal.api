@@ -51,7 +51,7 @@ const makeAddGuardian = (): AddGuardian => {
         email: 'valid_email@mail.com',
         phone: 'valid_phone',
         password: 'valid_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
 
       return await new Promise(resolve => { resolve(fakeGuardian) })
@@ -89,7 +89,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -106,7 +106,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -123,7 +123,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -140,7 +140,7 @@ describe('SignUp Controller', () => {
         email: 'any_email@mail.com',
         phone: 'any_phone',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -157,7 +157,7 @@ describe('SignUp Controller', () => {
         email: 'any_email@mail.com',
         phone: 'any_phone',
         password: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -175,7 +175,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'invalid_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -183,7 +183,7 @@ describe('SignUp Controller', () => {
     expect(httpResponse.body).toEqual(new InvalidParamError('passwordConfirmation'))
   })
 
-  it('Should return 400 if isProvicyPolicyAccepted is not provided', async () => {
+  it('Should return 400 if isPrivacyPolicyAccepted is not provided', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
@@ -197,10 +197,10 @@ describe('SignUp Controller', () => {
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('isProvicyPolicyAccepted'))
+    expect(httpResponse.body).toEqual(new MissingParamError('isPrivacyPolicyAccepted'))
   })
 
-  it('Should return 400 if isProvicyPolicyAccepted is false', async () => {
+  it('Should return 400 if isPrivacyPolicyAccepted is false', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
@@ -210,12 +210,12 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: false
+        isPrivacyPolicyAccepted: false
       }
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new InvalidParamError('isProvicyPolicyAccepted'))
+    expect(httpResponse.body).toEqual(new InvalidParamError('isPrivacyPolicyAccepted'))
   })
 
   it('Should return 400 if an invalid name is provided', async () => {
@@ -229,7 +229,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -248,7 +248,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     await sut.handle(httpRequest)
@@ -268,7 +268,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -287,7 +287,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -306,7 +306,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     await sut.handle(httpRequest)
@@ -326,7 +326,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -345,7 +345,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -364,7 +364,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     await sut.handle(httpRequest)
@@ -384,7 +384,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -403,7 +403,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -422,7 +422,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     await sut.handle(httpRequest)
@@ -442,7 +442,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -463,7 +463,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -482,7 +482,7 @@ describe('SignUp Controller', () => {
         phone: 'any_phone',
         password: 'any_password',
         passwordConfirmation: 'any_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     await sut.handle(httpRequest)
@@ -492,7 +492,7 @@ describe('SignUp Controller', () => {
       email: 'any_email@mail.com',
       phone: 'any_phone',
       password: 'any_password',
-      isProvicyPolicyAccepted: true
+      isPrivacyPolicyAccepted: true
     })
   })
 
@@ -506,7 +506,7 @@ describe('SignUp Controller', () => {
         phone: 'valid_phone',
         password: 'valid_password',
         passwordConfirmation: 'valid_password',
-        isProvicyPolicyAccepted: true
+        isPrivacyPolicyAccepted: true
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -518,7 +518,7 @@ describe('SignUp Controller', () => {
       email: 'valid_email@mail.com',
       phone: 'valid_phone',
       password: 'valid_password',
-      isProvicyPolicyAccepted: true
+      isPrivacyPolicyAccepted: true
     })
   })
 })
