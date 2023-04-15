@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres
+    container_name: petjournal_db
+    restart: always
+    ports:
+      - 54320:5432
+    env_file:
+      - .env.dev
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

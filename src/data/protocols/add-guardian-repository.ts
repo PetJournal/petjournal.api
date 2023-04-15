@@ -1,6 +1,10 @@
-import { type Guardian } from 'domain/entities'
 import { type IAddGuardian } from 'domain/use-cases'
 
 export interface AddGuardianRepository {
-  add: (guardian: IAddGuardian) => Promise<Guardian>
+  add: (guardian: AddGuardianRepository.Params) => Promise<AddGuardianRepository.Result>
+}
+
+export namespace AddGuardianRepository {
+  export type Params = IAddGuardian
+  export type Result = boolean
 }
