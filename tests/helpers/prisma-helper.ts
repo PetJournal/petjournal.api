@@ -14,7 +14,7 @@ const generateDatabaseURL = (schema: string): string => {
 }
 
 const schemaId = 'test-'.concat(v4())
-const prismaBinary = join(__dirname, '..', '..', '..', '..', '..', 'node_modules', '.bin', 'prisma')
+const prismaBinary = join(__dirname, '..', '..', 'node_modules', '.bin', 'prisma')
 
 const url = generateDatabaseURL(schemaId)
 process.env.DATABASE_URL = url
