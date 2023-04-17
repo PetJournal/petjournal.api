@@ -14,8 +14,8 @@ describe('SignUp Routes', () => {
         firstName: 'John',
         lastName: 'Doe',
         email: 'johndoe@email.com',
-        password: '123',
-        passwordConfirmation: '123',
+        password: 'Teste@123',
+        passwordConfirmation: 'Teste@123',
         phone: '11987654321',
         isPrivacyPolicyAccepted: true
       })
