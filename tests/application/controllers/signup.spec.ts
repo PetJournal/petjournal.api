@@ -1,8 +1,7 @@
 import { InvalidParamError, MissingParamError, ServerError } from '../../../src/application/errors'
 import { SignUpController } from '../../../src/application/controllers/signup'
 import { type PhoneValidator, type EmailValidator, type NameValidator } from '../../../src/application/validation/protocols'
-import { type AddGuardian, type IAddGuardian } from 'domain/use-cases/add-guardian'
-import { type Guardian } from 'domain/entities/guardian'
+import { type AddGuardian } from 'domain/use-cases/add-guardian'
 import { type PasswordValidator } from 'application/validation/protocols/password-validator'
 
 const makeNameValidator = (): NameValidator => {
@@ -43,18 +42,8 @@ const makePasswordValidator = (): PasswordValidator => {
 
 const makeAddGuardian = (): AddGuardian => {
   class AddGuardianStub implements AddGuardian {
-    async add (guardian: IAddGuardian): Promise<Guardian> {
-      const fakeGuardian = {
-        id: 1,
-        firstName: 'valid_first_name',
-        lastName: 'valid_last_name',
-        email: 'valid_email@mail.com',
-        phone: 'valid_phone',
-        password: 'valid_password',
-        isPrivacyPolicyAccepted: true
-      }
-
-      return await new Promise(resolve => { resolve(fakeGuardian) })
+    async add (guardian: AddGuardian.Params): Promise<AddGuardian.Result> {
+      return await new Promise(resolve => { resolve(true) })
     }
   }
   return new AddGuardianStub()
@@ -511,14 +500,6 @@ describe('SignUp Controller', () => {
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(200)
-    expect(httpResponse.body).toEqual({
-      id: 1,
-      firstName: 'valid_first_name',
-      lastName: 'valid_last_name',
-      email: 'valid_email@mail.com',
-      phone: 'valid_phone',
-      password: 'valid_password',
-      isPrivacyPolicyAccepted: true
-    })
+    expect(httpResponse.body).toBe(true)
   })
 })

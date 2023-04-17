@@ -1,6 +1,5 @@
 import { type AddGuardianRepository, type Encrypter } from 'data/protocols'
-import { type Guardian } from '../../domain/entities'
-import { type AddGuardian, type IAddGuardian } from '../../domain/use-cases'
+import { type AddGuardian } from '../../domain/use-cases'
 
 export class DbAddGuardian implements AddGuardian {
   private readonly addGuardianRepository: AddGuardianRepository
@@ -11,7 +10,7 @@ export class DbAddGuardian implements AddGuardian {
     this.encrypter = encrypter
   }
 
-  async add (guardianData: IAddGuardian): Promise<Guardian> {
+  async add (guardianData: AddGuardian.Params): Promise<AddGuardian.Result> {
     const hashedPassword = await this.encrypter.encrypt(guardianData.password)
     return await this.addGuardianRepository.add(Object.assign({}, guardianData, { password: hashedPassword }))
   }

@@ -1,14 +1,16 @@
-import { type Guardian } from 'domain/entities/guardian'
-
-export interface IAddGuardian {
-  firstName: string
-  lastName: string
-  email: string
-  phone: string
-  password: string
-  isPrivacyPolicyAccepted: boolean
+export interface AddGuardian {
+  add: (guardianData: AddGuardian.Params) => Promise<AddGuardian.Result>
 }
 
-export interface AddGuardian {
-  add: (guardian: IAddGuardian) => Promise<Guardian>
+export namespace AddGuardian {
+  export interface Params {
+    firstName: string
+    lastName: string
+    email: string
+    phone: string
+    password: string
+    isPrivacyPolicyAccepted: boolean
+  }
+
+  export type Result = boolean
 }
