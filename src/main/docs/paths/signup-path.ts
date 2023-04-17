@@ -9,6 +9,15 @@ export const signUpPath = {
         'application/json': {
           schema: {
             $ref: '#/schemas/signUpParams'
+          },
+          example: {
+            firstName: 'John',
+            lastName: 'Doe',
+            email: 'johndoe@email.com',
+            password: 'Teste@123',
+            passwordConfirmation: 'Teste@123',
+            phone: '11987654321',
+            isPrivacyPolicyAccepted: true
           }
         }
       }

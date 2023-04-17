@@ -4,8 +4,10 @@ export const badRequest = {
     'application/json': {
       schema: {
         $ref: '#/schemas/error'
+      },
+      example: {
+        error: 'Invalid param: password'
       }
     }
-
   }
 }
