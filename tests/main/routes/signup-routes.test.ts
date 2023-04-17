@@ -1,5 +1,10 @@
 import request from 'supertest'
 import app from '../../../src/main/config/app'
+import { PrismaHelper } from '../../helpers/prisma-helper'
+
+beforeEach(() => { PrismaHelper.connect() })
+
+afterEach(async () => { await PrismaHelper.disconnect() })
 
 describe('SignUp Routes', () => {
   it('Should return an guardian account on success', async () => {
