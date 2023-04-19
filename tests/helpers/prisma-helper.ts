@@ -31,7 +31,6 @@ export const PrismaHelper = {
       }
     })
   },
-
   async disconnect  (): Promise<void> {
     await prisma.$executeRawUnsafe(`DROP SCHEMA IF EXISTS "${schemaId}" CASCADE;`)
     await prisma.$disconnect()
