@@ -7,7 +7,7 @@ beforeEach(() => { PrismaHelper.connect() })
 afterEach(async () => { await PrismaHelper.disconnect() })
 
 describe('SignUp Routes', () => {
-  it('Should return an guardian account on success', async () => {
+  it('Should return a guardian account on success', async () => {
     await request(app)
       .post('/api/signup')
       .send({

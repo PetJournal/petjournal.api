@@ -12,14 +12,14 @@ const makeSut = (): PhoneValidatorAdapter => {
 }
 
 describe('PhoneValidator Adapter', () => {
-  it('Should return false if validator returns false', () => {
+  it('Should return false if validation returns false', () => {
     const sut = makeSut()
     jest.spyOn(validator, 'isMobilePhone').mockReturnValueOnce(false)
     const isValid = sut.isValid('invalid_phone')
     expect(isValid).toBe(false)
   })
 
-  it('Should return true if validator returns true', () => {
+  it('Should return true if validation returns true', () => {
     const sut = makeSut()
     const isValid = sut.isValid('valid_phone')
     expect(isValid).toBe(true)

@@ -12,14 +12,14 @@ const makeSut = (): NameValidatorAdapter => {
 }
 
 describe('NameValidator Adapter', () => {
-  it('Should return false if validator returns false', () => {
+  it('Should return false if validation returns false', () => {
     const sut = makeSut()
     jest.spyOn(validator, 'matches').mockReturnValueOnce(false)
     const isValid = sut.isValid('invalid_first_name', 'invalid_last_name')
     expect(isValid).toBe(false)
   })
 
-  it('Should return true if validator returns true', () => {
+  it('Should return true if validation returns true', () => {
     const sut = makeSut()
     const isValid = sut.isValid('valid_first_name', 'valid_last_name')
     expect(isValid).toBe(true)

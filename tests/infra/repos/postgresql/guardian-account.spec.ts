@@ -11,7 +11,7 @@ const makeSut = (): GuardianAccountRepository => {
 }
 
 describe('GuardianAccountRepository', () => {
-  it('Should return an guardian account on success ', async () => {
+  it('Should return a guardian account on success ', async () => {
     const sut = makeSut()
     const guardianData = {
       firstName: 'valid_first_name',
@@ -25,7 +25,7 @@ describe('GuardianAccountRepository', () => {
     expect(isValid).toBe(true)
   })
 
-  it('Should not return an guardian account if duplicated email or phone is provided', async () => {
+  it('Should not return a guardian account if duplicated email or phone is provided', async () => {
     const sut = makeSut()
     const guardianData = {
       firstName: 'valid_first_name',

@@ -12,14 +12,14 @@ const makeSut = (): PasswordValidatorAdapter => {
 }
 
 describe('PasswordValidator Adapter', () => {
-  it('Should return false if validator returns false', () => {
+  it('Should return false if validation returns false', () => {
     const sut = makeSut()
     jest.spyOn(validator, 'isStrongPassword').mockReturnValueOnce(0)
     const isValid = sut.isValid('invalid_password')
     expect(Boolean(isValid)).toBe(false)
   })
 
-  it('Should return true if validator returns true', () => {
+  it('Should return true if validation returns true', () => {
     const sut = makeSut()
     const isValid = sut.isValid('valid_password')
     expect(isValid).toBe(true)
