@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "src",
+    "rootDirs": [
+      "src",
+      "tests"
+    ],
     "target": "es2022",
     "sourceMap": true,
     "skipLibCheck": true,
@@ -10,7 +13,15 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "baseUrl": "src",
-    "strict": true
+    "strict": true,
+    "paths": {
+      "@/tests/*": [
+        "../tests/*"
+      ],
+      "@/*": [
+        "*"
+      ]
+    }
   },
   "include": [
     "src",
