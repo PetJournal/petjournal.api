@@ -1,4 +1,4 @@
-import swaggerConfig from '../docs'
+import swaggerConfig from '@/main/docs'
 import { serve, setup } from 'swagger-ui-express'
 import { type Express } from 'express'
 

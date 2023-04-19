@@ -1,8 +1,8 @@
-import { InvalidParamError, MissingParamError, ServerError } from '../../../src/application/errors'
-import { SignUpController } from '../../../src/application/controllers/signup'
-import { type PhoneValidator, type EmailValidator, type NameValidator } from '../../../src/application/validation/protocols'
-import { type AddGuardian } from 'domain/use-cases/add-guardian'
-import { type PasswordValidator } from 'application/validation/protocols/password-validator'
+import { InvalidParamError, MissingParamError, ServerError } from '@/application/errors'
+import { SignUpController } from '@/application/controllers/signup'
+import { type PhoneValidator, type EmailValidator, type NameValidator } from '@/application/validation/protocols'
+import { type AddGuardian } from '@/domain/use-cases/add-guardian'
+import { type PasswordValidator } from '@/application/validation/protocols/password-validator'
 
 const makeNameValidator = (): NameValidator => {
   class NameValidatorStub implements NameValidator {

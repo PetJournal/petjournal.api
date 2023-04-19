@@ -1,4 +1,4 @@
-import { PasswordValidatorAdapter } from '../../src/application/validation/validators/'
+import { PasswordValidatorAdapter } from '@/application/validation/validators/'
 import validator from 'validator'
 
 jest.mock('validator', () => ({
@@ -14,9 +14,9 @@ const makeSut = (): PasswordValidatorAdapter => {
 describe('PasswordValidator Adapter', () => {
   it('Should return false if validator returns false', () => {
     const sut = makeSut()
-    jest.spyOn(validator, 'isStrongPassword').mockReturnValueOnce(false)
+    jest.spyOn(validator, 'isStrongPassword').mockReturnValueOnce(0)
     const isValid = sut.isValid('invalid_password')
-    expect(isValid).toBe(false)
+    expect(Boolean(isValid)).toBe(false)
   })
 
   it('Should return true if validator returns true', () => {

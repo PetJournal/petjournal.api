@@ -1,8 +1,8 @@
-import { EmailValidatorAdapter, NameValidatorAdapter, PasswordValidatorAdapter, PhoneValidatorAdapter } from '../../../application/validation/validators'
-import { SignUpController } from '../../../application/controllers/signup'
-import { DbAddGuardian } from '../../../data/use-cases/db-add-guardian'
-import { BcryptAdapter } from '../../../infra/criptography/bcrypt-adapter'
-import { GuardianAccountRepository } from '../../../infra/repos/postgresql/guardian-account-repository'
+import { EmailValidatorAdapter, NameValidatorAdapter, PasswordValidatorAdapter, PhoneValidatorAdapter } from '@/application/validation/validators'
+import { SignUpController } from '@/application/controllers/signup'
+import { DbAddGuardian } from '@/data/use-cases/db-add-guardian'
+import { BcryptAdapter } from '@/infra/criptography/bcrypt-adapter'
+import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
 
 export const makeSignUpController = (): SignUpController => {
   const salt = 12

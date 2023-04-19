@@ -1,5 +1,5 @@
-import { type Controller } from '../../application/controllers/controller'
-import { type HttpResponse, type HttpRequest } from '../../application/helpers/http'
+import { type Controller } from '@/application/controllers/controller'
+import { type HttpResponse, type HttpRequest } from '@/application/helpers/http'
 import { type Request, type Response } from 'express'
 
 export const adaptRoute = (controller: Controller) => {

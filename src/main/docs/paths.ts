@@ -1,4 +1,4 @@
-import { signUpPath } from './paths/'
+import { signUpPath } from '@/main/docs/paths/'
 
 export default {
   '/signup': signUpPath

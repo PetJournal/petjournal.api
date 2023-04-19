@@ -1,4 +1,4 @@
-import { type AddGuardianRepository } from 'data/protocols'
+import { type AddGuardianRepository } from '@/data/protocols'
 import { prisma as db } from './prisma'
 
 export class GuardianAccountRepository implements AddGuardianRepository {

@@ -1,6 +1,6 @@
 
-import { GuardianAccountRepository } from '../../../../src/infra/repos/postgresql/guardian-account-repository'
-import { PrismaHelper } from '../../../helpers/prisma-helper'
+import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
+import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 
 beforeEach(() => { PrismaHelper.connect() })
 

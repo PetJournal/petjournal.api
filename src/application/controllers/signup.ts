@@ -1,8 +1,8 @@
-import { InvalidParamError, MissingParamError } from '../errors'
-import { type EmailValidator, type NameValidator, type PasswordValidator, type PhoneValidator } from '../validation/protocols'
-import { badRequest, serverError, success, type HttpRequest, type HttpResponse } from '../helpers/http'
-import { type Controller } from './controller'
-import { type AddGuardian } from 'domain/use-cases/add-guardian'
+import { InvalidParamError, MissingParamError } from '@/application/errors'
+import { type EmailValidator, type NameValidator, type PasswordValidator, type PhoneValidator } from '@/application/validation/protocols'
+import { badRequest, serverError, success, type HttpRequest, type HttpResponse } from '@/application/helpers/http'
+import { type Controller } from '@/application/controllers/controller'
+import { type AddGuardian } from '@/domain/use-cases/add-guardian'
 
 export class SignUpController implements Controller {
   private readonly addGuardian: AddGuardian

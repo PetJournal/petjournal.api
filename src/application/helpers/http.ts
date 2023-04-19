@@ -1,4 +1,4 @@
-import { ServerError } from '../errors'
+import { ServerError } from '@/application/errors'
 
 export interface HttpRequest {
   body?: any

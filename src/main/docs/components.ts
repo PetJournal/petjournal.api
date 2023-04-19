@@ -1,4 +1,4 @@
-import { badRequest, serverError } from './components/'
+import { badRequest, serverError } from '@/main/docs/components/'
 
 export default {
   badRequest,

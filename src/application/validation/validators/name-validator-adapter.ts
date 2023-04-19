@@ -1,4 +1,4 @@
-import { type NameValidator } from '../protocols'
+import { type NameValidator } from '@/application/validation/protocols'
 import validator from 'validator'
 
 export class NameValidatorAdapter implements NameValidator {

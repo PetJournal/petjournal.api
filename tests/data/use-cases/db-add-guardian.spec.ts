@@ -1,7 +1,5 @@
-import { type AddGuardianRepository, type Encrypter } from '../../../src/data/protocols'
-import { DbAddGuardian } from '../../../src/data/use-cases'
-import { type Guardian } from '../../../src/domain/entities'
-import { type IAddGuardian } from '../../../src/domain/use-cases'
+import { type AddGuardianRepository, type Encrypter } from '@/data/protocols'
+import { DbAddGuardian } from '@/data/use-cases'
 
 const makeEncrypter = (): Encrypter => {
   class EncrypterStub implements Encrypter {
@@ -14,17 +12,8 @@ const makeEncrypter = (): Encrypter => {
 
 const makeAddGuardianRepository = (): AddGuardianRepository => {
   class AddGuardianRepositoryStub implements AddGuardianRepository {
-    async add (guardian: IAddGuardian): Promise<Guardian> {
-      const fakeGuardian = {
-        id: 1,
-        firstName: 'valid_first_name',
-        lastName: 'valid_last_name',
-        email: 'valid_email',
-        phone: 'valid_phone',
-        password: 'hashed_password',
-        isPrivacyPolicyAccepted: true
-      }
-      return await new Promise(resolve => { resolve(fakeGuardian) })
+    async add (guardian: AddGuardianRepository.Params): Promise<AddGuardianRepository.Result> {
+      return await new Promise(resolve => { resolve(true) })
     }
   }
   return new AddGuardianRepositoryStub()
@@ -126,14 +115,6 @@ describe('DbAddGuardian use case', () => {
       isPrivacyPolicyAccepted: true
     }
     const guardian = await sut.add(guardianData)
-    expect(guardian).toEqual({
-      id: 1,
-      firstName: 'valid_first_name',
-      lastName: 'valid_last_name',
-      email: 'valid_email',
-      phone: 'valid_phone',
-      password: 'hashed_password',
-      isPrivacyPolicyAccepted: true
-    })
+    expect(guardian).toBe(true)
   })
 })

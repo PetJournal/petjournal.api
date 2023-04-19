@@ -1,6 +1,6 @@
 import request from 'supertest'
-import app from '../../../src/main/config/app'
-import { PrismaHelper } from '../../helpers/prisma-helper'
+import app from '@/main/config/app'
+import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 
 beforeEach(() => { PrismaHelper.connect() })
 
