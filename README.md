@@ -27,22 +27,21 @@ API da plataforma Pet Journal que te ajuda a cuidar do teu pet.
 git clone https://github.com/PetJournal/petjournal.api.git
 ```
 
-1. Inicie o [Docker](https://www.docker.com/) em sua máquina;
+1. Renomeie o arquivo `.env.example` para apenas `.env`. Neste arquivo, substitua os valores das variáveis pela porta de sua preferência para o `localhost`, além do nome de usuário e senha do seu banco de dados PostgreSQL.
+> A aplicação só funcionará com esses dados corretamente inseridos no arquivo `.env`.
 
-2. Para iniciar o banco de dados PostgreSQL, rode o comando:
+2. Inicie o [Docker](https://www.docker.com/) em sua máquina;
+
+3. Para iniciar o banco de dados PostgreSQL, rode o comando:
 ```bash
 docker compose -f docker-compose.dev.yml
 ```
 
-3. Garanta que o [**Node.js**](https://nodejs.org/en/download/) está instalado em sua máquina e então habilite o gerenciador de pacotes yarn usando o comando `corepack enable`;
+4. Garanta que o [**Node.js**](https://nodejs.org/en/download/) está instalado em sua máquina e então habilite o gerenciador de pacotes yarn usando o comando `corepack enable`;
 
-4. Acesse a pasta do projeto com seu terminal;
+5. Acesse a pasta do projeto com seu terminal;
 
-5. Rode o comando `yarn` para instalar as dependências do projeto;
-
-6. Renomeie o arquivo `.env.example` para apenas `.env`. Neste arquivo, substitua os valores das variáveis pela porta de sua preferência para o `localhost`, além do nome de usuário e senha do seu banco de dados PostgreSQL inicializado no passo **2**.
-
-> A aplicação só funcionará com esses dados corretamente inseridos no arquivo `.env`.
+6. Rode o comando `yarn` para instalar as dependências do projeto;
 
 7. Após a correta configuração acima, compile a aplicação com o comando `yarn build` e em seguida rode com o comando `yarn start`. Você deve receber a seguinte mensagem de confirmação:
 
@@ -73,23 +72,22 @@ API of the Pet Journal platform that helps you take care of your pet.
 ```bash
 git clone https://github.com/PetJournal/petjournal.api.git
 ```
+1. Rename the `.env.example` file to only `.env`. In this file, replace the values for the variables with your favorite localhost port, the user name and password for the PostgreSQL database.
 
-1. Start [Docker](https://www.docker.com/) on your machine;
+> The app will only work properly if these data are correctly set in `.env` file.
 
-2. To start the PostgreSQL database, run the command:
+2. Start [Docker](https://www.docker.com/) on your machine;
+
+3. To start the PostgreSQL database, run the command:
 ```bash
 docker compose -f docker-compose.dev.yml
 ```
 
-3. Ensure that [**Node.js**](https://nodejs.org/en/download/) is installed on your machine and then enable the `yarn` package manager using the `corepack enable` command;
+4. Ensure that [**Node.js**](https://nodejs.org/en/download/) is installed on your machine and then enable the `yarn` package manager using the `corepack enable` command;
 
-4. Access the project root folder on your terminal;
+5. Access the project root folder on your terminal;
 
-5. Run the `yarn` command to install the project dependencies;
-
-6. Rename the `.env.example` file to only `.env`. In this file, replace the values for the variables with your favorite localhost port, the user name and password for the PostgreSQL database initialized on step **2**.
-
-> The app will only work properly if these data are correctly set in `.env` file.
+6. Run the `yarn` command to install the project dependencies;
 
 7. To start the application, build with `yarn build` and run `yarn start` on your terminal. You should receive the following message:
 
