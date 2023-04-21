@@ -1,5 +1,6 @@
 import { ForgetPasswordController } from '@/application/controllers/forget-password'
 import { type EmailValidator } from '@/application/validation/protocols'
+import { ServerError } from '@/application/errors'
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
@@ -59,5 +60,21 @@ describe('ForgetPassword Controller', () => {
 
     await sut.handle(httpRequest)
     expect(isValidSpy).toHaveBeenCalledWith('valid_email@mail.com')
+  })
+
+  it('Should return 500 if EmailValidator throws', async () => {
+    const { sut, emailValidatorStub } = makeSut()
+    jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com'
+      }
+    }
+
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 })
