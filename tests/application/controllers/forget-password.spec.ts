@@ -47,4 +47,17 @@ describe('ForgetPassword Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
   })
+
+  it('Should call EmailValidator with correct email', async () => {
+    const { sut, emailValidatorStub } = makeSut()
+    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
+    const httpRequest = {
+      body: {
+        email: 'valid_email@mail.com'
+      }
+    }
+
+    await sut.handle(httpRequest)
+    expect(isValidSpy).toHaveBeenCalledWith('valid_email@mail.com')
+  })
 })
