@@ -8,7 +8,7 @@ services:
     ports:
       - 54320:5432
     env_file:
-      - .env.dev
+      - .env
     volumes:
       - pgdata:/var/lib/postgresql/data
 
