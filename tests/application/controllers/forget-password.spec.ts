@@ -115,4 +115,17 @@ describe('ForgetPassword Controller', () => {
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
   })
+
+  it('Should call LoadGuardianByEmail with correct value', async () => {
+    const { sut, loadGuardianByEmail } = makeSut()
+    const loadSpy = jest.spyOn(loadGuardianByEmail, 'load')
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com'
+      }
+    }
+
+    await sut.handle(httpRequest)
+    expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
+  })
 })
