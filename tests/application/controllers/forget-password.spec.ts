@@ -1,8 +1,13 @@
 import { ForgetPasswordController } from '@/application/controllers/forget-password'
 
+const makeSut = (): ForgetPasswordController => {
+  const sut = new ForgetPasswordController()
+  return sut
+}
+
 describe('ForgetPassword Controller', () => {
   it('Should return 400 if no email is provided', async () => {
-    const sut = new ForgetPasswordController()
+    const sut = makeSut()
     const httpRequest = {
       body: {}
     }
