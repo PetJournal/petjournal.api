@@ -55,8 +55,7 @@ export class SignUpController implements Controller {
         lastName,
         email,
         phone,
-        password,
-        isPrivacyPolicyAccepted
+        password
       })
       return success(guardian)
     } catch (error) {

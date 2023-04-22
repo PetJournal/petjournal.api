@@ -480,8 +480,7 @@ describe('SignUp Controller', () => {
       lastName: 'any_last_name',
       email: 'any_email@mail.com',
       phone: 'any_phone',
-      password: 'any_password',
-      isPrivacyPolicyAccepted: true
+      password: 'any_password'
     })
   })
 
