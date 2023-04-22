@@ -30,7 +30,7 @@ export class LoginController implements Controller {
       if (!accessToken) {
         return unauthorized()
       }
-      return success(accessToken)
+      return success({ accessToken })
     } catch (error) {
       console.error(error)
       return serverError()
