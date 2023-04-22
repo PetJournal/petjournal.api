@@ -9,7 +9,6 @@ export namespace AddGuardian {
     email: string
     phone: string
     password: string
-    isPrivacyPolicyAccepted: boolean
   }
 
   export type Result = boolean
