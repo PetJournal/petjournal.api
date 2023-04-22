@@ -18,8 +18,7 @@ describe('GuardianAccountRepository', () => {
       lastName: 'valid_last_name',
       email: 'valid_email',
       password: 'valid_password',
-      phone: 'valid_phone',
-      isPrivacyPolicyAccepted: true
+      phone: 'valid_phone'
     }
     const isValid = await sut.add(guardianData)
     expect(isValid).toBe(true)
@@ -32,8 +31,7 @@ describe('GuardianAccountRepository', () => {
       lastName: 'valid_last_name',
       email: 'valid_email',
       password: 'valid_password',
-      phone: 'valid_phone',
-      isPrivacyPolicyAccepted: true
+      phone: 'valid_phone'
     }
     const firstAttempt = await sut.add(guardianData)
     const secondAttempt = await sut.add(guardianData)

@@ -9,7 +9,6 @@ export namespace AddGuardianRepository {
     email: string
     phone: string
     password: string
-    isPrivacyPolicyAccepted: boolean
   }
 
   export type Result = boolean

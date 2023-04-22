@@ -6,7 +6,6 @@ CREATE TABLE "guardian" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
-    "isPrivacyPolicyAccepted" BOOLEAN NOT NULL,
 
     CONSTRAINT "guardian_pkey" PRIMARY KEY ("id")
 );
