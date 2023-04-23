@@ -3,14 +3,17 @@ import { InvalidParamError, MissingParamError, NotFoundError } from '../errors'
 import { type HttpRequest, type HttpResponse, badRequest, success, serverError } from '../helpers/http'
 import { type EmailValidator } from '../validation/protocols'
 import { type Controller } from './controller'
+import { type TokenGenerator } from '@/data/protocols/recovery-password/token-generator'
 
 export class ForgetPasswordController implements Controller {
   private readonly emailValidator: EmailValidator
   private readonly loadGuardianByEmail: LoadGuardianByEmail
+  private readonly tokenGenerator: TokenGenerator
 
-  constructor (emailValidator: EmailValidator, loadGuardianByEmail: LoadGuardianByEmail) {
+  constructor (emailValidator: EmailValidator, loadGuardianByEmail: LoadGuardianByEmail, tokenGenerator: TokenGenerator) {
     this.emailValidator = emailValidator
     this.loadGuardianByEmail = loadGuardianByEmail
+    this.tokenGenerator = tokenGenerator
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -29,6 +32,9 @@ export class ForgetPasswordController implements Controller {
       if (!guardian) {
         return badRequest(new NotFoundError('User'))
       }
+
+      const tokenSize = 6
+      const token = await this.tokenGenerator.generate(tokenSize)
 
       return success('')
     } catch (error) {
