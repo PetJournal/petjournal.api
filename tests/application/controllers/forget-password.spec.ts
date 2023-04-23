@@ -2,6 +2,7 @@ import { ForgetPasswordController } from '@/application/controllers/forget-passw
 import { type EmailValidator } from '@/application/validation/protocols'
 import { ServerError } from '@/application/errors'
 import { type LoadGuardianByEmail } from '@/domain/use-cases/load-guardian-by-email'
+import { type TokenGenerator } from '@/data/protocols/recovery-password/token-generator'
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
@@ -30,20 +31,32 @@ const makeLoadGuardianByEmail = (): LoadGuardianByEmail => {
   return new LoadGuardianByEmailStub()
 }
 
+const makeTokenGenerator = (): TokenGenerator => {
+  class TokenGeneratorStub implements TokenGenerator {
+    async generate (tokenSize: number): Promise<string> {
+      return await new Promise(resolve => { resolve('123456') })
+    }
+  }
+  return new TokenGeneratorStub()
+}
+
 interface SutTypes {
   sut: ForgetPasswordController
   emailValidatorStub: EmailValidator
   loadGuardianByEmail: LoadGuardianByEmail
+  tokenGenerator: TokenGenerator
 }
 
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
   const loadGuardianByEmail = makeLoadGuardianByEmail()
-  const sut = new ForgetPasswordController(emailValidatorStub, loadGuardianByEmail)
+  const tokenGenerator = makeTokenGenerator()
+  const sut = new ForgetPasswordController(emailValidatorStub, loadGuardianByEmail, tokenGenerator)
   return {
     sut,
     emailValidatorStub,
-    loadGuardianByEmail
+    loadGuardianByEmail,
+    tokenGenerator
   }
 }
 
@@ -127,5 +140,19 @@ describe('ForgetPassword Controller', () => {
 
     await sut.handle(httpRequest)
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
+  })
+
+  it('Should TokenGenerator return a token', async () => {
+    const { sut, tokenGenerator } = makeSut()
+    const tokenGeneratorSpy = jest.spyOn(tokenGenerator, 'generate')
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com'
+      }
+    }
+
+    await sut.handle(httpRequest)
+    expect(tokenGeneratorSpy).toHaveBeenCalled()
+    expect(tokenGeneratorSpy).toBeCalledWith(6)
   })
 })
