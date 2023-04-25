@@ -3,6 +3,7 @@ import { type EmailValidator } from '@/application/validation/protocols'
 import { ServerError } from '@/application/errors'
 import { type LoadGuardianByEmail } from '@/domain/use-cases/load-guardian-by-email'
 import { type TokenGenerator } from '@/data/protocols/recovery-password/token-generator'
+import { type EmailOptions, type EmailService } from '@/domain/use-cases'
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
@@ -40,23 +41,35 @@ const makeTokenGenerator = (): TokenGenerator => {
   return new TokenGeneratorStub()
 }
 
+const makeEmailService = (): EmailService => {
+  class EmailServiceStub implements EmailService {
+    async send (options: EmailOptions): Promise<boolean> {
+      return await new Promise(resolve => { resolve(true) })
+    }
+  }
+  return new EmailServiceStub()
+}
+
 interface SutTypes {
   sut: ForgetPasswordController
   emailValidatorStub: EmailValidator
-  loadGuardianByEmail: LoadGuardianByEmail
-  tokenGenerator: TokenGenerator
+  loadGuardianByEmailStub: LoadGuardianByEmail
+  tokenGeneratorStub: TokenGenerator
+  emailServiceStub: EmailService
 }
 
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
-  const loadGuardianByEmail = makeLoadGuardianByEmail()
-  const tokenGenerator = makeTokenGenerator()
-  const sut = new ForgetPasswordController(emailValidatorStub, loadGuardianByEmail, tokenGenerator)
+  const loadGuardianByEmailStub = makeLoadGuardianByEmail()
+  const tokenGeneratorStub = makeTokenGenerator()
+  const emailServiceStub = makeEmailService()
+  const sut = new ForgetPasswordController(emailValidatorStub, loadGuardianByEmailStub, tokenGeneratorStub, emailServiceStub)
   return {
     sut,
     emailValidatorStub,
-    loadGuardianByEmail,
-    tokenGenerator
+    loadGuardianByEmailStub,
+    tokenGeneratorStub,
+    emailServiceStub
   }
 }
 
@@ -114,8 +127,8 @@ describe('ForgetPassword Controller', () => {
   })
 
   it('Should return 500 if LoadGuardianByEmail throws', async () => {
-    const { sut, loadGuardianByEmail } = makeSut()
-    jest.spyOn(loadGuardianByEmail, 'load').mockImplementationOnce(async () => {
+    const { sut, loadGuardianByEmailStub } = makeSut()
+    jest.spyOn(loadGuardianByEmailStub, 'load').mockImplementationOnce(async () => {
       return await new Promise((resolve, reject) => { reject(new Error()) })
     })
     const httpRequest = {
@@ -130,8 +143,8 @@ describe('ForgetPassword Controller', () => {
   })
 
   it('Should call LoadGuardianByEmail with correct value', async () => {
-    const { sut, loadGuardianByEmail } = makeSut()
-    const loadSpy = jest.spyOn(loadGuardianByEmail, 'load')
+    const { sut, loadGuardianByEmailStub } = makeSut()
+    const loadSpy = jest.spyOn(loadGuardianByEmailStub, 'load')
     const httpRequest = {
       body: {
         email: 'any_email@mail.com'
@@ -143,8 +156,8 @@ describe('ForgetPassword Controller', () => {
   })
 
   it('Should TokenGenerator return a token', async () => {
-    const { sut, tokenGenerator } = makeSut()
-    const tokenGeneratorSpy = jest.spyOn(tokenGenerator, 'generate')
+    const { sut, tokenGeneratorStub } = makeSut()
+    const tokenGeneratorSpy = jest.spyOn(tokenGeneratorStub, 'generate')
     const httpRequest = {
       body: {
         email: 'any_email@mail.com'
@@ -154,5 +167,24 @@ describe('ForgetPassword Controller', () => {
     await sut.handle(httpRequest)
     expect(tokenGeneratorSpy).toHaveBeenCalled()
     expect(tokenGeneratorSpy).toBeCalledWith(6)
+  })
+
+  it('Should call EmailService with correct values', async () => {
+    const { sut, emailServiceStub } = makeSut()
+    const sendSpy = jest.spyOn(emailServiceStub, 'send')
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com'
+      }
+    }
+
+    await sut.handle(httpRequest)
+    expect(sendSpy).toHaveBeenCalledWith({
+      from: '',
+      to: 'any_email@mail.com',
+      subject: 'Recuperação de senha',
+      text: 'Olá any_first_name any_last_name, seu código de recuperação de senha é: 123456.'
+    })
+    expect(sendSpy).toBeTruthy()
   })
 })
