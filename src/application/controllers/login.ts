@@ -1,6 +1,6 @@
-import { type Controller } from './controller'
-import { badRequest, serverError, type HttpRequest, type HttpResponse, success, unauthorized } from '../helpers/http'
-import { InvalidParamError, MissingParamError } from '../errors'
+import { type Controller } from '@/application/controllers/controller'
+import { type HttpRequest, type HttpResponse, badRequest, serverError, success, unauthorized } from '@/application/helpers/http'
+import { InvalidParamError, MissingParamError } from '@/application/errors'
 import { type Authentication } from '@/domain/use-cases/authentication'
 import { type IdentifierValidator } from '@/application/validation/protocols'
 
