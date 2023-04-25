@@ -1,4 +1,4 @@
-import { type LoadGuardianByEmail } from '@/domain/use-cases'
+import { type EmailOptions, type EmailService, type LoadGuardianByEmail } from '@/domain/use-cases'
 import { InvalidParamError, MissingParamError, NotFoundError } from '../errors'
 import { type HttpRequest, type HttpResponse, badRequest, success, serverError } from '../helpers/http'
 import { type EmailValidator } from '../validation/protocols'
@@ -9,11 +9,13 @@ export class ForgetPasswordController implements Controller {
   private readonly emailValidator: EmailValidator
   private readonly loadGuardianByEmail: LoadGuardianByEmail
   private readonly tokenGenerator: TokenGenerator
+  private readonly emailService: EmailService
 
-  constructor (emailValidator: EmailValidator, loadGuardianByEmail: LoadGuardianByEmail, tokenGenerator: TokenGenerator) {
+  constructor (emailValidator: EmailValidator, loadGuardianByEmail: LoadGuardianByEmail, tokenGenerator: TokenGenerator, emailService: EmailService) {
     this.emailValidator = emailValidator
     this.loadGuardianByEmail = loadGuardianByEmail
     this.tokenGenerator = tokenGenerator
+    this.emailService = emailService
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -35,6 +37,14 @@ export class ForgetPasswordController implements Controller {
 
       const tokenSize = 6
       const token = await this.tokenGenerator.generate(tokenSize)
+
+      const options: EmailOptions = {
+        from: '',
+        to: email,
+        subject: 'Recuperação de senha',
+        text: `Olá ${guardian.firstName} ${guardian.lastName}, seu código de recuperação de senha é: ${token}.`
+      }
+      await this.emailService.send(options)
 
       return success('')
     } catch (error) {
