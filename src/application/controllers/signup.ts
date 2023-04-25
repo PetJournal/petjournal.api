@@ -59,7 +59,6 @@ export class SignUpController implements Controller {
       })
       return success(guardian)
     } catch (error) {
-      console.error(error)
       return serverError()
     }
   }
