@@ -2,7 +2,7 @@ import { EmailValidatorAdapter } from './email-validator-adapter'
 import { PhoneValidatorAdapter } from './phone-validator-adapter'
 import { type EmailValidator, type PhoneValidator } from '@/application/validation/protocols'
 
-export class IdentifierValidator implements EmailValidator, PhoneValidator {
+export class IdentifierValidatorAdapter implements EmailValidator, PhoneValidator {
   private readonly emailValidator: EmailValidatorAdapter
   private readonly phoneValidator: PhoneValidatorAdapter
 
