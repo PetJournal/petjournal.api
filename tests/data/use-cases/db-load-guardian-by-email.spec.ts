@@ -38,16 +38,32 @@ const makeSut = (): SutTypes => {
 
 describe('DbLoadGuardianByEmail', () => {
   it('Should call LoadGuardianByEmailRepository with correct email', async () => {
-    const { sut } = makeSut()
-    const loadSpy = jest.spyOn(sut, 'load')
+    const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
+    const loadSpy = jest.spyOn(loadGuardianByEmailRepositoryStub, 'load')
     await sut.load('any_email@mail.com')
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
   it('Should throw if LoadGuardianByEmailRespository throw', async () => {
-    const { sut } = makeSut()
-    jest.spyOn(sut, 'load').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
+    jest.spyOn(loadGuardianByEmailRepositoryStub, 'load').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
     const promise = sut.load('any_email@mail.com')
     await expect(promise).rejects.toThrow()
+  })
+
+  it('Should return an guardian on success', async () => {
+    const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
+    jest.spyOn(loadGuardianByEmailRepositoryStub, 'load')
+    const guardian = await sut.load('any_email@mail.com')
+    expect(guardian).toEqual({
+      id: 1,
+      firstName: 'any_first_name',
+      lastName: 'any_last_name',
+      email: 'any_email@mail.com',
+      phone: 'any_phone',
+      password: 'any_password',
+      passwordConfirmation: 'any_password',
+      isPrivacyPolicyAccepted: true
+    })
   })
 })
