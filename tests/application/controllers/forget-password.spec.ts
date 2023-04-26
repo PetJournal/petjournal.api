@@ -18,13 +18,8 @@ const makeLoadGuardianByEmail = (): LoadGuardianByEmail => {
   class LoadGuardianByEmailStub implements LoadGuardianByEmail {
     async load (email: string): Promise<LoadGuardianByEmail.Result> {
       return {
-        id: 1,
         firstName: 'any_first_name',
-        lastName: 'any_last_name',
-        email: 'any_email@mail.com',
-        phone: 'any_phone',
-        password: 'any_password',
-        isPrivacyPolicyAccepted: true
+        lastName: 'any_last_name'
       }
     }
   }

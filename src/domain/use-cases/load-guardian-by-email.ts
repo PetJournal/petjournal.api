@@ -1,17 +1,13 @@
 export interface LoadGuardianByEmail {
-  load: (email: string) => Promise<LoadGuardianByEmail.Result>
+  load: (email: LoadGuardianByEmail.Params) => Promise<LoadGuardianByEmail.Result>
 }
 
 export namespace LoadGuardianByEmail {
-
-  export interface Guadian {
-    id: number
+  export type Params = string
+  export interface Guardian {
     firstName: string
     lastName: string
-    email: string
-    phone: string
-    password: string
-    isPrivacyPolicyAccepted: boolean
   }
-  export type Result = Guadian | undefined
+
+  export type Result = Guardian | undefined
 }

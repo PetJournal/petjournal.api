@@ -9,16 +9,11 @@ interface SutTypes {
 
 const makeLoadGuardianByEmailRepository = (): LoadGuardianByEmailRepository => {
   class LoadGuardianByEmailRepositoryStub implements LoadGuardianByEmailRepository {
-    async load (email: string): Promise<LoadGuardianByEmail.Result> {
+    async loadByEmail (email: string): Promise<LoadGuardianByEmail.Result> {
       return await new Promise(resolve => {
         resolve({
-          id: 1,
           firstName: 'any_first_name',
-          lastName: 'any_last_name',
-          email: 'any_email@mail.com',
-          phone: 'any_phone',
-          password: 'any_password',
-          isPrivacyPolicyAccepted: true
+          lastName: 'any_last_name'
         })
       })
     }
@@ -38,30 +33,25 @@ const makeSut = (): SutTypes => {
 describe('DbLoadGuardianByEmail', () => {
   it('Should call LoadGuardianByEmailRepository with correct email', async () => {
     const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
-    const loadSpy = jest.spyOn(loadGuardianByEmailRepositoryStub, 'load')
+    const loadSpy = jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail')
     await sut.load('any_email@mail.com')
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
   it('Should throw if LoadGuardianByEmailRespository throw', async () => {
     const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
-    jest.spyOn(loadGuardianByEmailRepositoryStub, 'load').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
     const promise = sut.load('any_email@mail.com')
     await expect(promise).rejects.toThrow()
   })
 
   it('Should return an guardian on success', async () => {
     const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
-    jest.spyOn(loadGuardianByEmailRepositoryStub, 'load')
+    jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail')
     const guardian = await sut.load('any_email@mail.com')
     expect(guardian).toEqual({
-      id: 1,
       firstName: 'any_first_name',
-      lastName: 'any_last_name',
-      email: 'any_email@mail.com',
-      phone: 'any_phone',
-      password: 'any_password',
-      isPrivacyPolicyAccepted: true
+      lastName: 'any_last_name'
     })
   })
 })
