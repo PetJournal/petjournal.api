@@ -6,7 +6,7 @@ import { type AuthenticationModel, type Authentication } from '@/domain/use-case
 
 const makeIdentifierValidator = (): IdentifierValidator => {
   class IdentifierValidatorStub implements IdentifierValidator {
-    isValid (guardian: string): boolean {
+    isValid (identifier: string): boolean {
       return true
     }
   }
