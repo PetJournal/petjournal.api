@@ -43,4 +43,11 @@ describe('DbLoadGuardianByEmail', () => {
     await sut.load('any_email@mail.com')
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
+
+  it('Should throw if LoadGuardianByEmailRespository throw', async () => {
+    const { sut } = makeSut()
+    jest.spyOn(sut, 'load').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    const promise = sut.load('any_email@mail.com')
+    await expect(promise).rejects.toThrow()
+  })
 })
