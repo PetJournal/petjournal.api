@@ -59,7 +59,7 @@ export class SignUpController implements Controller {
       })
       return success(guardian)
     } catch (error) {
-      return serverError()
+      return serverError(error as Error)
     }
   }
 }

@@ -1,8 +1,9 @@
-import { InvalidParamError, MissingParamError, ServerError } from '@/application/errors'
+import { InvalidParamError, MissingParamError } from '@/application/errors'
 import { SignUpController } from '@/application/controllers/signup'
 import { type PhoneValidator, type EmailValidator, type NameValidator } from '@/application/validation/protocols'
 import { type AddGuardian } from '@/domain/use-cases/add-guardian'
 import { type PasswordValidator } from '@/application/validation/protocols/password-validator'
+import { serverError } from '@/application/helpers/http'
 
 const makeNameValidator = (): NameValidator => {
   class NameValidatorStub implements NameValidator {
@@ -261,8 +262,7 @@ describe('SignUp Controller', () => {
       }
     }
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 
   it('Should return 400 if an invalid email is provided', async () => {
@@ -319,8 +319,7 @@ describe('SignUp Controller', () => {
       }
     }
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 
   it('Should return 400 if an invalid phone is provided', async () => {
@@ -377,8 +376,7 @@ describe('SignUp Controller', () => {
       }
     }
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 
   it('Should return 400 if an invalid password is provided', async () => {
@@ -435,8 +433,7 @@ describe('SignUp Controller', () => {
       }
     }
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 
   it('Should return 500 if AddGuardian throws', async () => {
@@ -456,8 +453,7 @@ describe('SignUp Controller', () => {
       }
     }
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 
   it('Should call AddGuardian with correct values', async () => {
