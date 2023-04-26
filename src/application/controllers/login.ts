@@ -26,7 +26,10 @@ export class LoginController implements Controller {
       if (!isValid) {
         return badRequest(new InvalidParamError('identifier'))
       }
-      const accessToken = await this.authentication.auth(identifier, password)
+      const accessToken = await this.authentication.auth({
+        identifier,
+        password
+      })
       if (!accessToken) {
         return unauthorized()
       }

@@ -2,7 +2,7 @@ import { LoginController } from '@/application/controllers/login'
 import { type HttpRequest, badRequest, serverError, unauthorized, success } from '@/application/helpers/http'
 import { InvalidParamError, MissingParamError } from '@/application/errors'
 import { type IdentifierValidator } from '@/application/validation/protocols'
-import { type Authentication } from '@/domain/use-cases/authentication'
+import { type AuthenticationModel, type Authentication } from '@/domain/use-cases'
 
 const makeIdentifierValidator = (): IdentifierValidator => {
   class IdentifierValidatorStub implements IdentifierValidator {
@@ -15,7 +15,7 @@ const makeIdentifierValidator = (): IdentifierValidator => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (identifier: string, password: string): Promise<string> {
+    async auth (authentication: AuthenticationModel): Promise<string> {
       return await new Promise(resolve => { resolve('any_token') })
     }
   }
@@ -96,7 +96,10 @@ describe('Login Controller', () => {
     const { sut, authenticationStub } = makeSut()
     const authSpy = jest.spyOn(authenticationStub, 'auth')
     await sut.handle(makeFakeRequest())
-    expect(authSpy).toHaveBeenCalledWith('any_email_or_phone', 'any_password')
+    expect(authSpy).toHaveBeenCalledWith({
+      identifier: 'any_email_or_phone',
+      password: 'any_password'
+    })
   })
 
   test('Should return 401 if invalid credentials are provided', async () => {
