@@ -1,4 +1,3 @@
-
 import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 
@@ -39,5 +38,33 @@ describe('GuardianAccountRepository', () => {
     const secondAttempt = await sut.add(guardianData)
     expect(firstAttempt).toBe(true)
     expect(secondAttempt).toBe(false)
+  })
+
+  it('Should return a guardian when calling the loadByEmail method', async () => {
+    const sut = makeSut()
+
+    const guardianData = {
+      firstName: 'valid_first_name',
+      lastName: 'valid_last_name',
+      email: 'valid_email',
+      password: 'valid_password',
+      phone: 'valid_phone',
+      isPrivacyPolicyAccepted: true
+    }
+
+    await sut.add(guardianData)
+
+    const guardian = await sut.loadByEmail('valid_email')
+
+    expect(guardian).toBeTruthy()
+    expect(guardian).toEqual({
+      id: expect.any(Number),
+      firstName: 'valid_first_name',
+      lastName: 'valid_last_name',
+      email: 'valid_email',
+      password: 'valid_password',
+      phone: 'valid_phone',
+      isPrivacyPolicyAccepted: true
+    })
   })
 })
