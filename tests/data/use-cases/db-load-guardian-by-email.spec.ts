@@ -18,7 +18,6 @@ const makeLoadGuardianByEmailRepository = (): LoadGuardianByEmailRepository => {
           email: 'any_email@mail.com',
           phone: 'any_phone',
           password: 'any_password',
-          passwordConfirmation: 'any_password',
           isPrivacyPolicyAccepted: true
         })
       })
@@ -62,7 +61,6 @@ describe('DbLoadGuardianByEmail', () => {
       email: 'any_email@mail.com',
       phone: 'any_phone',
       password: 'any_password',
-      passwordConfirmation: 'any_password',
       isPrivacyPolicyAccepted: true
     })
   })

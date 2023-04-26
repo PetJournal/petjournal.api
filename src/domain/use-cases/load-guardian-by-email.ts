@@ -3,14 +3,15 @@ export interface LoadGuardianByEmail {
 }
 
 export namespace LoadGuardianByEmail {
-  export interface Result {
+
+  export interface Guadian {
     id: number
     firstName: string
     lastName: string
     email: string
     phone: string
     password: string
-    passwordConfirmation: string
     isPrivacyPolicyAccepted: boolean
   }
+  export type Result = Guadian | undefined
 }
