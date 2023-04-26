@@ -9,6 +9,6 @@ export class DbLoadGuardianByEmail implements LoadGuardianByEmail {
   }
 
   async load (email: string): Promise<LoadGuardianByEmail.Result> {
-    return await this.loadGuardianByEmailRepository.load(email)
+    return await this.loadGuardianByEmailRepository.loadByEmail(email)
   }
 }
