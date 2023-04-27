@@ -22,7 +22,7 @@ export class GuardianAccountRepository implements AddGuardianRepository, LoadGua
     return success
   }
 
-  async loadByEmail (email: string): Promise<LoadGuardianByEmailRepository.Result> {
+  async loadByEmail (email: LoadGuardianByEmailRepository.Params): Promise<LoadGuardianByEmailRepository.Result> {
     const guardian = await db.guardian.findUnique({
       where: { email }
     })
