@@ -64,4 +64,11 @@ describe('ForgetPasswordTokenGenerator', () => {
     await sut.generate(1)
     expect(saveTokenSpy).toHaveBeenCalledWith(1, 'any_token')
   })
+
+  it('Should throw if SaveTokenRepository throws', async () => {
+    const { sut, saveTokenRepositoryStub } = makeSut()
+    jest.spyOn(saveTokenRepositoryStub, 'saveToken').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    const promise = sut.generate(1)
+    await expect(promise).rejects.toThrow()
+  })
 })
