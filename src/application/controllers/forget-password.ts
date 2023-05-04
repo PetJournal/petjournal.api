@@ -35,8 +35,7 @@ export class ForgetPasswordController implements Controller {
         return badRequest(new NotFoundError('User'))
       }
 
-      const tokenSize = 6
-      const token = await this.tokenGenerator.generate(tokenSize)
+      const token = await this.tokenGenerator.generate(guardian.id)
 
       const options: EmailOptions = {
         from: '',

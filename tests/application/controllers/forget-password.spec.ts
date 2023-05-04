@@ -18,6 +18,7 @@ const makeLoadGuardianByEmail = (): LoadGuardianByEmail => {
   class LoadGuardianByEmailStub implements LoadGuardianByEmail {
     async load (email: string): Promise<LoadGuardianByEmail.Result> {
       return {
+        id: 1,
         firstName: 'any_first_name',
         lastName: 'any_last_name'
       }
@@ -160,7 +161,7 @@ describe('ForgetPassword Controller', () => {
 
     await sut.handle(httpRequest)
     expect(tokenGeneratorSpy).toHaveBeenCalled()
-    expect(tokenGeneratorSpy).toBeCalledWith(6)
+    expect(tokenGeneratorSpy).toBeCalledWith(1)
   })
 
   it('Should call EmailService with correct values', async () => {

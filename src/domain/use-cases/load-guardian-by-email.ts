@@ -5,6 +5,7 @@ export interface LoadGuardianByEmail {
 export namespace LoadGuardianByEmail {
   export type Params = string
   export interface Guardian {
+    id: number
     firstName: string
     lastName: string
   }

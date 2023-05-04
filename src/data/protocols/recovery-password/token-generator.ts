@@ -1,3 +1,3 @@
 export interface TokenGenerator {
-  generate: (tokenSize: number) => Promise<string>
+  generate: (userId: number) => Promise<string>
 }
