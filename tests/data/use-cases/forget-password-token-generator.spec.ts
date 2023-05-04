@@ -38,4 +38,11 @@ describe('ForgetPasswordTokenGenerator', () => {
     await sut.generate(1)
     expect(encryptSpy).toBeCalled()
   })
+
+  it('Should throw if Encrypter throws', async () => {
+    const { sut, encrypterStub } = makeSut()
+    jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    const promise = sut.generate(1)
+    await expect(promise).rejects.toThrow()
+  })
 })
