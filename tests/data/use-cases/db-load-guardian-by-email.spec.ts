@@ -12,6 +12,7 @@ const makeLoadGuardianByEmailRepository = (): LoadGuardianByEmailRepository => {
     async loadByEmail (email: string): Promise<LoadGuardianByEmail.Result> {
       return await new Promise(resolve => {
         resolve({
+          id: 1,
           firstName: 'any_first_name',
           lastName: 'any_last_name'
         })
@@ -50,6 +51,7 @@ describe('DbLoadGuardianByEmail', () => {
     jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail')
     const guardian = await sut.load('any_email@mail.com')
     expect(guardian).toEqual({
+      id: 1,
       firstName: 'any_first_name',
       lastName: 'any_last_name'
     })
