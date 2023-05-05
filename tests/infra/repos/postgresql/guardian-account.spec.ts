@@ -2,7 +2,7 @@
 import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 
-beforeEach(() => { PrismaHelper.connect() })
+beforeEach(async () => { await PrismaHelper.connect() })
 
 afterEach(async () => { await PrismaHelper.disconnect() })
 

@@ -2,7 +2,7 @@ import request from 'supertest'
 import app from '@/main/config/app'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 
-beforeEach(() => { PrismaHelper.connect() })
+beforeEach(async () => { await PrismaHelper.connect() })
 
 afterEach(async () => { await PrismaHelper.disconnect() })
 

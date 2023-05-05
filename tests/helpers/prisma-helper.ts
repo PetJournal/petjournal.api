@@ -23,7 +23,7 @@ export const prisma = new PrismaClient({
 })
 
 export const PrismaHelper = {
-  connect (): void {
+  async connect (): Promise<void> {
     execSync(`${prismaBinary} db push --skip-generate`, {
       env: {
         ...process.env,
