@@ -64,7 +64,14 @@ describe('GuardianAccountRepository', () => {
       email: 'valid_email',
       password: 'valid_password',
       phone: 'valid_phone',
-      isPrivacyPolicyAccepted: true
+      isPrivacyPolicyAccepted: true,
+      forgetPasswordToken: null
     })
+  })
+
+  it('Should call the saveToken method and return false if the guardian is not found', async () => {
+    const sut = makeSut()
+    const isValid = await sut.saveToken(1, 'valid_token')
+    expect(isValid).toBe(false)
   })
 })
