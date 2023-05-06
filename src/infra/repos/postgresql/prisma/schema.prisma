@@ -15,6 +15,7 @@ model Guardian {
   password                String
   phone                   String  @unique
   isPrivacyPolicyAccepted Boolean
+  forgetPasswordToken     String?
 
   @@map("guardian")
 }
