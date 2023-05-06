@@ -31,4 +31,11 @@ describe('DbSaveToken', () => {
     await sut.save({ accountId: 1, token: 'any_token' })
     expect(saveSpy).toBeCalledWith(1, 'any_token')
   })
+
+  it('Should throw if SaveTokenRepository throws', async () => {
+    const { sut, saveTokenRepositoryStub } = makeSut()
+    jest.spyOn(saveTokenRepositoryStub, 'saveToken').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    const promise = sut.save({ accountId: 1, token: 'any_token' })
+    await expect(promise).rejects.toThrow()
+  })
 })
