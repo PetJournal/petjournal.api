@@ -38,4 +38,10 @@ describe('DbSaveToken', () => {
     const promise = sut.save({ accountId: 1, token: 'any_token' })
     await expect(promise).rejects.toThrow()
   })
+
+  it('Should return true on success', async () => {
+    const { sut } = makeSut()
+    const response = await sut.save({ accountId: 1, token: 'any_token' })
+    expect(response).toBe(true)
+  })
 })
