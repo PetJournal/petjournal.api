@@ -74,4 +74,27 @@ describe('GuardianAccountRepository', () => {
     const isValid = await sut.saveToken(1, 'valid_token')
     expect(isValid).toBe(false)
   })
+
+  it('Should call the saveToken method and return true if the guardian is found', async () => {
+    const sut = makeSut()
+
+    const guardianData = {
+      firstName: 'valid_first_name',
+      lastName: 'valid_last_name',
+      email: 'valid_email',
+      password: 'valid_password',
+      phone: 'valid_phone',
+      isPrivacyPolicyAccepted: true
+    }
+
+    await sut.add(guardianData)
+
+    const guardian = await sut.loadByEmail('valid_email')
+
+    if (guardian) {
+      const isValid = await sut.saveToken(guardian.id, 'valid_token')
+      expect(isValid).toBe(true)
+    }
+  }
+  )
 })
