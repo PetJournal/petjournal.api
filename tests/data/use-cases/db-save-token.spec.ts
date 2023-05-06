@@ -1,16 +1,33 @@
 import { DbSaveToken } from '@/data/use-cases'
 import { type SaveTokenRepository } from '@/data/protocols'
 
+interface SutTypes {
+  sut: DbSaveToken
+  saveTokenRepositoryStub: SaveTokenRepository
+}
+
+const makeSaveTokenRepository = (): SaveTokenRepository => {
+  class SaveTokenRepositoryStub implements SaveTokenRepository {
+    async saveToken (accountId: number, token: string): Promise<SaveTokenRepository.Result> {
+      return await new Promise(resolve => { resolve(true) })
+    }
+  }
+  return new SaveTokenRepositoryStub()
+}
+
+const makeSut = (): SutTypes => {
+  const saveTokenRepositoryStub = makeSaveTokenRepository()
+  const sut = new DbSaveToken(saveTokenRepositoryStub)
+  return {
+    sut,
+    saveTokenRepositoryStub
+  }
+}
+
 describe('DbSaveToken', () => {
   it('Should call SaveTokenRepository with correct values', async () => {
-    class SaveTokenRepositoryStub implements SaveTokenRepository {
-      async saveToken (accountId: number, token: string): Promise<SaveTokenRepository.Result> {
-        return await new Promise(resolve => { resolve(true) })
-      }
-    }
-    const saveTokenRepositoryStub = new SaveTokenRepositoryStub()
+    const { sut, saveTokenRepositoryStub } = makeSut()
     const saveSpy = jest.spyOn(saveTokenRepositoryStub, 'saveToken')
-    const sut = new DbSaveToken(saveTokenRepositoryStub)
     await sut.save({ accountId: 1, token: 'any_token' })
     expect(saveSpy).toBeCalledWith(1, 'any_token')
   })
