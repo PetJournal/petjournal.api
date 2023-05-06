@@ -1,18 +1,19 @@
-import { type SaveTokenRepository, type Encrypter, type TokenGenerator } from '../protocols'
+import { type SaveToken } from '@/domain/use-cases'
+import { type Encrypter, type TokenGenerator } from '../protocols'
 
 export class ForgetPasswordTokenGenerator implements TokenGenerator {
   private readonly encrypter: Encrypter
-  private readonly saveTokenRepository: SaveTokenRepository
+  private readonly saveToken: SaveToken
 
-  constructor (encrypter: Encrypter, saveTokenRepository: SaveTokenRepository) {
+  constructor (encrypter: Encrypter, saveToken: SaveToken) {
     this.encrypter = encrypter
-    this.saveTokenRepository = saveTokenRepository
+    this.saveToken = saveToken
   }
 
   async generate (userId: number): Promise<string> {
     const token = Math.floor(100000 + Math.random() * 900000).toString()
     const encryptedToken = await this.encrypter.encrypt(token)
-    await this.saveTokenRepository.saveToken(userId, encryptedToken)
+    await this.saveToken.save({ accountId: userId, token: encryptedToken })
     return token
   }
 }

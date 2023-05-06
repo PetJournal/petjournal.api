@@ -1,15 +1,16 @@
 import { ForgetPasswordTokenGenerator } from '@/data/use-cases/forget-password-token-generation'
-import { type SaveTokenRepository, type Encrypter } from '@/data/protocols'
+import { type Encrypter } from '@/data/protocols'
+import { type SaveToken } from '@/domain/use-cases'
 
 interface SutTypes {
   sut: ForgetPasswordTokenGenerator
   encrypterStub: Encrypter
-  saveTokenRepositoryStub: SaveTokenRepository
+  saveTokenRepositoryStub: SaveToken
 }
 
-const makeSaveTokenRepository = (): SaveTokenRepository => {
-  class SaveTokenRepositoryStub implements SaveTokenRepository {
-    async saveToken (userId: number, token: string): Promise<boolean> {
+const makeSaveTokenRepository = (): SaveToken => {
+  class SaveTokenRepositoryStub implements SaveToken {
+    async save (tokenData: SaveToken.Params): Promise<SaveToken.Result> {
       return await new Promise(resolve => { resolve(true) })
     }
   }
@@ -60,14 +61,14 @@ describe('ForgetPasswordTokenGenerator', () => {
 
   it('Should call SaveTokenRepository with correct values', async () => {
     const { sut, saveTokenRepositoryStub } = makeSut()
-    const saveTokenSpy = jest.spyOn(saveTokenRepositoryStub, 'saveToken')
+    const saveTokenSpy = jest.spyOn(saveTokenRepositoryStub, 'save')
     await sut.generate(1)
-    expect(saveTokenSpy).toHaveBeenCalledWith(1, 'any_token')
+    expect(saveTokenSpy).toHaveBeenCalledWith({ accountId: 1, token: 'any_token' })
   })
 
   it('Should throw if SaveTokenRepository throws', async () => {
     const { sut, saveTokenRepositoryStub } = makeSut()
-    jest.spyOn(saveTokenRepositoryStub, 'saveToken').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    jest.spyOn(saveTokenRepositoryStub, 'save').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
     const promise = sut.generate(1)
     await expect(promise).rejects.toThrow()
   })
