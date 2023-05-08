@@ -21,20 +21,21 @@ const makeFakeGuardianData = (): AddGuardianRepository.Params => ({
 })
 
 describe('GuardianAccountRepository', () => {
-  it('Should return a guardian account on success ', async () => {
-    const sut = makeSut()
-    const isValid = await sut.add(makeFakeGuardianData())
-    expect(isValid).toBe(true)
-  })
+  describe('AddGuardianRepository', () => {
+    it('Should return a guardian account on success ', async () => {
+      const sut = makeSut()
+      const isValid = await sut.add(makeFakeGuardianData())
+      expect(isValid).toBe(true)
+    })
 
-  it('Should not return a guardian account if duplicated email or phone is provided', async () => {
-    const sut = makeSut()
-    const firstAttempt = await sut.add(makeFakeGuardianData())
-    const secondAttempt = await sut.add(makeFakeGuardianData())
-    expect(firstAttempt).toBe(true)
-    expect(secondAttempt).toBe(false)
+    it('Should not return a guardian account if duplicated email or phone is provided', async () => {
+      const sut = makeSut()
+      const firstAttempt = await sut.add(makeFakeGuardianData())
+      const secondAttempt = await sut.add(makeFakeGuardianData())
+      expect(firstAttempt).toBe(true)
+      expect(secondAttempt).toBe(false)
+    })
   })
-
   describe('LoadAccountByEmailRepository', () => {
     it('Should return a guardian account on success', async () => {
       const sut = makeSut()
