@@ -2,7 +2,7 @@ import { LoginController } from '@/application/controllers/login'
 import { type HttpRequest, badRequest, serverError, unauthorized, success } from '@/application/helpers/http'
 import { InvalidParamError, MissingParamError } from '@/application/errors'
 import { type EmailValidator } from '@/application/validation/protocols'
-import { type AuthenticationModel, type Authentication } from '@/domain/use-cases'
+import { type Authentication } from '@/domain/use-cases'
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
@@ -15,7 +15,7 @@ const makeEmailValidator = (): EmailValidator => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationModel): Promise<string> {
+    async auth (authentication: Authentication.Params): Promise<Authentication.Result | null> {
       return await new Promise(resolve => { resolve('any_token') })
     }
   }

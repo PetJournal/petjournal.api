@@ -1,4 +1,5 @@
-import { type AddGuardian, type AuthenticationModel, DbAuthentication } from '@/domain/use-cases'
+import { type AddGuardian, type Authentication } from '@/domain/use-cases'
+import { DbAuthentication } from '@/data/use-cases'
 import { type LoadAccountByEmailRepository, type HashComparer, type TokenGenerator, type UpdateAccessTokenRepository } from '@/data/protocols'
 
 const makeFakeAccount = (): AddGuardian.Params => ({
@@ -10,7 +11,7 @@ const makeFakeAccount = (): AddGuardian.Params => ({
   isPrivacyPolicyAccepted: true
 })
 
-const makeFakeAuthentication = (): AuthenticationModel => ({
+const makeFakeAuthentication = (): Authentication.Params => ({
   email: 'any_email@mail.com',
   password: 'any_password'
 })
