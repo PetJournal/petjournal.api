@@ -45,5 +45,14 @@ describe('GuardianAccountRepository', () => {
 
       expect(guardian).toEqual({ ...guardianData, id: 1 })
     })
+
+    it('Should not return a guardian account if invalid email is provided', async () => {
+      const sut = makeSut()
+      const email = 'invalid_email:mail.com'
+
+      const guardian = await sut.loadByEmail(email)
+
+      expect(guardian).toBeNull()
+    })
   })
 })
