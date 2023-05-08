@@ -1,4 +1,4 @@
-import { type EmailOptions, type EmailService, type LoadGuardianByEmail } from '@/domain/use-cases'
+import { type EmailService, type LoadGuardianByEmail } from '@/domain/use-cases'
 import { InvalidParamError, MissingParamError, NotFoundError } from '../errors'
 import { type HttpRequest, type HttpResponse, badRequest, success, serverError } from '../helpers/http'
 import { type EmailValidator } from '../validation/protocols'
@@ -37,7 +37,7 @@ export class ForgetPasswordController implements Controller {
 
       const token = await this.tokenGenerator.generate(guardian.id)
 
-      const options: EmailOptions = {
+      const options: EmailService.Options = {
         from: '',
         to: email,
         subject: 'Recuperação de senha',

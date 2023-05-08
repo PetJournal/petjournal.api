@@ -3,7 +3,7 @@ import { type EmailValidator } from '@/application/validation/protocols'
 import { ServerError } from '@/application/errors'
 import { type LoadGuardianByEmail } from '@/domain/use-cases/load-guardian-by-email'
 import { type TokenGenerator } from '@/data/protocols/recovery-password/token-generator'
-import { type EmailOptions, type EmailService } from '@/domain/use-cases'
+import { type EmailService } from '@/domain/use-cases'
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
@@ -38,7 +38,7 @@ const makeTokenGenerator = (): TokenGenerator => {
 
 const makeEmailService = (): EmailService => {
   class EmailServiceStub implements EmailService {
-    async send (options: EmailOptions): Promise<boolean> {
+    async send (options: EmailService.Options): Promise<boolean> {
       return await new Promise(resolve => { resolve(true) })
     }
   }
