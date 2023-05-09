@@ -13,16 +13,27 @@ jest.mock('nodemailer', () => {
   }
 })
 
+interface SutTypes {
+  sut: NodeMailerAdapter
+}
+
+const makeSut = (): SutTypes => {
+  const transporter = {
+    service: 'any_service',
+    auth: {
+      user: 'any_user',
+      pass: 'any_pass'
+    }
+  }
+  const sut = new NodeMailerAdapter(transporter)
+  return {
+    sut
+  }
+}
+
 describe('NodeMailerAdapter', () => {
   it('Should call send with correct values', async () => {
-    const transporter = {
-      service: 'any_service',
-      auth: {
-        user: 'any_user',
-        pass: 'any_pass'
-      }
-    }
-    const sut = new NodeMailerAdapter(transporter)
+    const { sut } = makeSut()
     const sendSpy = jest.spyOn(sut, 'send')
     const mailOptions: EmailService.Options = {
       from: 'any_email@mail.com',
