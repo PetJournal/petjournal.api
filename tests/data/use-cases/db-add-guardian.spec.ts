@@ -1,9 +1,9 @@
-import { type AddGuardianRepository, type Encrypter } from '@/data/protocols'
+import { type AddGuardianRepository, type HashGenerator } from '@/data/protocols'
 import { DbAddGuardian } from '@/data/use-cases'
 
-const makeEncrypter = (): Encrypter => {
-  class EncrypterStub implements Encrypter {
-    async encrypt (value: string): Promise<string> {
+const makeEncrypter = (): HashGenerator => {
+  class EncrypterStub implements HashGenerator {
+    async encrypt (input: HashGenerator.Input): Promise<HashGenerator.Output> {
       return await new Promise(resolve => { resolve('hashed_password') })
     }
   }
@@ -21,7 +21,7 @@ const makeAddGuardianRepository = (): AddGuardianRepository => {
 
 interface SutTypes {
   sut: DbAddGuardian
-  encrypterStub: Encrypter
+  encrypterStub: HashGenerator
   addGuardianRepositoryStub: AddGuardianRepository
 }
 
@@ -49,7 +49,7 @@ describe('DbAddGuardian use case', () => {
       isPrivacyPolicyAccepted: true
     }
     await sut.add(guardianData)
-    expect(encryptSpy).toHaveBeenCalledWith('valid_password')
+    expect(encryptSpy).toHaveBeenCalledWith({ value: 'valid_password' })
   })
 
   it('Should throw if encrypter throws', async () => {

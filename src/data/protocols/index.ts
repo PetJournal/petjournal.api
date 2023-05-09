@@ -1,5 +1,5 @@
 export * from './guardian/add-guardian-repository'
-export * from './cryptography/encrypter'
+export * from './cryptography/hash-generator'
 export * from './guardian/load-account-by-email-repository'
 export * from './cryptography/hash-comparer'
 export * from './cryptography/token-generator'

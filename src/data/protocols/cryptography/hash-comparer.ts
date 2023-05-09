@@ -1,3 +1,11 @@
 export interface HashComparer {
-  compare: (value: string, hash: string) => Promise<boolean>
+  compare: (input: HashComparer.Input) => Promise<HashComparer.Output>
+}
+
+export namespace HashComparer {
+  export interface Input {
+    value: string
+    hash: string
+  }
+  export type Output = boolean
 }

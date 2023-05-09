@@ -1,19 +1,19 @@
 import bcrypt from 'bcrypt'
-import { type HashComparer, type Encrypter } from '@/data/protocols'
+import { type HashComparer, type HashGenerator } from '@/data/protocols'
 
-export class BcryptAdapter implements Encrypter, HashComparer {
+export class BcryptAdapter implements HashGenerator, HashComparer {
   private readonly salt: number
 
   constructor (salt: number) {
     this.salt = salt
   }
 
-  async encrypt (value: string): Promise<string> {
-    return await bcrypt.hash(value, this.salt)
+  async encrypt (input: HashGenerator.Input): Promise<HashGenerator.Output> {
+    return await bcrypt.hash(input.value, this.salt)
   }
 
-  async compare (value: string, hash: string): Promise<boolean> {
-    const isValid = await bcrypt.compare(value, hash)
+  async compare (input: HashComparer.Input): Promise<HashComparer.Output> {
+    const isValid = await bcrypt.compare(input.value, input.hash)
     return isValid
   }
 }
