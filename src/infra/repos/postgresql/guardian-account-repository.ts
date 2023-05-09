@@ -1,8 +1,8 @@
-import { type LoadAccountByEmailRepository, type AddGuardianRepository } from '@/data/protocols'
+import { type LoadAccountByEmailRepository, type AddGuardianRepository, type UpdateAccessTokenRepository } from '@/data/protocols'
 import { prisma as db } from './prisma'
 import { type Guardian } from '@/domain/models/guardian'
 
-export class GuardianAccountRepository implements AddGuardianRepository, LoadAccountByEmailRepository {
+export class GuardianAccountRepository implements AddGuardianRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository {
   async add (guardianData: AddGuardianRepository.Params): Promise<AddGuardianRepository.Result> {
     let success: boolean = false
     const guardianHasEmailRegistered = await db.guardian.findUnique({
@@ -33,8 +33,9 @@ export class GuardianAccountRepository implements AddGuardianRepository, LoadAcc
       firstName: guardianDb.firstName,
       lastName: guardianDb.lastName,
       email: guardianDb.email,
-      phone: guardianDb.phone,
       password: guardianDb.password,
+      phone: guardianDb.phone,
+      accessToken: guardianDb.accessToken,
       isPrivacyPolicyAccepted: guardianDb.isPrivacyPolicyAccepted
     }
     return guardian
