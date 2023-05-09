@@ -44,4 +44,16 @@ describe('NodeMailerAdapter', () => {
     await sut.send(mailOptions)
     expect(sendSpy).toHaveBeenCalledWith(mailOptions)
   })
+
+  it('Should return true on success', async () => {
+    const { sut } = makeSut()
+    const mailOptions: EmailService.Options = {
+      from: 'any_email@mail.com',
+      to: 'other_email@mail.com',
+      subject: 'any_subject',
+      text: 'any_text'
+    }
+    const isSuccess = await sut.send(mailOptions)
+    expect(isSuccess).toBe(true)
+  })
 })
