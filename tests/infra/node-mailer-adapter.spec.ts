@@ -17,6 +17,13 @@ interface SutTypes {
   sut: NodeMailerAdapter
 }
 
+const makeFakeMailOptions = (): EmailService.Options => ({
+  from: 'any_email@mail.com',
+  to: 'other_email@mail.com',
+  subject: 'any_subject',
+  text: 'any_text'
+})
+
 const makeSut = (): SutTypes => {
   const transporter = {
     service: 'any_service',
@@ -35,51 +42,27 @@ describe('NodeMailerAdapter', () => {
   it('Should call send with correct values', async () => {
     const { sut } = makeSut()
     const sendSpy = jest.spyOn(sut, 'send')
-    const mailOptions: EmailService.Options = {
-      from: 'any_email@mail.com',
-      to: 'other_email@mail.com',
-      subject: 'any_subject',
-      text: 'any_text'
-    }
-    await sut.send(mailOptions)
-    expect(sendSpy).toHaveBeenCalledWith(mailOptions)
+    await sut.send(makeFakeMailOptions())
+    expect(sendSpy).toHaveBeenCalledWith(makeFakeMailOptions())
   })
 
   it('Should return true on success', async () => {
     const { sut } = makeSut()
-    const mailOptions: EmailService.Options = {
-      from: 'any_email@mail.com',
-      to: 'other_email@mail.com',
-      subject: 'any_subject',
-      text: 'any_text'
-    }
-    const isSuccess = await sut.send(mailOptions)
+    const isSuccess = await sut.send(makeFakeMailOptions())
     expect(isSuccess).toBe(true)
   })
 
   it('Should return false on fail', async () => {
     const { sut } = makeSut()
     jest.spyOn(sut, 'send').mockResolvedValueOnce(false)
-    const mailOptions: EmailService.Options = {
-      from: 'any_email@mail.com',
-      to: 'other_email@mail.com',
-      subject: 'any_subject',
-      text: 'any_text'
-    }
-    const isSuccess = await sut.send(mailOptions)
+    const isSuccess = await sut.send(makeFakeMailOptions())
     expect(isSuccess).toBe(false)
   })
 
   it('Should throw if send throws', async () => {
     const { sut } = makeSut()
     jest.spyOn(sut, 'send').mockRejectedValueOnce(new Error())
-    const mailOptions: EmailService.Options = {
-      from: 'any_email@mail.com',
-      to: 'other_email@mail.com',
-      subject: 'any_subject',
-      text: 'any_text'
-    }
-    const promise = sut.send(mailOptions)
+    const promise = sut.send(makeFakeMailOptions())
     await expect(promise).rejects.toThrow()
   })
 })
