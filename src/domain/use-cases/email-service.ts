@@ -4,9 +4,7 @@ export interface EmailService {
 
 export namespace EmailService {
   export interface Transport {
-    host: string
-    port: number
-    secure: boolean
+    service: string
     auth: {
       user: string
       pass: string
