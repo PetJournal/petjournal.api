@@ -1,7 +1,8 @@
 
-import { type AddGuardianRepository } from '@/data/protocols'
+// import { type AddGuardianRepository } from '@/data/protocols'
 import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
+import { type Guardian } from '@prisma/client'
 
 beforeEach(() => { PrismaHelper.connect() })
 
@@ -11,12 +12,13 @@ const makeSut = (): GuardianAccountRepository => {
   return new GuardianAccountRepository()
 }
 
-const makeFakeGuardianData = (): AddGuardianRepository.Params => ({
+const makeFakeGuardianData = (): Omit<Guardian, 'id'> => ({
   firstName: 'valid_first_name',
   lastName: 'valid_last_name',
   email: 'valid_email',
   password: 'valid_password',
   phone: 'valid_phone',
+  accessToken: null,
   isPrivacyPolicyAccepted: true
 })
 
@@ -54,6 +56,20 @@ describe('GuardianAccountRepository', () => {
       const guardian = await sut.loadByEmail(email)
 
       expect(guardian).toBeNull()
+    })
+  })
+
+  describe('UpdateAccessTokenRepository', () => {
+    it('Should update the account successfully', async () => {
+      const sut = makeSut()
+      const guardianData = makeFakeGuardianData()
+
+      await sut.add(guardianData)
+      await sut.updateAccessToken(guardianData.email, 'valid_token')
+      const guardian = await sut.loadByEmail(guardianData.email)
+
+      expect(guardian?.accessToken).not.toBeNull()
+      expect(guardian?.accessToken).toBe('valid_token')
     })
   })
 })
