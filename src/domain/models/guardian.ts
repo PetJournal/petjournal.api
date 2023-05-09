@@ -5,5 +5,6 @@ export interface Guardian {
   email: string
   password: string
   phone: string
+  accessToken: string | null
   isPrivacyPolicyAccepted: boolean
 }
