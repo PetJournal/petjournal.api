@@ -56,4 +56,17 @@ describe('NodeMailerAdapter', () => {
     const isSuccess = await sut.send(mailOptions)
     expect(isSuccess).toBe(true)
   })
+
+  it('Should return false on fail', async () => {
+    const { sut } = makeSut()
+    jest.spyOn(sut, 'send').mockResolvedValueOnce(false)
+    const mailOptions: EmailService.Options = {
+      from: 'any_email@mail.com',
+      to: 'other_email@mail.com',
+      subject: 'any_subject',
+      text: 'any_text'
+    }
+    const isSuccess = await sut.send(mailOptions)
+    expect(isSuccess).toBe(false)
+  })
 })
