@@ -17,3 +17,11 @@ model Guardian {
 
   @@map("guardian")
 }
+
+model LogError {
+  id    Int      @id @default(autoincrement())
+  stack String
+  date  DateTime
+
+  @@map("log_error")
+}
