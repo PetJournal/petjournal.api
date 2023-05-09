@@ -9,8 +9,14 @@ export class NodeMailerAdapter implements EmailService {
   }
 
   async send (options: EmailService.Options): Promise<EmailService.Result> {
-    await this.transporter.sendMail(options)
+    let success: boolean = false
 
-    return true
+    const info = await this.transporter.sendMail(options)
+
+    if (info) {
+      success = true
+    }
+
+    return success
   }
 }
