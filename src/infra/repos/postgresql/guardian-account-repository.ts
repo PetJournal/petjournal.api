@@ -40,4 +40,8 @@ export class GuardianAccountRepository implements AddGuardianRepository, LoadAcc
     }
     return guardian
   }
+
+  async updateAccessToken (email: string, token: string): Promise<void> {
+    await db.guardian.update({ where: { email }, data: { accessToken: token } })
+  }
 }
