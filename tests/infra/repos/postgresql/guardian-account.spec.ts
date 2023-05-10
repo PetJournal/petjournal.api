@@ -1,6 +1,6 @@
-
 import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
+import { type LoadGuardianByEmailRepository } from '@/data/protocols'
 import { type Guardian } from '@prisma/client'
 
 beforeEach(() => { PrismaHelper.connect() })
@@ -64,14 +64,14 @@ describe('GuardianAccountRepository', () => {
       const guardianData = makeFakeGuardianData()
 
       await sut.add(guardianData)
-      let guardian = await sut.loadByEmail(guardianData.email)
+      let guardian = await sut.loadByEmail(guardianData.email) as LoadGuardianByEmailRepository.Result
 
-      const authenticationData = { id: guardian?.id ?? ' ', token: 'valid_token' }
+      const authenticationData = { id: guardian.id, token: 'valid_token' }
       await sut.updateAccessToken(authenticationData)
-      guardian = await sut.loadByEmail(guardianData.email)
+      guardian = await sut.loadByEmail(guardianData.email) as LoadGuardianByEmailRepository.Result
 
-      expect(guardian?.accessToken).not.toBeNull()
-      expect(guardian?.accessToken).toBe(authenticationData.token)
+      expect(guardian.accessToken).not.toBeNull()
+      expect(guardian.accessToken).toBe(authenticationData.token)
     })
   })
 })
