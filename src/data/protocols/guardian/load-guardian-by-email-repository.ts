@@ -5,7 +5,7 @@ export interface LoadGuardianByEmailRepository {
 export namespace LoadGuardianByEmailRepository {
   export type Params = string
   export interface Result {
-    id: number
+    id: string
     firstName: string
     lastName: string
     email: string
