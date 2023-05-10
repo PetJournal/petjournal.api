@@ -4,10 +4,11 @@ import { DbAuthentication } from '@/data/use-cases'
 import { BcryptAdapter } from '@/infra/criptography/bcrypt-adapter'
 import { JwtAdapter } from '@/infra/criptography/jwt-adapter'
 import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
+import env from '@/main/config/env'
 
 export const makeLoginController = (): LoginController => {
-  const salt = 12
-  const secret = 'any_secret'
+  const salt = Number(env.salt)
+  const secret = env.secret
   const hashComparer = new BcryptAdapter(salt)
   const tokenGenerator = new JwtAdapter(secret)
   const emailValidator = new EmailValidatorAdapter()

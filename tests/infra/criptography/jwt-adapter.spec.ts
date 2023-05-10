@@ -7,8 +7,9 @@ jest.mock('jsonwebtoken', () => ({
   }
 }))
 
+const fakeSecret = 'secret'
 const makeSut = (): JwtAdapter => {
-  return new JwtAdapter('secret')
+  return new JwtAdapter(fakeSecret)
 }
 
 describe('Jwt Adapter', () => {
@@ -16,7 +17,7 @@ describe('Jwt Adapter', () => {
     const sut = makeSut()
     const signSpy = jest.spyOn(jwt, 'sign')
     await sut.generate({ sub: 'any_id' })
-    expect(signSpy).toHaveBeenCalledWith({ id: 'any_id' }, 'secret')
+    expect(signSpy).toHaveBeenCalledWith({ id: 'any_id' }, fakeSecret)
   })
 
   it('Should return a token on sign success', async () => {

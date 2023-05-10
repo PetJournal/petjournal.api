@@ -3,9 +3,10 @@ import { SignUpController } from '@/application/controllers/signup'
 import { DbAddGuardian } from '@/data/use-cases/db-add-guardian'
 import { BcryptAdapter } from '@/infra/criptography/bcrypt-adapter'
 import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
+import env from '@/main/config/env'
 
 export const makeSignUpController = (): SignUpController => {
-  const salt = 12
+  const salt = Number(env.salt)
   const bcryptAdapter = new BcryptAdapter(salt)
   const guardianAccountRepository = new GuardianAccountRepository()
   const dbAddGuardian = new DbAddGuardian(guardianAccountRepository, bcryptAdapter)
