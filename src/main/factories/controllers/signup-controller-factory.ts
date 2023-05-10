@@ -1,7 +1,7 @@
 import { EmailValidatorAdapter, NameValidatorAdapter, PasswordValidatorAdapter, PhoneValidatorAdapter } from '@/application/validation/validators'
 import { SignUpController } from '@/application/controllers/signup'
 import { DbAddGuardian } from '@/data/use-cases/db-add-guardian'
-import { BcryptAdapter } from '@/infra/criptography/bcrypt-adapter'
+import { BcryptAdapter } from '@/infra/cryptography/bcrypt-adapter'
 import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
 import env from '@/main/config/env'
 

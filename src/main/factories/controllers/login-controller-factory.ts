@@ -1,8 +1,8 @@
 import { LoginController } from '@/application/controllers/login'
 import { EmailValidatorAdapter } from '@/application/validation/validators'
 import { DbAuthentication } from '@/data/use-cases'
-import { BcryptAdapter } from '@/infra/criptography/bcrypt-adapter'
-import { JwtAdapter } from '@/infra/criptography/jwt-adapter'
+import { BcryptAdapter } from '@/infra/cryptography/bcrypt-adapter'
+import { JwtAdapter } from '@/infra/cryptography/jwt-adapter'
 import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
 import env from '@/main/config/env'
 
