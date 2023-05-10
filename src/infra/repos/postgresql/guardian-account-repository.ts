@@ -40,7 +40,8 @@ export class GuardianAccountRepository implements AddGuardianRepository, LoadGua
     return guardian
   }
 
-  async updateAccessToken (email: string, token: string): Promise<void> {
-    await db.guardian.update({ where: { email }, data: { accessToken: token } })
+  async updateAccessToken (authentication: UpdateAccessTokenRepository.Params): Promise<void> {
+    const { id, token } = authentication
+    await db.guardian.update({ where: { id }, data: { accessToken: token } })
   }
 }
