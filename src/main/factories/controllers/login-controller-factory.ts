@@ -11,8 +11,8 @@ export const makeLoginController = (): LoginController => {
   const hashComparer = new BcryptAdapter(salt)
   const tokenGenerator = new JwtAdapter(secret)
   const emailValidator = new EmailValidatorAdapter()
-  const loadAccountByEmailRepository = new GuardianAccountRepository()
+  const loadGuardianByEmailRepository = new GuardianAccountRepository()
   const updateAccessTokenRepository = new GuardianAccountRepository()
-  const authentication = new DbAuthentication(loadAccountByEmailRepository, hashComparer, tokenGenerator, updateAccessTokenRepository)
+  const authentication = new DbAuthentication({ loadGuardianByEmailRepository, hashComparer, tokenGenerator, updateAccessTokenRepository })
   return new LoginController(emailValidator, authentication)
 }

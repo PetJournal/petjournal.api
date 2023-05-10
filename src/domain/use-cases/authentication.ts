@@ -1,3 +1,5 @@
+import { type HashComparer, type LoadGuardianByEmailRepository, type TokenGenerator, type UpdateAccessTokenRepository } from '@/data/protocols'
+
 export interface Authentication {
   auth: (authentication: Authentication.Params) => Promise<Authentication.Result | null>
 }
@@ -9,4 +11,11 @@ export namespace Authentication {
   }
 
   export type Result = string
+
+  export interface Dependencies {
+    loadGuardianByEmailRepository: LoadGuardianByEmailRepository
+    hashComparer: HashComparer
+    tokenGenerator: TokenGenerator
+    updateAccessTokenRepository: UpdateAccessTokenRepository
+  }
 }
