@@ -1,13 +1,15 @@
-import { type AddGuardian, type Authentication } from '@/domain/use-cases'
+import { type Authentication } from '@/domain/use-cases'
 import { DbAuthentication } from '@/data/use-cases'
-import { type LoadAccountByEmailRepository, type HashComparer, type TokenGenerator, type UpdateAccessTokenRepository } from '@/data/protocols'
+import { type LoadGuardianByEmailRepository, type HashComparer, type TokenGenerator, type UpdateAccessTokenRepository } from '@/data/protocols'
 
-const makeFakeAccount = (): AddGuardian.Params => ({
+const makeFakeAccount = (): LoadGuardianByEmailRepository.Result => ({
+  id: 1,
   firstName: 'valid_first_name',
   lastName: 'valid_last_name',
   email: 'valid_email@mail.com',
   phone: 'valid_phone',
   password: 'hashed_password',
+  accessToken: 'valid_token',
   isPrivacyPolicyAccepted: true
 })
 
@@ -16,13 +18,13 @@ const makeFakeAuthentication = (): Authentication.Params => ({
   password: 'any_password'
 })
 
-const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
-  class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
-    async loadByEmail (email: string): Promise<AddGuardian.Params | null> {
+const makeLoadGuardianByEmailRepository = (): LoadGuardianByEmailRepository => {
+  class LoadGuardianByEmailRepositoryStub implements LoadGuardianByEmailRepository {
+    async loadByEmail (email: LoadGuardianByEmailRepository.Params): Promise<LoadGuardianByEmailRepository.Result | null> {
       return await new Promise(resolve => { resolve(makeFakeAccount()) })
     }
   }
-  return new LoadAccountByEmailRepositoryStub()
+  return new LoadGuardianByEmailRepositoryStub()
 }
 
 const makeHashComparer = (): HashComparer => {
@@ -54,26 +56,26 @@ const makeUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
 
 interface SutTypes {
   sut: DbAuthentication
-  loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
+  LoadGuardianByEmailRepositoryStub: LoadGuardianByEmailRepository
   hashComparerStub: HashComparer
   tokenGeneratorStub: TokenGenerator
   updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
 }
 
 const makeSut = (): SutTypes => {
-  const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository()
+  const LoadGuardianByEmailRepositoryStub = makeLoadGuardianByEmailRepository()
   const hashComparerStub = makeHashComparer()
   const tokenGeneratorStub = makeTokenGenerator()
   const updateAccessTokenRepositoryStub = makeUpdateAccessTokenRepository()
   const sut = new DbAuthentication(
-    loadAccountByEmailRepositoryStub,
+    LoadGuardianByEmailRepositoryStub,
     hashComparerStub,
     tokenGeneratorStub,
     updateAccessTokenRepositoryStub
   )
   return {
     sut,
-    loadAccountByEmailRepositoryStub,
+    LoadGuardianByEmailRepositoryStub,
     hashComparerStub,
     tokenGeneratorStub,
     updateAccessTokenRepositoryStub
@@ -82,22 +84,22 @@ const makeSut = (): SutTypes => {
 
 describe('DbAuthentication UseCase', () => {
   it('Should call LoadAccountByEmailRepository with correct email', async () => {
-    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
-    const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
+    const { sut, LoadGuardianByEmailRepositoryStub } = makeSut()
+    const loadSpy = jest.spyOn(LoadGuardianByEmailRepositoryStub, 'loadByEmail')
     await sut.auth(makeFakeAuthentication())
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
   it('Should throw if LoadAccountByEmailRepository throws', async () => {
-    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
-    jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    const { sut, LoadGuardianByEmailRepositoryStub } = makeSut()
+    jest.spyOn(LoadGuardianByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
     const promise = sut.auth(makeFakeAuthentication())
     await expect(promise).rejects.toThrow()
   })
 
   it('Should return null if LoadAccountByEmailRepository returns null', async () => {
-    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
-    jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockResolvedValueOnce(null)
+    const { sut, LoadGuardianByEmailRepositoryStub } = makeSut()
+    jest.spyOn(LoadGuardianByEmailRepositoryStub, 'loadByEmail').mockResolvedValueOnce(null)
     const accessToken = await sut.auth(makeFakeAuthentication())
     expect(accessToken).toBeNull()
   })

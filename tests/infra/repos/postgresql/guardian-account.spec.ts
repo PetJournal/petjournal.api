@@ -1,5 +1,4 @@
 
-// import { type AddGuardianRepository } from '@/data/protocols'
 import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 import { type Guardian } from '@prisma/client'
