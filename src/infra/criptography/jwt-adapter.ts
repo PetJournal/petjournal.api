@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken'
+import jwt, { type JwtPayload } from 'jsonwebtoken'
 import { type TokenGenerator } from '@/data/protocols'
 
 export class JwtAdapter implements TokenGenerator {
@@ -8,8 +8,8 @@ export class JwtAdapter implements TokenGenerator {
     this.secret = secret
   }
 
-  async generate (value: string): Promise<string> {
-    const accessToken = jwt.sign({ email: value }, this.secret)
+  async generate (payload: JwtPayload): Promise<string> {
+    const accessToken = jwt.sign({ id: payload.sub }, this.secret)
     return accessToken
   }
 }
