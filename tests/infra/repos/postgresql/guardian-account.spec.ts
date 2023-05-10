@@ -45,7 +45,7 @@ describe('GuardianAccountRepository', () => {
 
       const guardian = await sut.loadByEmail(guardianData.email)
 
-      expect(guardian).toEqual({ ...guardianData, id: 1 })
+      expect(guardian).toMatchObject(guardianData)
     })
 
     it('Should not return a guardian account if invalid email is provided', async () => {
@@ -64,11 +64,14 @@ describe('GuardianAccountRepository', () => {
       const guardianData = makeFakeGuardianData()
 
       await sut.add(guardianData)
-      await sut.updateAccessToken(guardianData.email, 'valid_token')
-      const guardian = await sut.loadByEmail(guardianData.email)
+      let guardian = await sut.loadByEmail(guardianData.email)
+
+      const authenticationData = { id: guardian?.id ?? ' ', token: 'valid_token' }
+      await sut.updateAccessToken(authenticationData)
+      guardian = await sut.loadByEmail(guardianData.email)
 
       expect(guardian?.accessToken).not.toBeNull()
-      expect(guardian?.accessToken).toBe('valid_token')
+      expect(guardian?.accessToken).toBe(authenticationData.token)
     })
   })
 })
