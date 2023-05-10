@@ -3,7 +3,7 @@ import { DbAuthentication } from '@/data/use-cases'
 import { type LoadGuardianByEmailRepository, type HashComparer, type TokenGenerator, type UpdateAccessTokenRepository } from '@/data/protocols'
 
 const makeFakeAccount = (): LoadGuardianByEmailRepository.Result => ({
-  id: 1,
+  id: 'valid_id',
   firstName: 'valid_first_name',
   lastName: 'valid_last_name',
   email: 'valid_email@mail.com',
@@ -21,7 +21,7 @@ const makeFakeAuthentication = (): Authentication.Params => ({
 const makeLoadGuardianByEmailRepository = (): LoadGuardianByEmailRepository => {
   class LoadGuardianByEmailRepositoryStub implements LoadGuardianByEmailRepository {
     async loadByEmail (email: LoadGuardianByEmailRepository.Params): Promise<LoadGuardianByEmailRepository.Result | null> {
-      return await new Promise(resolve => { resolve(makeFakeAccount()) })
+      return await Promise.resolve(makeFakeAccount())
     }
   }
   return new LoadGuardianByEmailRepositoryStub()
@@ -30,7 +30,7 @@ const makeLoadGuardianByEmailRepository = (): LoadGuardianByEmailRepository => {
 const makeHashComparer = (): HashComparer => {
   class HashComparerStub implements HashComparer {
     async compare ({ value, hash }: HashComparer.Input): Promise<HashComparer.Output> {
-      return await new Promise(resolve => { resolve(true) })
+      return await Promise.resolve(true)
     }
   }
   return new HashComparerStub()
@@ -38,8 +38,8 @@ const makeHashComparer = (): HashComparer => {
 
 const makeTokenGenerator = (): TokenGenerator => {
   class TokenGeneratorStub implements TokenGenerator {
-    async generate (email: string): Promise<string> {
-      return await new Promise(resolve => { resolve('any_token') })
+    async generate (payload: any): Promise<string> {
+      return await Promise.resolve('any_token')
     }
   }
   return new TokenGeneratorStub()
@@ -47,8 +47,8 @@ const makeTokenGenerator = (): TokenGenerator => {
 
 const makeUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
   class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
-    async updateAccessToken (email: string, token: string): Promise<void> {
-      await new Promise(resolve => { resolve(undefined) })
+    async updateAccessToken (authentication: UpdateAccessTokenRepository.Params): Promise<void> {
+      await Promise.resolve(undefined)
     }
   }
   return new UpdateAccessTokenRepositoryStub()
@@ -94,7 +94,7 @@ describe('DbAuthentication UseCase', () => {
 
   it('Should throw if LoadAccountByEmailRepository throws', async () => {
     const { sut, LoadGuardianByEmailRepositoryStub } = makeSut()
-    jest.spyOn(LoadGuardianByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    jest.spyOn(LoadGuardianByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(Promise.reject(new Error()))
     const promise = sut.auth(makeFakeAuthentication())
     await expect(promise).rejects.toThrow()
   })
@@ -115,28 +115,28 @@ describe('DbAuthentication UseCase', () => {
 
   it('Should throw if HashComparer throws', async () => {
     const { sut, hashComparerStub } = makeSut()
-    jest.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    jest.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(Promise.reject(new Error()))
     const promise = sut.auth(makeFakeAuthentication())
     await expect(promise).rejects.toThrow()
   })
 
   it('Should return null if HashComparer returns false', async () => {
     const { sut, hashComparerStub } = makeSut()
-    jest.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(new Promise(resolve => { resolve(false) }))
+    jest.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(Promise.resolve(false))
     const accessToken = await sut.auth(makeFakeAuthentication())
     expect(accessToken).toBeNull()
   })
 
-  it('Should call TokenGenerator with correct email', async () => {
+  it('Should call TokenGenerator with correct id', async () => {
     const { sut, tokenGeneratorStub } = makeSut()
     const generateSpy = jest.spyOn(tokenGeneratorStub, 'generate')
     await sut.auth(makeFakeAuthentication())
-    expect(generateSpy).toHaveBeenCalledWith('valid_email@mail.com')
+    expect(generateSpy).toHaveBeenCalledWith({ sub: 'valid_id' })
   })
 
   it('Should throw if TokenGenerator throws', async () => {
     const { sut, tokenGeneratorStub } = makeSut()
-    jest.spyOn(tokenGeneratorStub, 'generate').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    jest.spyOn(tokenGeneratorStub, 'generate').mockReturnValueOnce(Promise.reject(new Error()))
     const promise = sut.auth(makeFakeAuthentication())
     await expect(promise).rejects.toThrow()
   })
@@ -151,12 +151,12 @@ describe('DbAuthentication UseCase', () => {
     const { sut, updateAccessTokenRepositoryStub } = makeSut()
     const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
     await sut.auth(makeFakeAuthentication())
-    expect(updateSpy).toHaveBeenCalledWith('valid_email@mail.com', 'any_token')
+    expect(updateSpy).toHaveBeenCalledWith({ id: 'valid_id', token: 'any_token' })
   })
 
   it('Should throw if UpdateAccessTokenRepository throws', async () => {
     const { sut, updateAccessTokenRepositoryStub } = makeSut()
-    jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken').mockReturnValueOnce(Promise.reject(new Error()))
     const promise = sut.auth(makeFakeAuthentication())
     await expect(promise).rejects.toThrow()
   })
