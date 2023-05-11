@@ -1,5 +1,5 @@
 export interface LoadGuardianByIdRepository {
-  loadById: (email: LoadGuardianByIdRepository.Params) => Promise<LoadGuardianByIdRepository.Result | null>
+  loadById: (id: LoadGuardianByIdRepository.Params) => Promise<LoadGuardianByIdRepository.Result | null>
 }
 
 export namespace LoadGuardianByIdRepository {
