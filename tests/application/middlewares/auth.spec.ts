@@ -1,21 +1,40 @@
 import { AuthMiddleware } from '@/application/middlewares/auth'
 import { type TokenDecoder } from '@/data/protocols/cryptography/token-decoder'
+import { type LoadGuardianByIdRepository } from '@/data/protocols/guardian/load-guardian-by-id-repository'
 
 interface SutTypes {
   sut: AuthMiddleware
   tokenDecoderStub: TokenDecoder
+  loadGuardianByIdStub: LoadGuardianByIdRepository
 }
 
 class TokenDecoderStub implements TokenDecoder {
   async decode (token: TokenDecoder.Input): Promise<TokenDecoder.Output> {
-    return true
+    return { userId: 'valid_id' }
   }
 }
 
+class LoadGuardianByIdStub implements LoadGuardianByIdRepository {
+  async loadById (id: LoadGuardianByIdRepository.Params): Promise<LoadGuardianByIdRepository.Result | null> {
+    return makeFakeGuardianData()
+  }
+}
+
+const makeFakeGuardianData = (): LoadGuardianByIdRepository.Result => ({
+  id: 'valid_id',
+  firstName: 'valid_first_name',
+  lastName: 'valid_last_name',
+  email: 'valid_email',
+  password: 'valid_password',
+  phone: 'valid_phone',
+  accessToken: null,
+  isPrivacyPolicyAccepted: true
+})
 const makeSut = (): SutTypes => {
   const tokenDecoderStub = new TokenDecoderStub()
-  const sut = new AuthMiddleware(tokenDecoderStub)
-  return { sut, tokenDecoderStub }
+  const loadGuardianByIdStub = new LoadGuardianByIdStub()
+  const sut = new AuthMiddleware({ tokenDecoder: tokenDecoderStub, loadGuardianById: loadGuardianByIdStub })
+  return { sut, tokenDecoderStub, loadGuardianByIdStub }
 }
 
 describe('Auth Middleware', () => {
@@ -57,5 +76,16 @@ describe('Auth Middleware', () => {
     const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(500)
+  })
+
+  it('Should return 401 if invalid payload is provided', async () => {
+    const { sut, tokenDecoderStub, loadGuardianByIdStub } = makeSut()
+    const httpRequest = { header: { authorization: 'valid_token' } }
+    jest.spyOn(tokenDecoderStub, 'decode').mockResolvedValueOnce({})
+    jest.spyOn(loadGuardianByIdStub, 'loadById').mockResolvedValueOnce(null)
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(401)
   })
 })
