@@ -27,7 +27,7 @@ const makeFakeGuardianData = (): LoadGuardianByIdRepository.Result => ({
   email: 'valid_email',
   password: 'valid_password',
   phone: 'valid_phone',
-  accessToken: null,
+  accessToken: 'valid_token',
   isPrivacyPolicyAccepted: true
 })
 const makeSut = (): SutTypes => {
@@ -62,9 +62,8 @@ describe('Auth Middleware', () => {
     const httpRequest = { header: { authorization: 'any_token' } }
     const spyDecoder = jest.spyOn(tokenDecoderStub, 'decode')
 
-    const httpResponse = await sut.handle(httpRequest)
+    await sut.handle(httpRequest)
 
-    expect(httpResponse.statusCode).toBe(200)
     expect(spyDecoder).toHaveBeenCalledWith(httpRequest.header.authorization)
   })
 
@@ -105,9 +104,18 @@ describe('Auth Middleware', () => {
     const httpRequest = { header: { authorization: 'valid_token' } }
     const spyLoadGuardianById = jest.spyOn(loadGuardianByIdStub, 'loadById')
 
+    await sut.handle(httpRequest)
+
+    expect(spyLoadGuardianById).toHaveBeenCalledWith('valid_id')
+  })
+
+  it('Should return 401 if authorization not match with accessToken in database', async () => {
+    const { sut, loadGuardianByIdStub } = makeSut()
+    const httpRequest = { header: { authorization: 'valid_token' } }
+    jest.spyOn(loadGuardianByIdStub, 'loadById').mockResolvedValueOnce({ ...makeFakeGuardianData(), accessToken: 'other_token' })
+
     const httpResponse = await sut.handle(httpRequest)
 
-    expect(httpResponse.statusCode).toBe(200)
-    expect(spyLoadGuardianById).toHaveBeenCalledWith('valid_id')
+    expect(httpResponse.statusCode).toBe(401)
   })
 })
