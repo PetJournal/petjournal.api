@@ -25,7 +25,7 @@ export class AuthMiddleware implements Middleware {
       if (!payload) {
         return unauthorized()
       }
-      const { userId } = payload
+      const { sub: userId } = payload
       const account = await this.loadGuardianById.loadById(userId)
       if (!account) {
         return unauthorized()
