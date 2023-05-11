@@ -99,4 +99,15 @@ describe('Auth Middleware', () => {
 
     expect(httpResponse.statusCode).toBe(401)
   })
+
+  it('Should call loadGuardianById with correct value', async () => {
+    const { sut, loadGuardianByIdStub } = makeSut()
+    const httpRequest = { header: { authorization: 'valid_token' } }
+    const spyLoadGuardianById = jest.spyOn(loadGuardianByIdStub, 'loadById')
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(200)
+    expect(spyLoadGuardianById).toHaveBeenCalledWith('valid_id')
+  })
 })
