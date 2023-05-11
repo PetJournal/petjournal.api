@@ -34,7 +34,7 @@ export class AuthMiddleware implements Middleware {
       if (!matchToken) {
         return unauthorized()
       }
-      return success({ userId: 'any_id' })
+      return success({ userId })
     } catch (error) {
       console.error(error)
       return serverError()
