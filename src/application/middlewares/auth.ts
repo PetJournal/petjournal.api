@@ -30,6 +30,10 @@ export class AuthMiddleware implements Middleware {
       if (!account) {
         return unauthorized()
       }
+      const matchToken = authorization === account.accessToken
+      if (!matchToken) {
+        return unauthorized()
+      }
       return success({ userId: 'any_id' })
     } catch (error) {
       console.error(error)
