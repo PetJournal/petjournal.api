@@ -48,4 +48,14 @@ describe('Auth Middleware', () => {
     expect(httpResponse.statusCode).toBe(200)
     expect(spyDecoder).toHaveBeenCalledWith(httpRequest.header.authorization)
   })
+
+  it('Should return 500 if tokenDecoder throws', async () => {
+    const { sut, tokenDecoderStub } = makeSut()
+    const httpRequest = { header: { authorization: 'any_token' } }
+    jest.spyOn(tokenDecoderStub, 'decode').mockRejectedValueOnce(new Error())
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(500)
+  })
 })
