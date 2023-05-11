@@ -37,4 +37,15 @@ describe('Auth Middleware', () => {
 
     expect(httpResponse.statusCode).toBe(401)
   })
+
+  it('Should call tokenDecoder with correct value', async () => {
+    const { sut, tokenDecoderStub } = makeSut()
+    const httpRequest = { header: { authorization: 'any_token' } }
+    const spyDecoder = jest.spyOn(tokenDecoderStub, 'decode')
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(200)
+    expect(spyDecoder).toHaveBeenCalledWith(httpRequest.header.authorization)
+  })
 })
