@@ -88,4 +88,15 @@ describe('Auth Middleware', () => {
 
     expect(httpResponse.statusCode).toBe(401)
   })
+
+  it('Should return 401 if valid payload is provided with invalid userId', async () => {
+    const { sut, tokenDecoderStub, loadGuardianByIdStub } = makeSut()
+    const httpRequest = { header: { authorization: 'valid_token' } }
+    jest.spyOn(tokenDecoderStub, 'decode').mockResolvedValueOnce({ userId: 'invalid_id' })
+    jest.spyOn(loadGuardianByIdStub, 'loadById').mockResolvedValueOnce(null)
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(401)
+  })
 })
