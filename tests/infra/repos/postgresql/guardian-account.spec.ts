@@ -1,7 +1,7 @@
 import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
-import { type LoadGuardianByEmailRepository } from '@/data/protocols'
 import { type Guardian } from '@prisma/client'
+import { type LoadGuardianByEmailRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 
 beforeEach(() => { PrismaHelper.connect() })
 
@@ -53,6 +53,28 @@ describe('GuardianAccountRepository', () => {
       const email = 'invalid_email:mail.com'
 
       const guardian = await sut.loadByEmail(email)
+
+      expect(guardian).toBeNull()
+    })
+  })
+
+  describe('LoadAccountByIdRepository', () => {
+    it('Should return a guardian account on success', async () => {
+      const sut = makeSut()
+      const guardianData = makeFakeGuardianData()
+      await sut.add(guardianData)
+
+      const guardianByEmail = await sut.loadByEmail(guardianData.email) as LoadGuardianByEmailRepository.Result
+      const guardianById = await sut.loadById(guardianByEmail.id) as LoadGuardianByIdRepository.Result
+
+      expect(guardianById).toMatchObject(guardianData)
+    })
+
+    it('Should not return a guardian account if invalid id is provided', async () => {
+      const sut = makeSut()
+      const id = 'invalid_id'
+
+      const guardian = await sut.loadById(id)
 
       expect(guardian).toBeNull()
     })
