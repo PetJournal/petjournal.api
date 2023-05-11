@@ -10,7 +10,7 @@ interface SutTypes {
 
 class TokenDecoderStub implements TokenDecoder {
   async decode (token: TokenDecoder.Input): Promise<TokenDecoder.Output> {
-    return { userId: 'valid_id' }
+    return makeFakeUserId()
   }
 }
 
@@ -19,6 +19,8 @@ class LoadGuardianByIdStub implements LoadGuardianByIdRepository {
     return makeFakeGuardianData()
   }
 }
+
+const makeFakeUserId = (): TokenDecoder.Output => ({ userId: 'valid_id' })
 
 const makeFakeGuardianData = (): LoadGuardianByIdRepository.Result => ({
   id: 'valid_id',
@@ -106,7 +108,7 @@ describe('Auth Middleware', () => {
 
     await sut.handle(httpRequest)
 
-    expect(spyLoadGuardianById).toHaveBeenCalledWith('valid_id')
+    expect(spyLoadGuardianById).toHaveBeenCalledWith(makeFakeUserId().userId)
   })
 
   it('Should return 401 if authorization not match with accessToken in database', async () => {
@@ -127,5 +129,15 @@ describe('Auth Middleware', () => {
     const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(500)
+  })
+
+  it('Should return 200 if success', async () => {
+    const { sut } = makeSut()
+    const httpRequest = { header: { authorization: 'valid_token' } }
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(200)
+    expect(httpResponse.body).toEqual(makeFakeUserId())
   })
 })
