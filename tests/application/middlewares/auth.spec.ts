@@ -118,4 +118,14 @@ describe('Auth Middleware', () => {
 
     expect(httpResponse.statusCode).toBe(401)
   })
+
+  it('Should return 500 if loadGuardianById throws', async () => {
+    const { sut, loadGuardianByIdStub } = makeSut()
+    const httpRequest = { header: { authorization: 'any_token' } }
+    jest.spyOn(loadGuardianByIdStub, 'loadById').mockRejectedValueOnce(new Error())
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(500)
+  })
 })
