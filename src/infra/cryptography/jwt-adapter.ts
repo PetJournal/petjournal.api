@@ -1,7 +1,7 @@
 import jwt, { type JwtPayload } from 'jsonwebtoken'
-import { type TokenGenerator } from '@/data/protocols'
+import { type TokenGenerator, type TokenDecoder } from '@/data/protocols'
 
-export class JwtAdapter implements TokenGenerator {
+export class JwtAdapter implements TokenGenerator, TokenDecoder {
   private readonly secret: string
 
   constructor (secret: string) {
@@ -9,7 +9,15 @@ export class JwtAdapter implements TokenGenerator {
   }
 
   async generate (payload: JwtPayload): Promise<string> {
-    const accessToken = jwt.sign({ id: payload.sub }, this.secret)
+    const accessToken = jwt.sign(payload, this.secret)
     return accessToken
+  }
+
+  async decode (token: string): Promise<JwtPayload | null> {
+    try {
+      return jwt.verify(token, this.secret) as JwtPayload
+    } catch (e) {
+      return null
+    }
   }
 }

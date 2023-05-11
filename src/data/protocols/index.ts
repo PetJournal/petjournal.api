@@ -1,6 +1,7 @@
 export * from './cryptography/hash-comparer'
 export * from './cryptography/hash-generator'
 export * from './cryptography/token-generator'
+export * from './cryptography/token-decoder'
 export * from './guardian/add-guardian-repository'
 export * from './guardian/load-guardian-by-email-repository'
 export * from './guardian/update-access-token-repository'
