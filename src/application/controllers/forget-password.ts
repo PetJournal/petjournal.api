@@ -37,15 +37,22 @@ export class ForgetPasswordController implements Controller {
 
       const token = await this.tokenGenerator.generate(guardian.id)
 
-      const options: EmailService.Options = {
-        from: '',
+      const emailOptions: EmailService.Options = {
+        from: 'contato.petjournal@gmail.com',
         to: email,
-        subject: 'Recuperação de senha',
-        text: `Olá ${guardian.firstName} ${guardian.lastName}, seu código de recuperação de senha é: ${token}.`
+        subject: `${guardian.firstName} ${guardian.lastName}, aqui está seu código`,
+        text: `
+          Olá ${guardian.firstName} ${guardian.lastName},\n
+          Recebemos uma solicitação para redefinir a senha de sua conta PetJournal.\n
+          ${token}\n
+          Insira este código para concluir a redefinição.\n
+          Obrigado por nos ajudar a manter sua conta segura.\n
+          Equipe PetJournal
+        `
       }
-      await this.emailService.send(options)
+      await this.emailService.send(emailOptions)
 
-      return success('')
+      return success({ message: 'Email sent successfully' })
     } catch (error) {
       return serverError()
     }

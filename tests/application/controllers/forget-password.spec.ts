@@ -175,10 +175,17 @@ describe('ForgetPassword Controller', () => {
 
     await sut.handle(httpRequest)
     expect(sendSpy).toHaveBeenCalledWith({
-      from: '',
+      from: 'contato.petjournal@gmail.com',
       to: 'any_email@mail.com',
-      subject: 'Recuperação de senha',
-      text: 'Olá any_first_name any_last_name, seu código de recuperação de senha é: 123456.'
+      subject: 'any_first_name any_last_name, aqui está seu código',
+      text: `
+          Olá any_first_name any_last_name,\n
+          Recebemos uma solicitação para redefinir a senha de sua conta PetJournal.\n
+          123456\n
+          Insira este código para concluir a redefinição.\n
+          Obrigado por nos ajudar a manter sua conta segura.\n
+          Equipe PetJournal
+        `
     })
     expect(sendSpy).toBeTruthy()
   })
