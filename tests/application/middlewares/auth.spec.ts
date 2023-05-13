@@ -16,7 +16,7 @@ class TokenDecoderStub implements TokenDecoder {
 }
 
 class LoadGuardianByIdStub implements LoadGuardianByIdRepository {
-  async loadById (id: LoadGuardianByIdRepository.Params): Promise<LoadGuardianByIdRepository.Result | null> {
+  async loadById (id: LoadGuardianByIdRepository.Params): Promise<LoadGuardianByIdRepository.Result> {
     return makeFakeGuardianData()
   }
 }
@@ -84,7 +84,7 @@ describe('Auth Middleware', () => {
     const { sut, tokenDecoderStub, loadGuardianByIdStub } = makeSut()
     const httpRequest = { header: { authorization: 'valid_token' } }
     jest.spyOn(tokenDecoderStub, 'decode').mockResolvedValueOnce({})
-    jest.spyOn(loadGuardianByIdStub, 'loadById').mockResolvedValueOnce(null)
+    jest.spyOn(loadGuardianByIdStub, 'loadById').mockResolvedValueOnce(undefined)
 
     const httpResponse = await sut.handle(httpRequest)
 
@@ -95,7 +95,7 @@ describe('Auth Middleware', () => {
     const { sut, tokenDecoderStub, loadGuardianByIdStub } = makeSut()
     const httpRequest = { header: { authorization: 'valid_token' } }
     jest.spyOn(tokenDecoderStub, 'decode').mockResolvedValueOnce({ userId: 'invalid_id' })
-    jest.spyOn(loadGuardianByIdStub, 'loadById').mockResolvedValueOnce(null)
+    jest.spyOn(loadGuardianByIdStub, 'loadById').mockResolvedValueOnce(undefined)
 
     const httpResponse = await sut.handle(httpRequest)
 

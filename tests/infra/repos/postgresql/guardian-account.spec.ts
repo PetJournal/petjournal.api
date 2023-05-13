@@ -53,7 +53,7 @@ describe('GuardianAccountRepository', () => {
 
       const guardian = await sut.loadByEmail(email)
 
-      expect(guardian).toBeNull()
+      expect(guardian).toBeFalsy()
     })
   })
 
@@ -75,7 +75,7 @@ describe('GuardianAccountRepository', () => {
 
       const guardian = await sut.loadById(id)
 
-      expect(guardian).toBeNull()
+      expect(guardian).toBeFalsy()
     })
   })
 
@@ -92,7 +92,7 @@ describe('GuardianAccountRepository', () => {
 
       guardian = await sut.loadByEmail(guardianData.email)
 
-      expect(guardian.accessToken).not.toBeNull()
+      expect(guardian.accessToken).not.toBeFalsy()
       expect(guardian.accessToken).toBe(authenticationData.token)
     })
   })

@@ -1,10 +1,10 @@
 export interface LoadGuardianByEmailRepository {
-  loadByEmail: (email: LoadGuardianByEmailRepository.Params) => Promise<LoadGuardianByEmailRepository.Result | null>
+  loadByEmail: (email: LoadGuardianByEmailRepository.Params) => Promise<LoadGuardianByEmailRepository.Result>
 }
 
 export namespace LoadGuardianByEmailRepository {
   export type Params = string
-  export interface Result {
+  export type Result = {
     id: string
     firstName: string
     lastName: string
@@ -13,5 +13,5 @@ export namespace LoadGuardianByEmailRepository {
     password: string
     accessToken: string | null
     isPrivacyPolicyAccepted: boolean
-  }
+  } | undefined
 }

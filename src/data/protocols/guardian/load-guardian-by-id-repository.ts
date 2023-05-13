@@ -1,10 +1,10 @@
 export interface LoadGuardianByIdRepository {
-  loadById: (id: LoadGuardianByIdRepository.Params) => Promise<LoadGuardianByIdRepository.Result | null>
+  loadById: (id: LoadGuardianByIdRepository.Params) => Promise<LoadGuardianByIdRepository.Result>
 }
 
 export namespace LoadGuardianByIdRepository {
   export type Params = string
-  export interface Result {
+  export type Result = {
     id: string
     firstName: string
     lastName: string
@@ -13,5 +13,5 @@ export namespace LoadGuardianByIdRepository {
     password: string
     accessToken: string | null
     isPrivacyPolicyAccepted: boolean
-  }
+  } | undefined
 }

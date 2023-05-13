@@ -28,40 +28,18 @@ export class GuardianAccountRepository implements AddGuardianRepository, LoadGua
     return success
   }
 
-  async loadByEmail (email: LoadGuardianByEmailRepository.Params): Promise<LoadGuardianByEmailRepository.Result | null> {
-    const guardianDb = await db.guardian.findUnique({ where: { email } })
-    if (!guardianDb) {
-      return null
+  async loadByEmail (email: LoadGuardianByEmailRepository.Params): Promise<LoadGuardianByEmailRepository.Result> {
+    const guardian = await db.guardian.findUnique({ where: { email } })
+    if (guardian) {
+      return guardian
     }
-    const guardian = {
-      id: guardianDb.id,
-      firstName: guardianDb.firstName,
-      lastName: guardianDb.lastName,
-      email: guardianDb.email,
-      password: guardianDb.password,
-      phone: guardianDb.phone,
-      accessToken: guardianDb.accessToken,
-      isPrivacyPolicyAccepted: guardianDb.isPrivacyPolicyAccepted
-    }
-    return guardian
   }
 
-  async loadById (id: LoadGuardianByIdRepository.Params): Promise<LoadGuardianByIdRepository.Result | null> {
-    const guardianDb = await db.guardian.findUnique({ where: { id } })
-    if (!guardianDb) {
-      return null
+  async loadById (id: LoadGuardianByIdRepository.Params): Promise<LoadGuardianByIdRepository.Result> {
+    const guardian = await db.guardian.findUnique({ where: { id } })
+    if (guardian) {
+      return guardian
     }
-    const guardian = {
-      id: guardianDb.id,
-      firstName: guardianDb.firstName,
-      lastName: guardianDb.lastName,
-      email: guardianDb.email,
-      password: guardianDb.password,
-      phone: guardianDb.phone,
-      accessToken: guardianDb.accessToken,
-      isPrivacyPolicyAccepted: guardianDb.isPrivacyPolicyAccepted
-    }
-    return guardian
   }
 
   async updateAccessToken (authentication: UpdateAccessTokenRepository.Params): Promise<void> {
