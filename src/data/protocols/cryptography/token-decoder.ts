@@ -1,8 +1,8 @@
 export interface TokenDecoder {
-  decode: (token: TokenDecoder.Input) => Promise<TokenDecoder.Output>
+  decode: (token: TokenDecoder.Params) => Promise<TokenDecoder.Result>
 }
 
 export namespace TokenDecoder {
-  export type Input = string
-  export type Output = any | null
+  export type Params = string
+  export type Result = any | null
 }

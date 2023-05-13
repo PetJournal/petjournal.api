@@ -8,12 +8,12 @@ export class JwtAdapter implements TokenGenerator, TokenDecoder {
     this.secret = secret
   }
 
-  async generate (payload: JwtPayload): Promise<string> {
+  async generate (payload: TokenGenerator.Params): Promise<TokenGenerator.Result> {
     const accessToken = jwt.sign(payload, this.secret)
     return accessToken
   }
 
-  async decode (token: string): Promise<JwtPayload | null> {
+  async decode (token: TokenDecoder.Params): Promise<TokenDecoder.Result> {
     try {
       return jwt.verify(token, this.secret) as JwtPayload
     } catch (e) {

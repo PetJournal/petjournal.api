@@ -1,8 +1,8 @@
 export interface HashGenerator {
-  encrypt: (input: HashGenerator.Input) => Promise<HashGenerator.Output>
+  encrypt: (input: HashGenerator.Params) => Promise<HashGenerator.Result>
 }
 
 export namespace HashGenerator {
-  export interface Input { value: string }
-  export type Output = string
+  export interface Params { value: string }
+  export type Result = string
 }

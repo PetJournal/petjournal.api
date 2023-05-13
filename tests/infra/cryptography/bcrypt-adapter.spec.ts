@@ -16,7 +16,7 @@ const throwError = (): never => {
   throw new Error()
 }
 
-const makeFakeHashCompare = (): HashComparer.Input => ({
+const makeFakeHashCompare = (): HashComparer.Params => ({
   value: 'any_value', hash: 'any_hash'
 })
 

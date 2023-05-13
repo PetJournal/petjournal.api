@@ -8,11 +8,11 @@ export class BcryptAdapter implements HashGenerator, HashComparer {
     this.salt = salt
   }
 
-  async encrypt (input: HashGenerator.Input): Promise<HashGenerator.Output> {
+  async encrypt (input: HashGenerator.Params): Promise<HashGenerator.Result> {
     return await bcrypt.hash(input.value, this.salt)
   }
 
-  async compare (input: HashComparer.Input): Promise<HashComparer.Output> {
+  async compare (input: HashComparer.Params): Promise<HashComparer.Result> {
     const isValid = await bcrypt.compare(input.value, input.hash)
     return isValid
   }

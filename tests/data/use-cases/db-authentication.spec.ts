@@ -29,7 +29,7 @@ const makeLoadGuardianByEmailRepository = (): LoadGuardianByEmailRepository => {
 
 const makeHashComparer = (): HashComparer => {
   class HashComparerStub implements HashComparer {
-    async compare ({ value, hash }: HashComparer.Input): Promise<HashComparer.Output> {
+    async compare ({ value, hash }: HashComparer.Params): Promise<HashComparer.Result> {
       return await Promise.resolve(true)
     }
   }

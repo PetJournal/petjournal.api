@@ -3,7 +3,7 @@ import { DbAddGuardian } from '@/data/use-cases'
 
 const makeEncrypter = (): HashGenerator => {
   class EncrypterStub implements HashGenerator {
-    async encrypt (input: HashGenerator.Input): Promise<HashGenerator.Output> {
+    async encrypt (input: HashGenerator.Params): Promise<HashGenerator.Result> {
       return await new Promise(resolve => { resolve('hashed_password') })
     }
   }

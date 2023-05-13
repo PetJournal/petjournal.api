@@ -1,8 +1,8 @@
 export interface TokenGenerator {
-  generate: (payload: TokenGenerator.Input) => Promise<TokenGenerator.Output>
+  generate: (payload: TokenGenerator.Params) => Promise<TokenGenerator.Result>
 }
 
 export namespace TokenGenerator {
-  export type Input = any
-  export type Output = string
+  export type Params = any
+  export type Result = string
 }

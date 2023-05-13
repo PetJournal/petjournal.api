@@ -1,6 +1,7 @@
 import { AuthMiddleware } from '@/application/middlewares/auth'
 import { type TokenDecoder } from '@/data/protocols/cryptography/token-decoder'
 import { type LoadGuardianByIdRepository } from '@/data/protocols/guardian/load-guardian-by-id-repository'
+import { type Guardian } from '@prisma/client'
 
 interface SutTypes {
   sut: AuthMiddleware
@@ -9,7 +10,7 @@ interface SutTypes {
 }
 
 class TokenDecoderStub implements TokenDecoder {
-  async decode (token: TokenDecoder.Input): Promise<TokenDecoder.Output> {
+  async decode (token: TokenDecoder.Params): Promise<TokenDecoder.Result> {
     return makeFakePayload()
   }
 }
@@ -20,9 +21,9 @@ class LoadGuardianByIdStub implements LoadGuardianByIdRepository {
   }
 }
 
-const makeFakePayload = (): TokenDecoder.Output => ({ sub: 'valid_id' })
+const makeFakePayload = (): TokenDecoder.Result => ({ sub: 'valid_id' })
 
-const makeFakeGuardianData = (): LoadGuardianByIdRepository.Result => ({
+const makeFakeGuardianData = (): Guardian => ({
   id: 'valid_id',
   firstName: 'valid_first_name',
   lastName: 'valid_last_name',
