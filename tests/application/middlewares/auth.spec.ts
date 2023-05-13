@@ -43,7 +43,7 @@ const makeSut = (): SutTypes => {
 describe('Auth Middleware', () => {
   it('Should return 401 if no authorization is provided', async () => {
     const { sut } = makeSut()
-    const httpRequest = { header: { } }
+    const httpRequest = { authorization: '' }
 
     const httpResponse = await sut.handle(httpRequest)
 
@@ -52,7 +52,7 @@ describe('Auth Middleware', () => {
 
   it('Should return 401 if invalid authorization is provided', async () => {
     const { sut, tokenDecoderStub } = makeSut()
-    const httpRequest = { header: { authorization: 'invalid_token' } }
+    const httpRequest = { authorization: 'invalid_token' }
     jest.spyOn(tokenDecoderStub, 'decode').mockResolvedValueOnce(false)
 
     const httpResponse = await sut.handle(httpRequest)
@@ -62,17 +62,17 @@ describe('Auth Middleware', () => {
 
   it('Should call tokenDecoder with correct value', async () => {
     const { sut, tokenDecoderStub } = makeSut()
-    const httpRequest = { header: { authorization: 'any_token' } }
+    const httpRequest = { authorization: 'any_token' }
     const spyDecoder = jest.spyOn(tokenDecoderStub, 'decode')
 
     await sut.handle(httpRequest)
 
-    expect(spyDecoder).toHaveBeenCalledWith(httpRequest.header.authorization)
+    expect(spyDecoder).toHaveBeenCalledWith(httpRequest.authorization)
   })
 
   it('Should return 500 if tokenDecoder throws', async () => {
     const { sut, tokenDecoderStub } = makeSut()
-    const httpRequest = { header: { authorization: 'any_token' } }
+    const httpRequest = { authorization: 'any_token' }
     jest.spyOn(tokenDecoderStub, 'decode').mockRejectedValueOnce(new Error())
 
     const httpResponse = await sut.handle(httpRequest)
@@ -82,7 +82,7 @@ describe('Auth Middleware', () => {
 
   it('Should return 401 if invalid payload is provided', async () => {
     const { sut, tokenDecoderStub, loadGuardianByIdStub } = makeSut()
-    const httpRequest = { header: { authorization: 'valid_token' } }
+    const httpRequest = { authorization: 'valid_token' }
     jest.spyOn(tokenDecoderStub, 'decode').mockResolvedValueOnce({})
     jest.spyOn(loadGuardianByIdStub, 'loadById').mockResolvedValueOnce(undefined)
 
@@ -93,7 +93,7 @@ describe('Auth Middleware', () => {
 
   it('Should return 401 if valid payload is provided with invalid userId', async () => {
     const { sut, tokenDecoderStub, loadGuardianByIdStub } = makeSut()
-    const httpRequest = { header: { authorization: 'valid_token' } }
+    const httpRequest = { authorization: 'valid_token' }
     jest.spyOn(tokenDecoderStub, 'decode').mockResolvedValueOnce({ userId: 'invalid_id' })
     jest.spyOn(loadGuardianByIdStub, 'loadById').mockResolvedValueOnce(undefined)
 
@@ -104,7 +104,7 @@ describe('Auth Middleware', () => {
 
   it('Should call loadGuardianById with correct value', async () => {
     const { sut, loadGuardianByIdStub } = makeSut()
-    const httpRequest = { header: { authorization: 'valid_token' } }
+    const httpRequest = { authorization: 'valid_token' }
     const spyLoadGuardianById = jest.spyOn(loadGuardianByIdStub, 'loadById')
 
     await sut.handle(httpRequest)
@@ -114,7 +114,7 @@ describe('Auth Middleware', () => {
 
   it('Should return 401 if authorization not match with accessToken in database', async () => {
     const { sut, loadGuardianByIdStub } = makeSut()
-    const httpRequest = { header: { authorization: 'valid_token' } }
+    const httpRequest = { authorization: 'valid_token' }
     jest.spyOn(loadGuardianByIdStub, 'loadById').mockResolvedValueOnce({ ...makeFakeGuardianData(), accessToken: 'other_token' })
 
     const httpResponse = await sut.handle(httpRequest)
@@ -124,7 +124,7 @@ describe('Auth Middleware', () => {
 
   it('Should return 500 if loadGuardianById throws', async () => {
     const { sut, loadGuardianByIdStub } = makeSut()
-    const httpRequest = { header: { authorization: 'any_token' } }
+    const httpRequest = { authorization: 'any_token' }
     jest.spyOn(loadGuardianByIdStub, 'loadById').mockRejectedValueOnce(new Error())
 
     const httpResponse = await sut.handle(httpRequest)
@@ -134,7 +134,7 @@ describe('Auth Middleware', () => {
 
   it('Should return 200 if success', async () => {
     const { sut } = makeSut()
-    const httpRequest = { header: { authorization: 'valid_token' } }
+    const httpRequest = { authorization: 'valid_token' }
 
     const httpResponse = await sut.handle(httpRequest)
 

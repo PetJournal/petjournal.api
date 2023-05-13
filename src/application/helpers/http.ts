@@ -2,7 +2,7 @@ import { ServerError, UnauthorizedError } from '@/application/errors'
 
 export interface HttpRequest {
   body?: any
-  header?: any
+  authorization?: any
 }
 
 export interface HttpResponse {

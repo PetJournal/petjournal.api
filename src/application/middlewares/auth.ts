@@ -14,13 +14,10 @@ export class AuthMiddleware implements Middleware {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const requiredFields = ['authorization']
-      for (const field of requiredFields) {
-        if (httpRequest.header[field] === undefined) {
-          return unauthorized()
-        }
+      if (httpRequest.authorization === undefined) {
+        return unauthorized()
       }
-      const { authorization } = httpRequest.header
+      const { authorization } = httpRequest
       const payload = await this.tokenDecoder.decode(authorization)
       if (!payload) {
         return unauthorized()
