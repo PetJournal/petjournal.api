@@ -17,10 +17,16 @@ export default {
     url: '/api',
     description: 'Main Server'
   }],
-  tags: [{
-    name: 'guardian',
-    description: 'operations about guardian'
-  }],
+  tags: [
+    {
+      name: 'guardian',
+      description: 'operations about guardian'
+    },
+    {
+      name: 'login',
+      description: 'operations about login'
+    }
+  ],
   paths,
   schemas,
   components
