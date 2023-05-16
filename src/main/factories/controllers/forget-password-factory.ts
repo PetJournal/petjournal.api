@@ -23,5 +23,11 @@ export const makeForgetPasswordController = (): ForgetPasswordController => {
     }
   }
   const nodeMailerAdapter = new NodeMailerAdapter(transporter)
-  return new ForgetPasswordController(emailValidator, dbLoadAccountByEmail, tokenGenerator, nodeMailerAdapter)
+  const dependencies: ForgetPasswordController.Dependencies = {
+    emailValidator,
+    loadGuardianByEmail: dbLoadAccountByEmail,
+    tokenGenerator,
+    emailService: nodeMailerAdapter
+  }
+  return new ForgetPasswordController(dependencies)
 }

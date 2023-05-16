@@ -11,7 +11,7 @@ export class ForgetPasswordController implements Controller {
   private readonly tokenGenerator: TokenGenerator
   private readonly emailService: EmailService
 
-  constructor (emailValidator: EmailValidator, loadGuardianByEmail: LoadGuardianByEmail, tokenGenerator: TokenGenerator, emailService: EmailService) {
+  constructor ({ emailValidator, loadGuardianByEmail, tokenGenerator, emailService }: ForgetPasswordController.Dependencies) {
     this.emailValidator = emailValidator
     this.loadGuardianByEmail = loadGuardianByEmail
     this.tokenGenerator = tokenGenerator
@@ -56,5 +56,14 @@ export class ForgetPasswordController implements Controller {
     } catch (error) {
       return serverError()
     }
+  }
+}
+
+export namespace ForgetPasswordController {
+  export interface Dependencies {
+    emailValidator: EmailValidator
+    loadGuardianByEmail: LoadGuardianByEmail
+    tokenGenerator: TokenGenerator
+    emailService: EmailService
   }
 }

@@ -58,7 +58,13 @@ const makeSut = (): SutTypes => {
   const loadGuardianByEmailStub = makeLoadGuardianByEmail()
   const tokenGeneratorStub = makeTokenGenerator()
   const emailServiceStub = makeEmailService()
-  const sut = new ForgetPasswordController(emailValidatorStub, loadGuardianByEmailStub, tokenGeneratorStub, emailServiceStub)
+  const dependencies: ForgetPasswordController.Dependencies = {
+    emailValidator: emailValidatorStub,
+    loadGuardianByEmail: loadGuardianByEmailStub,
+    tokenGenerator: tokenGeneratorStub,
+    emailService: emailServiceStub
+  }
+  const sut = new ForgetPasswordController(dependencies)
   return {
     sut,
     emailValidatorStub,
