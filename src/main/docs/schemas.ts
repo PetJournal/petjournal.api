@@ -1,6 +1,7 @@
-import { errorSchema, signUpParamsSchema } from '@/main/docs/schemas/'
+import { errorSchema, forgetPasswordSchema, signUpParamsSchema } from '@/main/docs/schemas/'
 
 export default {
   error: errorSchema,
-  signUpParams: signUpParamsSchema
+  signUpParams: signUpParamsSchema,
+  forgetPasswordParams: forgetPasswordSchema
 }
