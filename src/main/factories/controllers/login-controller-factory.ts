@@ -9,11 +9,12 @@ import env from '@/main/config/env'
 export const makeLoginController = (): LoginController => {
   const salt = Number(env.salt)
   const secret = env.secret
+  const hashGenerator = new BcryptAdapter(salt)
   const hashComparer = new BcryptAdapter(salt)
   const tokenGenerator = new JwtAdapter(secret)
   const emailValidator = new EmailValidatorAdapter()
   const loadGuardianByEmailRepository = new GuardianAccountRepository()
   const updateAccessTokenRepository = new GuardianAccountRepository()
-  const authentication = new DbAuthentication({ loadGuardianByEmailRepository, hashComparer, tokenGenerator, updateAccessTokenRepository })
+  const authentication = new DbAuthentication({ loadGuardianByEmailRepository, hashGenerator, hashComparer, tokenGenerator, updateAccessTokenRepository })
   return new LoginController(emailValidator, authentication)
 }

@@ -1,4 +1,5 @@
 import { AuthMiddleware } from '@/application/middlewares/auth'
+import { type HashComparer } from '@/data/protocols'
 import { type TokenDecoder } from '@/data/protocols/cryptography/token-decoder'
 import { type LoadGuardianByIdRepository } from '@/data/protocols/guardian/load-guardian-by-id-repository'
 import { type Guardian } from '@prisma/client'
@@ -6,12 +7,19 @@ import { type Guardian } from '@prisma/client'
 interface SutTypes {
   sut: AuthMiddleware
   tokenDecoderStub: TokenDecoder
+  hashComparerStub: HashComparer
   loadGuardianByIdStub: LoadGuardianByIdRepository
 }
 
 class TokenDecoderStub implements TokenDecoder {
   async decode (token: TokenDecoder.Params): Promise<TokenDecoder.Result> {
     return makeFakePayload()
+  }
+}
+
+class HashComparerStub implements HashComparer {
+  async compare (input: HashComparer.Params): Promise<HashComparer.Result> {
+    return true
   }
 }
 
@@ -33,17 +41,19 @@ const makeFakeGuardianData = (): Guardian => ({
   accessToken: 'valid_token',
   isPrivacyPolicyAccepted: true
 })
+
 const makeSut = (): SutTypes => {
   const tokenDecoderStub = new TokenDecoderStub()
+  const hashComparerStub = new HashComparerStub()
   const loadGuardianByIdStub = new LoadGuardianByIdStub()
-  const sut = new AuthMiddleware({ tokenDecoder: tokenDecoderStub, loadGuardianById: loadGuardianByIdStub })
-  return { sut, tokenDecoderStub, loadGuardianByIdStub }
+  const sut = new AuthMiddleware({ tokenDecoder: tokenDecoderStub, hashComparer: hashComparerStub, loadGuardianById: loadGuardianByIdStub })
+  return { sut, tokenDecoderStub, loadGuardianByIdStub, hashComparerStub }
 }
 
 describe('Auth Middleware', () => {
   it('Should return 401 if no authorization is provided', async () => {
     const { sut } = makeSut()
-    const httpRequest = { authorization: '' }
+    const httpRequest = { }
 
     const httpResponse = await sut.handle(httpRequest)
 
@@ -113,9 +123,9 @@ describe('Auth Middleware', () => {
   })
 
   it('Should return 401 if authorization not match with accessToken in database', async () => {
-    const { sut, loadGuardianByIdStub } = makeSut()
+    const { sut, hashComparerStub } = makeSut()
     const httpRequest = { authorization: 'valid_token' }
-    jest.spyOn(loadGuardianByIdStub, 'loadById').mockResolvedValueOnce({ ...makeFakeGuardianData(), accessToken: 'other_token' })
+    jest.spyOn(hashComparerStub, 'compare').mockResolvedValueOnce(false)
 
     const httpResponse = await sut.handle(httpRequest)
 
