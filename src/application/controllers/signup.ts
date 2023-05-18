@@ -1,4 +1,4 @@
-import { InvalidParamError, MissingParamError } from '@/application/errors'
+import { ConflictGuardianError, InvalidParamError, MissingParamError } from '@/application/errors'
 import { type EmailValidator, type NameValidator, type PasswordValidator, type PhoneValidator } from '@/application/validation/protocols'
 import { badRequest, serverError, create, type HttpRequest, type HttpResponse, conflict } from '@/application/helpers/http'
 import { type Controller } from '@/application/controllers/controller'
@@ -58,7 +58,7 @@ export class SignUpController implements Controller {
         password
       })
       if (!guardian) {
-        return conflict('Phone or Email already registered')
+        return conflict(new ConflictGuardianError())
       }
       return create(guardian)
     } catch (error) {

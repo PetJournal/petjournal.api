@@ -1,4 +1,4 @@
-import { InvalidParamError, MissingParamError } from '@/application/errors'
+import { ConflictGuardianError, InvalidParamError, MissingParamError } from '@/application/errors'
 import { SignUpController } from '@/application/controllers/signup'
 import { type PhoneValidator, type EmailValidator, type NameValidator } from '@/application/validation/protocols'
 import { type AddGuardian } from '@/domain/use-cases/add-guardian'
@@ -416,6 +416,6 @@ describe('SignUp Controller', () => {
 
     const httpResponse = await sut.handle(httpRequest)
 
-    expect(httpResponse).toEqual(conflict('Phone or Email already registered'))
+    expect(httpResponse).toEqual(conflict(new ConflictGuardianError()))
   })
 })

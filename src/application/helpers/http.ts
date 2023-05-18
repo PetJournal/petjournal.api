@@ -14,9 +14,9 @@ export const badRequest = (error: Error): HttpResponse => ({
   body: error
 })
 
-export const conflict = (data: any): HttpResponse => ({
+export const conflict = (error: Error): HttpResponse => ({
   statusCode: 409,
-  body: data
+  body: error
 })
 
 export const serverError = (error: Error): HttpResponse => ({
