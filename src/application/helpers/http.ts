@@ -23,3 +23,8 @@ export const success = (data: any): HttpResponse => ({
   statusCode: 200,
   body: data
 })
+
+export const create = (data: any): HttpResponse => ({
+  statusCode: 201,
+  body: data
+})
