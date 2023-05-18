@@ -3,7 +3,7 @@ import { SignUpController } from '@/application/controllers/signup'
 import { type PhoneValidator, type EmailValidator, type NameValidator } from '@/application/validation/protocols'
 import { type AddGuardian } from '@/domain/use-cases/add-guardian'
 import { type PasswordValidator } from '@/application/validation/protocols/password-validator'
-import { badRequest, type HttpRequest, serverError, create } from '@/application/helpers/http'
+import { badRequest, type HttpRequest, serverError, create, conflict } from '@/application/helpers/http'
 
 const makeNameValidator = (): NameValidator => {
   class NameValidatorStub implements NameValidator {
@@ -397,5 +397,25 @@ describe('SignUp Controller', () => {
       email: 'any_email@mail.com',
       phone: 'any_phone'
     }))
+  })
+
+  it('Should returns 409 if email already exists in database', async () => {
+    const { sut, addGuardianStub } = makeSut()
+    const httpRequest = {
+      body: {
+        firstName: 'valid_first_name',
+        lastName: 'valid_last_name',
+        email: 'duplicated_email@mail.com',
+        phone: 'valid_phone',
+        password: 'valid_password',
+        passwordConfirmation: 'valid_password',
+        isPrivacyPolicyAccepted: true
+      }
+    }
+    jest.spyOn(addGuardianStub, 'add').mockResolvedValueOnce(undefined)
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual(conflict('Phone or Email already registered'))
   })
 })
