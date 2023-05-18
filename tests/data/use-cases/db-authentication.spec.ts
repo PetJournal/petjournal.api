@@ -128,6 +128,15 @@ describe('DbAuthentication UseCase', () => {
     expect(hashGeneratorSpy).toHaveBeenCalledWith({ value: 'any_token' })
   })
 
+  it('Should throw if hashGenerator throws', async () => {
+    const { sut, hashGeneratorStub } = makeSut()
+    jest.spyOn(hashGeneratorStub, 'encrypt').mockRejectedValueOnce(new Error())
+
+    const promise = sut.auth(makeFakeAuthentication())
+
+    await expect(promise).rejects.toThrow()
+  })
+
   it('Should call HashComparer with correct values', async () => {
     const { sut, hashComparerStub } = makeSut()
     const compareSpy = jest.spyOn(hashComparerStub, 'compare')
