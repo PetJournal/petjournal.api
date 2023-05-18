@@ -14,7 +14,13 @@ const makeEncrypter = (): Encrypter => {
 const makeAddGuardianRepository = (): AddGuardianRepository => {
   class AddGuardianRepositoryStub implements AddGuardianRepository {
     async add (guardian: AddGuardian.Params): Promise<AddGuardian.Result> {
-      return await new Promise(resolve => { resolve(true) })
+      return {
+        id: 1,
+        firstName: 'any_first_name',
+        lastName: 'any_last_name',
+        email: 'any_email@mail.com',
+        phone: 'any_phone'
+      }
     }
   }
   return new AddGuardianRepositoryStub()
@@ -83,6 +89,12 @@ describe('DbAddGuardian use case', () => {
   it('Should return an guardian on success', async () => {
     const { sut } = makeSut()
     const guardian = await sut.add(makeFakeGuardianData())
-    expect(guardian).toBe(true)
+    expect(guardian).toEqual({
+      id: 1,
+      firstName: 'any_first_name',
+      lastName: 'any_last_name',
+      email: 'any_email@mail.com',
+      phone: 'any_phone'
+    })
   })
 })

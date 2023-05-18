@@ -3,7 +3,7 @@ import { SignUpController } from '@/application/controllers/signup'
 import { type PhoneValidator, type EmailValidator, type NameValidator } from '@/application/validation/protocols'
 import { type AddGuardian } from '@/domain/use-cases/add-guardian'
 import { type PasswordValidator } from '@/application/validation/protocols/password-validator'
-import { badRequest, type HttpRequest, serverError, success } from '@/application/helpers/http'
+import { badRequest, type HttpRequest, serverError, create } from '@/application/helpers/http'
 
 const makeNameValidator = (): NameValidator => {
   class NameValidatorStub implements NameValidator {
@@ -44,7 +44,13 @@ const makePasswordValidator = (): PasswordValidator => {
 const makeAddGuardian = (): AddGuardian => {
   class AddGuardianStub implements AddGuardian {
     async add (guardian: AddGuardian.Params): Promise<AddGuardian.Result> {
-      return await new Promise(resolve => { resolve(true) })
+      return {
+        id: 1,
+        firstName: 'any_first_name',
+        lastName: 'any_last_name',
+        email: 'any_email@mail.com',
+        phone: 'any_phone'
+      }
     }
   }
   return new AddGuardianStub()
@@ -370,7 +376,7 @@ describe('SignUp Controller', () => {
     })
   })
 
-  it('Should return 200 if valid data is provided', async () => {
+  it('Should return 201 if valid data is provided', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
@@ -384,6 +390,12 @@ describe('SignUp Controller', () => {
       }
     }
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(success(true))
+    expect(httpResponse).toEqual(create({
+      id: 1,
+      firstName: 'any_first_name',
+      lastName: 'any_last_name',
+      email: 'any_email@mail.com',
+      phone: 'any_phone'
+    }))
   })
 })

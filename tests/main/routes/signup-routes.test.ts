@@ -19,6 +19,6 @@ describe('SignUp Routes', () => {
         phone: '11987654321',
         isPrivacyPolicyAccepted: true
       })
-      .expect(200)
+      .expect(201)
   })
 })

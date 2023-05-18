@@ -1,6 +1,6 @@
 import { InvalidParamError, MissingParamError } from '@/application/errors'
 import { type EmailValidator, type NameValidator, type PasswordValidator, type PhoneValidator } from '@/application/validation/protocols'
-import { badRequest, serverError, success, type HttpRequest, type HttpResponse } from '@/application/helpers/http'
+import { badRequest, serverError, create, type HttpRequest, type HttpResponse } from '@/application/helpers/http'
 import { type Controller } from '@/application/controllers/controller'
 import { type AddGuardian } from '@/domain/use-cases/add-guardian'
 
@@ -57,7 +57,7 @@ export class SignUpController implements Controller {
         phone,
         password
       })
-      return success(guardian)
+      return create(guardian)
     } catch (error) {
       return serverError(error as Error)
     }

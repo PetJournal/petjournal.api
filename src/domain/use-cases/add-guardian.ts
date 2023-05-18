@@ -11,5 +11,11 @@ export namespace AddGuardian {
     password: string
   }
 
-  export type Result = boolean
+  export type Result = {
+    id: number
+    firstName: string
+    lastName: string
+    email: string
+    phone: string
+  } | undefined
 }
