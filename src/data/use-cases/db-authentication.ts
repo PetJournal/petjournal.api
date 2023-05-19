@@ -23,7 +23,7 @@ export class DbAuthentication implements Authentication {
     this.updateAccessTokenRepository = updateAccessTokenRepository
   }
 
-  async auth (credentials: Authentication.Params): Promise<Authentication.Result | null> {
+  async auth (credentials: Authentication.Params): Promise<Authentication.Result> {
     const account = await this.loadGuardianByEmailRepository.loadByEmail(credentials.email)
     if (!account) {
       return null
