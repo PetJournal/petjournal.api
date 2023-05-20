@@ -3,7 +3,6 @@ import { prisma as db } from './prisma'
 
 export class GuardianAccountRepository implements AddGuardianRepository {
   async add (guardianData: AddGuardianRepository.Params): Promise<AddGuardianRepository.Result> {
-    let success: boolean = false
     const guardianHasEmailRegistered = await db.guardian.findUnique({
       where: { email: guardianData.email }
     })
@@ -12,13 +11,18 @@ export class GuardianAccountRepository implements AddGuardianRepository {
       where: { phone: guardianData.phone }
     })
 
-    if (!guardianHasEmailRegistered && !guardianHasPhoneRegistered) {
-      await db.guardian.create({
-        data: guardianData
-      })
-
-      success = true
+    if (guardianHasEmailRegistered ?? guardianHasPhoneRegistered) {
+      return undefined
     }
-    return success
+    return await db.guardian.create({
+      data: guardianData,
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        phone: true
+      }
+    })
   }
 }

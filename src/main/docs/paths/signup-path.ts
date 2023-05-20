@@ -23,18 +23,21 @@ export const signUpPath = {
       }
     },
     responses: {
-      200: {
+      201: {
         description: 'Success',
         content: {
           'application/json': {
             schema: {
-              type: 'boolean'
+              $ref: '#/schemas/guardian'
             }
           }
         }
       },
       400: {
         $ref: '#/components/badRequest'
+      },
+      409: {
+        $ref: '#/components/conflict'
       },
       500: {
         $ref: '#/components/serverError'

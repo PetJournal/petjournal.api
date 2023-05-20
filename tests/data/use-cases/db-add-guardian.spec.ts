@@ -1,5 +1,6 @@
 import { type AddGuardianRepository, type Encrypter } from '@/data/protocols'
 import { DbAddGuardian } from '@/data/use-cases'
+import { type AddGuardian } from '@/domain/use-cases'
 
 const makeEncrypter = (): Encrypter => {
   class EncrypterStub implements Encrypter {
@@ -12,12 +13,26 @@ const makeEncrypter = (): Encrypter => {
 
 const makeAddGuardianRepository = (): AddGuardianRepository => {
   class AddGuardianRepositoryStub implements AddGuardianRepository {
-    async add (guardian: AddGuardianRepository.Params): Promise<AddGuardianRepository.Result> {
-      return await new Promise(resolve => { resolve(true) })
+    async add (guardian: AddGuardian.Params): Promise<AddGuardian.Result> {
+      return {
+        id: 1,
+        firstName: 'any_first_name',
+        lastName: 'any_last_name',
+        email: 'any_email@mail.com',
+        phone: 'any_phone'
+      }
     }
   }
   return new AddGuardianRepositoryStub()
 }
+
+const makeFakeGuardianData = (): AddGuardianRepository.Params => ({
+  firstName: 'valid_first_name',
+  lastName: 'valid_last_name',
+  email: 'valid_email',
+  phone: 'valid_phone',
+  password: 'valid_password'
+})
 
 interface SutTypes {
   sut: DbAddGuardian
@@ -40,81 +55,46 @@ describe('DbAddGuardian use case', () => {
   it('Should call encrypter with correct password', async () => {
     const { sut, encrypterStub } = makeSut()
     const encryptSpy = jest.spyOn(encrypterStub, 'encrypt')
-    const guardianData = {
-      firstName: 'valid_first_name',
-      lastName: 'valid_last_name',
-      email: 'valid_email',
-      phone: 'valid_phone',
-      password: 'valid_password',
-      isPrivacyPolicyAccepted: true
-    }
-    await sut.add(guardianData)
+    await sut.add(makeFakeGuardianData())
     expect(encryptSpy).toHaveBeenCalledWith('valid_password')
   })
 
   it('Should throw if encrypter throws', async () => {
     const { sut, encrypterStub } = makeSut()
     jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
-    const guardianData = {
-      firstName: 'valid_first_name',
-      lastName: 'valid_last_name',
-      email: 'valid_email',
-      phone: 'valid_phone',
-      password: 'valid_password',
-      isPrivacyPolicyAccepted: true
-    }
-    const promise = sut.add(guardianData)
+    const promise = sut.add(makeFakeGuardianData())
     await expect(promise).rejects.toThrow()
   })
 
   it('Should call AddGuardianRepository with correct values', async () => {
     const { sut, addGuardianRepositoryStub } = makeSut()
     const addSpy = jest.spyOn(addGuardianRepositoryStub, 'add')
-    const guardianData = {
-      firstName: 'valid_first_name',
-      lastName: 'valid_last_name',
-      email: 'valid_email',
-      phone: 'valid_phone',
-      password: 'valid_password',
-      isPrivacyPolicyAccepted: true
-    }
-    await sut.add(guardianData)
+    await sut.add(makeFakeGuardianData())
     expect(addSpy).toHaveBeenCalledWith({
       firstName: 'valid_first_name',
       lastName: 'valid_last_name',
       email: 'valid_email',
       phone: 'valid_phone',
-      password: 'hashed_password',
-      isPrivacyPolicyAccepted: true
+      password: 'hashed_password'
     })
   })
 
   it('Should throw if AddGuardianRepository throws', async () => {
     const { sut, addGuardianRepositoryStub } = makeSut()
     jest.spyOn(addGuardianRepositoryStub, 'add').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
-    const guardianData = {
-      firstName: 'valid_first_name',
-      lastName: 'valid_last_name',
-      email: 'valid_email',
-      phone: 'valid_phone',
-      password: 'valid_password',
-      isPrivacyPolicyAccepted: true
-    }
-    const promise = sut.add(guardianData)
+    const promise = sut.add(makeFakeGuardianData())
     await expect(promise).rejects.toThrow()
   })
 
   it('Should return an guardian on success', async () => {
     const { sut } = makeSut()
-    const guardianData = {
-      firstName: 'valid_first_name',
-      lastName: 'valid_last_name',
-      email: 'valid_email',
-      phone: 'valid_phone',
-      password: 'valid_password',
-      isPrivacyPolicyAccepted: true
-    }
-    const guardian = await sut.add(guardianData)
-    expect(guardian).toBe(true)
+    const guardian = await sut.add(makeFakeGuardianData())
+    expect(guardian).toEqual({
+      id: 1,
+      firstName: 'any_first_name',
+      lastName: 'any_last_name',
+      email: 'any_email@mail.com',
+      phone: 'any_phone'
+    })
   })
 })

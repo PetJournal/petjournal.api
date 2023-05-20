@@ -23,7 +23,7 @@ export const prisma = new PrismaClient({
 })
 
 export const PrismaHelper = {
-  connect (): void {
+  async connect (): Promise<void> {
     execSync(`${prismaBinary} db push --skip-generate`, {
       env: {
         ...process.env,
@@ -31,7 +31,7 @@ export const PrismaHelper = {
       }
     })
   },
-  async disconnect  (): Promise<void> {
+  async disconnect (): Promise<void> {
     await prisma.$executeRawUnsafe(`DROP SCHEMA IF EXISTS "${schemaId}" CASCADE;`)
     await prisma.$disconnect()
   }

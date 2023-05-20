@@ -2,7 +2,7 @@
 import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 
-beforeEach(() => { PrismaHelper.connect() })
+beforeEach(async () => { await PrismaHelper.connect() })
 
 afterEach(async () => { await PrismaHelper.disconnect() })
 
@@ -16,13 +16,18 @@ describe('GuardianAccountRepository', () => {
     const guardianData = {
       firstName: 'valid_first_name',
       lastName: 'valid_last_name',
-      email: 'valid_email',
+      email: 'any_email@mail.com',
       password: 'valid_password',
-      phone: 'valid_phone',
-      isPrivacyPolicyAccepted: true
+      phone: 'valid_phone'
     }
     const isValid = await sut.add(guardianData)
-    expect(isValid).toBe(true)
+    expect(isValid).toEqual({
+      id: 1,
+      firstName: 'valid_first_name',
+      lastName: 'valid_last_name',
+      email: 'any_email@mail.com',
+      phone: 'valid_phone'
+    })
   })
 
   it('Should not return a guardian account if duplicated email or phone is provided', async () => {
@@ -30,14 +35,19 @@ describe('GuardianAccountRepository', () => {
     const guardianData = {
       firstName: 'valid_first_name',
       lastName: 'valid_last_name',
-      email: 'valid_email',
+      email: 'any_email@mail.com',
       password: 'valid_password',
-      phone: 'valid_phone',
-      isPrivacyPolicyAccepted: true
+      phone: 'valid_phone'
     }
     const firstAttempt = await sut.add(guardianData)
     const secondAttempt = await sut.add(guardianData)
-    expect(firstAttempt).toBe(true)
-    expect(secondAttempt).toBe(false)
+    expect(firstAttempt).toEqual({
+      id: 1,
+      firstName: 'valid_first_name',
+      lastName: 'valid_last_name',
+      email: 'any_email@mail.com',
+      phone: 'valid_phone'
+    })
+    expect(secondAttempt).toBe(undefined)
   })
 })
