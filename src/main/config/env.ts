@@ -1,3 +1,8 @@
+import dotenv from 'dotenv'
+
+dotenv.config()
 export default {
-  port: process.env.port ?? 3333
+  port: process.env.PORT ?? 3333,
+  salt: process.env.SALT ?? 12,
+  secret: process.env.SECRET ?? 'secret'
 }

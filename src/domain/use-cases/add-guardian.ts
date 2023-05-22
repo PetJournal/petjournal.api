@@ -12,7 +12,7 @@ export namespace AddGuardian {
   }
 
   export type Result = {
-    id: number
+    id: string
     firstName: string
     lastName: string
     email: string
