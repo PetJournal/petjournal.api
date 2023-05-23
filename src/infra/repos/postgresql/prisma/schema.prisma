@@ -8,13 +8,14 @@ datasource db {
 }
 
 model Guardian {
-  id          String  @id @default(uuid())
-  firstName   String
-  lastName    String
-  email       String  @unique
-  password    String
-  phone       String  @unique
-  accessToken String?
+  id                  String  @id @default(uuid())
+  firstName           String
+  lastName            String
+  email               String  @unique
+  password            String
+  phone               String  @unique
+  accessToken         String?
+  forgetPasswordToken String?
 
   @@map("guardian")
 }

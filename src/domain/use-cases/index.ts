@@ -1,2 +1,5 @@
 export * from './add-guardian'
+export * from './email-service'
+export * from './save-token'
 export * from './authentication'
+export * from './forget-password'

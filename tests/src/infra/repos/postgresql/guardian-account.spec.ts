@@ -14,7 +14,7 @@ describe('GuardianAccountRepository', () => {
   describe('AddGuardianRepository', () => {
     it('Should return a guardian account on success ', async () => {
       const sut = makeSut()
-      const { accessToken, ...guardianData } = makeFakeGuardianData()
+      const { accessToken, forgetPasswordToken, ...guardianData } = makeFakeGuardianData()
       const { password, ...guardianDataDb } = guardianData
 
       const guardian = await sut.add(guardianData)

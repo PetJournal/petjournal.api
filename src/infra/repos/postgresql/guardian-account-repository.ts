@@ -1,13 +1,13 @@
-
 import { prisma as db } from './prisma'
 import {
   type LoadGuardianByEmailRepository,
   type AddGuardianRepository,
   type UpdateAccessTokenRepository,
-  type LoadGuardianByIdRepository
+  type LoadGuardianByIdRepository,
+  type SaveTokenRepository
 } from '@/data/protocols'
 
-export class GuardianAccountRepository implements AddGuardianRepository, LoadGuardianByEmailRepository, LoadGuardianByIdRepository, UpdateAccessTokenRepository {
+export class GuardianAccountRepository implements AddGuardianRepository, LoadGuardianByEmailRepository, LoadGuardianByIdRepository, UpdateAccessTokenRepository, SaveTokenRepository {
   async add (guardianData: AddGuardianRepository.Params): Promise<AddGuardianRepository.Result> {
     const guardianHasEmailRegistered = await db.guardian.findUnique({
       where: { email: guardianData.email }
@@ -50,5 +50,23 @@ export class GuardianAccountRepository implements AddGuardianRepository, LoadGua
     const { id, token } = authentication
     const result = await db.guardian.update({ where: { id }, data: { accessToken: token } })
     return Boolean(result)
+  }
+
+  async saveToken (accountId: string, token: string): Promise<SaveTokenRepository.Result> {
+    let success: boolean = false
+    const guardian = await db.guardian.findUnique({
+      where: { id: accountId }
+    })
+
+    if (guardian) {
+      await db.guardian.update({
+        where: { id: accountId },
+        data: { forgetPasswordToken: token }
+      })
+
+      success = true
+    }
+
+    return success
   }
 }

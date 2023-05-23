@@ -5,6 +5,7 @@ interface Guardian {
   password: string
   phone: string
   accessToken: string | null
+  forgetPasswordToken: string | null
 }
 
 interface GuardianWithId extends Guardian {

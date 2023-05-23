@@ -52,7 +52,8 @@ describe('DbAddGuardian use case', () => {
         lastName: 'valid_last_name',
         email: 'valid_email',
         phone: 'valid_phone',
-        password: 'hashed_password'
+        password: 'hashed_password',
+        forgetPasswordToken: null
       })
     })
 
@@ -70,7 +71,7 @@ describe('DbAddGuardian use case', () => {
   describe('test dbAddGuardian success case', () => {
     it('Should return an guardian on success', async () => {
       const { sut } = makeSut()
-      const { accessToken, ...guardianData } = makeFakeGuardianData()
+      const { accessToken, forgetPasswordToken, ...guardianData } = makeFakeGuardianData()
       const { password, ...guardianDataDb } = guardianData
 
       const guardian = await sut.add(guardianData)

@@ -12,5 +12,6 @@ export namespace LoadGuardianByEmailRepository {
     phone: string
     password: string
     accessToken: string | null
+    forgetPasswordToken: string | null
   } | undefined
 }
