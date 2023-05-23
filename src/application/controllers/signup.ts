@@ -1,6 +1,6 @@
-import { InvalidParamError, MissingParamError } from '@/application/errors'
+import { ConflictGuardianError, InvalidParamError, MissingParamError } from '@/application/errors'
 import { type EmailValidator, type NameValidator, type PasswordValidator, type PhoneValidator } from '@/application/validation/protocols'
-import { badRequest, serverError, success, type HttpRequest, type HttpResponse } from '@/application/helpers/http'
+import { badRequest, serverError, create, type HttpRequest, type HttpResponse, conflict } from '@/application/helpers/http'
 import { type Controller } from '@/application/controllers/controller'
 import { type AddGuardian } from '@/domain/use-cases/add-guardian'
 
@@ -55,13 +55,14 @@ export class SignUpController implements Controller {
         lastName,
         email,
         phone,
-        password,
-        isPrivacyPolicyAccepted
+        password
       })
-      return success(guardian)
+      if (!guardian) {
+        return conflict(new ConflictGuardianError())
+      }
+      return create(guardian)
     } catch (error) {
-      console.error(error)
-      return serverError()
+      return serverError(error as Error)
     }
   }
 }

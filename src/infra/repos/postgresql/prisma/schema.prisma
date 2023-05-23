@@ -8,14 +8,22 @@ datasource db {
 }
 
 model Guardian {
-  id                      Int     @id @default(autoincrement())
-  firstName               String
-  lastName                String
-  email                   String  @unique
-  password                String
-  phone                   String  @unique
-  isPrivacyPolicyAccepted Boolean
-  forgetPasswordToken     String?
+  id                  String  @id @default(uuid())
+  firstName           String
+  lastName            String
+  email               String  @unique
+  password            String
+  phone               String  @unique
+  accessToken         String?
+  forgetPasswordToken String?
 
   @@map("guardian")
+}
+
+model LogError {
+  id    Int      @id @default(autoincrement())
+  stack String
+  date  DateTime
+
+  @@map("log_error")
 }

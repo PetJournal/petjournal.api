@@ -1,8 +1,8 @@
 import { ForgetPasswordController } from '@/application/controllers/forget-password'
 import { EmailValidatorAdapter } from '@/application/validation/validators'
-import { DbLoadGuardianByEmail, DbSaveToken } from '@/data/use-cases'
+import { DbForgetPassword } from '@/data/use-cases'
 import { ForgetPasswordTokenGenerator } from '@/data/use-cases/forget-password-token-generation'
-import { JwtAdapter } from '@/infra/criptography/jwt-adapter'
+import { BcryptAdapter } from '@/infra/cryptography/bcrypt-adapter'
 import { NodeMailerAdapter } from '@/infra/node-mailer-adapter'
 import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
 import env from '@/main/config/env'
@@ -10,11 +10,10 @@ import env from '@/main/config/env'
 export const makeForgetPasswordController = (): ForgetPasswordController => {
   const emailValidator = new EmailValidatorAdapter()
   const loadGuardianByEmailRepository = new GuardianAccountRepository()
-  const dbLoadAccountByEmail = new DbLoadGuardianByEmail(loadGuardianByEmailRepository)
-  const jwtAdapter = new JwtAdapter(env.secret)
+  const salt = Number(env.salt)
+  const bcryptAdapter = new BcryptAdapter(salt)
   const saveTokenRepository = new GuardianAccountRepository()
-  const dbSaveToken = new DbSaveToken(saveTokenRepository)
-  const tokenGenerator = new ForgetPasswordTokenGenerator(jwtAdapter, dbSaveToken)
+  const tokenGenerator = new ForgetPasswordTokenGenerator(bcryptAdapter, saveTokenRepository)
   const transporter = {
     service: 'gmail',
     auth: {
@@ -23,11 +22,10 @@ export const makeForgetPasswordController = (): ForgetPasswordController => {
     }
   }
   const nodeMailerAdapter = new NodeMailerAdapter(transporter)
+  const dbForgetPassword = new DbForgetPassword({ loadGuardianByEmailRepository, tokenGenerator, emailService: nodeMailerAdapter })
   const dependencies: ForgetPasswordController.Dependencies = {
     emailValidator,
-    loadGuardianByEmail: dbLoadAccountByEmail,
-    tokenGenerator,
-    emailService: nodeMailerAdapter
+    forgetPassword: dbForgetPassword
   }
   return new ForgetPasswordController(dependencies)
 }
