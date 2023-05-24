@@ -1,6 +1,6 @@
 import { WaitingCodeController } from '@/application/controllers/waiting-code'
 import { InvalidParamError, MissingParamError } from '@/application/errors'
-import { badRequest, unauthorized } from '@/application/helpers/http'
+import { badRequest, success, unauthorized } from '@/application/helpers/http'
 import { type EmailValidator } from '@/application/validation/protocols'
 import { type ForgetCodeAuthentication } from '@/domain/use-cases'
 import { makeEmailValidator, makeForgetCodeAuthentication } from '@/tests/utils'
@@ -111,6 +111,22 @@ describe('WaitingCode Controller', () => {
         email: httpRequest.body.email,
         forgetPasswordCode: httpRequest.body.forgetPasswordCode
       })
+    })
+  })
+
+  describe('test success case', () => {
+    it('should return success if valid input is provided', async () => {
+      const { sut } = makeSut()
+      const httpRequest = {
+        body: {
+          email: 'valid_email',
+          forgetPasswordCode: 'valid_code'
+        }
+      }
+
+      const httpResponse = await sut.handle(httpRequest)
+
+      expect(httpResponse).toEqual(success({ message: 'Success, valid forget password code provided' }))
     })
   })
 })
