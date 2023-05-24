@@ -1,6 +1,6 @@
 import { WaitingCodeController } from '@/application/controllers/waiting-code'
 import { InvalidParamError, MissingParamError } from '@/application/errors'
-import { badRequest, success, unauthorized } from '@/application/helpers/http'
+import { type HttpRequest, badRequest, success, unauthorized } from '@/application/helpers/http'
 import { type EmailValidator } from '@/application/validation/protocols'
 import { type ForgetCodeAuthentication } from '@/domain/use-cases'
 import { makeEmailValidator, makeFakeServerError, makeForgetCodeAuthentication } from '@/tests/utils'
@@ -21,6 +21,13 @@ const makeSut = (): SutTypes => {
     forgetCodeAuthenticationStub
   }
 }
+
+const makeFakeWaitingCodeRequest = (): HttpRequest => ({
+  body: {
+    email: 'valid_email',
+    forgetPasswordCode: 'valid_code'
+  }
+})
 
 describe('WaitingCode Controller', () => {
   describe('tests the email field', () => {
@@ -52,30 +59,18 @@ describe('WaitingCode Controller', () => {
 
     it('should call EmailValidator with correct email', async () => {
       const { sut, emailValidatorStub } = makeSut()
-      const httpRequest = {
-        body: {
-          email: 'valid_email',
-          forgetPasswordCode: 'valid_code'
-        }
-      }
       const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
 
-      await sut.handle(httpRequest)
+      await sut.handle(makeFakeWaitingCodeRequest())
 
-      expect(isValidSpy).toHaveBeenCalledWith(httpRequest.body.email)
+      expect(isValidSpy).toHaveBeenCalledWith(makeFakeWaitingCodeRequest().body.email)
     })
 
     it('should throws if EmailValidator throws', async () => {
       const { sut, emailValidatorStub } = makeSut()
-      const httpRequest = {
-        body: {
-          email: 'valid_email',
-          forgetPasswordCode: 'valid_code'
-        }
-      }
       jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
 
-      const httpResponse = await sut.handle(httpRequest)
+      const httpResponse = await sut.handle(makeFakeWaitingCodeRequest())
 
       expect(httpResponse).toEqual(makeFakeServerError())
     })
@@ -130,15 +125,9 @@ describe('WaitingCode Controller', () => {
 
     it('should throws if ForgetCodeAuthentication throws', async () => {
       const { sut, forgetCodeAuthenticationStub } = makeSut()
-      const httpRequest = {
-        body: {
-          email: 'valid_email',
-          forgetPasswordCode: 'valid_code'
-        }
-      }
       jest.spyOn(forgetCodeAuthenticationStub, 'auth').mockImplementationOnce(() => { throw new Error() })
 
-      const httpResponse = await sut.handle(httpRequest)
+      const httpResponse = await sut.handle(makeFakeWaitingCodeRequest())
 
       expect(httpResponse).toEqual(makeFakeServerError())
     })
@@ -147,14 +136,8 @@ describe('WaitingCode Controller', () => {
   describe('test success case', () => {
     it('should return success if valid input is provided', async () => {
       const { sut } = makeSut()
-      const httpRequest = {
-        body: {
-          email: 'valid_email',
-          forgetPasswordCode: 'valid_code'
-        }
-      }
 
-      const httpResponse = await sut.handle(httpRequest)
+      const httpResponse = await sut.handle(makeFakeWaitingCodeRequest())
 
       expect(httpResponse).toEqual(success({ message: 'Success, valid forget password code provided' }))
     })
