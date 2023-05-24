@@ -14,5 +14,18 @@ describe('WaitingCode Controller', () => {
 
       expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
     })
+
+    it('should return bad request if no forgetPasswordCode is provided', async () => {
+      const sut = new WaitingCodeController()
+      const httpRequest = {
+        body: {
+          email: 'valid_email'
+        }
+      }
+
+      const httpResponse = await sut.handle(httpRequest)
+
+      expect(httpResponse).toEqual(badRequest(new MissingParamError('forgetPasswordCode')))
+    })
   })
 })
