@@ -3,7 +3,7 @@ import { InvalidParamError, MissingParamError } from '@/application/errors'
 import { badRequest, success, unauthorized } from '@/application/helpers/http'
 import { type EmailValidator } from '@/application/validation/protocols'
 import { type ForgetCodeAuthentication } from '@/domain/use-cases'
-import { makeEmailValidator, makeForgetCodeAuthentication } from '@/tests/utils'
+import { makeEmailValidator, makeFakeServerError, makeForgetCodeAuthentication } from '@/tests/utils'
 
 interface SutTypes {
   sut: WaitingCodeController
@@ -63,6 +63,21 @@ describe('WaitingCode Controller', () => {
       await sut.handle(httpRequest)
 
       expect(isValidSpy).toHaveBeenCalledWith(httpRequest.body.email)
+    })
+
+    it('should throws if EmailValidator throws', async () => {
+      const { sut, emailValidatorStub } = makeSut()
+      const httpRequest = {
+        body: {
+          email: 'valid_email',
+          forgetPasswordCode: 'valid_code'
+        }
+      }
+      jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
+
+      const httpResponse = await sut.handle(httpRequest)
+
+      expect(httpResponse).toEqual(makeFakeServerError())
     })
   })
 
