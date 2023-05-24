@@ -127,6 +127,21 @@ describe('WaitingCode Controller', () => {
         forgetPasswordCode: httpRequest.body.forgetPasswordCode
       })
     })
+
+    it('should throws if ForgetCodeAuthentication throws', async () => {
+      const { sut, forgetCodeAuthenticationStub } = makeSut()
+      const httpRequest = {
+        body: {
+          email: 'valid_email',
+          forgetPasswordCode: 'valid_code'
+        }
+      }
+      jest.spyOn(forgetCodeAuthenticationStub, 'auth').mockImplementationOnce(() => { throw new Error() })
+
+      const httpResponse = await sut.handle(httpRequest)
+
+      expect(httpResponse).toEqual(makeFakeServerError())
+    })
   })
 
   describe('test success case', () => {
