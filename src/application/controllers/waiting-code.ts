@@ -1,5 +1,5 @@
 import { type Controller } from '@/application/controllers/controller'
-import { type HttpRequest, type HttpResponse, badRequest, unauthorized, success } from '@/application/helpers/http'
+import { type HttpRequest, type HttpResponse, badRequest, unauthorized, success, serverError } from '@/application/helpers/http'
 import { InvalidParamError, MissingParamError } from '@/application/errors'
 import { type EmailValidator } from '../validation/protocols'
 import { type ForgetCodeAuthentication } from '@/domain/use-cases'
@@ -14,24 +14,28 @@ export class WaitingCodeController implements Controller {
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const requiredFields = ['email', 'forgetPasswordCode']
-    for (const field of requiredFields) {
-      if (httpRequest.body[field] === undefined) {
-        return badRequest(new MissingParamError(field))
+    try {
+      const requiredFields = ['email', 'forgetPasswordCode']
+      for (const field of requiredFields) {
+        if (httpRequest.body[field] === undefined) {
+          return badRequest(new MissingParamError(field))
+        }
       }
+      const { email, forgetPasswordCode } = httpRequest.body
+      const isEmailValid = this.emailValidator.isValid(email)
+      if (!isEmailValid) {
+        return badRequest(new InvalidParamError('email'))
+      }
+      const codeAuthorized = await this.forgetCodeAuthentication.auth({
+        email,
+        forgetPasswordCode
+      })
+      if (!codeAuthorized) {
+        return unauthorized()
+      }
+      return success({ message: 'Success, valid forget password code provided' })
+    } catch (error) {
+      return serverError(error as Error)
     }
-    const { email, forgetPasswordCode } = httpRequest.body
-    const isEmailValid = this.emailValidator.isValid(email)
-    if (!isEmailValid) {
-      return badRequest(new InvalidParamError('email'))
-    }
-    const codeAuthorized = await this.forgetCodeAuthentication.auth({
-      email,
-      forgetPasswordCode
-    })
-    if (!codeAuthorized) {
-      return unauthorized()
-    }
-    return success({ message: 'Success, valid forget password code provided' })
   }
 }
