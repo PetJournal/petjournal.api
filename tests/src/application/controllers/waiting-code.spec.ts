@@ -19,7 +19,7 @@ const makeSut = (): SutTypes => {
 }
 
 describe('WaitingCode Controller', () => {
-  describe('validations tests', () => {
+  describe('tests the email field', () => {
     it('should return bad request if no email is provided', async () => {
       const { sut } = makeSut()
       const httpRequest = {
@@ -29,19 +29,6 @@ describe('WaitingCode Controller', () => {
       const httpResponse = await sut.handle(httpRequest)
 
       expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
-    })
-
-    it('should return bad request if no forgetPasswordCode is provided', async () => {
-      const { sut } = makeSut()
-      const httpRequest = {
-        body: {
-          email: 'valid_email'
-        }
-      }
-
-      const httpResponse = await sut.handle(httpRequest)
-
-      expect(httpResponse).toEqual(badRequest(new MissingParamError('forgetPasswordCode')))
     })
 
     it('should return bad request if invalid email is provided', async () => {
@@ -57,6 +44,36 @@ describe('WaitingCode Controller', () => {
       const httpResponse = await sut.handle(httpRequest)
 
       expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
+    })
+
+    it('should call EmailValidator with correct email', async () => {
+      const { sut, emailValidatorStub } = makeSut()
+      const httpRequest = {
+        body: {
+          email: 'valid_email',
+          forgetPasswordCode: 'valid_code'
+        }
+      }
+      const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
+
+      await sut.handle(httpRequest)
+
+      expect(isValidSpy).toHaveBeenCalledWith(httpRequest.body.email)
+    })
+  })
+
+  describe('tests the forgetPasswordCode field', () => {
+    it('should return bad request if no forgetPasswordCode is provided', async () => {
+      const { sut } = makeSut()
+      const httpRequest = {
+        body: {
+          email: 'valid_email'
+        }
+      }
+
+      const httpResponse = await sut.handle(httpRequest)
+
+      expect(httpResponse).toEqual(badRequest(new MissingParamError('forgetPasswordCode')))
     })
   })
 })
