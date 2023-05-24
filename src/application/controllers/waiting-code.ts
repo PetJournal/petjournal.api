@@ -1,5 +1,5 @@
 import { type Controller } from '@/application/controllers/controller'
-import { type HttpRequest, type HttpResponse, badRequest, serverError, unauthorized } from '@/application/helpers/http'
+import { type HttpRequest, type HttpResponse, badRequest, unauthorized, success } from '@/application/helpers/http'
 import { InvalidParamError, MissingParamError } from '@/application/errors'
 import { type EmailValidator } from '../validation/protocols'
 import { type ForgetCodeAuthentication } from '@/domain/use-cases'
@@ -32,7 +32,6 @@ export class WaitingCodeController implements Controller {
     if (!codeAuthorized) {
       return unauthorized()
     }
-
-    return serverError(new Error())
+    return success({ message: 'Success, valid forget password code provided' })
   }
 }
