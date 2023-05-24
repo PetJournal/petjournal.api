@@ -1,4 +1,4 @@
-import { type Authentication, type AddGuardian } from '@/domain/use-cases'
+import { type Authentication, type AddGuardian, type ForgetCodeAuthentication } from '@/domain/use-cases'
 import { makeFakeGuardianWithIdData } from '../mocks'
 
 const makeAddGuardian = (): AddGuardian => {
@@ -20,7 +20,17 @@ const makeAuthentication = (): Authentication => {
   return new AuthenticationStub()
 }
 
+const makeForgetCodeAuthentication = (): ForgetCodeAuthentication => {
+  class ForgetCodeAuthenticationStub implements ForgetCodeAuthentication {
+    async auth (input: ForgetCodeAuthentication.Params): Promise<ForgetCodeAuthentication.Result> {
+      return true
+    }
+  }
+  return new ForgetCodeAuthenticationStub()
+}
+
 export {
   makeAddGuardian,
-  makeAuthentication
+  makeAuthentication,
+  makeForgetCodeAuthentication
 }

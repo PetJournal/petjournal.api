@@ -1,20 +1,24 @@
 import { WaitingCodeController } from '@/application/controllers/waiting-code'
 import { InvalidParamError, MissingParamError } from '@/application/errors'
-import { badRequest } from '@/application/helpers/http'
+import { badRequest, unauthorized } from '@/application/helpers/http'
 import { type EmailValidator } from '@/application/validation/protocols'
-import { makeEmailValidator } from '@/tests/utils'
+import { type ForgetCodeAuthentication } from '@/domain/use-cases'
+import { makeEmailValidator, makeForgetCodeAuthentication } from '@/tests/utils'
 
 interface SutTypes {
   sut: WaitingCodeController
   emailValidatorStub: EmailValidator
+  forgetCodeAuthenticationStub: ForgetCodeAuthentication
 }
 
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
-  const sut = new WaitingCodeController(emailValidatorStub)
+  const forgetCodeAuthenticationStub = makeForgetCodeAuthentication()
+  const sut = new WaitingCodeController(emailValidatorStub, forgetCodeAuthenticationStub)
   return {
     sut,
-    emailValidatorStub
+    emailValidatorStub,
+    forgetCodeAuthenticationStub
   }
 }
 
@@ -74,6 +78,21 @@ describe('WaitingCode Controller', () => {
       const httpResponse = await sut.handle(httpRequest)
 
       expect(httpResponse).toEqual(badRequest(new MissingParamError('forgetPasswordCode')))
+    })
+
+    it('should return unauthorized if invalid forgetPasswordCode is provided', async () => {
+      const { sut, forgetCodeAuthenticationStub } = makeSut()
+      const httpRequest = {
+        body: {
+          email: 'valid_email',
+          forgetPasswordCode: 'invalid_code'
+        }
+      }
+      jest.spyOn(forgetCodeAuthenticationStub, 'auth').mockResolvedValueOnce(false)
+
+      const httpResponse = await sut.handle(httpRequest)
+
+      expect(httpResponse).toEqual(unauthorized())
     })
   })
 })
