@@ -94,5 +94,23 @@ describe('WaitingCode Controller', () => {
 
       expect(httpResponse).toEqual(unauthorized())
     })
+
+    it('should call ForgetCodeAuthentication with correct values', async () => {
+      const { sut, forgetCodeAuthenticationStub } = makeSut()
+      const httpRequest = {
+        body: {
+          email: 'valid_email',
+          forgetPasswordCode: 'invalid_code'
+        }
+      }
+      const codeAuthSpy = jest.spyOn(forgetCodeAuthenticationStub, 'auth').mockResolvedValueOnce(false)
+
+      await sut.handle(httpRequest)
+
+      expect(codeAuthSpy).toHaveBeenCalledWith({
+        email: httpRequest.body.email,
+        forgetPasswordCode: httpRequest.body.forgetPasswordCode
+      })
+    })
   })
 })
