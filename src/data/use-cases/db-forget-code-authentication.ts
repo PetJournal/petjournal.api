@@ -1,5 +1,6 @@
 import { type ForgetCodeAuthentication } from '@/domain/use-cases'
 import { type LoadGuardianByEmailRepository } from '@/data/protocols'
+import { NotFoundError } from '@/application/errors'
 
 export class DbForgetCodeAuthentication implements ForgetCodeAuthentication {
   private readonly loadGuardianByEmailRepository: LoadGuardianByEmailRepository
@@ -11,7 +12,9 @@ export class DbForgetCodeAuthentication implements ForgetCodeAuthentication {
   }
 
   async auth (input: ForgetCodeAuthentication.Params): Promise<ForgetCodeAuthentication.Result> {
-    await this.loadGuardianByEmailRepository.loadByEmail(input.email)
-    return false
+    const guardian = await this.loadGuardianByEmailRepository.loadByEmail(input.email)
+    if (!guardian) {
+      return new NotFoundError('email')
+    }
   }
 }

@@ -20,9 +20,9 @@ export const conflict = (error: Error): HttpResponse => ({
   body: error
 })
 
-export const unauthorized = (): HttpResponse => ({
+export const unauthorized = (error?: Error): HttpResponse => ({
   statusCode: 401,
-  body: new UnauthorizedError()
+  body: error ?? new UnauthorizedError()
 })
 
 export const serverError = (error: Error): HttpResponse => ({

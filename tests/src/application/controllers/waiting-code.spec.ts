@@ -98,11 +98,11 @@ describe('WaitingCode Controller', () => {
           forgetPasswordCode: 'invalid_code'
         }
       }
-      jest.spyOn(forgetCodeAuthenticationStub, 'auth').mockResolvedValueOnce(false)
+      jest.spyOn(forgetCodeAuthenticationStub, 'auth').mockResolvedValueOnce(new Error())
 
       const httpResponse = await sut.handle(httpRequest)
 
-      expect(httpResponse).toEqual(unauthorized())
+      expect(httpResponse).toEqual(unauthorized(new Error()))
     })
 
     it('should call ForgetCodeAuthentication with correct values', async () => {
@@ -113,7 +113,7 @@ describe('WaitingCode Controller', () => {
           forgetPasswordCode: 'invalid_code'
         }
       }
-      const codeAuthSpy = jest.spyOn(forgetCodeAuthenticationStub, 'auth').mockResolvedValueOnce(false)
+      const codeAuthSpy = jest.spyOn(forgetCodeAuthenticationStub, 'auth').mockResolvedValueOnce(new Error())
 
       await sut.handle(httpRequest)
 
