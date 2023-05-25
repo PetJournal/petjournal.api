@@ -35,6 +35,15 @@ describe('DbForgetCodeAuthentication UseCase', () => {
       expect(result).toStrictEqual(new NotFoundError('email'))
     })
 
+    it('Should throw if LoadGuardianByEmailRepository throws', async () => {
+      const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
+      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail').mockRejectedValueOnce(new Error())
+
+      const promise = sut.auth(fakeInput)
+
+      await expect(promise).rejects.toThrow()
+    })
+
     it('Should call LoadGuardianByEmailRepository with correct email', async () => {
       const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail')
