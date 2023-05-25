@@ -1,3 +1,4 @@
+import { type Controller } from '@/application/controllers/controller'
 import { ForgetPasswordController } from '@/application/controllers/forget-password'
 import { EmailValidatorAdapter } from '@/application/validation/validators'
 import { DbForgetPassword } from '@/data/use-cases'
@@ -5,9 +6,11 @@ import { ForgetPasswordTokenGenerator } from '@/data/use-cases/forget-password-t
 import { BcryptAdapter } from '@/infra/cryptography/bcrypt-adapter'
 import { NodeMailerAdapter } from '@/infra/node-mailer-adapter'
 import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
+import { LoggerPgRepository } from '@/infra/repos/postgresql/logger-repository'
 import env from '@/main/config/env'
+import { LoggerControllerDecorator } from '@/main/decorators/logger'
 
-export const makeForgetPasswordController = (): ForgetPasswordController => {
+export const makeForgetPasswordController = (): Controller => {
   const emailValidator = new EmailValidatorAdapter()
   const loadGuardianByEmailRepository = new GuardianAccountRepository()
   const salt = Number(env.salt)
@@ -27,5 +30,7 @@ export const makeForgetPasswordController = (): ForgetPasswordController => {
     emailValidator,
     forgetPassword: dbForgetPassword
   }
-  return new ForgetPasswordController(dependencies)
+  const loggerPgRepository = new LoggerPgRepository()
+  const forgetPasswordController = new ForgetPasswordController(dependencies)
+  return new LoggerControllerDecorator(forgetPasswordController, loggerPgRepository)
 }
