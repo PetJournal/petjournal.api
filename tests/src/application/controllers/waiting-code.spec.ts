@@ -14,7 +14,7 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
   const forgetCodeAuthenticationStub = makeForgetCodeAuthentication()
-  const sut = new WaitingCodeController(emailValidatorStub, forgetCodeAuthenticationStub)
+  const sut = new WaitingCodeController({ emailValidator: emailValidatorStub, forgetCodeAuthentication: forgetCodeAuthenticationStub })
   return {
     sut,
     emailValidatorStub,

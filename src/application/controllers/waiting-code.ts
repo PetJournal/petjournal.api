@@ -8,7 +8,7 @@ export class WaitingCodeController implements Controller {
   private readonly emailValidator: EmailValidator
   private readonly forgetCodeAuthentication: ForgetCodeAuthentication
 
-  constructor (emailValidator: EmailValidator, forgetCodeAuthentication: ForgetCodeAuthentication) {
+  constructor ({ emailValidator, forgetCodeAuthentication }: WaitingCodeController.Dependencies) {
     this.emailValidator = emailValidator
     this.forgetCodeAuthentication = forgetCodeAuthentication
   }
@@ -37,5 +37,12 @@ export class WaitingCodeController implements Controller {
     } catch (error) {
       return serverError(error as Error)
     }
+  }
+}
+
+namespace WaitingCodeController {
+  export interface Dependencies {
+    emailValidator: EmailValidator
+    forgetCodeAuthentication: ForgetCodeAuthentication
   }
 }
