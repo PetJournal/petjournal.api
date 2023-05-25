@@ -20,8 +20,8 @@ export class ForgetPasswordController implements Controller {
         return badRequest(new MissingParamError('email'))
       }
 
-      const isValid = this.emailValidator.isValid(email)
-      if (!isValid) {
+      const isValidEmail = this.emailValidator.isValid(email)
+      if (!isValidEmail) {
         return badRequest(new InvalidParamError('email'))
       }
 

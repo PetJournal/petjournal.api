@@ -1,9 +1,11 @@
 import { ForgetPasswordController } from '@/application/controllers/forget-password'
 import { type EmailValidator } from '@/application/validation/protocols'
-import { type TokenGenerator } from '@/data/protocols/recovery-password/token-generator'
+import { type TokenGenerator } from '@/data/protocols/cryptography'
 import { type ForgetPassword, type EmailService } from '@/domain/use-cases'
 import { makeEmailValidator, makeFakeGuardianWithIdData, makeFakeServerError, makeLoadGuardianByEmail, makeTokenGenerator } from '@/tests/utils'
 import { type LoadGuardianByEmailRepository } from '@/data/protocols'
+import { NotFoundError } from '@/application/errors'
+import { badRequest } from '@/application/helpers/http'
 
 const makeEmailService = (): EmailService => {
   class EmailServiceStub implements EmailService {
@@ -103,5 +105,17 @@ describe('ForgetPassword Controller', () => {
 
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(makeFakeServerError())
+  })
+
+  it('Should return 400 if no guardian is found with the provided email', async () => {
+    const { sut, forgetPasswordStub } = makeSut()
+    jest.spyOn(forgetPasswordStub, 'forgetPassword').mockReturnValueOnce(new Promise(resolve => { resolve(false) }))
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com'
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new NotFoundError('email')))
   })
 })
