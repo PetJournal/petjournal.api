@@ -1,7 +1,8 @@
-import { forgetPasswordPath, loginPath, signUpPath } from '@/main/docs/paths/'
+import { forgetPasswordPath, loginPath, signUpPath, waitingCodePath } from '@/main/docs/paths/'
 
 export default {
-  '/forget-password': forgetPasswordPath,
+  '/signup': signUpPath,
   '/login': loginPath,
-  '/signup': signUpPath
+  '/forget-password': forgetPasswordPath,
+  '/waiting-code': waitingCodePath
 }
