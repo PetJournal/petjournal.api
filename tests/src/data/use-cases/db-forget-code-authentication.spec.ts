@@ -63,6 +63,17 @@ describe('DbForgetCodeAuthentication UseCase', () => {
       expect(result).toStrictEqual(new InvalidForgetCodeError())
     })
 
+    it('should call HashComparer with empty value if falsy forgetPasswordToken is provided', async () => {
+      const { sut, hashComparerStub, loadGuardianByEmailRepositoryStub } = makeSut()
+      const fakeGuardian = { ...makeFakeGuardianWithIdData(), forgetPasswordToken: null }
+      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail').mockResolvedValueOnce(fakeGuardian)
+      const spyHashComparer = jest.spyOn(hashComparerStub, 'compare')
+
+      await sut.auth(fakeInput)
+
+      expect(spyHashComparer).toHaveBeenCalledWith({ value: fakeInput.forgetPasswordCode, hash: '' })
+    })
+
     it('Should throw if HashComparer throws', async () => {
       const { sut, hashComparerStub } = makeSut()
       jest.spyOn(hashComparerStub, 'compare').mockRejectedValueOnce(new Error())
