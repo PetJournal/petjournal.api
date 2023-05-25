@@ -88,4 +88,10 @@ describe('DbForgetPassword UseCase', () => {
     const isSuccess = await sut.forgetPassword({ email: 'any_email@mail.com' })
     expect(isSuccess).toBe(false)
   })
+
+  it('Should return true if all succeeds', async () => {
+    const { sut } = makeSut()
+    const isSuccess = await sut.forgetPassword({ email: 'any_email@mail.com' })
+    expect(isSuccess).toBe(true)
+  })
 })
