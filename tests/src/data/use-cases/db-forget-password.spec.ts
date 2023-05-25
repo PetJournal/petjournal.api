@@ -81,4 +81,11 @@ describe('DbForgetPassword UseCase', () => {
     })
     expect(sendSpy).toBeTruthy()
   })
+
+  it('Should return false if LoadGuardianByEmail returns undefined', async () => {
+    const { sut, loadGuardianByEmailStub } = makeSut()
+    jest.spyOn(loadGuardianByEmailStub, 'loadByEmail').mockReturnValueOnce(new Promise(resolve => { resolve(undefined) }))
+    const isSuccess = await sut.forgetPassword({ email: 'any_email@mail.com' })
+    expect(isSuccess).toBe(false)
+  })
 })
