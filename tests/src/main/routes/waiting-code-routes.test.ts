@@ -8,7 +8,7 @@ describe('waiting-code-routes', () => {
   afterEach(async () => { await PrismaHelper.disconnect() })
 
   describe('WaitingCode Routes', () => {
-    it('Should return 400 with invalid body', async () => {
+    it('Should return 400 if invalid body is provided', async () => {
       await request(app)
         .post('/api/waiting-code')
         .send({
@@ -20,6 +20,15 @@ describe('waiting-code-routes', () => {
         .send({
           forgetPasswordCode: 'valide_code'
         }).expect(400)
+    })
+
+    it('Should return 401 if incorrect email or code is provided', async () => {
+      await request(app)
+        .post('/api/waiting-code')
+        .send({
+          email: 'incorrect@email.com',
+          forgetPasswordCode: 'valide_code'
+        }).expect(401)
     })
   })
 })
