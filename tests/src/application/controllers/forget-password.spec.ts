@@ -5,7 +5,7 @@ import { type ForgetPassword, type EmailService } from '@/domain/use-cases'
 import { makeEmailValidator, makeFakeGuardianWithIdData, makeFakeServerError, makeLoadGuardianByEmail, makeTokenGenerator } from '@/tests/utils'
 import { type LoadGuardianByEmailRepository } from '@/data/protocols'
 import { NotFoundError } from '@/application/errors'
-import { badRequest } from '@/application/helpers/http'
+import { badRequest, success } from '@/application/helpers/http'
 
 const makeEmailService = (): EmailService => {
   class EmailServiceStub implements EmailService {
@@ -117,5 +117,16 @@ describe('ForgetPassword Controller', () => {
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new NotFoundError('email')))
+  })
+
+  it('Should return 200 if an valid email is provided', async () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com'
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(success({ message: 'Email sent successfully' }))
   })
 })
