@@ -5,7 +5,7 @@ import { type ForgetPassword, type EmailService } from '@/domain/use-cases'
 import { makeEmailValidator, makeFakeGuardianWithIdData, makeFakeServerError, makeLoadGuardianByEmail, makeTokenGenerator } from '@/tests/utils'
 import { type LoadGuardianByEmailRepository } from '@/data/protocols'
 import { NotFoundError } from '@/application/errors'
-import { badRequest, success } from '@/application/helpers/http'
+import { badRequest, success, type HttpRequest } from '@/application/helpers/http'
 
 const makeEmailService = (): EmailService => {
   class EmailServiceStub implements EmailService {
@@ -23,6 +23,14 @@ const makeForgetPassword = (): ForgetPassword => {
     }
   }
   return new ForgetPasswordStub()
+}
+
+const makeFakeRequest = (): HttpRequest => {
+  return {
+    body: {
+      email: 'any_email@mail.com'
+    }
+  }
 }
 
 interface SutTypes {
@@ -69,13 +77,7 @@ describe('ForgetPassword Controller', () => {
   it('Should return 400 if an invalid email is provided', async () => {
     const { sut, emailValidatorStub } = makeSut()
     jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
-    const httpRequest = {
-      body: {
-        email: 'invalid_email@mail.com'
-      }
-    }
-
-    const httpResponse = await sut.handle(httpRequest)
+    const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse.statusCode).toBe(400)
   })
 
@@ -87,7 +89,6 @@ describe('ForgetPassword Controller', () => {
         email: 'valid_email@mail.com'
       }
     }
-
     await sut.handle(httpRequest)
     expect(isValidSpy).toHaveBeenCalledWith('valid_email@mail.com')
   })
@@ -97,36 +98,20 @@ describe('ForgetPassword Controller', () => {
     jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
       throw new Error()
     })
-    const httpRequest = {
-      body: {
-        email: 'any_email@mail.com'
-      }
-    }
-
-    const httpResponse = await sut.handle(httpRequest)
+    const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(makeFakeServerError())
   })
 
   it('Should return 400 if no guardian is found with the provided email', async () => {
     const { sut, forgetPasswordStub } = makeSut()
     jest.spyOn(forgetPasswordStub, 'forgetPassword').mockReturnValueOnce(new Promise(resolve => { resolve(false) }))
-    const httpRequest = {
-      body: {
-        email: 'any_email@mail.com'
-      }
-    }
-    const httpResponse = await sut.handle(httpRequest)
+    const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(badRequest(new NotFoundError('email')))
   })
 
   it('Should return 200 if an valid email is provided', async () => {
     const { sut } = makeSut()
-    const httpRequest = {
-      body: {
-        email: 'any_email@mail.com'
-      }
-    }
-    const httpResponse = await sut.handle(httpRequest)
+    const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(success({ message: 'Email sent successfully' }))
   })
 })
