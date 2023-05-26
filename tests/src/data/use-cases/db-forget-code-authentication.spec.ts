@@ -1,22 +1,29 @@
 import { InvalidForgetCodeError, NotFoundError } from '@/application/errors'
-import { type HashComparer, type LoadGuardianByEmailRepository } from '@/data/protocols'
+import { type TokenGenerator, type HashComparer, type LoadGuardianByEmailRepository } from '@/data/protocols'
 import { DbForgetCodeAuthentication } from '@/data/use-cases/db-forget-code-authentication'
-import { makeFakeGuardianWithIdData, makeHashComparer, makeLoadGuardianByEmail } from '@/tests/utils'
+import { makeFakeGuardianWithIdData, makeHashComparer, makeLoadGuardianByEmail, makeTokenGenerator } from '@/tests/utils'
 
 interface SutTypes {
   sut: DbForgetCodeAuthentication
   loadGuardianByEmailRepositoryStub: LoadGuardianByEmailRepository
   hashComparerStub: HashComparer
+  tokenGeneratorStub: TokenGenerator
 }
 
 const makeSut = (): SutTypes => {
   const loadGuardianByEmailRepositoryStub = makeLoadGuardianByEmail(makeFakeGuardianWithIdData())
   const hashComparerStub = makeHashComparer()
-  const sut = new DbForgetCodeAuthentication({ loadGuardianByEmailRepository: loadGuardianByEmailRepositoryStub, hashComparer: hashComparerStub })
+  const tokenGeneratorStub = makeTokenGenerator()
+  const sut = new DbForgetCodeAuthentication({
+    loadGuardianByEmailRepository: loadGuardianByEmailRepositoryStub,
+    hashComparer: hashComparerStub,
+    tokenGenerator: tokenGeneratorStub
+  })
   return {
     sut,
     loadGuardianByEmailRepositoryStub,
-    hashComparerStub
+    hashComparerStub,
+    tokenGeneratorStub
   }
 }
 
@@ -92,6 +99,17 @@ describe('DbForgetCodeAuthentication UseCase', () => {
       await sut.auth(fakeInput)
 
       expect(spyHashComparer).toHaveBeenCalledWith({ value: fakeInput.forgetPasswordCode, hash: fakeGuardian.forgetPasswordToken })
+    })
+  })
+
+  describe('test TokenGenerator', () => {
+    it('should call TokenGenerator with correct value', async () => {
+      const { sut, tokenGeneratorStub } = makeSut()
+      const spyTokenGenerator = jest.spyOn(tokenGeneratorStub, 'generate')
+
+      await sut.auth(fakeInput)
+
+      expect(spyTokenGenerator).toHaveBeenCalledWith({ sub: makeFakeGuardianWithIdData().id })
     })
   })
 })
