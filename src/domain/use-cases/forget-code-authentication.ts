@@ -2,7 +2,8 @@ import {
   type TokenGenerator,
   type HashComparer,
   type LoadGuardianByEmailRepository,
-  type HashGenerator
+  type HashGenerator,
+  type UpdateAccessTokenRepository
 } from '@/data/protocols'
 
 export interface ForgetCodeAuthentication {
@@ -19,6 +20,7 @@ export namespace ForgetCodeAuthentication {
 
   export interface Dependencies {
     loadGuardianByEmailRepository: LoadGuardianByEmailRepository
+    updateAccessTokenRepository: UpdateAccessTokenRepository
     hashComparer: HashComparer
     tokenGenerator: TokenGenerator
     hashGenerator: HashGenerator

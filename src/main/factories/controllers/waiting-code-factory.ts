@@ -11,11 +11,12 @@ export const makeWaitingCodeController = (): WaitingCodeController => {
   const salt = Number(env.salt)
   const secret = env.secret
   const emailValidator = new EmailValidatorAdapter()
-  const loadGuardianByEmailRepository = new GuardianAccountRepository()
+  const repository = new GuardianAccountRepository()
   const hasher = new BcryptAdapter(salt)
   const tokenGenerator = new JwtAdapter(secret)
   const forgetCodeAuthentication = new DbForgetCodeAuthentication({
-    loadGuardianByEmailRepository,
+    loadGuardianByEmailRepository: repository,
+    updateAccessTokenRepository: repository,
     hashComparer: hasher,
     hashGenerator: hasher,
     tokenGenerator
