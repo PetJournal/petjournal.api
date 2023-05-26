@@ -3,7 +3,8 @@ import {
   type TokenGenerator,
   type HashComparer,
   type LoadGuardianByEmailRepository,
-  type HashGenerator
+  type HashGenerator,
+  type UpdateAccessTokenRepository
 } from '@/data/protocols'
 import { DbForgetCodeAuthentication } from '@/data/use-cases/db-forget-code-authentication'
 import {
@@ -11,7 +12,8 @@ import {
   makeHashComparer,
   makeHashGenerator,
   makeLoadGuardianByEmail,
-  makeTokenGenerator
+  makeTokenGenerator,
+  makeUpdateAccessTokenRepository
 } from '@/tests/utils'
 
 interface SutTypes {
@@ -20,6 +22,7 @@ interface SutTypes {
   hashComparerStub: HashComparer
   hashGeneratorStub: HashGenerator
   tokenGeneratorStub: TokenGenerator
+  updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
 }
 
 const makeSut = (): SutTypes => {
@@ -27,8 +30,10 @@ const makeSut = (): SutTypes => {
   const hashComparerStub = makeHashComparer()
   const tokenGeneratorStub = makeTokenGenerator()
   const hashGeneratorStub = makeHashGenerator()
+  const updateAccessTokenRepositoryStub = makeUpdateAccessTokenRepository()
   const sut = new DbForgetCodeAuthentication({
     loadGuardianByEmailRepository: loadGuardianByEmailRepositoryStub,
+    updateAccessTokenRepository: updateAccessTokenRepositoryStub,
     hashComparer: hashComparerStub,
     tokenGenerator: tokenGeneratorStub,
     hashGenerator: hashGeneratorStub
@@ -36,6 +41,7 @@ const makeSut = (): SutTypes => {
   return {
     sut,
     loadGuardianByEmailRepositoryStub,
+    updateAccessTokenRepositoryStub,
     hashComparerStub,
     hashGeneratorStub,
     tokenGeneratorStub
@@ -136,6 +142,16 @@ describe('DbForgetCodeAuthentication UseCase', () => {
       await sut.auth(fakeInput)
 
       expect(spyHashGenerator).toHaveBeenCalledWith({ value: 'valid_token' })
+    })
+  })
+  describe('tests UpdateAccessTokenRepository service', () => {
+    it('Should call UpdateAccessTokenRepository with correct values', async () => {
+      const { sut, updateAccessTokenRepositoryStub } = makeSut()
+      const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
+
+      await sut.auth(fakeInput)
+
+      expect(updateSpy).toHaveBeenCalledWith({ id: 'valid_id', token: 'hashed_value' })
     })
   })
 })
