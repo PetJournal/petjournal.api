@@ -1,4 +1,9 @@
-import { type TokenGenerator, type HashComparer, type LoadGuardianByEmailRepository } from '@/data/protocols'
+import {
+  type TokenGenerator,
+  type HashComparer,
+  type LoadGuardianByEmailRepository,
+  type HashGenerator
+} from '@/data/protocols'
 
 export interface ForgetCodeAuthentication {
   auth: (input: ForgetCodeAuthentication.Params) => Promise<ForgetCodeAuthentication.Result>
@@ -16,5 +21,6 @@ export namespace ForgetCodeAuthentication {
     loadGuardianByEmailRepository: LoadGuardianByEmailRepository
     hashComparer: HashComparer
     tokenGenerator: TokenGenerator
+    hashGenerator: HashGenerator
   }
 }
