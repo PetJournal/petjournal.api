@@ -1,6 +1,6 @@
 import { type HttpRequest } from '@/application/helpers/http'
 import { type TokenDecoder } from '@/data/protocols'
-import { type LoginRequest, type SignUpRequest } from '@/tests/utils'
+import { type WaitingCodeRequest, type LoginRequest, type SignUpRequest } from '@/tests/utils'
 
 const makeFakeAuthorization = ({ data }: { data: string }): HttpRequest => ({
   authorization: data
@@ -30,8 +30,17 @@ const makeFakeLogin = (): LoginRequest => ({
   password: 'any_password'
 })
 
-const makeFakeRequest = (): HttpRequest => ({
+const makeFakeLoginRequest = (): HttpRequest => ({
   body: makeFakeLogin()
+})
+
+const makeFakeWaitingCode = (): WaitingCodeRequest => ({
+  email: 'valid_email',
+  forgetPasswordCode: 'valid_code'
+})
+
+const makeFakeWaitingCodeRequest = (): HttpRequest => ({
+  body: makeFakeWaitingCode()
 })
 
 const makeFakePayload = (): TokenDecoder.Result => ({
@@ -41,7 +50,9 @@ const makeFakePayload = (): TokenDecoder.Result => ({
 export {
   makeFakeSignUpRequest,
   makeFakeLogin,
+  makeFakeLoginRequest,
   makeFakeAuthorization,
-  makeFakePayload,
-  makeFakeRequest
+  makeFakeWaitingCode,
+  makeFakeWaitingCodeRequest,
+  makeFakePayload
 }
