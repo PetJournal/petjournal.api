@@ -1,18 +1,21 @@
 import { type ForgetCodeAuthentication } from '@/domain/use-cases'
-import { type HashComparer, type LoadGuardianByEmailRepository } from '@/data/protocols'
+import { type TokenGenerator, type HashComparer, type LoadGuardianByEmailRepository } from '@/data/protocols'
 import { NotFoundError } from '@/application/errors'
 import { InvalidForgetCodeError } from '@/application/errors/invalid-forget-code-error'
 
 export class DbForgetCodeAuthentication implements ForgetCodeAuthentication {
   private readonly loadGuardianByEmailRepository: LoadGuardianByEmailRepository
   private readonly hashComparer: HashComparer
+  private readonly tokenGenerator: TokenGenerator
 
   constructor ({
     loadGuardianByEmailRepository,
-    hashComparer
+    hashComparer,
+    tokenGenerator
   }: ForgetCodeAuthentication.Dependencies) {
     this.loadGuardianByEmailRepository = loadGuardianByEmailRepository
     this.hashComparer = hashComparer
+    this.tokenGenerator = tokenGenerator
   }
 
   async auth (input: ForgetCodeAuthentication.Params): Promise<ForgetCodeAuthentication.Result> {
@@ -24,5 +27,6 @@ export class DbForgetCodeAuthentication implements ForgetCodeAuthentication {
     if (!isValid) {
       return new InvalidForgetCodeError()
     }
+    await this.tokenGenerator.generate({ sub: guardian.id })
   }
 }
