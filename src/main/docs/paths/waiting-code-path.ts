@@ -23,10 +23,7 @@ export const waitingCodePath = {
         content: {
           'application/json': {
             schema: {
-              type: 'object',
-              example: {
-                message: 'Success, valid forget password code provided'
-              }
+              $ref: '#/schemas/accessToken'
             }
           }
         }
