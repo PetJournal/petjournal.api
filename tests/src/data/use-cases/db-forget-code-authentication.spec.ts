@@ -1,12 +1,24 @@
 import { InvalidForgetCodeError, NotFoundError } from '@/application/errors'
-import { type TokenGenerator, type HashComparer, type LoadGuardianByEmailRepository } from '@/data/protocols'
+import {
+  type TokenGenerator,
+  type HashComparer,
+  type LoadGuardianByEmailRepository,
+  type HashGenerator
+} from '@/data/protocols'
 import { DbForgetCodeAuthentication } from '@/data/use-cases/db-forget-code-authentication'
-import { makeFakeGuardianWithIdData, makeHashComparer, makeLoadGuardianByEmail, makeTokenGenerator } from '@/tests/utils'
+import {
+  makeFakeGuardianWithIdData,
+  makeHashComparer,
+  makeHashGenerator,
+  makeLoadGuardianByEmail,
+  makeTokenGenerator
+} from '@/tests/utils'
 
 interface SutTypes {
   sut: DbForgetCodeAuthentication
   loadGuardianByEmailRepositoryStub: LoadGuardianByEmailRepository
   hashComparerStub: HashComparer
+  hashGeneratorStub: HashGenerator
   tokenGeneratorStub: TokenGenerator
 }
 
@@ -14,15 +26,18 @@ const makeSut = (): SutTypes => {
   const loadGuardianByEmailRepositoryStub = makeLoadGuardianByEmail(makeFakeGuardianWithIdData())
   const hashComparerStub = makeHashComparer()
   const tokenGeneratorStub = makeTokenGenerator()
+  const hashGeneratorStub = makeHashGenerator()
   const sut = new DbForgetCodeAuthentication({
     loadGuardianByEmailRepository: loadGuardianByEmailRepositoryStub,
     hashComparer: hashComparerStub,
-    tokenGenerator: tokenGeneratorStub
+    tokenGenerator: tokenGeneratorStub,
+    hashGenerator: hashGeneratorStub
   })
   return {
     sut,
     loadGuardianByEmailRepositoryStub,
     hashComparerStub,
+    hashGeneratorStub,
     tokenGeneratorStub
   }
 }
@@ -110,6 +125,17 @@ describe('DbForgetCodeAuthentication UseCase', () => {
       await sut.auth(fakeInput)
 
       expect(spyTokenGenerator).toHaveBeenCalledWith({ sub: makeFakeGuardianWithIdData().id })
+    })
+  })
+  describe('test HashGenerator', () => {
+    it('should call HashGenerator with correct value', async () => {
+      const { sut, hashGeneratorStub, tokenGeneratorStub } = makeSut()
+      const spyHashGenerator = jest.spyOn(hashGeneratorStub, 'encrypt')
+      jest.spyOn(tokenGeneratorStub, 'generate').mockResolvedValueOnce('valid_token')
+
+      await sut.auth(fakeInput)
+
+      expect(spyHashGenerator).toHaveBeenCalledWith({ value: 'valid_token' })
     })
   })
 })
