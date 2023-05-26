@@ -134,12 +134,12 @@ describe('WaitingCode Controller', () => {
   })
 
   describe('test success case', () => {
-    it('should return success if valid input is provided', async () => {
+    it('should return accessToken if valid input is provided', async () => {
       const { sut } = makeSut()
 
       const httpResponse = await sut.handle(makeFakeWaitingCodeRequest())
 
-      expect(httpResponse).toEqual(success({ message: 'Success, valid forget password code provided' }))
+      expect(httpResponse).toEqual(success({ accessToken: 'hashed_value' }))
     })
   })
 })

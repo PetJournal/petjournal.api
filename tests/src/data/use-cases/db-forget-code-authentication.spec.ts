@@ -53,6 +53,7 @@ describe('DbForgetCodeAuthentication UseCase', () => {
     email: 'any_email',
     forgetPasswordCode: 'any_code'
   }
+
   describe('tests LoadGuardianByEmailRepository', () => {
     it('Should return NotFoundError if not found email is provided', async () => {
       const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
@@ -81,6 +82,7 @@ describe('DbForgetCodeAuthentication UseCase', () => {
       expect(loadSpy).toHaveBeenCalledWith(fakeInput.email)
     })
   })
+
   describe('test HashComparer', () => {
     it('should return InvalidForgetCodeError if invalid code is provided', async () => {
       const { sut, hashComparerStub } = makeSut()
@@ -133,6 +135,7 @@ describe('DbForgetCodeAuthentication UseCase', () => {
       expect(spyTokenGenerator).toHaveBeenCalledWith({ sub: makeFakeGuardianWithIdData().id })
     })
   })
+
   describe('test HashGenerator', () => {
     it('should call HashGenerator with correct value', async () => {
       const { sut, hashGeneratorStub, tokenGeneratorStub } = makeSut()
@@ -144,6 +147,7 @@ describe('DbForgetCodeAuthentication UseCase', () => {
       expect(spyHashGenerator).toHaveBeenCalledWith({ value: 'valid_token' })
     })
   })
+
   describe('tests UpdateAccessTokenRepository service', () => {
     it('Should call UpdateAccessTokenRepository with correct values', async () => {
       const { sut, updateAccessTokenRepositoryStub } = makeSut()
@@ -152,6 +156,16 @@ describe('DbForgetCodeAuthentication UseCase', () => {
       await sut.auth(fakeInput)
 
       expect(updateSpy).toHaveBeenCalledWith({ id: 'valid_id', token: 'hashed_value' })
+    })
+  })
+
+  describe('When success', () => {
+    it('should return valid token', async () => {
+      const { sut } = makeSut()
+
+      const result = await sut.auth(fakeInput)
+
+      expect(result).toBe('any_token')
     })
   })
 })
