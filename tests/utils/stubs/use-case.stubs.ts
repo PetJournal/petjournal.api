@@ -23,7 +23,7 @@ const makeAuthentication = (): Authentication => {
 const makeForgetCodeAuthentication = (): ForgetCodeAuthentication => {
   class ForgetCodeAuthenticationStub implements ForgetCodeAuthentication {
     async auth (input: ForgetCodeAuthentication.Params): Promise<ForgetCodeAuthentication.Result> {
-
+      return 'hashed_value'
     }
   }
   return new ForgetCodeAuthenticationStub()

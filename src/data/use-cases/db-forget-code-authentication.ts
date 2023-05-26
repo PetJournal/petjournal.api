@@ -36,5 +36,6 @@ export class DbForgetCodeAuthentication implements ForgetCodeAuthentication {
     const accessToken = await this.tokenGenerator.generate({ sub: guardian.id })
     const hashedToken = await this.hashGenerator.encrypt({ value: accessToken })
     await this.updateAccessTokenRepository.updateAccessToken({ id: guardian.id, token: hashedToken })
+    return accessToken
   }
 }

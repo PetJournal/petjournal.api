@@ -26,14 +26,14 @@ export class WaitingCodeController implements Controller {
       if (!isEmailValid) {
         return badRequest(new InvalidParamError('email'))
       }
-      const error = await this.forgetCodeAuthentication.auth({
+      const result = await this.forgetCodeAuthentication.auth({
         email,
         forgetPasswordCode
       })
-      if (error) {
-        return unauthorized(error)
+      if (result instanceof Error) {
+        return unauthorized(result)
       }
-      return success({ message: 'Success, valid forget password code provided' })
+      return success({ accessToken: result })
     } catch (error) {
       return serverError(error as Error)
     }

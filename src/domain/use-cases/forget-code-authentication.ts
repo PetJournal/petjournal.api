@@ -16,7 +16,7 @@ export namespace ForgetCodeAuthentication {
     forgetPasswordCode: string
   }
 
-  export type Result = Error | void
+  export type Result = Error | string
 
   export interface Dependencies {
     loadGuardianByEmailRepository: LoadGuardianByEmailRepository
