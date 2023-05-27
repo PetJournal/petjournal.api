@@ -34,7 +34,6 @@ export class AuthMiddleware implements Middleware {
       }
       return success({ userId })
     } catch (error) {
-      console.error(error)
       return serverError(error as Error)
     }
   }
