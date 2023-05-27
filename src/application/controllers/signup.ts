@@ -1,8 +1,8 @@
+import { type AddGuardian } from '@/domain/use-cases'
+import { type Controller } from '@/application/protocols'
+import { type EmailValidator, type NameValidator, type PasswordValidator, type PhoneValidator } from '@/application/validation'
+import { type HttpRequest, type HttpResponse, conflict, badRequest, serverError, create } from '@/application/helpers'
 import { ConflictGuardianError, InvalidParamError, MissingParamError } from '@/application/errors'
-import { type EmailValidator, type NameValidator, type PasswordValidator, type PhoneValidator } from '@/application/validation/protocols'
-import { badRequest, serverError, create, type HttpRequest, type HttpResponse, conflict } from '@/application/helpers/http'
-import { type Controller } from '@/application/controllers/controller'
-import { type AddGuardian } from '@/domain/use-cases/add-guardian'
 
 export class SignUpController implements Controller {
   private readonly addGuardian: AddGuardian
@@ -11,9 +11,9 @@ export class SignUpController implements Controller {
   private readonly passwordValidator: PasswordValidator
   private readonly phoneValidator: PhoneValidator
 
-  constructor (addGuardian: AddGuardian, emailValidator: EmailValidator, nameValidator: NameValidator, passwordValidator: PasswordValidator, phoneValidator: PhoneValidator) {
-    this.emailValidator = emailValidator
+  constructor ({ addGuardian, emailValidator, nameValidator, passwordValidator, phoneValidator }: SignUpController.Dependencies) {
     this.addGuardian = addGuardian
+    this.emailValidator = emailValidator
     this.nameValidator = nameValidator
     this.passwordValidator = passwordValidator
     this.phoneValidator = phoneValidator
@@ -64,5 +64,15 @@ export class SignUpController implements Controller {
     } catch (error) {
       return serverError(error as Error)
     }
+  }
+}
+
+export namespace SignUpController {
+  export interface Dependencies {
+    addGuardian: AddGuardian
+    emailValidator: EmailValidator
+    nameValidator: NameValidator
+    passwordValidator: PasswordValidator
+    phoneValidator: PhoneValidator
   }
 }

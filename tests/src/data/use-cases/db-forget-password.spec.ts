@@ -1,44 +1,47 @@
-import { type LoadGuardianByEmailRepository, type TokenGenerator } from '@/data/protocols'
-import { DbForgetPassword } from '@/data/use-cases'
 import { type EmailService, type ForgetPassword } from '@/domain/use-cases'
+import { type TokenGenerator, type LoadGuardianByEmailRepository } from '@/data/protocols'
+import { DbForgetPassword } from '@/data/use-cases'
 import { makeFakeGuardianWithIdData, makeLoadGuardianByEmail, makeTokenGenerator } from '@/tests/utils'
 
+const makeEmailService = (): EmailService => {
+  class EmailServiceStub implements EmailService {
+    async send (options: EmailService.Options): Promise<boolean> {
+      return await Promise.resolve(true)
+    }
+  }
+  return new EmailServiceStub()
+}
+
+interface SutTypes {
+  sut: DbForgetPassword
+  loadGuardianByEmailStub: LoadGuardianByEmailRepository
+  tokenGeneratorStub: TokenGenerator
+  emailServiceStub: EmailService
+}
+
+const makeSut = (): SutTypes => {
+  const loadGuardianByEmailStub = makeLoadGuardianByEmail(makeFakeGuardianWithIdData())
+  const tokenGeneratorStub = makeTokenGenerator()
+  const emailServiceStub = makeEmailService()
+  const dependencies: ForgetPassword.Dependencies = {
+    loadGuardianByEmailRepository: loadGuardianByEmailStub,
+    tokenGenerator: tokenGeneratorStub,
+    emailService: emailServiceStub
+  }
+  const sut = new DbForgetPassword(dependencies)
+  return {
+    sut,
+    loadGuardianByEmailStub,
+    tokenGeneratorStub,
+    emailServiceStub
+  }
+}
+
 describe('DbForgetPassword UseCase', () => {
-  const makeEmailService = (): EmailService => {
-    class EmailServiceStub implements EmailService {
-      async send (options: EmailService.Options): Promise<boolean> {
-        return await new Promise(resolve => { resolve(true) })
-      }
-    }
-    return new EmailServiceStub()
-  }
-
-  interface SutTypes {
-    sut: DbForgetPassword
-    loadGuardianByEmailStub: LoadGuardianByEmailRepository
-    tokenGeneratorStub: TokenGenerator
-    emailServiceStub: EmailService
-  }
-
-  const makeSut = (): SutTypes => {
-    const dependencies: ForgetPassword.Dependencies = {
-      loadGuardianByEmailRepository: makeLoadGuardianByEmail(makeFakeGuardianWithIdData()),
-      tokenGenerator: makeTokenGenerator(),
-      emailService: makeEmailService()
-    }
-    const sut = new DbForgetPassword(dependencies)
-    return {
-      sut,
-      loadGuardianByEmailStub: dependencies.loadGuardianByEmailRepository,
-      tokenGeneratorStub: dependencies.tokenGenerator,
-      emailServiceStub: dependencies.emailService
-    }
-  }
-
   it('Should return 500 if LoadGuardianByEmail throws', async () => {
     const { sut, loadGuardianByEmailStub } = makeSut()
     jest.spyOn(loadGuardianByEmailStub, 'loadByEmail').mockImplementationOnce(async () => {
-      return await new Promise((resolve, reject) => { reject(new Error()) })
+      return await Promise.reject(new Error())
     })
     const promise = sut.forgetPassword({ email: 'any_email@mail.com' })
     await expect(promise).rejects.toThrow()

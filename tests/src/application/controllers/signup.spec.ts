@@ -1,13 +1,8 @@
-import { SignUpController } from '@/application/controllers/signup'
+import { type AddGuardian } from '@/domain/use-cases'
+import { type PhoneValidator, type EmailValidator, type NameValidator, type PasswordValidator } from '@/application/validation'
+import { SignUpController } from '@/application/controllers'
+import { badRequest, create } from '@/application/helpers'
 import { InvalidParamError, MissingParamError } from '@/application/errors'
-import { badRequest, create } from '@/application/helpers/http'
-import { type AddGuardian } from '@/domain/use-cases/add-guardian'
-import {
-  type PhoneValidator,
-  type EmailValidator,
-  type NameValidator,
-  type PasswordValidator
-} from '@/application/validation/protocols'
 import {
   makeEmailValidator,
   makeNameValidator,
@@ -34,7 +29,14 @@ const makeSut = (): SutTypes => {
   const nameValidatorStub = makeNameValidator()
   const passwordValidatorStub = makePasswordValidator()
   const phoneValidatorStub = makePhoneValidator()
-  const sut = new SignUpController(addGuardianStub, emailValidatorStub, nameValidatorStub, passwordValidatorStub, phoneValidatorStub)
+  const dependencies: SignUpController.Dependencies = {
+    addGuardian: addGuardianStub,
+    emailValidator: emailValidatorStub,
+    nameValidator: nameValidatorStub,
+    passwordValidator: passwordValidatorStub,
+    phoneValidator: phoneValidatorStub
+  }
+  const sut = new SignUpController(dependencies)
   return { sut, addGuardianStub, emailValidatorStub, nameValidatorStub, passwordValidatorStub, phoneValidatorStub }
 }
 

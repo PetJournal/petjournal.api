@@ -1,8 +1,7 @@
-import { type Controller } from '@/application/controllers/controller'
-import { success, type HttpRequest, type HttpResponse } from '@/application/helpers/http'
-import { LoggerControllerDecorator } from '@/main/decorators/logger'
-import { serverError } from '@/application/helpers/http'
-import { type LoggerErrorRepository } from '@/data/protocols/logger-error-repository'
+import { type Controller } from '@/application/protocols'
+import { type HttpRequest, type HttpResponse, serverError, success } from '@/application/helpers'
+import { LoggerControllerDecorator } from '@/main/decorators'
+import { type LoggerErrorRepository } from '@/data/protocols'
 
 const makeController = (): Controller => {
   class ControllerStub implements Controller {
@@ -11,7 +10,7 @@ const makeController = (): Controller => {
         statusCode: 200,
         body: true
       }
-      return await new Promise(resolve => { resolve(httpResponse) })
+      return await Promise.resolve(httpResponse)
     }
   }
   return new ControllerStub()
@@ -20,7 +19,7 @@ const makeController = (): Controller => {
 const makeLoggerErrorRepository = (): LoggerErrorRepository => {
   class LoggerErrorRepositoryStub implements LoggerErrorRepository {
     async logError (stack: string): Promise<void> {
-      await new Promise(resolve => { resolve(null) })
+      await Promise.resolve(null)
     }
   }
   return new LoggerErrorRepositoryStub()
@@ -74,7 +73,7 @@ describe('LoggerController Decorator', () => {
   it('Should call LoggerErrorRepository with correct error if controller retuns a server error', async () => {
     const { controllerStub, loggerErrorRepositoryStub, sut } = makeSut()
     const loggerSpy = jest.spyOn(loggerErrorRepositoryStub, 'logError')
-    jest.spyOn(controllerStub, 'handle').mockReturnValueOnce(new Promise(resolve => { resolve(makeFakeServerError()) }))
+    jest.spyOn(controllerStub, 'handle').mockReturnValueOnce(Promise.resolve(makeFakeServerError()))
     await sut.handle(makeFakeRequest())
     expect(loggerSpy).toHaveBeenCalledWith('any_stack')
   })

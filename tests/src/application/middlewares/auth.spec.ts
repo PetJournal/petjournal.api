@@ -1,6 +1,6 @@
-import { AuthMiddleware } from '@/application/middlewares/auth'
-import { type TokenDecoder } from '@/data/protocols/cryptography/token-decoder'
-import { type LoadGuardianByIdRepository } from '@/data/protocols/guardian/load-guardian-by-id-repository'
+import { AuthMiddleware } from '@/application/middlewares'
+import { type TokenDecoder, type HashComparer, type LoadGuardianByIdRepository } from '@/data/protocols'
+import { success, unauthorized } from '@/application/helpers'
 import {
   makeFakePayload,
   makeFakeAuthorization,
@@ -9,8 +9,6 @@ import {
   makeLoadGuardianById,
   makeFakeServerError
 } from '@/tests/utils'
-import { success, unauthorized } from '@/application/helpers/http'
-import { type HashComparer } from '@/data/protocols'
 
 interface SutTypes {
   sut: AuthMiddleware
@@ -23,7 +21,12 @@ const makeSut = (): SutTypes => {
   const tokenDecoderStub = makeTokenDecoder()
   const hashComparerStub = makeHashComparer()
   const loadGuardianByIdStub = makeLoadGuardianById()
-  const sut = new AuthMiddleware({ tokenDecoder: tokenDecoderStub, hashComparer: hashComparerStub, loadGuardianById: loadGuardianByIdStub })
+  const dependencies = {
+    tokenDecoder: tokenDecoderStub,
+    hashComparer: hashComparerStub,
+    loadGuardianById: loadGuardianByIdStub
+  }
+  const sut = new AuthMiddleware(dependencies)
   return { sut, tokenDecoderStub, loadGuardianByIdStub, hashComparerStub }
 }
 

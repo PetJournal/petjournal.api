@@ -1,14 +1,9 @@
-import { LoginController } from '@/application/controllers/login'
-import { badRequest, unauthorized, success } from '@/application/helpers/http'
-import { InvalidParamError, MissingParamError } from '@/application/errors'
-import { type EmailValidator } from '@/application/validation/protocols'
 import { type Authentication } from '@/domain/use-cases'
-import {
-  makeEmailValidator,
-  makeAuthentication,
-  makeFakeRequest
-} from '@/tests/utils'
-import { makeFakeServerError } from '@/tests/utils/mocks/response.mocks'
+import { type EmailValidator } from '@/application/validation'
+import { LoginController } from '@/application/controllers'
+import { badRequest, unauthorized, success } from '@/application/helpers'
+import { InvalidParamError, MissingParamError } from '@/application/errors'
+import { makeEmailValidator, makeAuthentication, makeFakeRequest, makeFakeServerError } from '@/tests/utils'
 
 interface SutTypes {
   sut: LoginController
@@ -19,7 +14,11 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
   const authenticationStub = makeAuthentication()
-  const sut = new LoginController(emailValidatorStub, authenticationStub)
+  const dependencies: LoginController.Dependencies = {
+    authentication: authenticationStub,
+    emailValidator: emailValidatorStub
+  }
+  const sut = new LoginController(dependencies)
   return {
     sut,
     emailValidatorStub,

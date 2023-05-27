@@ -1,14 +1,14 @@
-import { ForgetPasswordController } from '@/application/controllers/forget-password'
-import { type EmailValidator } from '@/application/validation/protocols'
-import { type TokenGenerator } from '@/data/protocols/recovery-password/token-generator'
 import { type ForgetPassword, type EmailService } from '@/domain/use-cases'
-import { makeEmailValidator, makeFakeGuardianWithIdData, makeFakeServerError, makeLoadGuardianByEmail, makeTokenGenerator } from '@/tests/utils'
+import { type EmailValidator } from '@/application/validation'
+import { type TokenGenerator } from '@/data/protocols/recovery-password/token-generator'
 import { type LoadGuardianByEmailRepository } from '@/data/protocols'
+import { ForgetPasswordController } from '@/application/controllers'
+import { makeEmailValidator, makeFakeGuardianWithIdData, makeFakeServerError, makeLoadGuardianByEmail, makeTokenGenerator } from '@/tests/utils'
 
 const makeEmailService = (): EmailService => {
   class EmailServiceStub implements EmailService {
     async send (options: EmailService.Options): Promise<boolean> {
-      return await new Promise(resolve => { resolve(true) })
+      return await Promise.resolve(true)
     }
   }
   return new EmailServiceStub()
@@ -17,7 +17,7 @@ const makeEmailService = (): EmailService => {
 const makeForgetPassword = (): ForgetPassword => {
   class ForgetPasswordStub implements ForgetPassword {
     async forgetPassword (email: ForgetPassword.Params): Promise<ForgetPassword.Result> {
-      return await new Promise(resolve => { resolve(true) })
+      return await Promise.resolve(true)
     }
   }
   return new ForgetPasswordStub()
