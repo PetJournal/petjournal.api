@@ -1,5 +1,5 @@
 import { type HttpRequest, type HttpResponse } from '@/application/helpers/http'
-import { type Middleware } from '@/application/middlewares/middleware'
+import { type Middleware } from '@/application/protocols'
 
 import { type Request, type Response, type NextFunction } from 'express'
 
