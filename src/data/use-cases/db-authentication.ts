@@ -1,25 +1,31 @@
-import { type LoadGuardianByEmailRepository, type HashComparer, type TokenGenerator, type UpdateAccessTokenRepository, type HashGenerator } from '@/data/protocols'
-import { type Authentication } from '@/domain/use-cases/authentication'
+import { type Authentication } from '@/domain/use-cases'
+import {
+  type HashComparer,
+  type HashGenerator,
+  type TokenGenerator,
+  type UpdateAccessTokenRepository,
+  type LoadGuardianByEmailRepository
+} from '@/data/protocols'
 
 export class DbAuthentication implements Authentication {
-  private readonly loadGuardianByEmailRepository: LoadGuardianByEmailRepository
-  private readonly hashGenerator: HashGenerator
   private readonly hashComparer: HashComparer
+  private readonly hashGenerator: HashGenerator
   private readonly tokenGenerator: TokenGenerator
+  private readonly loadGuardianByEmailRepository: LoadGuardianByEmailRepository
   private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
 
   constructor ({
-    loadGuardianByEmailRepository,
-    hashGenerator,
     hashComparer,
+    hashGenerator,
     tokenGenerator,
+    loadGuardianByEmailRepository,
     updateAccessTokenRepository
   }: Authentication.Dependencies
   ) {
-    this.loadGuardianByEmailRepository = loadGuardianByEmailRepository
-    this.hashGenerator = hashGenerator
     this.hashComparer = hashComparer
+    this.hashGenerator = hashGenerator
     this.tokenGenerator = tokenGenerator
+    this.loadGuardianByEmailRepository = loadGuardianByEmailRepository
     this.updateAccessTokenRepository = updateAccessTokenRepository
   }
 
