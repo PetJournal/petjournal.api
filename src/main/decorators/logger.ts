@@ -1,6 +1,6 @@
-import { type Controller } from '@/application/controllers/controller'
-import { type HttpRequest, type HttpResponse } from '@/application/helpers/http'
-import { type LoggerErrorRepository } from '@/data/protocols/logger-error-repository'
+import { type Controller } from '@/application/protocols'
+import { type HttpRequest, type HttpResponse } from '@/application/helpers'
+import { type LoggerErrorRepository } from '@/data/protocols'
 
 export class LoggerControllerDecorator implements Controller {
   private readonly controller: Controller
