@@ -1,6 +1,6 @@
 export class PasswordRequirementsError extends Error {
   constructor () {
-    super('A senha informada não atende os requisitos necessários de 8 caracteres')
+    super('The entered password does not meet the required 8-character requirements')
     this.name = 'PasswordRequirementsError'
   }
 }
