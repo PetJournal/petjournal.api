@@ -1,4 +1,4 @@
-import { type Authentication, type AddGuardian } from '@/domain/use-cases'
+import { type Authentication, type AddGuardian, type ChangePassword } from '@/domain/use-cases'
 import { makeFakeGuardianWithIdData } from '../mocks'
 
 const makeAddGuardian = (): AddGuardian => {
@@ -13,14 +13,24 @@ const makeAddGuardian = (): AddGuardian => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: Authentication.Params): Promise<Authentication.Result | null> {
+    async auth (authentication: Authentication.Params): Promise<Authentication.Result> {
       return 'any_token'
     }
   }
   return new AuthenticationStub()
 }
 
+const makeChangePassword = (): ChangePassword => {
+  class ChangePasswordStub implements ChangePassword {
+    async change (userData: ChangePassword.Params): Promise<ChangePassword.Result> {
+      return { isSuccess: true }
+    }
+  }
+  return new ChangePasswordStub()
+}
+
 export {
   makeAddGuardian,
-  makeAuthentication
+  makeAuthentication,
+  makeChangePassword
 }
