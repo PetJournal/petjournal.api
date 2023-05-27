@@ -6,7 +6,8 @@ import {
   type LoadGuardianByEmailRepository,
   type HashComparer,
   type TokenGenerator,
-  type UpdateAccessTokenRepository
+  type UpdateAccessTokenRepository,
+  type UpdateGuardianPasswordRepository
 } from '@/data/protocols'
 import { type Guardian } from '@prisma/client'
 
@@ -82,6 +83,15 @@ const makeUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
   return new UpdateAccessTokenRepositoryStub()
 }
 
+const makeUpdateGuardianRepository = (): UpdateGuardianPasswordRepository => {
+  class UpdateGuardianPasswordRepositoryStub implements UpdateGuardianPasswordRepository {
+    async updatePassword (userData: UpdateGuardianPasswordRepository.Params): Promise<UpdateGuardianPasswordRepository.Result> {
+      return true
+    }
+  }
+  return new UpdateGuardianPasswordRepositoryStub()
+}
+
 export {
   makeEncrypter,
   makeHashComparer,
@@ -90,5 +100,6 @@ export {
   makeTokenDecoder,
   makeLoadGuardianById,
   makeLoadGuardianByEmail,
-  makeUpdateAccessTokenRepository
+  makeUpdateAccessTokenRepository,
+  makeUpdateGuardianRepository
 }
