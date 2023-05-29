@@ -1,8 +1,12 @@
 import { type ChangePassword } from '@/domain/use-cases'
 import { type HashGenerator, type LoadGuardianByIdRepository, type UpdateGuardianPasswordRepository } from '@/data/protocols'
 import { DbChangePassword } from '@/data/use-cases'
-import { makeHashGenerator, makeLoadGuardianById, makeUpdateGuardianRepository } from '@/tests/utils'
 import { NotFoundError } from '@/application/errors'
+import {
+  makeFakeHashGenerator,
+  makeFakeLoadGuardianByIdRepository,
+  makeFakeUpdateGuardianPasswordRepository
+} from '@/tests/utils'
 
 interface SutTypes {
   sut: DbChangePassword
@@ -12,9 +16,9 @@ interface SutTypes {
 }
 
 const makeSut = (): SutTypes => {
-  const hashGeneratorStub = makeHashGenerator()
-  const loadGuardianByIdRepositoryStub = makeLoadGuardianById()
-  const updateGuardianPasswordRepositoryStub = makeUpdateGuardianRepository()
+  const hashGeneratorStub = makeFakeHashGenerator()
+  const loadGuardianByIdRepositoryStub = makeFakeLoadGuardianByIdRepository()
+  const updateGuardianPasswordRepositoryStub = makeFakeUpdateGuardianPasswordRepository()
 
   const dependencies: ChangePassword.Dependencies = {
     hashGenerator: hashGeneratorStub,

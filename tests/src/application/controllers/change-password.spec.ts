@@ -3,7 +3,7 @@ import { type PasswordValidator } from '@/application/validation'
 import { ChangePasswordController } from '@/application/controllers'
 import { MissingParamError, NotFoundError, PasswordMismatchError, PasswordRequirementsError } from '@/application/errors'
 import { badRequest, success } from '@/application/helpers'
-import { makeChangePassword, makeFakeServerError, makePasswordValidator } from '@/tests/utils'
+import { makeFakeChangePasswordUseCase, makeFakeServerError, makePasswordValidator } from '@/tests/utils'
 
 interface SutTypes {
   sut: ChangePasswordController
@@ -12,7 +12,7 @@ interface SutTypes {
 }
 
 const makeSut = (): SutTypes => {
-  const changePasswordStub = makeChangePassword()
+  const changePasswordStub = makeFakeChangePasswordUseCase()
   const passwordValidatorStub = makePasswordValidator()
   const dependencies: ChangePasswordController.Dependencies = {
     changePassword: changePasswordStub,

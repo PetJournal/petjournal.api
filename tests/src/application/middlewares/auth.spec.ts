@@ -4,9 +4,9 @@ import { success, unauthorized } from '@/application/helpers'
 import {
   makeFakePayload,
   makeFakeAuthorization,
-  makeTokenDecoder,
-  makeHashComparer,
-  makeLoadGuardianById,
+  makeFakeTokenDecoder,
+  makeFakeHashComparer,
+  makeFakeLoadGuardianByIdRepository,
   makeFakeServerError
 } from '@/tests/utils'
 
@@ -18,9 +18,9 @@ interface SutTypes {
 }
 
 const makeSut = (): SutTypes => {
-  const tokenDecoderStub = makeTokenDecoder()
-  const hashComparerStub = makeHashComparer()
-  const loadGuardianByIdStub = makeLoadGuardianById()
+  const tokenDecoderStub = makeFakeTokenDecoder()
+  const hashComparerStub = makeFakeHashComparer()
+  const loadGuardianByIdStub = makeFakeLoadGuardianByIdRepository()
   const dependencies = {
     tokenDecoder: tokenDecoderStub,
     hashComparer: hashComparerStub,

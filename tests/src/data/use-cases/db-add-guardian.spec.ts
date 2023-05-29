@@ -1,7 +1,7 @@
 import { type AddGuardian } from '@/domain/use-cases'
 import { type AddGuardianRepository, type HashGenerator } from '@/data/protocols'
 import { DbAddGuardian } from '@/data/use-cases'
-import { makeAddGuardian, makeFakeGuardianData, makeEncrypter } from '@/tests/utils'
+import { makeFakeGuardianData, makeEncrypter, makeFakeAddGuardianRepository } from '@/tests/utils'
 
 interface SutTypes {
   sut: DbAddGuardian
@@ -10,8 +10,8 @@ interface SutTypes {
 }
 
 const makeSut = (): SutTypes => {
-  const addGuardianRepositoryStub = makeAddGuardian()
   const hashGeneratorStub = makeEncrypter()
+  const addGuardianRepositoryStub = makeFakeAddGuardianRepository()
   const dependencies: AddGuardian.Dependencies = {
     hashGenerator: hashGeneratorStub,
     addGuardianRepository: addGuardianRepositoryStub

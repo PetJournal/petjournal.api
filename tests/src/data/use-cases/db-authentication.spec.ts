@@ -3,42 +3,42 @@ import { type HashComparer, type HashGenerator, type TokenGenerator, type LoadGu
 import { DbAuthentication } from '@/data/use-cases'
 import {
   makeFakeLogin,
-  makeLoadGuardianByEmail,
-  makeHashComparer,
-  makeTokenGenerator,
-  makeUpdateAccessTokenRepository,
-  makeHashGenerator
+  makeFakeHashComparer,
+  makeFakeTokenGenerator,
+  makeFakeLoadGuardianByEmailRepository,
+  makeFakeUpdateAccessTokenRepository,
+  makeFakeHashGenerator
 } from '@/tests/utils'
 
 interface SutTypes {
   sut: DbAuthentication
-  LoadGuardianByEmailRepositoryStub: LoadGuardianByEmailRepository
   hashGeneratorStub: HashGenerator
   hashComparerStub: HashComparer
   tokenGeneratorStub: TokenGenerator
+  loadGuardianByEmailRepositoryStub: LoadGuardianByEmailRepository
   updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
 }
 
 const makeSut = (): SutTypes => {
-  const LoadGuardianByEmailRepositoryStub = makeLoadGuardianByEmail()
-  const hashGeneratorStub = makeHashGenerator()
-  const hashComparerStub = makeHashComparer()
-  const tokenGeneratorStub = makeTokenGenerator()
-  const updateAccessTokenRepositoryStub = makeUpdateAccessTokenRepository()
+  const hashGeneratorStub = makeFakeHashGenerator()
+  const hashComparerStub = makeFakeHashComparer()
+  const tokenGeneratorStub = makeFakeTokenGenerator()
+  const loadGuardianByEmailRepositoryStub = makeFakeLoadGuardianByEmailRepository()
+  const updateAccessTokenRepositoryStub = makeFakeUpdateAccessTokenRepository()
   const dependencies: Authentication.Dependencies = {
-    loadGuardianByEmailRepository: LoadGuardianByEmailRepositoryStub,
     hashGenerator: hashGeneratorStub,
     hashComparer: hashComparerStub,
     tokenGenerator: tokenGeneratorStub,
+    loadGuardianByEmailRepository: loadGuardianByEmailRepositoryStub,
     updateAccessTokenRepository: updateAccessTokenRepositoryStub
   }
   const sut = new DbAuthentication(dependencies)
   return {
     sut,
-    LoadGuardianByEmailRepositoryStub,
     hashGeneratorStub,
     hashComparerStub,
     tokenGeneratorStub,
+    loadGuardianByEmailRepositoryStub,
     updateAccessTokenRepositoryStub
   }
 }
@@ -47,8 +47,8 @@ describe('DbAuthentication UseCase', () => {
 
   describe('tests LoadAccountByEmailRepository', () => {
     it('Should call LoadAccountByEmailRepository with correct email', async () => {
-      const { sut, LoadGuardianByEmailRepositoryStub } = makeSut()
-      const loadSpy = jest.spyOn(LoadGuardianByEmailRepositoryStub, 'loadByEmail')
+      const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
+      const loadSpy = jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail')
 
       await sut.auth(fakeLogin)
 
@@ -56,8 +56,8 @@ describe('DbAuthentication UseCase', () => {
     })
 
     it('Should throw if LoadAccountByEmailRepository throws', async () => {
-      const { sut, LoadGuardianByEmailRepositoryStub } = makeSut()
-      jest.spyOn(LoadGuardianByEmailRepositoryStub, 'loadByEmail').mockRejectedValueOnce(new Error())
+      const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
+      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail').mockRejectedValueOnce(new Error())
 
       const promise = sut.auth(fakeLogin)
 
@@ -65,8 +65,8 @@ describe('DbAuthentication UseCase', () => {
     })
 
     it('Should return null if LoadAccountByEmailRepository returns null', async () => {
-      const { sut, LoadGuardianByEmailRepositoryStub } = makeSut()
-      jest.spyOn(LoadGuardianByEmailRepositoryStub, 'loadByEmail').mockResolvedValueOnce(undefined)
+      const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
+      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail').mockResolvedValueOnce(undefined)
 
       const accessToken = await sut.auth(fakeLogin)
 

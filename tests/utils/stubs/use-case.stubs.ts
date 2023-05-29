@@ -1,7 +1,7 @@
 import { type Authentication, type AddGuardian, type ChangePassword } from '@/domain/use-cases'
 import { type Guardian, makeFakeGuardianData } from '@/tests/utils'
 
-const makeAddGuardian = (): AddGuardian => {
+const makeFakeAddGuardianUseCase = (): AddGuardian => {
   class AddGuardianStub implements AddGuardian {
     async add (guardian: AddGuardian.Params): Promise<AddGuardian.Result> {
       const result = makeFakeGuardianData({ withId: true })
@@ -11,7 +11,7 @@ const makeAddGuardian = (): AddGuardian => {
   return new AddGuardianStub()
 }
 
-const makeAuthentication = (): Authentication => {
+const makeFakeAuthenticationUseCase = (): Authentication => {
   class AuthenticationStub implements Authentication {
     async auth (authentication: Authentication.Params): Promise<Authentication.Result> {
       return 'any_token'
@@ -20,7 +20,7 @@ const makeAuthentication = (): Authentication => {
   return new AuthenticationStub()
 }
 
-const makeChangePassword = (): ChangePassword => {
+const makeFakeChangePasswordUseCase = (): ChangePassword => {
   class ChangePasswordStub implements ChangePassword {
     async change (userData: ChangePassword.Params): Promise<ChangePassword.Result> {
       return { isSuccess: true }
@@ -30,7 +30,7 @@ const makeChangePassword = (): ChangePassword => {
 }
 
 export {
-  makeAddGuardian,
-  makeAuthentication,
-  makeChangePassword
+  makeFakeAddGuardianUseCase,
+  makeFakeAuthenticationUseCase,
+  makeFakeChangePasswordUseCase
 }

@@ -1,9 +1,9 @@
 import { type ForgetPassword, type EmailService } from '@/domain/use-cases'
 import { type EmailValidator } from '@/application/validation'
+import { ForgetPasswordController } from '@/application/controllers'
 import { type TokenGenerator } from '@/data/protocols/recovery-password/token-generator'
 import { type LoadGuardianByEmailRepository } from '@/data/protocols'
-import { ForgetPasswordController } from '@/application/controllers'
-import { makeLoadGuardianByEmail, makeEmailValidator, makeFakeServerError, makeTokenGenerator } from '@/tests/utils'
+import { makeFakeLoadGuardianByEmailRepository, makeEmailValidator, makeFakeServerError, makeFakeTokenGenerator } from '@/tests/utils'
 
 const makeEmailService = (): EmailService => {
   class EmailServiceStub implements EmailService {
@@ -34,8 +34,8 @@ interface SutTypes {
 
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
-  const loadGuardianByEmailStub = makeLoadGuardianByEmail()
-  const tokenGeneratorStub = makeTokenGenerator()
+  const loadGuardianByEmailStub = makeFakeLoadGuardianByEmailRepository()
+  const tokenGeneratorStub = makeFakeTokenGenerator()
   const emailServiceStub = makeEmailService()
   const forgetPasswordStub = makeForgetPassword()
   const dependencies: ForgetPasswordController.Dependencies = {

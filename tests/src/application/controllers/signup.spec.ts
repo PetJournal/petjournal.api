@@ -8,7 +8,7 @@ import {
   makeNameValidator,
   makePasswordValidator,
   makePhoneValidator,
-  makeAddGuardian,
+  makeFakeAddGuardianUseCase,
   makeFakeSignUpRequest,
   makeFakeServerError,
   makeFakeGuardianData
@@ -24,7 +24,7 @@ interface SutTypes {
 }
 
 const makeSut = (): SutTypes => {
-  const addGuardianStub = makeAddGuardian()
+  const addGuardianStub = makeFakeAddGuardianUseCase()
   const emailValidatorStub = makeEmailValidator()
   const nameValidatorStub = makeNameValidator()
   const passwordValidatorStub = makePasswordValidator()

@@ -1,7 +1,7 @@
 import { type EmailService, type ForgetPassword } from '@/domain/use-cases'
 import { type TokenGenerator, type LoadGuardianByEmailRepository } from '@/data/protocols'
 import { DbForgetPassword } from '@/data/use-cases'
-import { makeLoadGuardianByEmail, makeTokenGenerator } from '@/tests/utils'
+import { makeFakeTokenGenerator, makeFakeLoadGuardianByEmailRepository } from '@/tests/utils'
 
 const makeEmailService = (): EmailService => {
   class EmailServiceStub implements EmailService {
@@ -20,9 +20,9 @@ interface SutTypes {
 }
 
 const makeSut = (): SutTypes => {
-  const loadGuardianByEmailStub = makeLoadGuardianByEmail()
-  const tokenGeneratorStub = makeTokenGenerator()
+  const tokenGeneratorStub = makeFakeTokenGenerator()
   const emailServiceStub = makeEmailService()
+  const loadGuardianByEmailStub = makeFakeLoadGuardianByEmailRepository()
   const dependencies: ForgetPassword.Dependencies = {
     loadGuardianByEmailRepository: loadGuardianByEmailStub,
     tokenGenerator: tokenGeneratorStub,
