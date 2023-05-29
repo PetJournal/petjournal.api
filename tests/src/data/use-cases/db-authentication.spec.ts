@@ -7,8 +7,7 @@ import {
   makeHashComparer,
   makeTokenGenerator,
   makeUpdateAccessTokenRepository,
-  makeHashGenerator,
-  makeFakeGuardianWithIdData
+  makeHashGenerator
 } from '@/tests/utils'
 
 interface SutTypes {
@@ -21,7 +20,7 @@ interface SutTypes {
 }
 
 const makeSut = (): SutTypes => {
-  const LoadGuardianByEmailRepositoryStub = makeLoadGuardianByEmail(makeFakeGuardianWithIdData())
+  const LoadGuardianByEmailRepositoryStub = makeLoadGuardianByEmail()
   const hashGeneratorStub = makeHashGenerator()
   const hashComparerStub = makeHashComparer()
   const tokenGeneratorStub = makeTokenGenerator()

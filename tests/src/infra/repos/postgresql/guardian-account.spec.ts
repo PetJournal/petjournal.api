@@ -1,6 +1,6 @@
 import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
-import { makeFakeGuardianData, makeFakeGuardianWithIdData } from '@/tests/utils'
+import { makeFakeGuardianData } from '@/tests/utils'
 
 beforeEach(async () => { await PrismaHelper.connect() })
 
@@ -54,7 +54,7 @@ describe('GuardianAccountRepository', () => {
   describe('LoadAccountByIdRepository', () => {
     it('Should return a guardian account on success', async () => {
       const sut = makeSut()
-      const guardianData = makeFakeGuardianWithIdData()
+      const guardianData = makeFakeGuardianData({ withId: true })
       await sut.add(guardianData)
 
       const guardianByEmail = await sut.loadByEmail(guardianData.email) as any
@@ -91,7 +91,7 @@ describe('GuardianAccountRepository', () => {
     })
   })
 
-  describe('UpdatePasswordRepository', () => {
+  describe('UpdateGuardianPasswordRepository', () => {
     it('Should update the account successfully', async () => {
       const sut = makeSut()
       const guardianData = makeFakeGuardianData()

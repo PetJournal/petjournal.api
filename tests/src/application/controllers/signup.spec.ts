@@ -11,7 +11,7 @@ import {
   makeAddGuardian,
   makeFakeSignUpRequest,
   makeFakeServerError,
-  makeFakeGuardianWithIdData
+  makeFakeGuardianData
 } from '@/tests/utils'
 
 interface SutTypes {
@@ -334,7 +334,7 @@ describe('SignUp Controller', () => {
       const httpRequest = {
         body: makeFakeSignUpRequest()
       }
-      const { password, accessToken, ...response } = makeFakeGuardianWithIdData()
+      const response = makeFakeGuardianData({ withId: true })
 
       const httpResponse = await sut.handle(httpRequest)
 

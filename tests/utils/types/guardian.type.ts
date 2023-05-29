@@ -8,11 +8,6 @@ interface Guardian {
   forgetPasswordToken: string | null
 }
 
-interface GuardianWithId extends Guardian {
-  id: string
-}
-
 export {
-  type Guardian,
-  type GuardianWithId
+  type Guardian
 }

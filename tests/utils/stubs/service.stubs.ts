@@ -1,4 +1,4 @@
-import { makeFakeGuardianData, makeFakePayload } from '../mocks'
+import { type Guardian, makeFakeGuardianData, makeFakePayload } from '@/tests/utils'
 import {
   type TokenDecoder,
   type HashGenerator,
@@ -9,7 +9,6 @@ import {
   type UpdateAccessTokenRepository,
   type UpdateGuardianPasswordRepository
 } from '@/data/protocols'
-import { type Guardian } from '@prisma/client'
 
 const makeEncrypter = (): HashGenerator => {
   class EncrypterStub implements HashGenerator {
@@ -59,16 +58,16 @@ const makeTokenDecoder = (): TokenDecoder => {
 const makeLoadGuardianById = (): LoadGuardianByIdRepository => {
   class LoadGuardianByIdStub implements LoadGuardianByIdRepository {
     async loadById (id: LoadGuardianByIdRepository.Params): Promise<LoadGuardianByIdRepository.Result> {
-      return makeFakeGuardianData() as Guardian
+      return makeFakeGuardianData({ withId: true }) as Guardian & { id: string }
     }
   }
   return new LoadGuardianByIdStub()
 }
 
-const makeLoadGuardianByEmail = (data: Guardian): LoadGuardianByEmailRepository => {
+const makeLoadGuardianByEmail = (): LoadGuardianByEmailRepository => {
   class LoadGuardianByEmailRepositoryStub implements LoadGuardianByEmailRepository {
     async loadByEmail (email: LoadGuardianByEmailRepository.Params): Promise<LoadGuardianByEmailRepository.Result> {
-      return data
+      return makeFakeGuardianData({ withId: true }) as Guardian & { id: string }
     }
   }
   return new LoadGuardianByEmailRepositoryStub()

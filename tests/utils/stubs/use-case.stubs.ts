@@ -1,11 +1,11 @@
 import { type Authentication, type AddGuardian, type ChangePassword } from '@/domain/use-cases'
-import { makeFakeGuardianWithIdData } from '../mocks'
+import { type Guardian, makeFakeGuardianData } from '@/tests/utils'
 
 const makeAddGuardian = (): AddGuardian => {
   class AddGuardianStub implements AddGuardian {
     async add (guardian: AddGuardian.Params): Promise<AddGuardian.Result> {
-      const { password, accessToken, ...result } = makeFakeGuardianWithIdData()
-      return result
+      const result = makeFakeGuardianData({ withId: true })
+      return result as Guardian & { id: string }
     }
   }
   return new AddGuardianStub()
