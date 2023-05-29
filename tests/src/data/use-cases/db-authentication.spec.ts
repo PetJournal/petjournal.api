@@ -2,7 +2,7 @@ import { type Authentication } from '@/domain/use-cases'
 import { type HashComparer, type HashGenerator, type TokenGenerator, type LoadGuardianByEmailRepository, type UpdateAccessTokenRepository } from '@/data/protocols'
 import { DbAuthentication } from '@/data/use-cases'
 import {
-  makeFakeLogin,
+  makeFakeLoginRequest,
   makeFakeHashComparer,
   makeFakeTokenGenerator,
   makeFakeLoadGuardianByEmailRepository,
@@ -42,8 +42,9 @@ const makeSut = (): SutTypes => {
     updateAccessTokenRepositoryStub
   }
 }
+
 describe('DbAuthentication UseCase', () => {
-  const fakeLogin = makeFakeLogin()
+  const { body: fakeLogin } = makeFakeLoginRequest()
 
   describe('tests LoadAccountByEmailRepository', () => {
     it('Should call LoadAccountByEmailRepository with correct email', async () => {

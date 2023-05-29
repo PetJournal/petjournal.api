@@ -1,13 +1,25 @@
 import { type HttpRequest } from '@/application/helpers/http'
 import { type TokenDecoder } from '@/data/protocols'
-import { type LoginRequest, type SignUpRequest } from '@/tests/utils'
+import { type ChangePasswordRequest, type LoginRequest, type SignUpRequest } from '@/tests/utils'
 
-const makeFakeAuthorization = ({ data }: { data: string }): HttpRequest => ({
-  authorization: data
-})
+interface Options<T extends { body: any }> {
+  withUserId?: boolean
+  fields?: Partial<T['body']>
+}
 
-const makeFakeSignUpRequest = (fields: Partial<SignUpRequest> = {}): SignUpRequest => {
-  const guardianFake = {
+const makeFakeLoginRequest = ({ fields = {} }: Options<LoginRequest> = {}): LoginRequest => {
+  const body = {
+    email: 'any_email@mail.com',
+    password: 'any_password'
+  }
+
+  Object.assign(body, fields)
+
+  return { body }
+}
+
+const makeFakeSignUpRequest = ({ fields = {} }: Options<SignUpRequest> = {}): SignUpRequest => {
+  const body = {
     firstName: 'any_first_name',
     lastName: 'any_last_name',
     email: 'any_email@mail.com',
@@ -19,29 +31,44 @@ const makeFakeSignUpRequest = (fields: Partial<SignUpRequest> = {}): SignUpReque
     forgetPasswordToken: null
   }
 
-  return {
-    ...guardianFake,
-    ...fields
-  }
+  Object.assign(body, fields)
+
+  return { body }
 }
 
-const makeFakeLogin = (): LoginRequest => ({
-  email: 'any_email@mail.com',
-  password: 'any_password'
-})
+const makeFakeChangePasswordRequest = ({ fields = {}, withUserId = true }: Options<ChangePasswordRequest> = {}): ChangePasswordRequest => {
+  const body = {
+    password: 'any_password',
+    passwordConfirmation: 'any_password'
+  }
 
-const makeFakeRequest = (): HttpRequest => ({
-  body: makeFakeLogin()
-})
+  const result = { body }
 
-const makeFakePayload = (): TokenDecoder.Result => ({
-  sub: 'valid_id'
-})
+  if (withUserId) {
+    Object.assign(result, { userId: 'any_id' })
+  }
+
+  Object.assign(body, fields)
+
+  return result
+}
+
+const makeFakeAuthorization = ({ data }: { data: string }): HttpRequest => {
+  const authorization = data
+
+  return { authorization }
+}
+
+const makeFakePayload = (): TokenDecoder.Result => {
+  const sub = 'valid_id'
+
+  return { sub }
+}
 
 export {
   makeFakeSignUpRequest,
-  makeFakeLogin,
+  makeFakeLoginRequest,
+  makeFakeChangePasswordRequest,
   makeFakeAuthorization,
-  makeFakePayload,
-  makeFakeRequest
+  makeFakePayload
 }

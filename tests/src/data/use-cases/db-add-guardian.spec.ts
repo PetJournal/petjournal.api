@@ -28,8 +28,8 @@ describe('DbAddGuardian use case', () => {
     it('Should call hash generator with correct password', async () => {
       const { sut, hashGeneratorStub } = makeSut()
       const encryptSpy = jest.spyOn(hashGeneratorStub, 'encrypt')
-      const guardianData = makeFakeGuardianData()
 
+      const guardianData = makeFakeGuardianData()
       await sut.add(guardianData)
 
       expect(encryptSpy).toHaveBeenCalledWith({ value: 'valid_password' })
