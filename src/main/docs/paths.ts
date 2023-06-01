@@ -4,5 +4,5 @@ export default {
   '/forget-password': forgetPasswordPath,
   '/login': loginPath,
   '/signup': signUpPath,
-  '/change-password': changePasswordPath
+  '/guardian/change-password': changePasswordPath
 }
