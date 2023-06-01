@@ -1,7 +1,7 @@
 import { type Controller } from '@/application/controllers/controller'
 import { WaitingCodeController } from '@/application/controllers/waiting-code'
 import { EmailValidatorAdapter } from '@/application/validation/validators'
-import { DbForgetCodeAuthentication } from '@/data/use-cases/db-forget-code-authentication'
+import { DbAuthentication } from '@/data/use-cases'
 import { BcryptAdapter } from '@/infra/cryptography/bcrypt-adapter'
 import { JwtAdapter } from '@/infra/cryptography/jwt-adapter'
 import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
@@ -17,7 +17,7 @@ export const makeWaitingCodeController = (): Controller => {
   const repository = new GuardianAccountRepository()
   const hasher = new BcryptAdapter(salt)
   const tokenGenerator = new JwtAdapter(secret)
-  const forgetCodeAuthentication = new DbForgetCodeAuthentication({
+  const authentication = new DbAuthentication({
     loadGuardianByEmailRepository: repository,
     updateAccessTokenRepository: repository,
     hashComparer: hasher,
@@ -27,7 +27,7 @@ export const makeWaitingCodeController = (): Controller => {
   const loggerPgRepository = new LoggerPgRepository()
   const waitingCodeController = new WaitingCodeController({
     emailValidator,
-    forgetCodeAuthentication
+    authentication
   })
 
   return new LoggerControllerDecorator(waitingCodeController, loggerPgRepository)

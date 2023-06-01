@@ -5,13 +5,13 @@ export interface Authentication {
 }
 
 export namespace Authentication {
+
   export interface Params {
     email: string
-    password: string
+    sensitiveData: { field: string, value: string }
   }
 
-  export type Result = string | null
-
+  export type Result = Error | string
   export interface Dependencies {
     loadGuardianByEmailRepository: LoadGuardianByEmailRepository
     hashGenerator: HashGenerator

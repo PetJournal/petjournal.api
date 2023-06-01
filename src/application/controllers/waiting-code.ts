@@ -1,16 +1,23 @@
 import { type Controller } from '@/application/controllers/controller'
-import { type HttpRequest, type HttpResponse, badRequest, unauthorized, success, serverError } from '@/application/helpers/http'
+import {
+  type HttpRequest,
+  type HttpResponse,
+  badRequest,
+  unauthorized,
+  success,
+  serverError
+} from '@/application/helpers/http'
 import { InvalidParamError, MissingParamError } from '@/application/errors'
 import { type EmailValidator } from '../validation/protocols'
-import { type ForgetCodeAuthentication } from '@/domain/use-cases'
+import { type Authentication } from '@/domain/use-cases'
 
 export class WaitingCodeController implements Controller {
   private readonly emailValidator: EmailValidator
-  private readonly forgetCodeAuthentication: ForgetCodeAuthentication
+  private readonly authentication: Authentication
 
-  constructor ({ emailValidator, forgetCodeAuthentication }: WaitingCodeController.Dependencies) {
+  constructor ({ emailValidator, authentication }: WaitingCodeController.Dependencies) {
     this.emailValidator = emailValidator
-    this.forgetCodeAuthentication = forgetCodeAuthentication
+    this.authentication = authentication
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -26,9 +33,9 @@ export class WaitingCodeController implements Controller {
       if (!isEmailValid) {
         return badRequest(new InvalidParamError('email'))
       }
-      const result = await this.forgetCodeAuthentication.auth({
+      const result = await this.authentication.auth({
         email,
-        forgetPasswordCode
+        sensitiveData: { field: 'forgetPasswordCode', value: forgetPasswordCode }
       })
       if (result instanceof Error) {
         return unauthorized(result)
@@ -43,6 +50,6 @@ export class WaitingCodeController implements Controller {
 namespace WaitingCodeController {
   export interface Dependencies {
     emailValidator: EmailValidator
-    forgetCodeAuthentication: ForgetCodeAuthentication
+    authentication: Authentication
   }
 }

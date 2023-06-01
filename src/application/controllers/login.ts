@@ -1,5 +1,12 @@
 import { type Controller } from '@/application/controllers/controller'
-import { type HttpRequest, type HttpResponse, badRequest, serverError, success, unauthorized } from '@/application/helpers/http'
+import {
+  type HttpRequest,
+  type HttpResponse,
+  badRequest,
+  serverError,
+  success,
+  unauthorized
+} from '@/application/helpers/http'
 import { InvalidParamError, MissingParamError } from '@/application/errors'
 import { type Authentication } from '@/domain/use-cases/authentication'
 import { type EmailValidator } from '@/application/validation/protocols'
@@ -8,7 +15,10 @@ export class LoginController implements Controller {
   private readonly emailValidator: EmailValidator
   private readonly authentication: Authentication
 
-  constructor (emailValidator: EmailValidator, authentication: Authentication) {
+  constructor (
+    emailValidator: EmailValidator,
+    authentication: Authentication
+  ) {
     this.emailValidator = emailValidator
     this.authentication = authentication
   }
@@ -26,14 +36,14 @@ export class LoginController implements Controller {
       if (!isValid) {
         return badRequest(new InvalidParamError('email'))
       }
-      const accessToken = await this.authentication.auth({
+      const result = await this.authentication.auth({
         email,
-        password
+        sensitiveData: { field: 'password', value: password }
       })
-      if (!accessToken) {
-        return unauthorized()
+      if (result instanceof Error) {
+        return unauthorized(result)
       }
-      return success({ accessToken })
+      return success({ accessToken: result })
     } catch (error) {
       console.error(error)
       return serverError(error as Error)
