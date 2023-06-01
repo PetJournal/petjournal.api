@@ -29,11 +29,11 @@ const makeSetup = async (): Promise<{ accessToken: string }> => {
   return body
 }
 
-describe('POST - /api/change-password Route', () => {
+describe('PATCH - /api/guardian/change-password Route', () => {
   it('Should return 400 if the password field is not provided', async () => {
     const { accessToken } = await makeSetup()
     const response = await request(app)
-      .post('/api/change-password')
+      .patch('/api/guardian/change-password')
       .set('Authorization', accessToken)
       .send({
         passwordConfirmation: 'Test@123'
@@ -46,7 +46,7 @@ describe('POST - /api/change-password Route', () => {
   it('Should return 400 if the passwordConfirmation field is not provided', async () => {
     const { accessToken } = await makeSetup()
     const response = await request(app)
-      .post('/api/change-password')
+      .patch('/api/guardian/change-password')
       .set('Authorization', accessToken)
       .send({
         password: 'Test@123'
@@ -59,7 +59,7 @@ describe('POST - /api/change-password Route', () => {
   it('Should return 400 if the password is invalid', async () => {
     const { accessToken } = await makeSetup()
     const response = await request(app)
-      .post('/api/change-password')
+      .patch('/api/guardian/change-password')
       .set('Authorization', accessToken)
       .send({
         password: 'invalid',
@@ -73,7 +73,7 @@ describe('POST - /api/change-password Route', () => {
   it('Should return 400 if the passwordConfirmation is different from password', async () => {
     const { accessToken } = await makeSetup()
     const response = await request(app)
-      .post('/api/change-password')
+      .patch('/api/guardian/change-password')
       .set('Authorization', accessToken)
       .send({
         password: 'Test123@',
@@ -87,7 +87,7 @@ describe('POST - /api/change-password Route', () => {
   it('Should return a status 200 when the password is successfully updated', async () => {
     const { accessToken } = await makeSetup()
     const response = await request(app)
-      .post('/api/change-password')
+      .patch('/api/guardian/change-password')
       .set('Authorization', accessToken)
       .send({
         password: 'Teste123@',

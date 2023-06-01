@@ -18,7 +18,10 @@ export class AuthMiddleware implements Middleware {
       if (!httpRequest.authorization) {
         return unauthorized()
       }
-      const { authorization } = httpRequest
+      let { authorization } = httpRequest
+      if (authorization.startsWith('Bearer ')) {
+        authorization = authorization.substring(7)
+      }
       const payload = await this.tokenDecoder.decode(authorization)
       if (!payload) {
         return unauthorized()

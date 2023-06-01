@@ -4,5 +4,5 @@ import { makeChangePasswordController } from '@/main/factories'
 import { auth } from '@/main/middlewares'
 
 export default (router: Router): void => {
-  router.post('/guardian/change-password', auth, adaptRoute(makeChangePasswordController()))
+  router.patch('/guardian/change-password', auth, adaptRoute(makeChangePasswordController()))
 }
