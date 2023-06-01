@@ -3,7 +3,7 @@ import components from './components'
 import schemas from './schemas'
 
 export default {
-  openapi: '3.0.0',
+  openapi: '3.0.1',
   info: {
     title: 'PetJournal',
     description: '',
