@@ -1,13 +1,11 @@
 export const changePasswordPath = {
-  post: {
+  patch: {
     tags: ['guardian'],
     summary: 'change guardian password ',
     description: '',
-    security: [
-      {
-        bearerAuth: []
-      }
-    ],
+    security: [{
+      bearerAuth: []
+    }],
     requestBody: {
       required: true,
       content: {
@@ -16,8 +14,8 @@ export const changePasswordPath = {
             $ref: '#/schemas/changePasswordParams'
           },
           example: {
-            password: 'New_password_teste@123',
-            passwordConfirmation: 'New_password_teste@123'
+            password: 'New_password_test@123',
+            passwordConfirmation: 'New_password_test@123'
           }
         }
       }
@@ -36,17 +34,11 @@ export const changePasswordPath = {
           }
         }
       },
-      400.1: {
+      400: {
         $ref: '#/components/badRequest',
         example: {
           error: 'Invalid param: password'
         }
-      },
-      400.2: {
-        $ref: '#/components/passwordMismatchError'
-      },
-      400.3: {
-        $ref: '#/components/passwordRequirementsError'
       },
       500: {
         $ref: '#/components/serverError'
