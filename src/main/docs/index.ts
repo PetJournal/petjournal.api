@@ -23,8 +23,8 @@ export default {
       description: 'operations about guardian'
     },
     {
-      name: 'login',
-      description: 'operations about login'
+      name: 'recovery-password',
+      description: 'operations about recovery password'
     }
   ],
   paths,

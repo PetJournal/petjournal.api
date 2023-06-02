@@ -1,7 +1,14 @@
 import { ForgetPasswordController } from '@/application/controllers/forget-password'
 import { type EmailValidator } from '@/application/validation/protocols'
 import { type ForgetPassword, type EmailService } from '@/domain/use-cases'
-import { makeEmailValidator, makeFakeForgetPasswordRequest, makeFakeGuardianWithIdData, makeFakeServerError, makeLoadGuardianByEmail, makeTokenGenerator } from '@/tests/utils'
+import {
+  makeEmailValidator,
+  makeFakeForgetPasswordRequest,
+  makeFakeGuardianWithIdData,
+  makeFakeServerError,
+  makeLoadGuardianByEmail,
+  makeTokenGenerator
+} from '@/tests/utils'
 import { type LoadGuardianByEmailRepository, type TokenGenerator } from '@/data/protocols'
 import { InvalidParamError, MissingParamError, NotFoundError } from '@/application/errors'
 import { badRequest, success } from '@/application/helpers/http'

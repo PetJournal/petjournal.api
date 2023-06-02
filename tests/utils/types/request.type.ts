@@ -5,6 +5,11 @@ interface LoginRequest {
   password: string
 }
 
+interface WaitingCodeRequest {
+  email: string
+  forgetPasswordCode: string
+}
+
 interface SignUpRequest extends Guardian {
   passwordConfirmation: string
   isPrivacyPolicyAccepted: boolean
@@ -12,5 +17,6 @@ interface SignUpRequest extends Guardian {
 
 export {
   type SignUpRequest,
-  type LoginRequest
+  type LoginRequest,
+  type WaitingCodeRequest
 }

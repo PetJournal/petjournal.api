@@ -1,6 +1,6 @@
 import { AuthMiddleware } from '@/application/middlewares/auth'
 import { type TokenDecoder } from '@/data/protocols/cryptography/token-decoder'
-import { type LoadGuardianByIdRepository } from '@/data/protocols/guardian/load-guardian-by-id-repository'
+import { type LoadGuardianByIdRepository } from '@/data/protocols/'
 import {
   makeFakePayload,
   makeFakeAuthorization,

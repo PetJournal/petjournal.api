@@ -13,7 +13,7 @@ const makeAddGuardian = (): AddGuardian => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: Authentication.Params): Promise<Authentication.Result | null> {
+    async auth (authentication: Authentication.Params): Promise<Authentication.Result> {
       return 'any_token'
     }
   }

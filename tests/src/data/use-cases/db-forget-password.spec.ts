@@ -1,7 +1,11 @@
 import { type LoadGuardianByEmailRepository, type TokenGenerator } from '@/data/protocols'
 import { DbForgetPassword } from '@/data/use-cases'
 import { type EmailService, type ForgetPassword } from '@/domain/use-cases'
-import { makeFakeGuardianWithIdData, makeLoadGuardianByEmail, makeTokenGenerator } from '@/tests/utils'
+import {
+  makeFakeGuardianWithIdData,
+  makeLoadGuardianByEmail,
+  makeTokenGenerator
+} from '@/tests/utils'
 
 describe('DbForgetPassword UseCase', () => {
   const makeEmailService = (): EmailService => {

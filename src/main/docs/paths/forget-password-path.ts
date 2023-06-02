@@ -1,6 +1,6 @@
 export const forgetPasswordPath = {
   post: {
-    tags: ['login'],
+    tags: ['recovery-password'],
     summary: 'send email for recovery password',
     description: '',
     requestBody: {
