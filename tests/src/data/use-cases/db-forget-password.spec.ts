@@ -1,7 +1,11 @@
 import { type LoadGuardianByEmailRepository, type TokenGenerator } from '@/data/protocols'
 import { DbForgetPassword } from '@/data/use-cases'
 import { type EmailService, type ForgetPassword } from '@/domain/use-cases'
-import { makeFakeGuardianWithIdData, makeLoadGuardianByEmail, makeTokenGenerator } from '@/tests/utils'
+import {
+  makeFakeGuardianWithIdData,
+  makeLoadGuardianByEmail,
+  makeTokenGenerator
+} from '@/tests/utils'
 
 describe('DbForgetPassword UseCase', () => {
   const makeEmailService = (): EmailService => {
@@ -80,5 +84,18 @@ describe('DbForgetPassword UseCase', () => {
         `
     })
     expect(sendSpy).toBeTruthy()
+  })
+
+  it('Should return false if LoadGuardianByEmail returns undefined', async () => {
+    const { sut, loadGuardianByEmailStub } = makeSut()
+    jest.spyOn(loadGuardianByEmailStub, 'loadByEmail').mockReturnValueOnce(Promise.resolve(undefined))
+    const isSuccess = await sut.forgetPassword({ email: 'any_email@mail.com' })
+    expect(isSuccess).toBe(false)
+  })
+
+  it('Should return true if all succeeds', async () => {
+    const { sut } = makeSut()
+    const isSuccess = await sut.forgetPassword({ email: 'any_email@mail.com' })
+    expect(isSuccess).toBe(true)
   })
 })

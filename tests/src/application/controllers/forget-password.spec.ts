@@ -1,9 +1,17 @@
 import { ForgetPasswordController } from '@/application/controllers/forget-password'
 import { type EmailValidator } from '@/application/validation/protocols'
-import { type TokenGenerator } from '@/data/protocols/recovery-password/token-generator'
 import { type ForgetPassword, type EmailService } from '@/domain/use-cases'
-import { makeEmailValidator, makeFakeGuardianWithIdData, makeFakeServerError, makeLoadGuardianByEmail, makeTokenGenerator } from '@/tests/utils'
-import { type LoadGuardianByEmailRepository } from '@/data/protocols'
+import {
+  makeEmailValidator,
+  makeFakeForgetPasswordRequest,
+  makeFakeGuardianWithIdData,
+  makeFakeServerError,
+  makeLoadGuardianByEmail,
+  makeTokenGenerator
+} from '@/tests/utils'
+import { type LoadGuardianByEmailRepository, type TokenGenerator } from '@/data/protocols'
+import { InvalidParamError, MissingParamError, NotFoundError } from '@/application/errors'
+import { badRequest, success } from '@/application/helpers/http'
 
 const makeEmailService = (): EmailService => {
   class EmailServiceStub implements EmailService {
@@ -22,7 +30,6 @@ const makeForgetPassword = (): ForgetPassword => {
   }
   return new ForgetPasswordStub()
 }
-
 interface SutTypes {
   sut: ForgetPasswordController
   emailValidatorStub: EmailValidator
@@ -61,20 +68,14 @@ describe('ForgetPassword Controller', () => {
     }
 
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
   })
 
   it('Should return 400 if an invalid email is provided', async () => {
     const { sut, emailValidatorStub } = makeSut()
     jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
-    const httpRequest = {
-      body: {
-        email: 'invalid_email@mail.com'
-      }
-    }
-
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(400)
+    const httpResponse = await sut.handle(makeFakeForgetPasswordRequest())
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
   })
 
   it('Should call EmailValidator with correct email', async () => {
@@ -85,7 +86,6 @@ describe('ForgetPassword Controller', () => {
         email: 'valid_email@mail.com'
       }
     }
-
     await sut.handle(httpRequest)
     expect(isValidSpy).toHaveBeenCalledWith('valid_email@mail.com')
   })
@@ -95,13 +95,20 @@ describe('ForgetPassword Controller', () => {
     jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
       throw new Error()
     })
-    const httpRequest = {
-      body: {
-        email: 'any_email@mail.com'
-      }
-    }
-
-    const httpResponse = await sut.handle(httpRequest)
+    const httpResponse = await sut.handle(makeFakeForgetPasswordRequest())
     expect(httpResponse).toEqual(makeFakeServerError())
+  })
+
+  it('Should return 400 if no guardian is found with the provided email', async () => {
+    const { sut, forgetPasswordStub } = makeSut()
+    jest.spyOn(forgetPasswordStub, 'forgetPassword').mockReturnValueOnce(new Promise(resolve => { resolve(false) }))
+    const httpResponse = await sut.handle(makeFakeForgetPasswordRequest())
+    expect(httpResponse).toEqual(badRequest(new NotFoundError('email')))
+  })
+
+  it('Should return 200 if an valid email is provided', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(makeFakeForgetPasswordRequest())
+    expect(httpResponse).toEqual(success({ message: 'Email sent successfully' }))
   })
 })

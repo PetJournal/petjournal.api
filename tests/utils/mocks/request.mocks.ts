@@ -53,6 +53,14 @@ const makeFakePayload = (): TokenDecoder.Result => ({
   sub: 'valid_id'
 })
 
+const makeFakeForgetPasswordRequest = (): HttpRequest => {
+  return {
+    body: {
+      email: 'any_email@mail.com'
+    }
+  }
+}
+
 export {
   makeFakeSignUpRequest,
   makeFakeLogin,
@@ -61,5 +69,6 @@ export {
   makeFakeWaitingCode,
   makeFakeWaitingCodeRequest,
   makeFakePayload,
-  makeFakeAuth
+  makeFakeAuth,
+  makeFakeForgetPasswordRequest
 }

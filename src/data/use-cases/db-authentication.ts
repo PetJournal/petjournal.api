@@ -1,5 +1,11 @@
 import { NotFoundError, UnauthorizedError } from '@/application/errors'
-import { type LoadGuardianByEmailRepository, type HashComparer, type TokenGenerator, type UpdateAccessTokenRepository, type HashGenerator } from '@/data/protocols'
+import {
+  type LoadGuardianByEmailRepository,
+  type HashComparer,
+  type TokenGenerator,
+  type UpdateAccessTokenRepository,
+  type HashGenerator
+} from '@/data/protocols'
 import { type Authentication } from '@/domain/use-cases/authentication'
 
 export class DbAuthentication implements Authentication {

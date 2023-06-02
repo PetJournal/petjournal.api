@@ -3,7 +3,12 @@ import { InvalidParamError, MissingParamError } from '@/application/errors'
 import { badRequest, success, unauthorized } from '@/application/helpers/http'
 import { type EmailValidator } from '@/application/validation/protocols'
 import { type Authentication } from '@/domain/use-cases'
-import { makeAuthentication, makeEmailValidator, makeFakeServerError, makeFakeWaitingCodeRequest } from '@/tests/utils'
+import {
+  makeAuthentication,
+  makeEmailValidator,
+  makeFakeServerError,
+  makeFakeWaitingCodeRequest
+} from '@/tests/utils'
 
 interface SutTypes {
   sut: WaitingCodeController
