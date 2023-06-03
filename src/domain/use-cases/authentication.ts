@@ -19,10 +19,8 @@ export namespace Authentication {
 
   export type Result = Error | string
   export interface Dependencies {
-    loadGuardianByEmailRepository: LoadGuardianByEmailRepository
-    hashGenerator: HashGenerator
-    hashComparer: HashComparer
-    tokenGenerator: TokenGenerator
-    updateAccessTokenRepository: UpdateAccessTokenRepository
+    guardianRepository: LoadGuardianByEmailRepository & UpdateAccessTokenRepository
+    hashService: HashGenerator & HashComparer
+    tokenService: TokenGenerator
   }
 }

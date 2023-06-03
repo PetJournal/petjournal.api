@@ -14,15 +14,13 @@ export const makeWaitingCodeController = (): Controller => {
   const salt = Number(env.salt)
   const secret = env.secret
   const emailValidator = new EmailValidatorAdapter()
-  const repository = new GuardianAccountRepository()
-  const hasher = new BcryptAdapter(salt)
-  const tokenGenerator = new JwtAdapter(secret)
+  const guardianRepository = new GuardianAccountRepository()
+  const hashService = new BcryptAdapter(salt)
+  const tokenService = new JwtAdapter(secret)
   const authentication = new DbAuthentication({
-    loadGuardianByEmailRepository: repository,
-    updateAccessTokenRepository: repository,
-    hashComparer: hasher,
-    hashGenerator: hasher,
-    tokenGenerator
+    guardianRepository,
+    hashService,
+    tokenService
   })
   const loggerPgRepository = new LoggerPgRepository()
   const waitingCodeController = new WaitingCodeController({

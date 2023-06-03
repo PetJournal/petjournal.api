@@ -7,47 +7,65 @@ import {
   type HashGenerator
 } from '@/data/protocols'
 import {
-  makeLoadGuardianByEmail,
-  makeHashComparer,
   makeTokenGenerator,
-  makeUpdateAccessTokenRepository,
-  makeHashGenerator,
   makeFakeGuardianWithIdData,
-  makeFakeAuth
+  makeFakeAuth,
+  type GuardianWithId
 } from '@/tests/utils'
 import { NotFoundError, UnauthorizedError } from '@/application/errors'
 
 interface SutTypes {
   sut: DbAuthentication
-  loadGuardianByEmailRepositoryStub: LoadGuardianByEmailRepository
-  hashGeneratorStub: HashGenerator
-  hashComparerStub: HashComparer
-  tokenGeneratorStub: TokenGenerator
-  updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
+  guardianRepositoryStub: LoadGuardianByEmailRepository & UpdateAccessTokenRepository
+  hashServiceStub: HashGenerator & HashComparer
+  tokenServiceStub: TokenGenerator
+}
+
+const makeGuardianRepository = (fakeGuardianData: GuardianWithId):
+LoadGuardianByEmailRepository &
+UpdateAccessTokenRepository => {
+  class GuardianRepositoryStub implements LoadGuardianByEmailRepository, UpdateAccessTokenRepository {
+    constructor (private readonly fakeGuardianData: LoadGuardianByEmailRepository.Result) {}
+    async updateAccessToken (authentication: UpdateAccessTokenRepository.Params): Promise<boolean> {
+      return true
+    }
+
+    async loadByEmail (email: string): Promise<LoadGuardianByEmailRepository.Result> {
+      return this.fakeGuardianData
+    }
+  }
+  return new GuardianRepositoryStub(fakeGuardianData)
+}
+
+const makeHashService = (): HashGenerator & HashComparer => {
+  class HashServiceStub implements HashGenerator, HashComparer {
+    async compare (input: HashComparer.Params): Promise<boolean> {
+      return true
+    }
+
+    async encrypt (input: HashGenerator.Params): Promise<string> {
+      return 'hashed_value'
+    }
+  }
+  return new HashServiceStub()
 }
 
 const makeSut = (): SutTypes => {
-  const loadGuardianByEmailRepositoryStub = makeLoadGuardianByEmail(makeFakeGuardianWithIdData())
-  const hashGeneratorStub = makeHashGenerator()
-  const hashComparerStub = makeHashComparer()
-  const tokenGeneratorStub = makeTokenGenerator()
-  const updateAccessTokenRepositoryStub = makeUpdateAccessTokenRepository()
+  const guardianRepositoryStub = makeGuardianRepository(makeFakeGuardianWithIdData())
+  const hashServiceStub = makeHashService()
+  const tokenServiceStub = makeTokenGenerator()
   const sut = new DbAuthentication(
     {
-      loadGuardianByEmailRepository: loadGuardianByEmailRepositoryStub,
-      hashGenerator: hashGeneratorStub,
-      hashComparer: hashComparerStub,
-      tokenGenerator: tokenGeneratorStub,
-      updateAccessTokenRepository: updateAccessTokenRepositoryStub
+      guardianRepository: guardianRepositoryStub,
+      hashService: hashServiceStub,
+      tokenService: tokenServiceStub
     }
   )
   return {
     sut,
-    loadGuardianByEmailRepositoryStub,
-    hashGeneratorStub,
-    hashComparerStub,
-    tokenGeneratorStub,
-    updateAccessTokenRepositoryStub
+    guardianRepositoryStub,
+    hashServiceStub,
+    tokenServiceStub
   }
 }
 describe('DbAuthentication UseCase', () => {
@@ -55,8 +73,8 @@ describe('DbAuthentication UseCase', () => {
 
   describe('tests LoadGuardianByEmailRepository', () => {
     it('Should return NotFoundError if not found email is provided', async () => {
-      const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
-      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail').mockResolvedValueOnce(undefined)
+      const { sut, guardianRepositoryStub } = makeSut()
+      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValueOnce(undefined)
 
       const result = await sut.auth(fakeAuth)
 
@@ -64,8 +82,8 @@ describe('DbAuthentication UseCase', () => {
     })
 
     it('Should throw if LoadGuardianByEmailRepository throws', async () => {
-      const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
-      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail').mockRejectedValueOnce(new Error())
+      const { sut, guardianRepositoryStub } = makeSut()
+      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockRejectedValueOnce(new Error())
 
       const promise = sut.auth(fakeAuth)
 
@@ -73,8 +91,8 @@ describe('DbAuthentication UseCase', () => {
     })
 
     it('Should call LoadGuardianByEmailRepository with correct email', async () => {
-      const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
-      const loadSpy = jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail')
+      const { sut, guardianRepositoryStub } = makeSut()
+      const loadSpy = jest.spyOn(guardianRepositoryStub, 'loadByEmail')
 
       await sut.auth(fakeAuth)
 
@@ -84,8 +102,8 @@ describe('DbAuthentication UseCase', () => {
 
   describe('test HashComparer', () => {
     it('should return UnauthorizedError if invalid code is provided', async () => {
-      const { sut, hashComparerStub } = makeSut()
-      jest.spyOn(hashComparerStub, 'compare').mockResolvedValueOnce(false)
+      const { sut, hashServiceStub } = makeSut()
+      jest.spyOn(hashServiceStub, 'compare').mockResolvedValueOnce(false)
 
       const result = await sut.auth(fakeAuth)
 
@@ -93,10 +111,10 @@ describe('DbAuthentication UseCase', () => {
     })
 
     it('should call HashComparer with empty value if falsy sensitiveData is provided', async () => {
-      const { sut, hashComparerStub, loadGuardianByEmailRepositoryStub } = makeSut()
+      const { sut, hashServiceStub, guardianRepositoryStub } = makeSut()
       const fakeGuardian = { ...makeFakeGuardianWithIdData(), sensitiveData: { field: 'any_field' } }
-      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail').mockResolvedValueOnce(fakeGuardian)
-      const spyHashComparer = jest.spyOn(hashComparerStub, 'compare')
+      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValueOnce(fakeGuardian)
+      const spyHashComparer = jest.spyOn(hashServiceStub, 'compare')
 
       await sut.auth(fakeAuth)
 
@@ -104,8 +122,8 @@ describe('DbAuthentication UseCase', () => {
     })
 
     it('Should throw if HashComparer throws', async () => {
-      const { sut, hashComparerStub } = makeSut()
-      jest.spyOn(hashComparerStub, 'compare').mockRejectedValueOnce(new Error())
+      const { sut, hashServiceStub } = makeSut()
+      jest.spyOn(hashServiceStub, 'compare').mockRejectedValueOnce(new Error())
 
       const promise = sut.auth(fakeAuth)
 
@@ -113,13 +131,13 @@ describe('DbAuthentication UseCase', () => {
     })
 
     it('should call HashComparer with correct values', async () => {
-      const { sut, hashComparerStub, loadGuardianByEmailRepositoryStub } = makeSut()
+      const { sut, hashServiceStub, guardianRepositoryStub } = makeSut()
       const fakeGuardian = {
         ...makeFakeGuardianWithIdData(),
         any_field: 'any_data'
       }
-      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail').mockResolvedValueOnce(fakeGuardian)
-      const spyHashComparer = jest.spyOn(hashComparerStub, 'compare')
+      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValueOnce(fakeGuardian)
+      const spyHashComparer = jest.spyOn(hashServiceStub, 'compare')
 
       await sut.auth(fakeAuth)
 
@@ -129,8 +147,8 @@ describe('DbAuthentication UseCase', () => {
 
   describe('test TokenGenerator', () => {
     it('should call TokenGenerator with correct value', async () => {
-      const { sut, tokenGeneratorStub } = makeSut()
-      const spyTokenGenerator = jest.spyOn(tokenGeneratorStub, 'generate')
+      const { sut, tokenServiceStub } = makeSut()
+      const spyTokenGenerator = jest.spyOn(tokenServiceStub, 'generate')
 
       await sut.auth(fakeAuth)
 
@@ -140,9 +158,9 @@ describe('DbAuthentication UseCase', () => {
 
   describe('test HashGenerator', () => {
     it('should call HashGenerator with correct value', async () => {
-      const { sut, hashGeneratorStub, tokenGeneratorStub } = makeSut()
-      const spyHashGenerator = jest.spyOn(hashGeneratorStub, 'encrypt')
-      jest.spyOn(tokenGeneratorStub, 'generate').mockResolvedValueOnce('valid_token')
+      const { sut, hashServiceStub, tokenServiceStub } = makeSut()
+      const spyHashGenerator = jest.spyOn(hashServiceStub, 'encrypt')
+      jest.spyOn(tokenServiceStub, 'generate').mockResolvedValueOnce('valid_token')
 
       await sut.auth(fakeAuth)
 
@@ -152,8 +170,8 @@ describe('DbAuthentication UseCase', () => {
 
   describe('tests UpdateAccessTokenRepository service', () => {
     it('Should call UpdateAccessTokenRepository with correct values', async () => {
-      const { sut, updateAccessTokenRepositoryStub } = makeSut()
-      const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
+      const { sut, guardianRepositoryStub } = makeSut()
+      const updateSpy = jest.spyOn(guardianRepositoryStub, 'updateAccessToken')
 
       await sut.auth(fakeAuth)
 
