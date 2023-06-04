@@ -8,8 +8,8 @@ import { BcryptAdapter } from '@/infra/cryptography/bcrypt-adapter'
 export const makeAuthMiddleware = (): Middleware => {
   const secret = env.secret
   const salt = Number(env.salt)
-  const tokenDecoder = new JwtAdapter(secret)
-  const hashComparer = new BcryptAdapter(salt)
-  const loadGuardianById = new GuardianAccountRepository()
-  return new AuthMiddleware({ tokenDecoder, loadGuardianById, hashComparer })
+  const tokenService = new JwtAdapter(secret)
+  const hashService = new BcryptAdapter(salt)
+  const guardianRepository = new GuardianAccountRepository()
+  return new AuthMiddleware({ tokenService, guardianRepository, hashService })
 }

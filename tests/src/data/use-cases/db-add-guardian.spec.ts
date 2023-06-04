@@ -1,29 +1,29 @@
 import { type AddGuardianRepository, type HashGenerator } from '@/data/protocols'
 import { DbAddGuardian } from '@/data/use-cases'
-import { makeAddGuardian, makeFakeGuardianData, makeEncrypter } from '@/tests/utils'
+import { makeFakeGuardianData, makeGuardianRepository, makeHashService } from '@/tests/utils'
 
 interface SutTypes {
   sut: DbAddGuardian
-  encrypterStub: HashGenerator
-  addGuardianRepositoryStub: AddGuardianRepository
+  hashServiceStub: HashGenerator
+  guardianRepositoryStub: AddGuardianRepository
 }
 
 const makeSut = (): SutTypes => {
-  const addGuardianRepositoryStub = makeAddGuardian()
-  const encrypterStub = makeEncrypter()
-  const sut = new DbAddGuardian(addGuardianRepositoryStub, encrypterStub)
+  const guardianRepositoryStub = makeGuardianRepository()
+  const hashServiceStub = makeHashService()
+  const sut = new DbAddGuardian(guardianRepositoryStub, hashServiceStub)
   return {
     sut,
-    addGuardianRepositoryStub,
-    encrypterStub
+    guardianRepositoryStub,
+    hashServiceStub
   }
 }
 
 describe('DbAddGuardian use case', () => {
   describe('tests encrypter services', () => {
     it('Should call encrypter with correct password', async () => {
-      const { sut, encrypterStub } = makeSut()
-      const encryptSpy = jest.spyOn(encrypterStub, 'encrypt')
+      const { sut, hashServiceStub } = makeSut()
+      const encryptSpy = jest.spyOn(hashServiceStub, 'encrypt')
       const guardianData = makeFakeGuardianData()
 
       await sut.add(guardianData)
@@ -31,8 +31,8 @@ describe('DbAddGuardian use case', () => {
     })
 
     it('Should throw if encrypter throws', async () => {
-      const { sut, encrypterStub } = makeSut()
-      jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(Promise.reject(new Error()))
+      const { sut, hashServiceStub } = makeSut()
+      jest.spyOn(hashServiceStub, 'encrypt').mockReturnValueOnce(Promise.reject(new Error()))
       const guardianData = makeFakeGuardianData()
       const promise = sut.add(guardianData)
       await expect(promise).rejects.toThrow()
@@ -41,8 +41,8 @@ describe('DbAddGuardian use case', () => {
 
   describe('tests AddGuardianRepository', () => {
     it('Should call AddGuardianRepository with correct values', async () => {
-      const { sut, addGuardianRepositoryStub } = makeSut()
-      const addSpy = jest.spyOn(addGuardianRepositoryStub, 'add')
+      const { sut, guardianRepositoryStub } = makeSut()
+      const addSpy = jest.spyOn(guardianRepositoryStub, 'add')
       const { accessToken, ...guardianData } = makeFakeGuardianData()
 
       await sut.add(guardianData)
@@ -52,14 +52,14 @@ describe('DbAddGuardian use case', () => {
         lastName: 'valid_last_name',
         email: 'valid_email',
         phone: 'valid_phone',
-        password: 'hashed_password',
+        password: 'hashed_value',
         forgetPasswordToken: null
       })
     })
 
     it('Should throw if AddGuardianRepository throws', async () => {
-      const { sut, addGuardianRepositoryStub } = makeSut()
-      jest.spyOn(addGuardianRepositoryStub, 'add').mockReturnValueOnce(Promise.reject(new Error()))
+      const { sut, guardianRepositoryStub } = makeSut()
+      jest.spyOn(guardianRepositoryStub, 'add').mockReturnValueOnce(Promise.reject(new Error()))
 
       const guardianData = makeFakeGuardianData()
 

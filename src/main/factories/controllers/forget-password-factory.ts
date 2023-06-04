@@ -12,11 +12,11 @@ import { LoggerControllerDecorator } from '@/main/decorators/logger'
 
 export const makeForgetPasswordController = (): Controller => {
   const emailValidator = new EmailValidatorAdapter()
-  const loadGuardianByEmailRepository = new GuardianAccountRepository()
+  const guardianRepository = new GuardianAccountRepository()
   const salt = Number(env.salt)
   const bcryptAdapter = new BcryptAdapter(salt)
   const saveTokenRepository = new GuardianAccountRepository()
-  const tokenGenerator = new ForgetPasswordTokenGenerator(bcryptAdapter, saveTokenRepository)
+  const tokenService = new ForgetPasswordTokenGenerator(bcryptAdapter, saveTokenRepository)
   const transporter = {
     service: 'gmail',
     auth: {
@@ -25,7 +25,7 @@ export const makeForgetPasswordController = (): Controller => {
     }
   }
   const nodeMailerAdapter = new NodeMailerAdapter(transporter)
-  const dbForgetPassword = new DbForgetPassword({ loadGuardianByEmailRepository, tokenGenerator, emailService: nodeMailerAdapter })
+  const dbForgetPassword = new DbForgetPassword({ guardianRepository, tokenService, emailService: nodeMailerAdapter })
   const dependencies: ForgetPasswordController.Dependencies = {
     emailValidator,
     forgetPassword: dbForgetPassword

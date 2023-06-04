@@ -7,10 +7,11 @@ import {
   type HashGenerator
 } from '@/data/protocols'
 import {
-  makeTokenGenerator,
+  makeTokenService,
   makeFakeGuardianWithIdData,
   makeFakeAuth,
-  type GuardianWithId
+  makeGuardianRepository,
+  makeHashService
 } from '@/tests/utils'
 import { NotFoundError, UnauthorizedError } from '@/application/errors'
 
@@ -21,39 +22,10 @@ interface SutTypes {
   tokenServiceStub: TokenGenerator
 }
 
-const makeGuardianRepository = (fakeGuardianData: GuardianWithId):
-LoadGuardianByEmailRepository &
-UpdateAccessTokenRepository => {
-  class GuardianRepositoryStub implements LoadGuardianByEmailRepository, UpdateAccessTokenRepository {
-    constructor (private readonly fakeGuardianData: LoadGuardianByEmailRepository.Result) {}
-    async updateAccessToken (authentication: UpdateAccessTokenRepository.Params): Promise<boolean> {
-      return true
-    }
-
-    async loadByEmail (email: string): Promise<LoadGuardianByEmailRepository.Result> {
-      return this.fakeGuardianData
-    }
-  }
-  return new GuardianRepositoryStub(fakeGuardianData)
-}
-
-const makeHashService = (): HashGenerator & HashComparer => {
-  class HashServiceStub implements HashGenerator, HashComparer {
-    async compare (input: HashComparer.Params): Promise<boolean> {
-      return true
-    }
-
-    async encrypt (input: HashGenerator.Params): Promise<string> {
-      return 'hashed_value'
-    }
-  }
-  return new HashServiceStub()
-}
-
 const makeSut = (): SutTypes => {
   const guardianRepositoryStub = makeGuardianRepository(makeFakeGuardianWithIdData())
   const hashServiceStub = makeHashService()
-  const tokenServiceStub = makeTokenGenerator()
+  const tokenServiceStub = makeTokenService()
   const sut = new DbAuthentication(
     {
       guardianRepository: guardianRepositoryStub,

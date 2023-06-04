@@ -6,8 +6,8 @@ import {
   makeFakeForgetPasswordRequest,
   makeFakeGuardianWithIdData,
   makeFakeServerError,
-  makeLoadGuardianByEmail,
-  makeTokenGenerator
+  makeGuardianRepository,
+  makeTokenService
 } from '@/tests/utils'
 import { type LoadGuardianByEmailRepository, type TokenGenerator } from '@/data/protocols'
 import { InvalidParamError, MissingParamError, NotFoundError } from '@/application/errors'
@@ -33,7 +33,7 @@ const makeForgetPassword = (): ForgetPassword => {
 interface SutTypes {
   sut: ForgetPasswordController
   emailValidatorStub: EmailValidator
-  loadGuardianByEmailStub: LoadGuardianByEmailRepository
+  guardianRepositoryStub: LoadGuardianByEmailRepository
   tokenGeneratorStub: TokenGenerator
   emailServiceStub: EmailService
   forgetPasswordStub: ForgetPassword
@@ -41,8 +41,8 @@ interface SutTypes {
 
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
-  const loadGuardianByEmailStub = makeLoadGuardianByEmail(makeFakeGuardianWithIdData())
-  const tokenGeneratorStub = makeTokenGenerator()
+  const guardianRepositoryStub = makeGuardianRepository(makeFakeGuardianWithIdData())
+  const tokenGeneratorStub = makeTokenService()
   const emailServiceStub = makeEmailService()
   const forgetPasswordStub = makeForgetPassword()
   const dependencies: ForgetPasswordController.Dependencies = {
@@ -53,7 +53,7 @@ const makeSut = (): SutTypes => {
   return {
     sut,
     emailValidatorStub,
-    loadGuardianByEmailStub,
+    guardianRepositoryStub,
     tokenGeneratorStub,
     emailServiceStub,
     forgetPasswordStub
