@@ -4,7 +4,7 @@ import { makeFakeGuardianWithIdData } from '../mocks'
 const makeAddGuardian = (): AddGuardian => {
   class AddGuardianStub implements AddGuardian {
     async add (guardian: AddGuardian.Params): Promise<AddGuardian.Result> {
-      const { password, accessToken, ...result } = makeFakeGuardianWithIdData()
+      const { password, verificationTokenCreatedAt, verificationToken, accessToken, ...result } = makeFakeGuardianWithIdData()
       return result
     }
   }

@@ -7,7 +7,8 @@ const makeFakeGuardianData = (): Guardian => ({
   password: 'valid_password',
   phone: 'valid_phone',
   accessToken: null,
-  forgetPasswordToken: null
+  verificationToken: 'token dumb',
+  verificationTokenCreatedAt: new Date('2023-06-05')
 })
 
 const makeFakeGuardianWithIdData = (): GuardianWithId => ({
@@ -18,7 +19,8 @@ const makeFakeGuardianWithIdData = (): GuardianWithId => ({
   password: 'valid_password',
   phone: 'valid_phone',
   accessToken: 'valid_token',
-  forgetPasswordToken: 'valid_forget_password_token'
+  verificationToken: 'token dumb',
+  verificationTokenCreatedAt: new Date('2023-06-05')
 })
 
 export {
