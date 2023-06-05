@@ -321,7 +321,8 @@ describe('SignUp Controller', () => {
         lastName: 'any_last_name',
         email: 'any_email@mail.com',
         phone: 'any_phone',
-        password: 'any_password'
+        password: 'any_password',
+        verificationToken: 'token dumb'
       })
     })
   })
@@ -332,7 +333,7 @@ describe('SignUp Controller', () => {
       const httpRequest = {
         body: makeFakeSignUpRequest()
       }
-      const { password, accessToken, ...response } = makeFakeGuardianWithIdData()
+      const { password, accessToken, verificationToken, verificationTokenCreatedAt, ...response } = makeFakeGuardianWithIdData()
 
       const httpResponse = await sut.handle(httpRequest)
 

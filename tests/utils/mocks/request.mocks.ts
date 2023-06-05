@@ -17,7 +17,8 @@ const makeFakeSignUpRequest = (fields: Partial<SignUpRequest> = {}): SignUpReque
     phone: 'any_phone',
     accessToken: 'any_token',
     isPrivacyPolicyAccepted: true,
-    forgetPasswordToken: null
+    verificationToken: 'any_verication_token',
+    verificationTokenCreatedAt: new Date()
   }
 
   return {

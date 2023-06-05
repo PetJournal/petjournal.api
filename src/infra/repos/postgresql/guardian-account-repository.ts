@@ -27,7 +27,8 @@ export class GuardianAccountRepository implements AddGuardianRepository, LoadGua
         firstName: true,
         lastName: true,
         email: true,
-        phone: true
+        phone: true,
+        verificationToken: true
       }
     })
   }
@@ -61,7 +62,7 @@ export class GuardianAccountRepository implements AddGuardianRepository, LoadGua
     if (guardian) {
       await db.guardian.update({
         where: { id: accountId },
-        data: { forgetPasswordToken: token }
+        data: { verificationToken: token }
       })
 
       success = true
