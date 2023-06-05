@@ -1,18 +1,18 @@
-export const loginPath = {
+export const waitingCodePath = {
   post: {
-    tags: ['guardian'],
-    summary: 'login a guardian',
+    tags: ['recovery-password'],
+    summary: 'send email and forgetPasswordCode for recovery password',
     description: '',
     requestBody: {
       required: true,
       content: {
         'application/json': {
           schema: {
-            $ref: '#/schemas/loginParams'
+            $ref: '#/schemas/waitingCodeParams'
           },
           example: {
             email: 'johndoe@email.com',
-            password: 'Teste@123'
+            forgetPasswordCode: '123456'
           }
         }
       }
@@ -32,7 +32,17 @@ export const loginPath = {
         $ref: '#/components/badRequest'
       },
       401: {
-        $ref: '#/components/unauthorized'
+        description: 'Unauthorized guardian',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/schemas/error'
+            },
+            example: {
+              error: 'Forget password code mismatch'
+            }
+          }
+        }
       },
       500: {
         $ref: '#/components/serverError'

@@ -1,3 +1,7 @@
+interface AuthMiddlewareRequest {
+  authorization: string
+}
+
 interface LoginRequest {
   body: {
     email: string
@@ -27,13 +31,17 @@ interface ChangePasswordRequest {
   }
 }
 
-interface AuthMiddlewareRequest {
-  authorization: string
+interface WaitingCodeRequest {
+  body: {
+    email: string
+    forgetPasswordCode: string
+  }
 }
 
 export {
-  type SignUpRequest,
+  type AuthMiddlewareRequest,
   type LoginRequest,
+  type SignUpRequest,
   type ChangePasswordRequest,
-  type AuthMiddlewareRequest
+  type WaitingCodeRequest
 }

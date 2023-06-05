@@ -1,7 +1,7 @@
 import { type Authentication } from '@/domain/use-cases'
 import { type EmailValidator } from '@/application/validation'
 import { LoginController } from '@/application/controllers'
-import { badRequest, unauthorized, success } from '@/application/helpers'
+import { badRequest, success } from '@/application/helpers'
 import { InvalidParamError, MissingParamError } from '@/application/errors'
 import { makeFakeAuthenticationUseCase, makeEmailValidator, makeFakeLoginRequest, makeFakeServerError } from '@/tests/utils'
 
@@ -61,7 +61,6 @@ describe('Login Controller', () => {
       jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
         throw new Error()
       })
-
       const httpResponse = await sut.handle(makeFakeLoginRequest())
       expect(httpResponse).toEqual(makeFakeServerError())
     })
@@ -87,17 +86,8 @@ describe('Login Controller', () => {
 
       expect(authSpy).toHaveBeenCalledWith({
         email: 'any_email@mail.com',
-        password: 'any_password'
+        sensitiveData: { field: 'password', value: 'any_password' }
       })
-    })
-
-    it('Should return 401 if invalid credentials are provided', async () => {
-      const { sut, authenticationStub } = makeSut()
-      jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(Promise.resolve(''))
-
-      const httpResponse = await sut.handle(makeFakeLoginRequest())
-
-      expect(httpResponse).toEqual(unauthorized())
     })
 
     it('Should return 500 if Authentication throws', async () => {

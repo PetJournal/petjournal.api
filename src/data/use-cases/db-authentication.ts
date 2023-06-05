@@ -6,6 +6,7 @@ import {
   type UpdateAccessTokenRepository,
   type LoadGuardianByEmailRepository
 } from '@/data/protocols'
+import { NotFoundError, UnauthorizedError } from '@/application/errors'
 
 export class DbAuthentication implements Authentication {
   private readonly hashComparer: HashComparer
@@ -32,11 +33,14 @@ export class DbAuthentication implements Authentication {
   async auth (credentials: Authentication.Params): Promise<Authentication.Result> {
     const account = await this.loadGuardianByEmailRepository.loadByEmail(credentials.email)
     if (!account) {
-      return null
+      return new NotFoundError('email')
     }
-    const isValid = await this.hashComparer.compare({ value: credentials.password, hash: account.password })
+    const isValid = await this.hashComparer.compare({
+      value: credentials.sensitiveData.value,
+      hash: account[credentials.sensitiveData?.field] ?? ''
+    })
     if (!isValid) {
-      return null
+      return new UnauthorizedError()
     }
     const accessToken = await this.tokenGenerator.generate({ sub: account.id })
     const hashedToken = await this.hashGenerator.encrypt({ value: accessToken })
