@@ -9,6 +9,7 @@ export namespace AddGuardianRepository {
     email: string
     phone: string
     password: string
+    verificationToken: string
   }
 
   export type Result = {

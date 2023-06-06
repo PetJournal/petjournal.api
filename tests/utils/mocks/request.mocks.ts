@@ -34,7 +34,8 @@ const makeFakeSignUpRequest = ({ fields = {} }: Options<SignUpRequest> = {}): Si
     phone: 'any_phone',
     accessToken: 'any_token',
     isPrivacyPolicyAccepted: true,
-    forgetPasswordToken: null
+    verificationToken: 'any_verication_token',
+    verificationTokenCreatedAt: new Date()
   }
 
   Object.assign(body, fields)

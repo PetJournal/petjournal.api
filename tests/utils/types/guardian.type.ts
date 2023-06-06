@@ -5,7 +5,8 @@ interface Guardian {
   password: string
   phone: string
   accessToken: string | null
-  forgetPasswordToken: string | null
+  verificationToken: string
+  verificationTokenCreatedAt: Date
 }
 
 export {

@@ -55,7 +55,8 @@ export class SignUpController implements Controller {
         lastName,
         email,
         phone,
-        password
+        password,
+        verificationToken: 'token dumb'
       })
       if (!guardian) {
         return conflict(new ConflictGuardianError())

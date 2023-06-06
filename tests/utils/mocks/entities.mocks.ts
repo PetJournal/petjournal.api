@@ -20,7 +20,8 @@ const makeFakeGuardianData = ({
     password: 'valid_password',
     phone: 'valid_phone',
     accessToken: null,
-    forgetPasswordToken: null
+    verificationToken: 'token dumb',
+    verificationTokenCreatedAt: new Date('2023-06-05')
   }
 
   if (withId) {

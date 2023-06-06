@@ -11,6 +11,7 @@ export namespace AddGuardian {
     email: string
     phone: string
     password: string
+    verificationToken: string
   }
 
   export type Result = {

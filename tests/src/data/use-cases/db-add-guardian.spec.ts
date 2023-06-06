@@ -61,7 +61,8 @@ describe('DbAddGuardian use case', () => {
         email: 'valid_email',
         phone: 'valid_phone',
         password: 'hashed_password',
-        forgetPasswordToken: null
+        verificationToken: 'token dumb',
+        verificationTokenCreatedAt: new Date('2023-06-05')
       })
     })
 
@@ -79,11 +80,10 @@ describe('DbAddGuardian use case', () => {
   describe('test DbAddGuardian success case', () => {
     it('Should return an guardian on success', async () => {
       const { sut } = makeSut()
-      const { accessToken, forgetPasswordToken, ...guardianData } = makeFakeGuardianData()
-      const { password, ...guardianDataDb } = guardianData
+      const { verificationTokenCreatedAt, ...guardianData } = makeFakeGuardianData()
+      const { password, verificationToken, accessToken, ...guardianDataDb } = guardianData
 
       const guardian = await sut.add(guardianData)
-
       expect(guardian).toMatchObject(guardianDataDb)
     })
   })
