@@ -4,11 +4,10 @@ import { EmailValidatorAdapter } from '@/application/validation/validators'
 import { DbForgetPassword } from '@/data/use-cases'
 import { ForgetPasswordTokenGenerator } from '@/data/use-cases/forget-password-token-generation'
 import { BcryptAdapter } from '@/infra/cryptography/bcrypt-adapter'
-import { NodeMailerAdapter } from '@/infra/node-mailer-adapter'
-import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
-import { LoggerPgRepository } from '@/infra/repos/postgresql/logger-repository'
+import { NodeMailerAdapter } from '@/infra/communication'
+import { GuardianAccountRepository, LoggerPgRepository } from '@/infra/repos/postgresql'
+import { LoggerControllerDecorator } from '@/main/decorators'
 import env from '@/main/config/env'
-import { LoggerControllerDecorator } from '@/main/decorators/logger'
 
 export const makeForgetPasswordController = (): Controller => {
   const emailValidator = new EmailValidatorAdapter()
