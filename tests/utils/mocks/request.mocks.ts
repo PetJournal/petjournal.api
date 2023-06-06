@@ -34,7 +34,7 @@ const makeFakeSignUpRequest = ({ fields = {} }: Options<SignUpRequest> = {}): Si
     phone: 'any_phone',
     accessToken: 'any_token',
     isPrivacyPolicyAccepted: true,
-    verificationToken: 'any_verication_token',
+    verificationToken: 'any_verification_token',
     verificationTokenCreatedAt: new Date()
   }
 

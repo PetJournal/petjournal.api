@@ -19,7 +19,8 @@ interface SignUpRequest {
     phone: string
     accessToken: string | null
     isPrivacyPolicyAccepted: boolean
-    forgetPasswordToken: string | null
+    verificationToken: string
+    verificationTokenCreatedAt: Date
   }
 }
 

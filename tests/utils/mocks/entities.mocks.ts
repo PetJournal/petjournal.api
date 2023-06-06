@@ -4,6 +4,7 @@ interface Options {
   withId?: boolean
   withAccessToken?: boolean
   withForgetPassword?: boolean
+  withVerificationTokenCreatedAt?: boolean
   fields?: Partial<Guardian>
 }
 
@@ -11,6 +12,7 @@ const makeFakeGuardianData = ({
   withId = false,
   withAccessToken = false,
   withForgetPassword = false,
+  withVerificationTokenCreatedAt = false,
   fields = {}
 }: Options = {}): Guardian => {
   const fakeGuardian = {
@@ -34,6 +36,10 @@ const makeFakeGuardianData = ({
 
   if (withForgetPassword) {
     Object.assign(fakeGuardian, { forgetPasswordToken: 'valid_forget_password' })
+  }
+
+  if (withVerificationTokenCreatedAt) {
+    Object.assign(fakeGuardian, { withVerificationTokenCreatedAt: new Date('2023-06-05') })
   }
 
   if (fields) {
