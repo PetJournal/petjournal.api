@@ -1,4 +1,4 @@
-import { type PhoneValidator } from '@/application/validation/protocols'
+import { type PhoneValidator } from '@/application/validation'
 import validator from 'validator'
 
 export class PhoneValidatorAdapter implements PhoneValidator {

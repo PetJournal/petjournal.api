@@ -1,11 +1,10 @@
 import { type Controller } from '@/application/protocols'
 import { ChangePasswordController } from '@/application/controllers'
-import { PasswordValidatorAdapter } from '@/application/validation'
 import { DbChangePassword } from '@/data/use-cases'
 import { BcryptAdapter } from '@/infra/cryptography'
-import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
+import { PasswordValidatorAdapter } from '@/infra/validators'
+import { GuardianAccountRepository, LoggerPgRepository } from '@/infra/repos/postgresql'
 import { LoggerControllerDecorator } from '@/main/decorators'
-import { LoggerPgRepository } from '@/infra/repos/postgresql/logger-repository'
 import env from '@/main/config/env'
 
 export const makeChangePasswordController = (): Controller => {

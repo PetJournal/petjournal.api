@@ -1,4 +1,4 @@
-import { NameValidatorAdapter } from '@/application/validation'
+import { NameValidatorAdapter } from '@/infra/validators'
 import validator from 'validator'
 
 jest.mock('validator', () => ({

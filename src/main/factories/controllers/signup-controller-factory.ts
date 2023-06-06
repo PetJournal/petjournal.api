@@ -1,11 +1,15 @@
 import { type Controller } from '@/application/protocols'
 import { SignUpController } from '@/application/controllers'
-import { EmailValidatorAdapter, NameValidatorAdapter, PasswordValidatorAdapter, PhoneValidatorAdapter } from '@/application/validation'
 import { DbAddGuardian } from '@/data/use-cases'
-import { BcryptAdapter } from '@/infra/cryptography/bcrypt-adapter'
-import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
+import {
+  EmailValidatorAdapter,
+  NameValidatorAdapter,
+  PasswordValidatorAdapter,
+  PhoneValidatorAdapter
+} from '@/infra/validators'
+import { BcryptAdapter } from '@/infra/cryptography'
+import { GuardianAccountRepository, LoggerPgRepository } from '@/infra/repos/postgresql'
 import { LoggerControllerDecorator } from '@/main/decorators'
-import { LoggerPgRepository } from '@/infra/repos/postgresql/logger-repository'
 import env from '@/main/config/env'
 
 export const makeSignUpController = (): Controller => {

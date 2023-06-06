@@ -1,7 +1,7 @@
 import { type Controller } from '@/application/protocols'
 import { WaitingCodeController } from '@/application/controllers'
-import { EmailValidatorAdapter } from '@/application/validation'
 import { DbAuthentication } from '@/data/use-cases'
+import { EmailValidatorAdapter } from '@/infra/validators'
 import { BcryptAdapter, JwtAdapter } from '@/infra/cryptography'
 import { GuardianAccountRepository, LoggerPgRepository } from '@/infra/repos/postgresql'
 import { LoggerControllerDecorator } from '@/main/decorators/logger'
