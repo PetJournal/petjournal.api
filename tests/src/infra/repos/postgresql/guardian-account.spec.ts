@@ -1,4 +1,4 @@
-import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
+import { GuardianAccountRepository } from '@/infra/repos/postgresql'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 import { makeFakeGuardianData } from '@/tests/utils'
 
