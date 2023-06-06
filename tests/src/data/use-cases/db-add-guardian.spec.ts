@@ -23,6 +23,7 @@ const makeSut = (): SutTypes => {
     addGuardianRepositoryStub
   }
 }
+
 describe('DbAddGuardian use case', () => {
   describe('tests hash generator services', () => {
     it('Should call hash generator with correct password', async () => {

@@ -3,7 +3,12 @@ import { type EmailValidator } from '@/application/validation'
 import { LoginController } from '@/application/controllers'
 import { badRequest, success } from '@/application/helpers'
 import { InvalidParamError, MissingParamError } from '@/application/errors'
-import { makeFakeAuthenticationUseCase, makeEmailValidator, makeFakeLoginRequest, makeFakeServerError } from '@/tests/utils'
+import {
+  makeEmailValidator,
+  makeFakeServerError,
+  makeFakeLoginRequest,
+  makeFakeAuthenticationUseCase
+} from '@/tests/utils'
 
 interface SutTypes {
   sut: LoginController

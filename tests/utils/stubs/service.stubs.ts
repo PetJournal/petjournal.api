@@ -4,6 +4,7 @@ import {
   type HashGenerator,
   type HashComparer,
   type TokenGenerator,
+  type EmailService,
   type AddGuardianRepository,
   type LoadGuardianByIdRepository,
   type LoadGuardianByEmailRepository,
@@ -54,6 +55,15 @@ const makeFakeTokenDecoder = (): TokenDecoder => {
     }
   }
   return new TokenDecoderStub()
+}
+
+const makeFakeEmailService = (): EmailService => {
+  class EmailServiceStub implements EmailService {
+    async send (options: EmailService.Options): Promise<boolean> {
+      return await Promise.resolve(true)
+    }
+  }
+  return new EmailServiceStub()
 }
 
 const makeFakeAddGuardianRepository = (): AddGuardianRepository => {
@@ -107,6 +117,7 @@ export {
   makeFakeHashGenerator,
   makeFakeTokenGenerator,
   makeFakeTokenDecoder,
+  makeFakeEmailService,
   makeFakeAddGuardianRepository,
   makeFakeLoadGuardianByIdRepository,
   makeFakeLoadGuardianByEmailRepository,

@@ -1,8 +1,8 @@
-import { WaitingCodeController } from '@/application/controllers/waiting-code'
-import { InvalidParamError, MissingParamError } from '@/application/errors'
-import { badRequest, success, unauthorized } from '@/application/helpers/http'
-import { type EmailValidator } from '@/application/validation/protocols'
 import { type Authentication } from '@/domain/use-cases'
+import { type EmailValidator } from '@/application/validation'
+import { WaitingCodeController } from '@/application/controllers'
+import { InvalidParamError, MissingParamError } from '@/application/errors'
+import { badRequest, success, unauthorized } from '@/application/helpers'
 import {
   makeFakeAuthenticationUseCase,
   makeEmailValidator,
@@ -19,7 +19,10 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
   const authenticationStub = makeFakeAuthenticationUseCase()
-  const sut = new WaitingCodeController({ emailValidator: emailValidatorStub, authentication: authenticationStub })
+  const sut = new WaitingCodeController({
+    emailValidator: emailValidatorStub,
+    authentication: authenticationStub
+  })
   return {
     sut,
     emailValidatorStub,

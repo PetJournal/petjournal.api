@@ -1,9 +1,19 @@
 import { type ChangePassword } from '@/domain/use-cases'
 import { type PasswordValidator } from '@/application/validation'
 import { ChangePasswordController } from '@/application/controllers'
-import { MissingParamError, NotFoundError, PasswordMismatchError, PasswordRequirementsError } from '@/application/errors'
 import { badRequest, success } from '@/application/helpers'
-import { makeFakeChangePasswordRequest, makeFakeChangePasswordUseCase, makeFakeServerError, makePasswordValidator } from '@/tests/utils'
+import {
+  PasswordRequirementsError,
+  PasswordMismatchError,
+  MissingParamError,
+  NotFoundError
+} from '@/application/errors'
+import {
+  makeFakeChangePasswordRequest,
+  makeFakeChangePasswordUseCase,
+  makePasswordValidator,
+  makeFakeServerError
+} from '@/tests/utils'
 
 interface SutTypes {
   sut: ChangePasswordController
@@ -30,8 +40,8 @@ describe('ChangePasswordController', () => {
   describe('test the id field', () => {
     it('Should return 400 if no userId is provided', async () => {
       const { sut } = makeSut()
-
       const httpRequest = makeFakeChangePasswordRequest({ withUserId: false })
+
       const httpResponse = await sut.handle(httpRequest)
 
       expect(httpResponse).toEqual(badRequest(new MissingParamError('id')))
@@ -41,10 +51,8 @@ describe('ChangePasswordController', () => {
   describe('test the password field', () => {
     it('Should return 400 if no password is provided', async () => {
       const { sut } = makeSut()
-
       const httpRequest = makeFakeChangePasswordRequest({ fields: { password: undefined } })
       const httpResponse = await sut.handle(httpRequest)
-
       expect(httpResponse).toEqual(badRequest(new MissingParamError('password')))
     })
 

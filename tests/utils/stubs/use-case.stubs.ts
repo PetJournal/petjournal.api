@@ -1,4 +1,9 @@
-import { type Authentication, type AddGuardian, type ChangePassword } from '@/domain/use-cases'
+import {
+  type AddGuardian,
+  type Authentication,
+  type ChangePassword,
+  type ForgetPassword
+} from '@/domain/use-cases'
 import { type Guardian, makeFakeGuardianData } from '@/tests/utils'
 
 const makeFakeAddGuardianUseCase = (): AddGuardian => {
@@ -20,6 +25,15 @@ const makeFakeAuthenticationUseCase = (): Authentication => {
   return new AuthenticationStub()
 }
 
+const makeFakeForgetPasswordUseCase = (): ForgetPassword => {
+  class ForgetPasswordStub implements ForgetPassword {
+    async forgetPassword (email: ForgetPassword.Params): Promise<ForgetPassword.Result> {
+      return await Promise.resolve(true)
+    }
+  }
+  return new ForgetPasswordStub()
+}
+
 const makeFakeChangePasswordUseCase = (): ChangePassword => {
   class ChangePasswordStub implements ChangePassword {
     async change (userData: ChangePassword.Params): Promise<ChangePassword.Result> {
@@ -32,5 +46,6 @@ const makeFakeChangePasswordUseCase = (): ChangePassword => {
 export {
   makeFakeAddGuardianUseCase,
   makeFakeAuthenticationUseCase,
+  makeFakeForgetPasswordUseCase,
   makeFakeChangePasswordUseCase
 }

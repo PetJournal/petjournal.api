@@ -1,7 +1,10 @@
 import { AuthMiddleware } from '@/application/middlewares'
 import { success, unauthorized } from '@/application/helpers'
-import { type TokenDecoder, type HashComparer, type LoadGuardianByIdRepository } from '@/data/protocols'
-
+import {
+  type TokenDecoder,
+  type HashComparer,
+  type LoadGuardianByIdRepository
+} from '@/data/protocols'
 import {
   makeFakePayload,
   makeFakeAuthorization,

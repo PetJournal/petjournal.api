@@ -1,34 +1,23 @@
-import { type ForgetPassword, type EmailService } from '@/domain/use-cases'
+import { type ForgetPassword } from '@/domain/use-cases'
 import { type EmailValidator } from '@/application/validation'
 import { ForgetPasswordController } from '@/application/controllers'
+import { MissingParamError, InvalidParamError, NotFoundError } from '@/application/errors'
+import { success, badRequest } from '@/application/helpers'
+import {
+  type EmailService,
+  type TokenGenerator,
+  type LoadGuardianByEmailRepository
+} from '@/data/protocols'
 import {
   makeFakeTokenGenerator,
   makeFakeLoadGuardianByEmailRepository,
   makeEmailValidator,
   makeFakeServerError,
-  makeFakeForgetPasswordRequest
+  makeFakeForgetPasswordRequest,
+  makeFakeEmailService,
+  makeFakeForgetPasswordUseCase
 } from '@/tests/utils'
-import { MissingParamError, InvalidParamError, NotFoundError } from '@/application/errors'
-import { success, badRequest } from '@/application/helpers'
-import { type LoadGuardianByEmailRepository, type TokenGenerator } from '@/data/protocols'
 
-const makeEmailService = (): EmailService => {
-  class EmailServiceStub implements EmailService {
-    async send (options: EmailService.Options): Promise<boolean> {
-      return await Promise.resolve(true)
-    }
-  }
-  return new EmailServiceStub()
-}
-
-const makeForgetPassword = (): ForgetPassword => {
-  class ForgetPasswordStub implements ForgetPassword {
-    async forgetPassword (email: ForgetPassword.Params): Promise<ForgetPassword.Result> {
-      return await Promise.resolve(true)
-    }
-  }
-  return new ForgetPasswordStub()
-}
 interface SutTypes {
   sut: ForgetPasswordController
   emailValidatorStub: EmailValidator
@@ -42,8 +31,8 @@ const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
   const loadGuardianByEmailStub = makeFakeLoadGuardianByEmailRepository()
   const tokenGeneratorStub = makeFakeTokenGenerator()
-  const emailServiceStub = makeEmailService()
-  const forgetPasswordStub = makeForgetPassword()
+  const emailServiceStub = makeFakeEmailService()
+  const forgetPasswordStub = makeFakeForgetPasswordUseCase()
   const dependencies: ForgetPasswordController.Dependencies = {
     emailValidator: emailValidatorStub,
     forgetPassword: forgetPasswordStub

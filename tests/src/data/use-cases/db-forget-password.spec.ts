@@ -1,5 +1,5 @@
-import { type EmailService, type ForgetPassword } from '@/domain/use-cases'
-import { type TokenGenerator, type LoadGuardianByEmailRepository } from '@/data/protocols'
+import { type ForgetPassword } from '@/domain/use-cases'
+import { type TokenGenerator, type LoadGuardianByEmailRepository, type EmailService } from '@/data/protocols'
 import { DbForgetPassword } from '@/data/use-cases'
 import { makeFakeTokenGenerator, makeFakeLoadGuardianByEmailRepository } from '@/tests/utils'
 
