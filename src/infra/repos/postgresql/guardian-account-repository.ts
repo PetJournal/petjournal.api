@@ -62,7 +62,7 @@ export class GuardianAccountRepository implements AddGuardianRepository, LoadGua
     if (guardian) {
       await db.guardian.update({
         where: { id: accountId },
-        data: { verificationToken: token }
+        data: { verificationToken: token, verificationTokenCreatedAt: new Date() }
       })
 
       success = true
