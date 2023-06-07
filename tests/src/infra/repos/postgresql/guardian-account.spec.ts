@@ -90,4 +90,25 @@ describe('GuardianAccountRepository', () => {
       expect(guardian.accessToken).toBe(authenticationData.token)
     })
   })
+
+  describe('UpdateVerificationTokenRepository', () => {
+    it('Should update the verificationToken successfully', async () => {
+      const sut = makeSut()
+      const guardianData = makeFakeGuardianData()
+
+      await sut.add(guardianData)
+      let guardian = await sut.loadByEmail(guardianData.email) as any
+      const verificationTokenCreatedAt = guardian.verificationTokenCreatedAt
+
+      jest.advanceTimersByTime(1)
+
+      await sut.updateVerificationToken(guardian.id, 'valid_token')
+
+      guardian = await sut.loadByEmail(guardianData.email)
+
+      expect(guardian.verificationToken).not.toBeFalsy()
+      expect(guardian.verificationToken).toBe('valid_token')
+      expect(guardian.verificationTokenCreatedAt.getMilliseconds()).toBeGreaterThan(verificationTokenCreatedAt.getMilliseconds())
+    })
+  })
 })
