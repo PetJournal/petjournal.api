@@ -22,20 +22,20 @@ export class WaitingCodeController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const requiredFields = ['email', 'forgetPasswordCode']
+      const requiredFields = ['email', 'verificationToken']
       for (const field of requiredFields) {
         if (httpRequest.body[field] === undefined) {
           return badRequest(new MissingParamError(field))
         }
       }
-      const { email, forgetPasswordCode } = httpRequest.body
+      const { email, verificationToken } = httpRequest.body
       const isEmailValid = this.emailValidator.isValid(email)
       if (!isEmailValid) {
         return badRequest(new InvalidParamError('email'))
       }
       const result = await this.authentication.auth({
         email,
-        sensitiveData: { field: 'forgetPasswordCode', value: forgetPasswordCode }
+        sensitiveData: { field: 'verificationToken', value: verificationToken }
       })
       if (result instanceof Error) {
         return unauthorized(result)

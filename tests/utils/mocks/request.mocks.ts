@@ -43,7 +43,7 @@ const makeFakeLoginRequest = (): HttpRequest => ({
 
 const makeFakeWaitingCode = (): WaitingCodeRequest => ({
   email: 'valid_email',
-  forgetPasswordCode: 'valid_code'
+  verificationToken: 'valid_code'
 })
 
 const makeFakeWaitingCodeRequest = (): HttpRequest => ({

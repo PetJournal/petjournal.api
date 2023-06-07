@@ -7,7 +7,7 @@ interface LoginRequest {
 
 interface WaitingCodeRequest {
   email: string
-  forgetPasswordCode: string
+  verificationToken: string
 }
 
 interface SignUpRequest extends Guardian {

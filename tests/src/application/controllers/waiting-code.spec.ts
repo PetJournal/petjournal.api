@@ -32,7 +32,7 @@ describe('WaitingCode Controller', () => {
     it('should return bad request if no email is provided', async () => {
       const { sut } = makeSut()
       const httpRequest = {
-        body: { forgetPasswordCode: 'valid_code' }
+        body: { verificationToken: 'valid_code' }
       }
 
       const httpResponse = await sut.handle(httpRequest)
@@ -68,8 +68,8 @@ describe('WaitingCode Controller', () => {
     })
   })
 
-  describe('tests the forgetPasswordCode field', () => {
-    it('should return bad request if no forgetPasswordCode is provided', async () => {
+  describe('tests the verificationToken field', () => {
+    it('should return bad request if no verificationToken is provided', async () => {
       const { sut } = makeSut()
       const httpRequest = {
         body: {
@@ -79,10 +79,10 @@ describe('WaitingCode Controller', () => {
 
       const httpResponse = await sut.handle(httpRequest)
 
-      expect(httpResponse).toEqual(badRequest(new MissingParamError('forgetPasswordCode')))
+      expect(httpResponse).toEqual(badRequest(new MissingParamError('verificationToken')))
     })
 
-    it('should return unauthorized if invalid forgetPasswordCode is provided', async () => {
+    it('should return unauthorized if invalid verificationToken is provided', async () => {
       const { sut, authenticationStub } = makeSut()
       jest.spyOn(authenticationStub, 'auth').mockResolvedValueOnce(new Error())
 
@@ -100,7 +100,7 @@ describe('WaitingCode Controller', () => {
 
       expect(codeAuthSpy).toHaveBeenCalledWith({
         email: httpRequest.body.email,
-        sensitiveData: { field: 'forgetPasswordCode', value: httpRequest.body.forgetPasswordCode }
+        sensitiveData: { field: 'verificationToken', value: httpRequest.body.verificationToken }
       })
     })
 
