@@ -4,10 +4,10 @@ import {
   type AddGuardianRepository,
   type UpdateAccessTokenRepository,
   type LoadGuardianByIdRepository,
-  type SaveTokenRepository
+  type UpdateVerificationTokenRepository
 } from '@/data/protocols'
 
-export class GuardianAccountRepository implements AddGuardianRepository, LoadGuardianByEmailRepository, LoadGuardianByIdRepository, UpdateAccessTokenRepository, SaveTokenRepository {
+export class GuardianAccountRepository implements AddGuardianRepository, LoadGuardianByEmailRepository, LoadGuardianByIdRepository, UpdateAccessTokenRepository, UpdateVerificationTokenRepository {
   async add (guardianData: AddGuardianRepository.Params): Promise<AddGuardianRepository.Result> {
     const guardianHasEmailRegistered = await db.guardian.findUnique({
       where: { email: guardianData.email }
@@ -53,7 +53,7 @@ export class GuardianAccountRepository implements AddGuardianRepository, LoadGua
     return Boolean(result)
   }
 
-  async saveToken (accountId: string, token: string): Promise<SaveTokenRepository.Result> {
+  async updateVerificationToken (accountId: string, token: string): Promise<UpdateVerificationTokenRepository.Result> {
     let success: boolean = false
     const guardian = await db.guardian.findUnique({
       where: { id: accountId }

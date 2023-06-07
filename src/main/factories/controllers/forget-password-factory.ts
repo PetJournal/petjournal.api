@@ -2,7 +2,7 @@ import { type Controller } from '@/application/controllers/controller'
 import { ForgetPasswordController } from '@/application/controllers/forget-password'
 import { EmailValidatorAdapter } from '@/application/validation/validators'
 import { DbForgetPassword } from '@/data/use-cases'
-import { ForgetPasswordTokenGenerator } from '@/data/use-cases/forget-password-token-generation'
+import { VerificationTokenGenerator } from '@/infra/cryptography/verification-token-adapter'
 import { BcryptAdapter } from '@/infra/cryptography/bcrypt-adapter'
 import { NodeMailerAdapter } from '@/infra/node-mailer-adapter'
 import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
@@ -15,8 +15,8 @@ export const makeForgetPasswordController = (): Controller => {
   const loadGuardianByEmailRepository = new GuardianAccountRepository()
   const salt = Number(env.salt)
   const bcryptAdapter = new BcryptAdapter(salt)
-  const saveTokenRepository = new GuardianAccountRepository()
-  const tokenGenerator = new ForgetPasswordTokenGenerator(bcryptAdapter, saveTokenRepository)
+  const updateVerificationTokenRepository = new GuardianAccountRepository()
+  const tokenGenerator = new VerificationTokenGenerator()
   const transporter = {
     service: 'gmail',
     auth: {
@@ -25,7 +25,13 @@ export const makeForgetPasswordController = (): Controller => {
     }
   }
   const nodeMailerAdapter = new NodeMailerAdapter(transporter)
-  const dbForgetPassword = new DbForgetPassword({ loadGuardianByEmailRepository, tokenGenerator, emailService: nodeMailerAdapter })
+  const dbForgetPassword = new DbForgetPassword({
+    loadGuardianByEmailRepository,
+    hashService: bcryptAdapter,
+    updateVerificationTokenRepository,
+    tokenGenerator,
+    emailService: nodeMailerAdapter
+  })
   const dependencies: ForgetPasswordController.Dependencies = {
     emailValidator,
     forgetPassword: dbForgetPassword

@@ -1,10 +1,12 @@
-import { type LoadGuardianByEmailRepository, type TokenGenerator } from '@/data/protocols'
+import { type UpdateVerificationTokenRepository, type LoadGuardianByEmailRepository, type TokenGenerator, type HashGenerator } from '@/data/protocols'
 import { DbForgetPassword } from '@/data/use-cases'
 import { type EmailService, type ForgetPassword } from '@/domain/use-cases'
 import {
+  makeEncrypter,
   makeFakeGuardianWithIdData,
   makeLoadGuardianByEmail,
-  makeTokenGenerator
+  makeTokenGenerator,
+  makeUpdateVerificationTokenRepository
 } from '@/tests/utils'
 
 describe('DbForgetPassword UseCase', () => {
@@ -20,20 +22,26 @@ describe('DbForgetPassword UseCase', () => {
   interface SutTypes {
     sut: DbForgetPassword
     loadGuardianByEmailStub: LoadGuardianByEmailRepository
+    updateVerificationTokenRepositoryStub: UpdateVerificationTokenRepository
     tokenGeneratorStub: TokenGenerator
     emailServiceStub: EmailService
+    hashServiceStub: HashGenerator
   }
 
   const makeSut = (): SutTypes => {
     const dependencies: ForgetPassword.Dependencies = {
       loadGuardianByEmailRepository: makeLoadGuardianByEmail(makeFakeGuardianWithIdData()),
       tokenGenerator: makeTokenGenerator(),
-      emailService: makeEmailService()
+      emailService: makeEmailService(),
+      hashService: makeEncrypter(),
+      updateVerificationTokenRepository: makeUpdateVerificationTokenRepository()
     }
     const sut = new DbForgetPassword(dependencies)
     return {
       sut,
       loadGuardianByEmailStub: dependencies.loadGuardianByEmailRepository,
+      updateVerificationTokenRepositoryStub: dependencies.updateVerificationTokenRepository,
+      hashServiceStub: dependencies.hashService,
       tokenGeneratorStub: dependencies.tokenGenerator,
       emailServiceStub: dependencies.emailService
     }
@@ -54,6 +62,34 @@ describe('DbForgetPassword UseCase', () => {
 
     await sut.forgetPassword({ email: 'any_email@mail.com' })
     expect(loadByEmailSpy).toHaveBeenCalledWith('any_email@mail.com')
+  })
+
+  it('Should call HashService with correct value', async () => {
+    const { sut, hashServiceStub } = makeSut()
+    const encryptSpy = jest.spyOn(hashServiceStub, 'encrypt')
+    await sut.forgetPassword({ email: 'any_email@mail.com' })
+    expect(encryptSpy).toBeCalled()
+  })
+
+  it('Should throw if HashService throws', async () => {
+    const { sut, hashServiceStub } = makeSut()
+    jest.spyOn(hashServiceStub, 'encrypt').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    const promise = sut.forgetPassword({ email: 'any_email@mail.com' })
+    await expect(promise).rejects.toThrow()
+  })
+
+  it('Should call UpdateVerificationTokenRepository with correct values', async () => {
+    const { sut, updateVerificationTokenRepositoryStub } = makeSut()
+    const forgetPasswordSpy = jest.spyOn(updateVerificationTokenRepositoryStub, 'updateVerificationToken')
+    await sut.forgetPassword({ email: 'any_email@mail.com' })
+    expect(forgetPasswordSpy).toHaveBeenCalledWith('valid_id', 'hashed_password')
+  })
+
+  it('Should throw if UpdateVerificationTokenRepository throws', async () => {
+    const { sut, updateVerificationTokenRepositoryStub } = makeSut()
+    jest.spyOn(updateVerificationTokenRepositoryStub, 'updateVerificationToken').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    const promise = sut.forgetPassword({ email: 'any_email@mail.com' })
+    await expect(promise).rejects.toThrow()
   })
 
   it('Should TokenGenerator return a token', async () => {

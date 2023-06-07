@@ -1,17 +1,21 @@
-import { type LoadGuardianByEmailRepository } from '@/data/protocols/guardian'
-import { type TokenGenerator } from '../protocols'
+import { type UpdateVerificationTokenRepository, type LoadGuardianByEmailRepository } from '@/data/protocols/guardian'
+import { type HashGenerator, type TokenGenerator } from '../protocols'
 import { type EmailService } from '@/domain/use-cases'
 import { type ForgetPassword } from '@/domain/use-cases/forget-password'
 
 export class DbForgetPassword implements ForgetPassword {
   private readonly loadGuardianByEmailRepository: LoadGuardianByEmailRepository
+  private readonly updateVerificationTokenRepository: UpdateVerificationTokenRepository
+  private readonly hashService: HashGenerator
   private readonly tokenGenerator: TokenGenerator
   private readonly emailService: EmailService
 
-  constructor ({ loadGuardianByEmailRepository, tokenGenerator, emailService }: ForgetPassword.Dependencies) {
+  constructor ({ loadGuardianByEmailRepository, tokenGenerator, emailService, hashService, updateVerificationTokenRepository }: ForgetPassword.Dependencies) {
     this.loadGuardianByEmailRepository = loadGuardianByEmailRepository
     this.tokenGenerator = tokenGenerator
     this.emailService = emailService
+    this.hashService = hashService
+    this.updateVerificationTokenRepository = updateVerificationTokenRepository
   }
 
   async forgetPassword (params: ForgetPassword.Params): Promise<boolean> {
@@ -22,6 +26,8 @@ export class DbForgetPassword implements ForgetPassword {
     }
 
     const token = await this.tokenGenerator.generate(guardian.id)
+    const hashedToken = await this.hashService.encrypt({ value: token })
+    await this.updateVerificationTokenRepository.updateVerificationToken(guardian.id, hashedToken)
 
     const emailOptions: EmailService.Options = {
       from: 'contato.petjournal@gmail.com',
