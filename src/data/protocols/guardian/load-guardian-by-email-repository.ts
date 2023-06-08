@@ -14,5 +14,6 @@ export namespace LoadGuardianByEmailRepository {
     password: string
     accessToken: string | null
     verificationToken: string
+    verificationTokenCreatedAt: Date
   } | undefined
 }

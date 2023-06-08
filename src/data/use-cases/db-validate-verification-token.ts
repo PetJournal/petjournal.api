@@ -1,9 +1,10 @@
-import { NotFoundError, UnauthorizedError } from '@/application/errors'
+import { ExpiredVerificationTokenError, NotFoundError, UnauthorizedError } from '@/application/errors'
 import {
   type LoadGuardianByEmailRepository,
   type HashComparer
 } from '@/data/protocols'
 import { type ValidateVerificationToken } from '@/domain/use-cases/validate-verification-token'
+import env from '@/main/config/env'
 
 export class DbValidateVerificationToken implements ValidateVerificationToken {
   private readonly guardianRepository: LoadGuardianByEmailRepository
@@ -22,6 +23,11 @@ export class DbValidateVerificationToken implements ValidateVerificationToken {
     const guardian = await this.guardianRepository.loadByEmail(input.email)
     if (!guardian) {
       return new NotFoundError('email')
+    }
+    const limitExpiresDate = new Date(guardian.verificationTokenCreatedAt)
+    limitExpiresDate.setSeconds(limitExpiresDate.getSeconds() + Number(env.expiryTimeSeconds))
+    if (limitExpiresDate < new Date()) {
+      return new ExpiredVerificationTokenError()
     }
     const isValid = await this.hashService.compare({
       value: input.verificationToken,

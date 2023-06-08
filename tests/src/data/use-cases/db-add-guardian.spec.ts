@@ -54,7 +54,7 @@ describe('DbAddGuardian use case', () => {
         phone: 'valid_phone',
         password: 'hashed_password',
         verificationToken: 'token dumb',
-        verificationTokenCreatedAt: new Date('2023-06-05')
+        verificationTokenCreatedAt: guardianData.verificationTokenCreatedAt
       })
     })
 
