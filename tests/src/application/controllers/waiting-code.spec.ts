@@ -90,7 +90,7 @@ describe('WaitingCode Controller', () => {
       expect(httpResponse).toEqual(badRequest(new MissingParamError('verificationToken')))
     })
 
-    it('should return unauthorized if invalid verificationToken is provided', async () => {
+    it('should return unauthorized if invalid or expired verificationToken is provided', async () => {
       const { sut, validateVerificationTokenStub } = makeSut()
       const unauthorizedError = new UnauthorizedError('Verification token mismatch or expired')
       jest.spyOn(validateVerificationTokenStub, 'validate').mockResolvedValueOnce(unauthorizedError)

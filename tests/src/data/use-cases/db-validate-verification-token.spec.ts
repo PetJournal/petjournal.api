@@ -7,7 +7,7 @@ import {
   makeLoadGuardianByEmail,
   makeHashComparer
 } from '@/tests/utils'
-import { NotFoundError, UnauthorizedError } from '@/application/errors'
+import { ExpiredVerificationTokenError, NotFoundError, UnauthorizedError } from '@/application/errors'
 import { DbValidateVerificationToken } from '@/data/use-cases/db-validate-verification-token'
 
 interface SutTypes {
@@ -45,6 +45,18 @@ describe('DbCreateAccessToken UseCase', () => {
       const result = await sut.validate(fakeValidation)
 
       expect(result).toStrictEqual(new NotFoundError('email'))
+    })
+
+    it('Should return ExpiredVerificationTokenError expired token is provided', async () => {
+      const { sut, guardianRepositoryStub } = makeSut()
+      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValueOnce({
+        ...makeFakeGuardianWithIdData(),
+        verificationTokenCreatedAt: new Date(2023, 0, 0, 0, 0, 0)
+      })
+
+      const result = await sut.validate(fakeValidation)
+
+      expect(result).toStrictEqual(new ExpiredVerificationTokenError())
     })
 
     it('Should throw if loadByEmail throws', async () => {
