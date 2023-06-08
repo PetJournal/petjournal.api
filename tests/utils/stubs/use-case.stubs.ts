@@ -4,13 +4,19 @@ import {
   type ChangePassword,
   type ForgetPassword
 } from '@/domain/use-cases'
-import { type Guardian, makeFakeGuardianData } from '@/tests/utils'
 
 const makeFakeAddGuardianUseCase = (): AddGuardian => {
   class AddGuardianStub implements AddGuardian {
     async add (guardian: AddGuardian.Params): Promise<AddGuardian.Result> {
-      const result = makeFakeGuardianData({ withId: true })
-      return result as Guardian & { id: string }
+      const result = {
+        id: 'any_id',
+        firstName: 'any_first_name',
+        lastName: 'any_last_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        phone: 'any_phone'
+      }
+      return result
     }
   }
   return new AddGuardianStub()

@@ -24,21 +24,15 @@ const makeFakeLoginRequest = ({ fields = {} }: Options<LoginRequest> = {}): Logi
   return { body }
 }
 
-const makeFakeSignUpRequest = ({ fields = {} }: Options<SignUpRequest> = {}): SignUpRequest => {
+const makeFakeSignUpRequest = (): SignUpRequest => {
   const body = {
     firstName: 'any_first_name',
     lastName: 'any_last_name',
     email: 'any_email@mail.com',
     password: 'any_password',
     passwordConfirmation: 'any_password',
-    phone: 'any_phone',
-    accessToken: 'any_token',
-    isPrivacyPolicyAccepted: true,
-    verificationToken: 'any_verification_token',
-    verificationTokenCreatedAt: new Date()
+    phone: 'any_phone'
   }
-
-  Object.assign(body, fields)
 
   return { body }
 }

@@ -17,10 +17,6 @@ interface SignUpRequest {
     password: string
     passwordConfirmation: string
     phone: string
-    accessToken: string | null
-    isPrivacyPolicyAccepted: boolean
-    verificationToken: string
-    verificationTokenCreatedAt: Date
   }
 }
 

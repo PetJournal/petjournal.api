@@ -14,16 +14,13 @@ const makeFakeGuardianData = ({
   withForgetPassword = false,
   withVerificationTokenCreatedAt = false,
   fields = {}
-}: Options = {}): Guardian => {
+}: Options = {}): Partial<Guardian> => {
   const fakeGuardian = {
     firstName: 'valid_first_name',
     lastName: 'valid_last_name',
     email: 'valid_email',
     password: 'valid_password',
-    phone: 'valid_phone',
-    accessToken: null,
-    verificationToken: 'token dumb',
-    verificationTokenCreatedAt: new Date('2023-06-05')
+    phone: 'valid_phone'
   }
 
   if (withId) {
