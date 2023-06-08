@@ -1,4 +1,4 @@
-import { type Authentication, type AddGuardian } from '@/domain/use-cases'
+import { type Authentication, type AddGuardian, type CreateAccessToken, type ValidateVerificationToken } from '@/domain/use-cases'
 import { makeFakeGuardianWithIdData } from '../mocks'
 
 const makeAddGuardian = (): AddGuardian => {
@@ -20,7 +20,27 @@ const makeAuthentication = (): Authentication => {
   return new AuthenticationStub()
 }
 
+const makeCreateAccessToken = (): CreateAccessToken => {
+  class CreateAccessTokenStub implements CreateAccessToken {
+    async create (email: string): Promise<CreateAccessToken.Result> {
+      return 'valid_token'
+    }
+  }
+  return new CreateAccessTokenStub()
+}
+
+const validateVerificationToken = (): ValidateVerificationToken => {
+  class ValidateVerificationTokenStub implements ValidateVerificationToken {
+    async validate (input: ValidateVerificationToken.Params): Promise<ValidateVerificationToken.Result> {
+      return true
+    }
+  }
+  return new ValidateVerificationTokenStub()
+}
+
 export {
   makeAddGuardian,
-  makeAuthentication
+  makeAuthentication,
+  makeCreateAccessToken,
+  validateVerificationToken
 }

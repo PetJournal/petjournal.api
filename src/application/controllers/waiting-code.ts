@@ -9,15 +9,18 @@ import {
 } from '@/application/helpers/http'
 import { InvalidParamError, MissingParamError } from '@/application/errors'
 import { type EmailValidator } from '../validation/protocols'
-import { type Authentication } from '@/domain/use-cases'
+import { type ValidateVerificationToken } from '@/domain/use-cases/validate-verification-token'
+import { type CreateAccessToken } from '@/domain/use-cases/create-access-token'
 
 export class WaitingCodeController implements Controller {
   private readonly emailValidator: EmailValidator
-  private readonly authentication: Authentication
+  private readonly validateVerificationToken: ValidateVerificationToken
+  private readonly createAccessToken: CreateAccessToken
 
-  constructor ({ emailValidator, authentication }: WaitingCodeController.Dependencies) {
+  constructor ({ emailValidator, validateVerificationToken, createAccessToken }: WaitingCodeController.Dependencies) {
     this.emailValidator = emailValidator
-    this.authentication = authentication
+    this.validateVerificationToken = validateVerificationToken
+    this.createAccessToken = createAccessToken
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -33,14 +36,18 @@ export class WaitingCodeController implements Controller {
       if (!isEmailValid) {
         return badRequest(new InvalidParamError('email'))
       }
-      const result = await this.authentication.auth({
+      const tokenIsValid = await this.validateVerificationToken.validate({
         email,
-        sensitiveData: { field: 'verificationToken', value: verificationToken }
+        verificationToken
       })
-      if (result instanceof Error) {
-        return unauthorized(result)
+      if (tokenIsValid instanceof Error) {
+        return unauthorized(tokenIsValid)
       }
-      return success({ accessToken: result })
+      const accessToken = await this.createAccessToken.create(email)
+      if (accessToken instanceof Error) {
+        return badRequest(accessToken)
+      }
+      return success({ accessToken })
     } catch (error) {
       return serverError(error as Error)
     }
@@ -50,6 +57,7 @@ export class WaitingCodeController implements Controller {
 namespace WaitingCodeController {
   export interface Dependencies {
     emailValidator: EmailValidator
-    authentication: Authentication
+    validateVerificationToken: ValidateVerificationToken
+    createAccessToken: CreateAccessToken
   }
 }
