@@ -1,14 +1,31 @@
-import { type HttpRequest } from '@/application/helpers/http'
-import { type TokenDecoder } from '@/data/protocols'
 import { type Authentication } from '@/domain/use-cases'
-import { type WaitingCodeRequest, type LoginRequest, type SignUpRequest } from '@/tests/utils'
+import { type HttpRequest } from '@/application/helpers'
+import { type TokenDecoder } from '@/data/protocols'
+import {
+  type LoginRequest,
+  type SignUpRequest,
+  type ChangePasswordRequest,
+  type WaitingCodeRequest
+} from '@/tests/utils'
 
-const makeFakeAuthorization = ({ data }: { data: string }): HttpRequest => ({
-  authorization: data
-})
+interface Options<T extends { body: any }> {
+  withUserId?: boolean
+  fields?: Partial<T['body']>
+}
 
-const makeFakeSignUpRequest = (fields: Partial<SignUpRequest> = {}): SignUpRequest => {
-  const guardianFake = {
+const makeFakeLoginRequest = ({ fields = {} }: Options<LoginRequest> = {}): LoginRequest => {
+  const body = {
+    email: 'any_email@mail.com',
+    password: 'any_password'
+  }
+
+  Object.assign(body, fields)
+
+  return { body }
+}
+
+const makeFakeSignUpRequest = ({ fields = {} }: Options<SignUpRequest> = {}): SignUpRequest => {
+  const body = {
     firstName: 'any_first_name',
     lastName: 'any_last_name',
     email: 'any_email@mail.com',
@@ -17,41 +34,58 @@ const makeFakeSignUpRequest = (fields: Partial<SignUpRequest> = {}): SignUpReque
     phone: 'any_phone',
     accessToken: 'any_token',
     isPrivacyPolicyAccepted: true,
-    verificationToken: 'any_verication_token',
+    verificationToken: 'any_verification_token',
     verificationTokenCreatedAt: new Date()
   }
 
-  return {
-    ...guardianFake,
-    ...fields
-  }
+  Object.assign(body, fields)
+
+  return { body }
 }
 
-const makeFakeLogin = (): LoginRequest => ({
-  email: 'any_email@mail.com',
-  password: 'any_password'
-})
+const makeFakeChangePasswordRequest = ({ fields = {}, withUserId = true }: Options<ChangePasswordRequest> = {}): ChangePasswordRequest => {
+  const body = {
+    password: 'any_password',
+    passwordConfirmation: 'any_password'
+  }
+
+  Object.assign(body, fields)
+
+  const result = { body }
+
+  if (withUserId) {
+    Object.assign(result, { userId: 'any_id' })
+  }
+
+  return result
+}
+
+const makeFakeWaitingCodeRequest = ({ fields = {} }: Options<WaitingCodeRequest> = {}): WaitingCodeRequest => {
+  const body = {
+    email: 'valid_email',
+    forgetPasswordCode: 'valid_code'
+  }
+
+  Object.assign(body, fields)
+
+  return { body }
+}
+
+const makeFakeAuthorization = ({ data }: { data: string }): HttpRequest => {
+  const authorization = data
+
+  return { authorization }
+}
+
+const makeFakePayload = (): TokenDecoder.Result => {
+  const sub = 'valid_id'
+
+  return { sub }
+}
 
 const makeFakeAuth = (): Authentication.Params => ({
   email: 'any_email@mail.com',
   sensitiveData: { field: 'any_field', value: 'any_data' }
-})
-
-const makeFakeLoginRequest = (): HttpRequest => ({
-  body: makeFakeLogin()
-})
-
-const makeFakeWaitingCode = (): WaitingCodeRequest => ({
-  email: 'valid_email',
-  forgetPasswordCode: 'valid_code'
-})
-
-const makeFakeWaitingCodeRequest = (): HttpRequest => ({
-  body: makeFakeWaitingCode()
-})
-
-const makeFakePayload = (): TokenDecoder.Result => ({
-  sub: 'valid_id'
 })
 
 const makeFakeForgetPasswordRequest = (): HttpRequest => {
@@ -64,12 +98,11 @@ const makeFakeForgetPasswordRequest = (): HttpRequest => {
 
 export {
   makeFakeSignUpRequest,
-  makeFakeLogin,
   makeFakeLoginRequest,
-  makeFakeAuthorization,
-  makeFakeWaitingCode,
+  makeFakeForgetPasswordRequest,
+  makeFakeChangePasswordRequest,
   makeFakeWaitingCodeRequest,
-  makeFakePayload,
+  makeFakeAuthorization,
   makeFakeAuth,
-  makeFakeForgetPasswordRequest
+  makeFakePayload
 }

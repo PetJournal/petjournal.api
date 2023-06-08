@@ -1,6 +1,5 @@
-import { type HttpRequest, type HttpResponse } from '@/application/helpers/http'
-import { type Middleware } from '@/application/middlewares/middleware'
-
+import { type Middleware } from '@/application/protocols'
+import { type HttpRequest, type HttpResponse } from '@/application/helpers'
 import { type Request, type Response, type NextFunction } from 'express'
 
 export const adaptMiddleware = (middleware: Middleware) => {
@@ -10,7 +9,7 @@ export const adaptMiddleware = (middleware: Middleware) => {
     }
     const httpResponse: HttpResponse = await middleware.handle(httpRequest)
     if (httpResponse.statusCode === 200) {
-      Object.assign(req, httpResponse.body)
+      req.userId = httpResponse.body.userId
       next()
     } else {
       res.status(httpResponse.statusCode).json({

@@ -1,32 +1,32 @@
-import { NotFoundError, UnauthorizedError } from '@/application/errors'
+import { type Authentication } from '@/domain/use-cases'
 import {
-  type LoadGuardianByEmailRepository,
   type HashComparer,
+  type HashGenerator,
   type TokenGenerator,
   type UpdateAccessTokenRepository,
-  type HashGenerator
+  type LoadGuardianByEmailRepository
 } from '@/data/protocols'
-import { type Authentication } from '@/domain/use-cases/authentication'
+import { NotFoundError, UnauthorizedError } from '@/application/errors'
 
 export class DbAuthentication implements Authentication {
-  private readonly loadGuardianByEmailRepository: LoadGuardianByEmailRepository
-  private readonly hashGenerator: HashGenerator
   private readonly hashComparer: HashComparer
+  private readonly hashGenerator: HashGenerator
   private readonly tokenGenerator: TokenGenerator
+  private readonly loadGuardianByEmailRepository: LoadGuardianByEmailRepository
   private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
 
   constructor ({
-    loadGuardianByEmailRepository,
-    hashGenerator,
     hashComparer,
+    hashGenerator,
     tokenGenerator,
+    loadGuardianByEmailRepository,
     updateAccessTokenRepository
   }: Authentication.Dependencies
   ) {
-    this.loadGuardianByEmailRepository = loadGuardianByEmailRepository
-    this.hashGenerator = hashGenerator
     this.hashComparer = hashComparer
+    this.hashGenerator = hashGenerator
     this.tokenGenerator = tokenGenerator
+    this.loadGuardianByEmailRepository = loadGuardianByEmailRepository
     this.updateAccessTokenRepository = updateAccessTokenRepository
   }
 

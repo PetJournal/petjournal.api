@@ -1,4 +1,7 @@
-import { type Controller } from '@/application/controllers/controller'
+import { type Authentication } from '@/domain/use-cases'
+import { type Controller } from '@/application/protocols'
+import { type EmailValidator } from '@/application/validation'
+import { InvalidParamError, MissingParamError } from '@/application/errors'
 import {
   type HttpRequest,
   type HttpResponse,
@@ -6,21 +9,15 @@ import {
   serverError,
   success,
   unauthorized
-} from '@/application/helpers/http'
-import { InvalidParamError, MissingParamError } from '@/application/errors'
-import { type Authentication } from '@/domain/use-cases/authentication'
-import { type EmailValidator } from '@/application/validation/protocols'
+} from '@/application/helpers'
 
 export class LoginController implements Controller {
-  private readonly emailValidator: EmailValidator
   private readonly authentication: Authentication
+  private readonly emailValidator: EmailValidator
 
-  constructor (
-    emailValidator: EmailValidator,
-    authentication: Authentication
-  ) {
-    this.emailValidator = emailValidator
+  constructor ({ authentication, emailValidator }: LoginController.Dependencies) {
     this.authentication = authentication
+    this.emailValidator = emailValidator
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -48,5 +45,12 @@ export class LoginController implements Controller {
       console.error(error)
       return serverError(error as Error)
     }
+  }
+}
+
+export namespace LoginController {
+  export interface Dependencies {
+    authentication: Authentication
+    emailValidator: EmailValidator
   }
 }

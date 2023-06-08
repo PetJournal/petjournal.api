@@ -1,8 +1,6 @@
-import { type Middleware } from '@/application/middlewares/middleware'
-import { serverError, type HttpRequest, type HttpResponse, unauthorized, success } from '../helpers/http'
-import { type TokenDecoder } from '@/data/protocols/cryptography/token-decoder'
-import { type LoadGuardianByIdRepository } from '@/data/protocols/guardian/load-guardian-by-id-repository'
-import { type HashComparer } from '@/data/protocols'
+import { type Middleware } from '@/application/protocols'
+import { type HashComparer, type TokenDecoder, type LoadGuardianByIdRepository } from '@/data/protocols'
+import { serverError, type HttpRequest, type HttpResponse, unauthorized, success } from '@/application/helpers'
 
 export class AuthMiddleware implements Middleware {
   private readonly tokenDecoder: TokenDecoder
@@ -20,7 +18,10 @@ export class AuthMiddleware implements Middleware {
       if (!httpRequest.authorization) {
         return unauthorized()
       }
-      const { authorization } = httpRequest
+      let { authorization } = httpRequest
+      if (authorization.startsWith('Bearer ')) {
+        authorization = authorization.substring(7)
+      }
       const payload = await this.tokenDecoder.decode(authorization)
       if (!payload) {
         return unauthorized()
@@ -36,7 +37,6 @@ export class AuthMiddleware implements Middleware {
       }
       return success({ userId })
     } catch (error) {
-      console.error(error)
       return serverError(error as Error)
     }
   }

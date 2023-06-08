@@ -1,4 +1,4 @@
-import { PhoneValidatorAdapter } from '@/application/validation/validators'
+import { PhoneValidatorAdapter } from '@/infra/validators'
 import validator from 'validator'
 
 jest.mock('validator', () => ({

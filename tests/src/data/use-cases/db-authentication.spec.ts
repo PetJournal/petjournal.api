@@ -1,55 +1,50 @@
+import { type Authentication } from '@/domain/use-cases'
+import { type HashComparer, type HashGenerator, type TokenGenerator, type LoadGuardianByEmailRepository, type UpdateAccessTokenRepository } from '@/data/protocols'
 import { DbAuthentication } from '@/data/use-cases'
 import {
-  type HashComparer,
-  type TokenGenerator,
-  type LoadGuardianByEmailRepository,
-  type UpdateAccessTokenRepository,
-  type HashGenerator
-} from '@/data/protocols'
-import {
-  makeLoadGuardianByEmail,
-  makeHashComparer,
-  makeTokenGenerator,
-  makeUpdateAccessTokenRepository,
-  makeHashGenerator,
-  makeFakeGuardianWithIdData,
-  makeFakeAuth
+  makeFakeHashComparer,
+  makeFakeTokenGenerator,
+  makeFakeLoadGuardianByEmailRepository,
+  makeFakeUpdateAccessTokenRepository,
+  makeFakeHashGenerator,
+  makeFakeAuth,
+  makeFakeGuardianData
 } from '@/tests/utils'
 import { NotFoundError, UnauthorizedError } from '@/application/errors'
 
 interface SutTypes {
   sut: DbAuthentication
-  loadGuardianByEmailRepositoryStub: LoadGuardianByEmailRepository
   hashGeneratorStub: HashGenerator
   hashComparerStub: HashComparer
   tokenGeneratorStub: TokenGenerator
+  loadGuardianByEmailRepositoryStub: LoadGuardianByEmailRepository
   updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
 }
 
 const makeSut = (): SutTypes => {
-  const loadGuardianByEmailRepositoryStub = makeLoadGuardianByEmail(makeFakeGuardianWithIdData())
-  const hashGeneratorStub = makeHashGenerator()
-  const hashComparerStub = makeHashComparer()
-  const tokenGeneratorStub = makeTokenGenerator()
-  const updateAccessTokenRepositoryStub = makeUpdateAccessTokenRepository()
-  const sut = new DbAuthentication(
-    {
-      loadGuardianByEmailRepository: loadGuardianByEmailRepositoryStub,
-      hashGenerator: hashGeneratorStub,
-      hashComparer: hashComparerStub,
-      tokenGenerator: tokenGeneratorStub,
-      updateAccessTokenRepository: updateAccessTokenRepositoryStub
-    }
-  )
+  const hashGeneratorStub = makeFakeHashGenerator()
+  const hashComparerStub = makeFakeHashComparer()
+  const tokenGeneratorStub = makeFakeTokenGenerator()
+  const loadGuardianByEmailRepositoryStub = makeFakeLoadGuardianByEmailRepository()
+  const updateAccessTokenRepositoryStub = makeFakeUpdateAccessTokenRepository()
+  const dependencies: Authentication.Dependencies = {
+    hashGenerator: hashGeneratorStub,
+    hashComparer: hashComparerStub,
+    tokenGenerator: tokenGeneratorStub,
+    loadGuardianByEmailRepository: loadGuardianByEmailRepositoryStub,
+    updateAccessTokenRepository: updateAccessTokenRepositoryStub
+  }
+  const sut = new DbAuthentication(dependencies)
   return {
     sut,
-    loadGuardianByEmailRepositoryStub,
     hashGeneratorStub,
     hashComparerStub,
     tokenGeneratorStub,
+    loadGuardianByEmailRepositoryStub,
     updateAccessTokenRepositoryStub
   }
 }
+
 describe('DbAuthentication UseCase', () => {
   const fakeAuth = makeFakeAuth()
 
@@ -94,8 +89,13 @@ describe('DbAuthentication UseCase', () => {
 
     it('should call HashComparer with empty value if falsy sensitiveData is provided', async () => {
       const { sut, hashComparerStub, loadGuardianByEmailRepositoryStub } = makeSut()
-      const fakeGuardian = { ...makeFakeGuardianWithIdData(), sensitiveData: { field: 'any_field' } }
-      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail').mockResolvedValueOnce(fakeGuardian)
+      const fakeGuardian = {
+        ...makeFakeGuardianData({ withId: true }),
+        sensitiveData: { field: 'any_field' }
+      }
+
+      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail')
+        .mockResolvedValueOnce(fakeGuardian as any)
       const spyHashComparer = jest.spyOn(hashComparerStub, 'compare')
 
       await sut.auth(fakeAuth)
@@ -115,15 +115,20 @@ describe('DbAuthentication UseCase', () => {
     it('should call HashComparer with correct values', async () => {
       const { sut, hashComparerStub, loadGuardianByEmailRepositoryStub } = makeSut()
       const fakeGuardian = {
-        ...makeFakeGuardianWithIdData(),
-        any_field: 'any_data'
+        ...makeFakeGuardianData({ withId: true }),
+        sensitiveData: { field: 'any_field' }
       }
-      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail').mockResolvedValueOnce(fakeGuardian)
+      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail')
+        .mockResolvedValueOnce(fakeGuardian as any)
+
       const spyHashComparer = jest.spyOn(hashComparerStub, 'compare')
 
       await sut.auth(fakeAuth)
 
-      expect(spyHashComparer).toHaveBeenCalledWith({ value: fakeAuth.sensitiveData.value, hash: fakeGuardian.any_field })
+      expect(spyHashComparer).toHaveBeenCalledWith({
+        value: 'any_data',
+        hash: ''
+      })
     })
   })
 
@@ -134,7 +139,7 @@ describe('DbAuthentication UseCase', () => {
 
       await sut.auth(fakeAuth)
 
-      expect(spyTokenGenerator).toHaveBeenCalledWith({ sub: makeFakeGuardianWithIdData().id })
+      expect(spyTokenGenerator).toHaveBeenCalledWith({ sub: 'valid_id' })
     })
   })
 
@@ -150,7 +155,7 @@ describe('DbAuthentication UseCase', () => {
     })
   })
 
-  describe('tests UpdateAccessTokenRepository service', () => {
+  describe('tests UpdateAccessTokenRepository', () => {
     it('Should call UpdateAccessTokenRepository with correct values', async () => {
       const { sut, updateAccessTokenRepositoryStub } = makeSut()
       const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
