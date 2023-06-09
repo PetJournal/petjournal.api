@@ -16,11 +16,11 @@ export const makeChangePasswordValidation = (): ValidationComposite => {
     validations.push(new RequiredFieldValidation(field))
   }
 
-  const passwordRequirements = (): Error => new PasswordRequirementsError()
-  validations.push(new CompareFieldsValidation('password', 'passwordConfirmation', passwordRequirements))
-
   const passwordMismatch = (): Error => new PasswordMismatchError()
-  validations.push(new PasswordValidation('password', new PasswordValidatorAdapter(), passwordMismatch))
+  validations.push(new CompareFieldsValidation('password', 'passwordConfirmation', passwordMismatch))
+
+  const passwordRequirements = (): Error => new PasswordRequirementsError()
+  validations.push(new PasswordValidation('password', new PasswordValidatorAdapter(), passwordRequirements))
 
   return new ValidationComposite(validations)
 }
