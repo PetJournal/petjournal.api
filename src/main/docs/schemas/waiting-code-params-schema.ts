@@ -4,7 +4,7 @@ export const waitingCodeParamsSchema = {
     email: {
       type: 'string'
     },
-    forgetPasswordCode: {
+    verificationToken: {
       type: 'string'
     }
   }
