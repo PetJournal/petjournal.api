@@ -20,6 +20,12 @@ interface SignUpRequest {
   }
 }
 
+interface ForgetPasswordRequest {
+  body: {
+    email: string
+  }
+}
+
 interface ChangePasswordRequest {
   userId?: string
   body: {
@@ -39,6 +45,7 @@ export {
   type AuthMiddlewareRequest,
   type LoginRequest,
   type SignUpRequest,
+  type ForgetPasswordRequest,
   type ChangePasswordRequest,
   type WaitingCodeRequest
 }
