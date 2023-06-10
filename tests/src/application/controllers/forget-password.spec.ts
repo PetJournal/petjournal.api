@@ -71,7 +71,9 @@ describe('ForgetPassword Controller', () => {
       const httpRequest = makeFakeForgetPasswordRequest()
       const validateSpy = jest.spyOn(validationStub, 'validate')
       await sut.handle(httpRequest)
-      expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+      expect(validateSpy).toHaveBeenCalledWith({
+        email: httpRequest.body.email
+      })
     })
 
     it('Should return 400 if Validation returns an error', async () => {
