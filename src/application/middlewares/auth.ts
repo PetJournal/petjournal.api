@@ -18,20 +18,27 @@ export class AuthMiddleware implements Middleware {
       if (!httpRequest.authorization) {
         return unauthorized()
       }
+
       let { authorization } = httpRequest
       if (authorization.startsWith('Bearer ')) {
         authorization = authorization.substring(7)
       }
+
       const payload = await this.tokenDecoder.decode(authorization)
       if (!payload) {
         return unauthorized()
       }
+
       const { sub: userId } = payload
       const account = await this.loadGuardianById.loadById(userId)
       if (!account) {
         return unauthorized()
       }
-      const matchToken = await this.hashComparer.compare({ hash: account.accessToken ?? '', value: authorization })
+
+      const matchToken = await this.hashComparer.compare({
+        hash: account.accessToken ?? '',
+        value: authorization
+      })
       if (!matchToken) {
         return unauthorized()
       }
