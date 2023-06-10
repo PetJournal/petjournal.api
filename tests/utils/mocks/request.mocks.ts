@@ -4,6 +4,7 @@ import { type TokenDecoder } from '@/data/protocols'
 import {
   type LoginRequest,
   type SignUpRequest,
+  type ForgetPasswordRequest,
   type ChangePasswordRequest,
   type WaitingCodeRequest
 } from '@/tests/utils'
@@ -32,6 +33,14 @@ const makeFakeSignUpRequest = (): SignUpRequest => {
     password: 'any_password',
     passwordConfirmation: 'any_password',
     phone: 'any_phone'
+  }
+
+  return { body }
+}
+
+const makeFakeForgetPasswordRequest = (): ForgetPasswordRequest => {
+  const body = {
+    email: 'any_email@mail.com'
   }
 
   return { body }
@@ -81,14 +90,6 @@ const makeFakeAuth = (): Authentication.Params => ({
   email: 'any_email@mail.com',
   sensitiveData: { field: 'any_field', value: 'any_data' }
 })
-
-const makeFakeForgetPasswordRequest = (): HttpRequest => {
-  return {
-    body: {
-      email: 'any_email@mail.com'
-    }
-  }
-}
 
 export {
   makeFakeSignUpRequest,
