@@ -7,8 +7,8 @@ import {
   makeFakeSignUpRequest,
   makeFakeValidation
 } from '@/tests/utils'
-import { conflict, create } from '@/application/helpers'
-import { ConflictGuardianError } from '@/application/errors'
+import { badRequest, conflict, create } from '@/application/helpers'
+import { ConflictGuardianError, MissingParamError } from '@/application/errors'
 
 interface SutTypes {
   sut: SignUpController
@@ -71,6 +71,31 @@ describe('SignUp Controller', () => {
         password: httpRequest.body.password,
         phone: httpRequest.body.phone
       }))
+    })
+  })
+
+  describe('Validation', () => {
+    it('Should call Validation with correct value', async () => {
+      const { sut, validationStub } = makeSut()
+      const httpRequest = makeFakeSignUpRequest()
+      const validateSpy = jest.spyOn(validationStub, 'validate')
+      await sut.handle(httpRequest)
+      expect(validateSpy).toHaveBeenCalledWith({
+        firstName: httpRequest.body.firstName,
+        lastName: httpRequest.body.lastName,
+        email: httpRequest.body.email,
+        phone: httpRequest.body.phone,
+        password: httpRequest.body.password,
+        passwordConfirmation: httpRequest.body.passwordConfirmation
+      })
+    })
+
+    it('Should return 400 if Validation returns an error', async () => {
+      const { sut, validationStub } = makeSut()
+      const httpRequest = makeFakeSignUpRequest()
+      jest.spyOn(validationStub, 'validate').mockReturnValue(new MissingParamError('email'))
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
     })
   })
 })
