@@ -1,6 +1,6 @@
 import { type ForgetPassword } from '@/domain/use-cases'
 import { type EmailService, type TokenGenerator } from '@/data/protocols'
-import { type LoadGuardianByEmailRepository } from '@/data/protocols/guardian'
+import { type LoadGuardianByEmailRepository } from '@/data/protocols/db/guardian'
 
 export class DbForgetPassword implements ForgetPassword {
   private readonly loadGuardianByEmailRepository: LoadGuardianByEmailRepository
