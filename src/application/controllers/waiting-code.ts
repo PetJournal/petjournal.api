@@ -1,5 +1,5 @@
 import { type Authentication } from '@/domain/use-cases'
-import { type Controller } from '@/application/protocols'
+import { type Controller, type Validation } from '@/application/protocols'
 import {
   type HttpRequest,
   type HttpResponse,
@@ -8,38 +8,33 @@ import {
   success,
   serverError
 } from '@/application/helpers/http'
-import { InvalidParamError, MissingParamError } from '@/application/errors'
-import { type EmailValidator } from '@/application/validation'
 
 export class WaitingCodeController implements Controller {
-  private readonly emailValidator: EmailValidator
+  private readonly validation: Validation
   private readonly authentication: Authentication
 
-  constructor ({ emailValidator, authentication }: WaitingCodeController.Dependencies) {
-    this.emailValidator = emailValidator
+  constructor ({ validation, authentication }: WaitingCodeController.Dependencies) {
     this.authentication = authentication
+    this.validation = validation
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const requiredFields = ['email', 'forgetPasswordCode']
-      for (const field of requiredFields) {
-        if (httpRequest.body[field] === undefined) {
-          return badRequest(new MissingParamError(field))
-        }
+      const error = this.validation.validate(httpRequest.body)
+      if (error) {
+        return badRequest(error)
       }
       const { email, forgetPasswordCode } = httpRequest.body
-      const isEmailValid = this.emailValidator.isValid(email)
-      if (!isEmailValid) {
-        return badRequest(new InvalidParamError('email'))
-      }
+
       const result = await this.authentication.auth({
         email,
         sensitiveData: { field: 'forgetPasswordCode', value: forgetPasswordCode }
       })
+
       if (result instanceof Error) {
         return unauthorized(result)
       }
+
       return success({ accessToken: result })
     } catch (error) {
       return serverError(error as Error)
@@ -49,7 +44,7 @@ export class WaitingCodeController implements Controller {
 
 namespace WaitingCodeController {
   export interface Dependencies {
-    emailValidator: EmailValidator
     authentication: Authentication
+    validation: Validation
   }
 }
