@@ -32,10 +32,10 @@ const makeSut = (): SutTypes => {
 }
 
 describe('ChangePasswordController', () => {
+  const httpRequest = makeFakeChangePasswordRequest()
   describe('ChangePassword Use case', () => {
     it('Should call ForgetPassword with correct values', async () => {
       const { sut, changePasswordStub } = makeSut()
-      const httpRequest = makeFakeChangePasswordRequest()
       const changePasswordSpy = jest.spyOn(changePasswordStub, 'change')
       await sut.handle(httpRequest)
       expect(changePasswordSpy).toHaveBeenCalledWith({
@@ -46,7 +46,6 @@ describe('ChangePasswordController', () => {
 
     it('Should return 500 if ChangePassword use case throws', async () => {
       const { sut, changePasswordStub } = makeSut()
-      const httpRequest = makeFakeChangePasswordRequest()
       jest.spyOn(changePasswordStub, 'change').mockRejectedValue(new Error())
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(makeFakeServerError())
@@ -54,7 +53,6 @@ describe('ChangePasswordController', () => {
 
     it('Should return 400 if invalid userId is provide', async () => {
       const { sut, changePasswordStub } = makeSut()
-      const httpRequest = makeFakeChangePasswordRequest()
       jest.spyOn(changePasswordStub, 'change').mockResolvedValue({
         isSuccess: false,
         error: new NotFoundError('userId')
@@ -65,7 +63,6 @@ describe('ChangePasswordController', () => {
 
     it('Should return 200 if valid user data are provide', async () => {
       const { sut } = makeSut()
-      const httpRequest = makeFakeChangePasswordRequest()
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(success({ message: 'Password reset completed successfully' }))
     })
@@ -74,7 +71,6 @@ describe('ChangePasswordController', () => {
   describe('Validation', () => {
     it('Should call Validation with correct value', async () => {
       const { sut, validationStub } = makeSut()
-      const httpRequest = makeFakeChangePasswordRequest()
       const validateSpy = jest.spyOn(validationStub, 'validate')
       await sut.handle(httpRequest)
       expect(validateSpy).toHaveBeenCalledWith({
@@ -85,7 +81,6 @@ describe('ChangePasswordController', () => {
 
     it('Should return 400 if Validation returns an error', async () => {
       const { sut, validationStub } = makeSut()
-      const httpRequest = makeFakeChangePasswordRequest()
       jest.spyOn(validationStub, 'validate').mockReturnValue(new MissingParamError('email'))
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
