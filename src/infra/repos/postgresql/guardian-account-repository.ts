@@ -1,13 +1,14 @@
 import { prisma as db } from './prisma'
 import {
-  type LoadGuardianByEmailRepository,
   type AddGuardianRepository,
-  type UpdateAccessTokenRepository,
   type LoadGuardianByIdRepository,
+  type LoadGuardianByEmailRepository,
+  type UpdateAccessTokenRepository,
+  type UpdateGuardianPasswordRepository,
   type SaveTokenRepository
 } from '@/data/protocols'
 
-export class GuardianAccountRepository implements AddGuardianRepository, LoadGuardianByEmailRepository, LoadGuardianByIdRepository, UpdateAccessTokenRepository, SaveTokenRepository {
+export class GuardianAccountRepository implements AddGuardianRepository, LoadGuardianByEmailRepository, LoadGuardianByIdRepository, UpdateAccessTokenRepository, UpdateGuardianPasswordRepository, SaveTokenRepository {
   async add (guardianData: AddGuardianRepository.Params): Promise<AddGuardianRepository.Result> {
     const guardianHasEmailRegistered = await db.guardian.findUnique({
       where: { email: guardianData.email }
@@ -27,7 +28,8 @@ export class GuardianAccountRepository implements AddGuardianRepository, LoadGua
         firstName: true,
         lastName: true,
         email: true,
-        phone: true
+        phone: true,
+        verificationToken: true
       }
     })
   }
@@ -61,12 +63,25 @@ export class GuardianAccountRepository implements AddGuardianRepository, LoadGua
     if (guardian) {
       await db.guardian.update({
         where: { id: accountId },
-        data: { forgetPasswordToken: token }
+        data: { verificationToken: token }
       })
 
       success = true
     }
 
     return success
+  }
+
+  async updatePassword (userData: UpdateGuardianPasswordRepository.Params): Promise<UpdateGuardianPasswordRepository.Result> {
+    const guardian = await db.guardian.findUnique({
+      where: { id: userData.id }
+    })
+    if (guardian) {
+      await db.guardian.update({
+        where: { id: userData.id },
+        data: { password: userData.password }
+      })
+    }
+    return Boolean(guardian)
   }
 }

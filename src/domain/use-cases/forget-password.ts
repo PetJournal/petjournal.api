@@ -1,5 +1,8 @@
-import { type LoadGuardianByEmailRepository, type TokenGenerator } from '@/data/protocols'
-import { type EmailService } from './email-service'
+import {
+  type LoadGuardianByEmailRepository,
+  type TokenGenerator,
+  type EmailService
+} from '@/data/protocols'
 
 export interface ForgetPassword {
   forgetPassword: (params: ForgetPassword.Params) => Promise<ForgetPassword.Result>

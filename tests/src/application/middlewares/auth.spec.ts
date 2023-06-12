@@ -1,17 +1,20 @@
-import { AuthMiddleware } from '@/application/middlewares/auth'
-import { type TokenDecoder } from '@/data/protocols/cryptography/token-decoder'
-import { type LoadGuardianByIdRepository } from '@/data/protocols/'
+import { AuthMiddleware } from '@/application/middlewares'
+import { success, unauthorized } from '@/application/helpers'
+import {
+  type TokenDecoder,
+  type HashComparer,
+  type LoadGuardianByIdRepository
+} from '@/data/protocols'
 import {
   makeFakePayload,
   makeFakeAuthorization,
   makeTokenService,
-  makeFakeServerError,
   makeHashService,
   makeGuardianRepository,
-  makeFakeGuardianWithIdData
+  makeFakeServerError,
+  type Guardian,
+  makeFakeGuardianData
 } from '@/tests/utils'
-import { success, unauthorized } from '@/application/helpers/http'
-import { type HashComparer } from '@/data/protocols'
 
 interface SutTypes {
   sut: AuthMiddleware
@@ -21,19 +24,26 @@ interface SutTypes {
 }
 
 const makeSut = (): SutTypes => {
-  const guardianRepositoryStub = makeGuardianRepository(makeFakeGuardianWithIdData())
+  const guardianRepositoryStub = makeGuardianRepository(
+    makeFakeGuardianData({ withId: true }) as Guardian & { id: string }
+  )
   const tokenServiceStub = makeTokenService()
   const hashServiceStub = makeHashService()
-  const sut = new AuthMiddleware({ tokenService: tokenServiceStub, hashService: hashServiceStub, guardianRepository: guardianRepositoryStub })
+  const dependencies = {
+    tokenService: tokenServiceStub,
+    hashService: hashServiceStub,
+    guardianRepository: guardianRepositoryStub
+  }
+  const sut = new AuthMiddleware(dependencies)
   return { sut, tokenServiceStub, guardianRepositoryStub, hashServiceStub }
 }
 
 describe('Auth Middleware', () => {
-  describe('tests the authorization field', () => {
+  describe('test the authorization field', () => {
     it('Should return 401 if no authorization is provided', async () => {
       const { sut } = makeSut()
-      const httpRequest = makeFakeAuthorization({ data: '' })
 
+      const httpRequest = makeFakeAuthorization({ data: '' })
       const httpResponse = await sut.handle(httpRequest)
 
       expect(httpResponse).toEqual(unauthorized())
@@ -50,7 +60,7 @@ describe('Auth Middleware', () => {
     })
   })
 
-  describe('tests the tokenDecoder dependency', () => {
+  describe('test the tokenDecoder dependency', () => {
     it('Should call tokenDecoder with correct value', async () => {
       const { sut, tokenServiceStub } = makeSut()
       const httpRequest = makeFakeAuthorization({ data: 'any_token' })
@@ -72,7 +82,7 @@ describe('Auth Middleware', () => {
     })
   })
 
-  describe('tests the loadGuardianById service', () => {
+  describe('test the loadGuardianById service', () => {
     it('Should return 401 if invalid payload is provided', async () => {
       const { sut, tokenServiceStub, guardianRepositoryStub } = makeSut()
       const httpRequest = makeFakeAuthorization({ data: 'valid_token' })

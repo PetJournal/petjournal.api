@@ -8,14 +8,15 @@ datasource db {
 }
 
 model Guardian {
-  id                  String  @id @default(uuid())
-  firstName           String
-  lastName            String
-  email               String  @unique
-  password            String
-  phone               String  @unique
-  accessToken         String?
-  forgetPasswordToken String?
+  id                         String   @id @default(uuid())
+  firstName                  String
+  lastName                   String
+  email                      String   @unique
+  password                   String
+  phone                      String   @unique
+  accessToken                String?
+  verificationToken          String
+  verificationTokenCreatedAt DateTime @default(now())
 
   @@map("guardian")
 }

@@ -1,6 +1,6 @@
 import request from 'supertest'
 import app from '@/main/config/app'
-import { auth } from '@/main/middlewares/auth'
+import { auth } from '@/main/middlewares'
 import { sign } from 'jsonwebtoken'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 

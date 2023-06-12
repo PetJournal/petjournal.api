@@ -5,14 +5,10 @@ interface Guardian {
   password: string
   phone: string
   accessToken: string | null
-  forgetPasswordToken: string | null
-}
-
-interface GuardianWithId extends Guardian {
-  id: string
+  verificationToken: string
+  verificationTokenCreatedAt: Date
 }
 
 export {
-  type Guardian,
-  type GuardianWithId
+  type Guardian
 }

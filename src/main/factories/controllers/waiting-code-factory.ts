@@ -1,14 +1,11 @@
-import { type Controller } from '@/application/controllers/controller'
-import { WaitingCodeController } from '@/application/controllers/waiting-code'
-import { EmailValidatorAdapter } from '@/application/validation/validators'
+import { type Controller } from '@/application/protocols'
+import { WaitingCodeController } from '@/application/controllers'
 import { DbAuthentication } from '@/data/use-cases'
-import { BcryptAdapter } from '@/infra/cryptography/bcrypt-adapter'
-import { JwtAdapter } from '@/infra/cryptography/jwt-adapter'
-import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
-import { LoggerPgRepository } from '@/infra/repos/postgresql/logger-repository'
-
-import env from '@/main/config/env'
+import { EmailValidatorAdapter } from '@/infra/validators'
+import { BcryptAdapter, JwtAdapter } from '@/infra/cryptography'
+import { GuardianAccountRepository, LoggerPgRepository } from '@/infra/repos/postgresql'
 import { LoggerControllerDecorator } from '@/main/decorators/logger'
+import env from '@/main/config/env'
 
 export const makeWaitingCodeController = (): Controller => {
   const salt = Number(env.salt)

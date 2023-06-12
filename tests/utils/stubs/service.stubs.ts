@@ -1,26 +1,30 @@
 import { makeFakePayload } from '../mocks'
 import {
-  type TokenDecoder,
-  type HashGenerator,
-  type LoadGuardianByIdRepository,
-  type LoadGuardianByEmailRepository,
+  type EmailService,
+  type AddGuardianRepository,
   type HashComparer,
+  type HashGenerator,
+  type LoadGuardianByEmailRepository,
+  type LoadGuardianByIdRepository,
+  type TokenDecoder,
   type TokenGenerator,
   type UpdateAccessTokenRepository,
-  type AddGuardianRepository
+  type UpdateGuardianPasswordRepository
 } from '@/data/protocols'
-import { type GuardianWithId } from '../types'
+import { type Guardian } from '../types'
 
-const makeGuardianRepository = (fakeGuardianData?: GuardianWithId):
+const makeGuardianRepository = (fakeGuardianData?: Guardian & { id: string }):
 AddGuardianRepository &
 LoadGuardianByEmailRepository &
 LoadGuardianByIdRepository &
-UpdateAccessTokenRepository => {
+UpdateAccessTokenRepository &
+UpdateGuardianPasswordRepository => {
   class GuardianRepositoryStub implements
   AddGuardianRepository,
   LoadGuardianByEmailRepository,
   LoadGuardianByIdRepository,
-  UpdateAccessTokenRepository {
+  UpdateAccessTokenRepository,
+  UpdateGuardianPasswordRepository {
     constructor (private readonly fakeGuardianData: LoadGuardianByEmailRepository.Result) {}
 
     async add (guardian: AddGuardianRepository.Params): Promise<AddGuardianRepository.Result> {
@@ -44,6 +48,10 @@ UpdateAccessTokenRepository => {
 
     async loadById (id: string): Promise<LoadGuardianByIdRepository.Result> {
       return this.fakeGuardianData
+    }
+
+    async updatePassword (userData: UpdateGuardianPasswordRepository.Params): Promise<UpdateGuardianPasswordRepository.Result> {
+      return true
     }
   }
   return new GuardianRepositoryStub(fakeGuardianData)
@@ -75,8 +83,18 @@ const makeTokenService = (): TokenGenerator & TokenDecoder => {
   return new TokenServiceStub()
 }
 
+const makeEmailService = (): EmailService => {
+  class EmailServiceStub implements EmailService {
+    async send (options: EmailService.Options): Promise<boolean> {
+      return await Promise.resolve(true)
+    }
+  }
+  return new EmailServiceStub()
+}
+
 export {
-  makeTokenService,
+  makeEmailService,
+  makeGuardianRepository,
   makeHashService,
-  makeGuardianRepository
+  makeTokenService
 }

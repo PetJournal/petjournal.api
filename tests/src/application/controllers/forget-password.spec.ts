@@ -1,35 +1,25 @@
-import { ForgetPasswordController } from '@/application/controllers/forget-password'
-import { type EmailValidator } from '@/application/validation/protocols'
-import { type ForgetPassword, type EmailService } from '@/domain/use-cases'
+import { type ForgetPassword } from '@/domain/use-cases'
+import { type EmailValidator } from '@/application/validation'
+import { ForgetPasswordController } from '@/application/controllers'
+import { MissingParamError, InvalidParamError, NotFoundError } from '@/application/errors'
+import { success, badRequest } from '@/application/helpers'
+import {
+  type EmailService,
+  type TokenGenerator,
+  type LoadGuardianByEmailRepository
+} from '@/data/protocols'
 import {
   makeEmailValidator,
   makeFakeForgetPasswordRequest,
-  makeFakeGuardianWithIdData,
+  makeFakeGuardianData,
   makeFakeServerError,
   makeGuardianRepository,
-  makeTokenService
+  makeTokenService,
+  type Guardian,
+  makeEmailService,
+  makeFakeForgetPasswordUseCase
 } from '@/tests/utils'
-import { type LoadGuardianByEmailRepository, type TokenGenerator } from '@/data/protocols'
-import { InvalidParamError, MissingParamError, NotFoundError } from '@/application/errors'
-import { badRequest, success } from '@/application/helpers/http'
 
-const makeEmailService = (): EmailService => {
-  class EmailServiceStub implements EmailService {
-    async send (options: EmailService.Options): Promise<boolean> {
-      return await new Promise(resolve => { resolve(true) })
-    }
-  }
-  return new EmailServiceStub()
-}
-
-const makeForgetPassword = (): ForgetPassword => {
-  class ForgetPasswordStub implements ForgetPassword {
-    async forgetPassword (email: ForgetPassword.Params): Promise<ForgetPassword.Result> {
-      return await new Promise(resolve => { resolve(true) })
-    }
-  }
-  return new ForgetPasswordStub()
-}
 interface SutTypes {
   sut: ForgetPasswordController
   emailValidatorStub: EmailValidator
@@ -41,10 +31,12 @@ interface SutTypes {
 
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
-  const guardianRepositoryStub = makeGuardianRepository(makeFakeGuardianWithIdData())
+  const guardianRepositoryStub = makeGuardianRepository(
+    makeFakeGuardianData({ withId: true }) as Guardian & { id: string }
+  )
   const tokenGeneratorStub = makeTokenService()
   const emailServiceStub = makeEmailService()
-  const forgetPasswordStub = makeForgetPassword()
+  const forgetPasswordStub = makeFakeForgetPasswordUseCase()
   const dependencies: ForgetPasswordController.Dependencies = {
     emailValidator: emailValidatorStub,
     forgetPassword: forgetPasswordStub
@@ -101,7 +93,7 @@ describe('ForgetPassword Controller', () => {
 
   it('Should return 400 if no guardian is found with the provided email', async () => {
     const { sut, forgetPasswordStub } = makeSut()
-    jest.spyOn(forgetPasswordStub, 'forgetPassword').mockReturnValueOnce(new Promise(resolve => { resolve(false) }))
+    jest.spyOn(forgetPasswordStub, 'forgetPassword').mockReturnValueOnce(Promise.resolve(false))
     const httpResponse = await sut.handle(makeFakeForgetPasswordRequest())
     expect(httpResponse).toEqual(badRequest(new NotFoundError('email')))
   })

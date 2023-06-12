@@ -1,4 +1,5 @@
-import { type Controller } from '@/application/controllers/controller'
+import { type Authentication } from '@/domain/use-cases'
+import { type Controller } from '@/application/protocols'
 import {
   type HttpRequest,
   type HttpResponse,
@@ -8,8 +9,7 @@ import {
   serverError
 } from '@/application/helpers/http'
 import { InvalidParamError, MissingParamError } from '@/application/errors'
-import { type EmailValidator } from '../validation/protocols'
-import { type Authentication } from '@/domain/use-cases'
+import { type EmailValidator } from '@/application/validation'
 
 export class WaitingCodeController implements Controller {
   private readonly emailValidator: EmailValidator

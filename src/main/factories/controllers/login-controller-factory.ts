@@ -1,12 +1,13 @@
-import { LoginController } from '@/application/controllers/login'
-import { EmailValidatorAdapter } from '@/application/validation/validators'
+import { type Controller } from '@/application/protocols'
+import { LoginController } from '@/application/controllers'
 import { DbAuthentication } from '@/data/use-cases'
-import { BcryptAdapter } from '@/infra/cryptography/bcrypt-adapter'
-import { JwtAdapter } from '@/infra/cryptography/jwt-adapter'
-import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
+import { EmailValidatorAdapter } from '@/infra/validators'
+import { BcryptAdapter, JwtAdapter } from '@/infra/cryptography'
+import { GuardianAccountRepository, LoggerPgRepository } from '@/infra/repos/postgresql'
+import { LoggerControllerDecorator } from '@/main/decorators'
 import env from '@/main/config/env'
 
-export const makeLoginController = (): LoginController => {
+export const makeLoginController = (): Controller => {
   const salt = Number(env.salt)
   const secret = env.secret
   const emailValidator = new EmailValidatorAdapter()
@@ -18,5 +19,7 @@ export const makeLoginController = (): LoginController => {
     hashService,
     tokenService
   })
-  return new LoginController(emailValidator, authentication)
+  const loggerPgRepository = new LoggerPgRepository()
+  const loginController = new LoginController({ emailValidator, authentication })
+  return new LoggerControllerDecorator(loginController, loggerPgRepository)
 }

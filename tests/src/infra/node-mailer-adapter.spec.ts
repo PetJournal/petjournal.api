@@ -1,5 +1,5 @@
-import { type EmailService } from '@/domain/use-cases'
-import { NodeMailerAdapter } from '@/infra/node-mailer-adapter'
+import { type EmailService } from '@/data/protocols'
+import { NodeMailerAdapter } from '@/infra/communication'
 
 jest.mock('nodemailer', () => {
   return {

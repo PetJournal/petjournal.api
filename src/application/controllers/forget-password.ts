@@ -1,8 +1,8 @@
 import { type ForgetPassword } from '@/domain/use-cases'
-import { InvalidParamError, MissingParamError, NotFoundError } from '../errors'
-import { type HttpRequest, type HttpResponse, badRequest, success, serverError } from '../helpers/http'
-import { type EmailValidator } from '../validation/protocols'
-import { type Controller } from './controller'
+import { type Controller } from '@/application/protocols'
+import { type EmailValidator } from '@/application/validation'
+import { type HttpRequest, type HttpResponse, badRequest, success, serverError } from '@/application/helpers'
+import { InvalidParamError, MissingParamError, NotFoundError } from '@/application/errors'
 
 export class ForgetPasswordController implements Controller {
   private readonly emailValidator: EmailValidator
