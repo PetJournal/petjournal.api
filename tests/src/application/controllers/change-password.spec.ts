@@ -44,14 +44,14 @@ describe('ChangePasswordController', () => {
       })
     })
 
-    it('Should return 500 if ChangePassword use case throws', async () => {
+    it('Should return 500 (ServerError) if ChangePassword use case throws', async () => {
       const { sut, changePasswordStub } = makeSut()
       jest.spyOn(changePasswordStub, 'change').mockRejectedValue(new Error())
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(makeFakeServerError())
     })
 
-    it('Should return 400 if invalid userId is provide', async () => {
+    it('Should return 400 (BadRequest) if invalid userId is provide', async () => {
       const { sut, changePasswordStub } = makeSut()
       jest.spyOn(changePasswordStub, 'change').mockResolvedValue({
         isSuccess: false,
@@ -61,7 +61,7 @@ describe('ChangePasswordController', () => {
       expect(httpResponse).toEqual(badRequest(new NotFoundError('userId')))
     })
 
-    it('Should return 200 if valid user data are provide', async () => {
+    it('Should return 200 (Success) if valid user data are provide', async () => {
       const { sut } = makeSut()
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(success({ message: 'Password reset completed successfully' }))
@@ -79,7 +79,7 @@ describe('ChangePasswordController', () => {
       })
     })
 
-    it('Should return 400 if Validation returns an error', async () => {
+    it('Should return 400 (BadRequest) if Validation returns an error', async () => {
       const { sut, validationStub } = makeSut()
       jest.spyOn(validationStub, 'validate').mockReturnValue(new MissingParamError('email'))
       const httpResponse = await sut.handle(httpRequest)

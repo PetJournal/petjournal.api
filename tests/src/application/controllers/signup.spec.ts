@@ -44,21 +44,21 @@ describe('SignUp Controller', () => {
       })
     })
 
-    it('Should return 500 if AddGuardian throws', async () => {
+    it('Should return 500 (ServerError) if AddGuardian throws', async () => {
       const { sut, addGuardianStub } = makeSut()
       jest.spyOn(addGuardianStub, 'add').mockRejectedValue(new Error())
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(makeFakeServerError())
     })
 
-    it('Should return 403 if AddGuardian returns undefined', async () => {
+    it('Should return 403 (Conflict) if AddGuardian returns undefined', async () => {
       const { sut, addGuardianStub } = makeSut()
       jest.spyOn(addGuardianStub, 'add').mockResolvedValue(undefined)
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(conflict(new ConflictGuardianError()))
     })
 
-    it('Should return 201 if valid data are provide', async () => {
+    it('Should return 201 (Create) if valid data are provide', async () => {
       const { sut } = makeSut()
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toMatchObject(create({
@@ -86,7 +86,7 @@ describe('SignUp Controller', () => {
       })
     })
 
-    it('Should return 400 if Validation returns an error', async () => {
+    it('Should return 400 (BadRequest) if Validation returns an error', async () => {
       const { sut, validationStub } = makeSut()
       jest.spyOn(validationStub, 'validate').mockReturnValue(new MissingParamError('email'))
       const httpResponse = await sut.handle(httpRequest)
