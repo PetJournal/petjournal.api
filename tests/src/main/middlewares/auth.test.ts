@@ -15,7 +15,7 @@ describe('Authentication Middleware', () => {
     })
     await request(app)
       .get('/test_auth')
-      .expect(401)
+      .expect(400)
   })
 
   it('Should return 401 if token is invalid', async () => {
