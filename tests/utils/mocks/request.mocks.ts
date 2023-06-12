@@ -74,8 +74,8 @@ const makeFakeWaitingCodeRequest = ({ fields = {} }: Options<WaitingCodeRequest>
   return { body }
 }
 
-const makeFakeAuthorization = ({ data }: { data: string }): HttpRequest => {
-  const authorization = data
+const makeFakeAuthorizationRequest = (): HttpRequest => {
+  const authorization = 'any_id'
 
   return { authorization }
 }
@@ -97,7 +97,7 @@ export {
   makeFakeForgetPasswordRequest,
   makeFakeChangePasswordRequest,
   makeFakeWaitingCodeRequest,
-  makeFakeAuthorization,
+  makeFakeAuthorizationRequest,
   makeFakeAuth,
   makeFakePayload
 }

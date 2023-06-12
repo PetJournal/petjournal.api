@@ -78,7 +78,15 @@ const makeFakeAddGuardianRepository = (): AddGuardianRepository => {
 const makeFakeLoadGuardianByIdRepository = (): LoadGuardianByIdRepository => {
   class LoadGuardianByIdStub implements LoadGuardianByIdRepository {
     async loadById (id: LoadGuardianByIdRepository.Params): Promise<LoadGuardianByIdRepository.Result> {
-      return makeFakeGuardianData({ withId: true }) as Guardian & { id: string }
+      return {
+        id: 'any_id',
+        firstName: 'any_first_name',
+        lastName: 'any_last_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        phone: 'any_phone',
+        accessToken: 'any_hashed_token'
+      }
     }
   }
   return new LoadGuardianByIdStub()
