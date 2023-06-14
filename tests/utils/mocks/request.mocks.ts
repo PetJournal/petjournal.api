@@ -1,7 +1,6 @@
-import { type Authentication } from '@/domain/use-cases'
-import { type HttpRequest } from '@/application/helpers'
 import { type TokenDecoder } from '@/data/protocols'
 import {
+  type AuthMiddlewareRequest,
   type LoginRequest,
   type SignUpRequest,
   type ForgetPasswordRequest,
@@ -9,18 +8,11 @@ import {
   type WaitingCodeRequest
 } from '@/tests/utils'
 
-interface Options<T extends { body: any }> {
-  withUserId?: boolean
-  fields?: Partial<T['body']>
-}
-
-const makeFakeLoginRequest = ({ fields = {} }: Options<LoginRequest> = {}): LoginRequest => {
+const makeFakeLoginRequest = (): LoginRequest => {
   const body = {
     email: 'any_email@mail.com',
     password: 'any_password'
   }
-
-  Object.assign(body, fields)
 
   return { body }
 }
@@ -46,35 +38,25 @@ const makeFakeForgetPasswordRequest = (): ForgetPasswordRequest => {
   return { body }
 }
 
-const makeFakeChangePasswordRequest = ({ fields = {}, withUserId = true }: Options<ChangePasswordRequest> = {}): ChangePasswordRequest => {
+const makeFakeChangePasswordRequest = (): ChangePasswordRequest => {
   const body = {
     password: 'any_password',
     passwordConfirmation: 'any_password'
   }
 
-  Object.assign(body, fields)
-
-  const result = { body }
-
-  if (withUserId) {
-    Object.assign(result, { userId: 'any_id' })
-  }
-
-  return result
+  return { body }
 }
 
-const makeFakeWaitingCodeRequest = ({ fields = {} }: Options<WaitingCodeRequest> = {}): WaitingCodeRequest => {
+const makeFakeWaitingCodeRequest = (): WaitingCodeRequest => {
   const body = {
     email: 'valid_email',
     forgetPasswordCode: 'valid_code'
   }
 
-  Object.assign(body, fields)
-
   return { body }
 }
 
-const makeFakeAuthorizationRequest = (): HttpRequest => {
+const makeFakeAuthorizationRequest = (): AuthMiddlewareRequest => {
   const authorization = 'any_id'
 
   return { authorization }
@@ -86,11 +68,6 @@ const makeFakePayload = (): TokenDecoder.Result => {
   return { sub }
 }
 
-const makeFakeAuth = (): Authentication.Params => ({
-  email: 'any_email@mail.com',
-  sensitiveData: { field: 'any_field', value: 'any_data' }
-})
-
 export {
   makeFakeSignUpRequest,
   makeFakeLoginRequest,
@@ -98,6 +75,5 @@ export {
   makeFakeChangePasswordRequest,
   makeFakeWaitingCodeRequest,
   makeFakeAuthorizationRequest,
-  makeFakeAuth,
   makeFakePayload
 }
