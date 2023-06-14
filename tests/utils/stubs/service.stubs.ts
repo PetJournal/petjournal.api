@@ -1,4 +1,4 @@
-import { type Guardian, makeFakeGuardianData, makeFakePayload } from '@/tests/utils'
+import { makeFakePayload, mockFakeGuardianAdded, mockFakeGuardianLoaded } from '@/tests/utils'
 import {
   type TokenDecoder,
   type HashGenerator,
@@ -11,15 +11,6 @@ import {
   type UpdateAccessTokenRepository,
   type UpdateGuardianPasswordRepository
 } from '@/data/protocols'
-
-const makeEncrypter = (): HashGenerator => {
-  class EncrypterStub implements HashGenerator {
-    async encrypt (input: HashGenerator.Params): Promise<HashGenerator.Result> {
-      return 'hashed_password'
-    }
-  }
-  return new EncrypterStub()
-}
 
 const makeFakeHashComparer = (): HashComparer => {
   class HashComparerStub implements HashComparer {
@@ -69,7 +60,7 @@ const makeFakeEmailService = (): EmailService => {
 const makeFakeAddGuardianRepository = (): AddGuardianRepository => {
   class AddGuardianRepositoryStub implements AddGuardianRepository {
     async add (id: AddGuardianRepository.Params): Promise<AddGuardianRepository.Result> {
-      return makeFakeGuardianData({ withId: true }) as Guardian & { id: string }
+      return mockFakeGuardianAdded()
     }
   }
   return new AddGuardianRepositoryStub()
@@ -78,15 +69,7 @@ const makeFakeAddGuardianRepository = (): AddGuardianRepository => {
 const makeFakeLoadGuardianByIdRepository = (): LoadGuardianByIdRepository => {
   class LoadGuardianByIdStub implements LoadGuardianByIdRepository {
     async loadById (id: LoadGuardianByIdRepository.Params): Promise<LoadGuardianByIdRepository.Result> {
-      return {
-        id: 'any_id',
-        firstName: 'any_first_name',
-        lastName: 'any_last_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        phone: 'any_phone',
-        accessToken: 'any_hashed_token'
-      }
+      return mockFakeGuardianLoaded()
     }
   }
   return new LoadGuardianByIdStub()
@@ -95,7 +78,7 @@ const makeFakeLoadGuardianByIdRepository = (): LoadGuardianByIdRepository => {
 const makeFakeLoadGuardianByEmailRepository = (): LoadGuardianByEmailRepository => {
   class LoadGuardianByEmailRepositoryStub implements LoadGuardianByEmailRepository {
     async loadByEmail (email: LoadGuardianByEmailRepository.Params): Promise<LoadGuardianByEmailRepository.Result> {
-      return makeFakeGuardianData({ withId: true }) as Guardian & { id: string }
+      return mockFakeGuardianLoaded()
     }
   }
   return new LoadGuardianByEmailRepositoryStub()
@@ -120,7 +103,6 @@ const makeFakeUpdateGuardianPasswordRepository = (): UpdateGuardianPasswordRepos
 }
 
 export {
-  makeEncrypter,
   makeFakeHashComparer,
   makeFakeHashGenerator,
   makeFakeTokenGenerator,
