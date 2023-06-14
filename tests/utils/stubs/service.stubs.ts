@@ -85,8 +85,8 @@ const makeUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
 
 const makeUpdateVerificationTokenRepository = (): UpdateVerificationTokenRepository => {
   class UpdateVerificationTokenRepositoryStub implements UpdateVerificationTokenRepository {
-    async updateVerificationToken (userId: string, token: string): Promise<UpdateVerificationTokenRepository.Result> {
-      return await new Promise(resolve => { resolve(true) })
+    async updateVerificationToken (credentials: UpdateVerificationTokenRepository.Params): Promise<UpdateVerificationTokenRepository.Result> {
+      return true
     }
   }
   return new UpdateVerificationTokenRepositoryStub()

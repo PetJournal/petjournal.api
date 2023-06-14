@@ -53,16 +53,16 @@ export class GuardianAccountRepository implements AddGuardianRepository, LoadGua
     return Boolean(result)
   }
 
-  async updateVerificationToken (accountId: string, token: string): Promise<UpdateVerificationTokenRepository.Result> {
+  async updateVerificationToken (credentials: UpdateVerificationTokenRepository.Params): Promise<UpdateVerificationTokenRepository.Result> {
     let success: boolean = false
     const guardian = await db.guardian.findUnique({
-      where: { id: accountId }
+      where: { id: credentials.userId }
     })
 
     if (guardian) {
       await db.guardian.update({
-        where: { id: accountId },
-        data: { verificationToken: token, verificationTokenCreatedAt: new Date() }
+        where: { id: credentials.userId },
+        data: { verificationToken: credentials.token, verificationTokenCreatedAt: new Date() }
       })
 
       success = true

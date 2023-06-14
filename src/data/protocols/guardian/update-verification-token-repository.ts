@@ -1,7 +1,8 @@
 export interface UpdateVerificationTokenRepository {
-  updateVerificationToken: (userId: string, token: string) => Promise<UpdateVerificationTokenRepository.Result>
+  updateVerificationToken: (credentials: UpdateVerificationTokenRepository.Params) => Promise<UpdateVerificationTokenRepository.Result>
 }
 
 export namespace UpdateVerificationTokenRepository {
+  export interface Params { userId: string, token: string }
   export type Result = boolean
 }

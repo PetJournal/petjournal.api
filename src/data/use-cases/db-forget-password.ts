@@ -1,7 +1,10 @@
-import { type UpdateVerificationTokenRepository, type LoadGuardianByEmailRepository } from '@/data/protocols/guardian'
-import { type HashGenerator, type TokenGenerator } from '../protocols'
-import { type EmailService } from '@/domain/use-cases'
-import { type ForgetPassword } from '@/domain/use-cases/forget-password'
+import {
+  type LoadGuardianByEmailRepository,
+  type HashGenerator,
+  type UpdateVerificationTokenRepository,
+  type TokenGenerator
+} from '@/data/protocols'
+import { type EmailService, type ForgetPassword } from '@/domain/use-cases'
 
 export class DbForgetPassword implements ForgetPassword {
   private readonly loadGuardianByEmailRepository: LoadGuardianByEmailRepository
@@ -27,7 +30,10 @@ export class DbForgetPassword implements ForgetPassword {
 
     const token = await this.tokenGenerator.generate(guardian.id)
     const hashedToken = await this.hashService.encrypt({ value: token })
-    await this.updateVerificationTokenRepository.updateVerificationToken(guardian.id, hashedToken)
+    await this.updateVerificationTokenRepository.updateVerificationToken({
+      userId: guardian.id,
+      token: hashedToken
+    })
 
     const emailOptions: EmailService.Options = {
       from: 'contato.petjournal@gmail.com',

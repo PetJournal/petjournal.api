@@ -102,7 +102,10 @@ describe('GuardianAccountRepository', () => {
 
       jest.advanceTimersByTime(1)
 
-      await sut.updateVerificationToken(guardian.id, 'valid_token')
+      await sut.updateVerificationToken({
+        userId: guardian.id,
+        token: 'valid_token'
+      })
 
       guardian = await sut.loadByEmail(guardianData.email)
 

@@ -1,4 +1,9 @@
-import { type UpdateVerificationTokenRepository, type LoadGuardianByEmailRepository, type TokenGenerator, type HashGenerator } from '@/data/protocols'
+import {
+  type UpdateVerificationTokenRepository,
+  type LoadGuardianByEmailRepository,
+  type TokenGenerator,
+  type HashGenerator
+} from '@/data/protocols'
 import { DbForgetPassword } from '@/data/use-cases'
 import { type EmailService, type ForgetPassword } from '@/domain/use-cases'
 import {
@@ -82,7 +87,7 @@ describe('DbForgetPassword UseCase', () => {
     const { sut, updateVerificationTokenRepositoryStub } = makeSut()
     const forgetPasswordSpy = jest.spyOn(updateVerificationTokenRepositoryStub, 'updateVerificationToken')
     await sut.forgetPassword({ email: 'any_email@mail.com' })
-    expect(forgetPasswordSpy).toHaveBeenCalledWith('valid_id', 'hashed_password')
+    expect(forgetPasswordSpy).toHaveBeenCalledWith({ userId: 'valid_id', token: 'hashed_password' })
   })
 
   it('Should throw if UpdateVerificationTokenRepository throws', async () => {
