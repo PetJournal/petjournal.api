@@ -6,9 +6,7 @@ import {
   makeFakeTokenGenerator,
   makeFakeLoadGuardianByEmailRepository,
   makeFakeUpdateAccessTokenRepository,
-  makeFakeHashGenerator,
-  makeFakeAuth,
-  makeFakeGuardianData
+  makeFakeHashGenerator
 } from '@/tests/utils'
 import { NotFoundError, UnauthorizedError } from '@/application/errors'
 
@@ -46,133 +44,108 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbAuthentication UseCase', () => {
-  const fakeAuth = makeFakeAuth()
+  const params: Authentication.Params = {
+    email: 'any_email@mail.com',
+    sensitiveData: { field: 'password', value: 'any_data' }
+  }
 
-  describe('tests LoadGuardianByEmailRepository', () => {
-    it('Should return NotFoundError if not found email is provided', async () => {
+  describe('HashGenerator', () => {
+    it('Should call HashGenerator with correct token', async () => {
+      const { sut, hashGeneratorStub } = makeSut()
+      const hashGeneratorSpy = jest.spyOn(hashGeneratorStub, 'encrypt')
+      await sut.auth(params)
+      expect(hashGeneratorSpy).toHaveBeenCalledWith({ value: 'any_token' })
+    })
+
+    it('Should throw if HashGenerator throws', async () => {
+      const { sut, hashGeneratorStub } = makeSut()
+      jest.spyOn(hashGeneratorStub, 'encrypt').mockRejectedValue(new Error())
+      const promise = sut.auth(params)
+      await expect(promise).rejects.toThrow()
+    })
+  })
+
+  describe('HashComparator', () => {
+    it('Should call HashGenerator with correct value and hash', async () => {
+      const { sut, hashComparerStub } = makeSut()
+      const hashComparerSpy = jest.spyOn(hashComparerStub, 'compare')
+      await sut.auth(params)
+      expect(hashComparerSpy).toHaveBeenCalledWith({ value: 'any_data', hash: 'any_hashed_password' })
+    })
+
+    it('Should throw if HashGenerator throws', async () => {
+      const { sut, hashComparerStub } = makeSut()
+      jest.spyOn(hashComparerStub, 'compare').mockRejectedValue(new Error())
+      const promise = sut.auth(params)
+      await expect(promise).rejects.toThrow()
+    })
+
+    it('Should returns unauthorized if the result is invalid', async () => {
+      const { sut, hashComparerStub } = makeSut()
+      jest.spyOn(hashComparerStub, 'compare').mockResolvedValue(false)
+      const result = await sut.auth(params)
+      expect(result).toEqual(new UnauthorizedError())
+    })
+  })
+
+  describe('TokenGenerator', () => {
+    it('Should call TokenGenerator with correct subject (userId)', async () => {
+      const { sut, tokenGeneratorStub } = makeSut()
+      const tokenGeneratorSpy = jest.spyOn(tokenGeneratorStub, 'generate')
+      await sut.auth(params)
+      expect(tokenGeneratorSpy).toHaveBeenCalledWith({ sub: 'any_id' })
+    })
+
+    it('Should throw if TokenGenerator throws', async () => {
+      const { sut, tokenGeneratorStub } = makeSut()
+      jest.spyOn(tokenGeneratorStub, 'generate').mockRejectedValue(new Error())
+      const promise = sut.auth(params)
+      await expect(promise).rejects.toThrow()
+    })
+  })
+
+  describe('LoadGuardianByEmailRepository', () => {
+    it('Should call LoadGuardianByEmailRepository with correct email', async () => {
       const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
-      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail').mockResolvedValueOnce(undefined)
-
-      const result = await sut.auth(fakeAuth)
-
-      expect(result).toStrictEqual(new NotFoundError('email'))
+      const loadByEmailSpy = jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail')
+      await sut.auth(params)
+      expect(loadByEmailSpy).toHaveBeenCalledWith(params.email)
     })
 
     it('Should throw if LoadGuardianByEmailRepository throws', async () => {
       const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
-      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail').mockRejectedValueOnce(new Error())
-
-      const promise = sut.auth(fakeAuth)
-
+      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail').mockRejectedValue(new Error())
+      const promise = sut.auth(params)
       await expect(promise).rejects.toThrow()
     })
 
-    it('Should call LoadGuardianByEmailRepository with correct email', async () => {
+    it('Should return not found error if email does not exist', async () => {
       const { sut, loadGuardianByEmailRepositoryStub } = makeSut()
-      const loadSpy = jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail')
-
-      await sut.auth(fakeAuth)
-
-      expect(loadSpy).toHaveBeenCalledWith(fakeAuth.email)
+      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail').mockResolvedValue(undefined)
+      const result = await sut.auth(params)
+      expect(result).toEqual(new NotFoundError('email'))
     })
   })
 
-  describe('test HashComparer', () => {
-    it('should return UnauthorizedError if invalid code is provided', async () => {
-      const { sut, hashComparerStub } = makeSut()
-      jest.spyOn(hashComparerStub, 'compare').mockResolvedValueOnce(false)
-
-      const result = await sut.auth(fakeAuth)
-
-      expect(result).toStrictEqual(new UnauthorizedError())
+  describe('UpdateAccessTokenRepository', () => {
+    it('Should call UpdateAccessTokenRepository with correct subject (userId)', async () => {
+      const { sut, updateAccessTokenRepositoryStub } = makeSut()
+      const updateAccessTokenSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
+      await sut.auth(params)
+      expect(updateAccessTokenSpy).toHaveBeenCalledWith({ id: 'any_id', token: 'hashed_value' })
     })
 
-    it('should call HashComparer with empty value if falsy sensitiveData is provided', async () => {
-      const { sut, hashComparerStub, loadGuardianByEmailRepositoryStub } = makeSut()
-      const fakeGuardian = {
-        ...makeFakeGuardianData({ withId: true }),
-        sensitiveData: { field: 'any_field' }
-      }
-
-      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail')
-        .mockResolvedValueOnce(fakeGuardian as any)
-      const spyHashComparer = jest.spyOn(hashComparerStub, 'compare')
-
-      await sut.auth(fakeAuth)
-
-      expect(spyHashComparer).toHaveBeenCalledWith({ value: fakeAuth.sensitiveData?.value, hash: '' })
-    })
-
-    it('Should throw if HashComparer throws', async () => {
-      const { sut, hashComparerStub } = makeSut()
-      jest.spyOn(hashComparerStub, 'compare').mockRejectedValueOnce(new Error())
-
-      const promise = sut.auth(fakeAuth)
-
+    it('Should throw if UpdateAccessTokenRepository throws', async () => {
+      const { sut, updateAccessTokenRepositoryStub } = makeSut()
+      jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken').mockRejectedValue(new Error())
+      const promise = sut.auth(params)
       await expect(promise).rejects.toThrow()
     })
-
-    it('should call HashComparer with correct values', async () => {
-      const { sut, hashComparerStub, loadGuardianByEmailRepositoryStub } = makeSut()
-      const fakeGuardian = {
-        ...makeFakeGuardianData({ withId: true }),
-        sensitiveData: { field: 'any_field' }
-      }
-      jest.spyOn(loadGuardianByEmailRepositoryStub, 'loadByEmail')
-        .mockResolvedValueOnce(fakeGuardian as any)
-
-      const spyHashComparer = jest.spyOn(hashComparerStub, 'compare')
-
-      await sut.auth(fakeAuth)
-
-      expect(spyHashComparer).toHaveBeenCalledWith({
-        value: 'any_data',
-        hash: ''
-      })
-    })
   })
 
-  describe('test TokenGenerator', () => {
-    it('should call TokenGenerator with correct value', async () => {
-      const { sut, tokenGeneratorStub } = makeSut()
-      const spyTokenGenerator = jest.spyOn(tokenGeneratorStub, 'generate')
-
-      await sut.auth(fakeAuth)
-
-      expect(spyTokenGenerator).toHaveBeenCalledWith({ sub: 'valid_id' })
-    })
-  })
-
-  describe('test HashGenerator', () => {
-    it('should call HashGenerator with correct value', async () => {
-      const { sut, hashGeneratorStub, tokenGeneratorStub } = makeSut()
-      const spyHashGenerator = jest.spyOn(hashGeneratorStub, 'encrypt')
-      jest.spyOn(tokenGeneratorStub, 'generate').mockResolvedValueOnce('valid_token')
-
-      await sut.auth(fakeAuth)
-
-      expect(spyHashGenerator).toHaveBeenCalledWith({ value: 'valid_token' })
-    })
-  })
-
-  describe('tests UpdateAccessTokenRepository', () => {
-    it('Should call UpdateAccessTokenRepository with correct values', async () => {
-      const { sut, updateAccessTokenRepositoryStub } = makeSut()
-      const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
-
-      await sut.auth(fakeAuth)
-
-      expect(updateSpy).toHaveBeenCalledWith({ id: 'valid_id', token: 'hashed_value' })
-    })
-  })
-
-  describe('When success', () => {
-    it('should return valid token', async () => {
-      const { sut } = makeSut()
-
-      const result = await sut.auth(fakeAuth)
-
-      expect(result).toBe('any_token')
-    })
+  test('Should return an accessToken when received data is valid', async () => {
+    const { sut } = makeSut()
+    const result = await sut.auth(params)
+    expect(result).toEqual('any_token')
   })
 })
