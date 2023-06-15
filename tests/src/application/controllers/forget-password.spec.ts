@@ -34,11 +34,11 @@ const makeSut = (): SutTypes => {
 describe('ForgetPassword Controller', () => {
   const httpRequest = makeFakeForgetPasswordRequest()
   describe('ForgetPassword Use case', () => {
-    it('Should call ForgetPassword with correct values', async () => {
+    it('Should return 400 (BadRequest) if invalid email is provide', async () => {
       const { sut, forgetPasswordStub } = makeSut()
-      const forgetPasswordSpy = jest.spyOn(forgetPasswordStub, 'forgetPassword')
-      await sut.handle(httpRequest)
-      expect(forgetPasswordSpy).toHaveBeenCalledWith({ email: httpRequest.body.email })
+      jest.spyOn(forgetPasswordStub, 'forgetPassword').mockResolvedValue(false)
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(badRequest(new NotFoundError('email')))
     })
 
     it('Should return 500 (ServerError) if ForgetPassword use case throws', async () => {
@@ -48,21 +48,22 @@ describe('ForgetPassword Controller', () => {
       expect(httpResponse).toEqual(makeFakeServerError())
     })
 
-    it('Should return 400 (BadRequest) if invalid email is provide', async () => {
+    it('Should call ForgetPassword with correct values', async () => {
       const { sut, forgetPasswordStub } = makeSut()
-      jest.spyOn(forgetPasswordStub, 'forgetPassword').mockResolvedValue(false)
-      const httpResponse = await sut.handle(httpRequest)
-      expect(httpResponse).toEqual(badRequest(new NotFoundError('email')))
-    })
-
-    it('Should return 200 (Success) if valid email is provide', async () => {
-      const { sut } = makeSut()
-      const httpResponse = await sut.handle(httpRequest)
-      expect(httpResponse).toEqual(success({ message: 'Email sent successfully' }))
+      const forgetPasswordSpy = jest.spyOn(forgetPasswordStub, 'forgetPassword')
+      await sut.handle(httpRequest)
+      expect(forgetPasswordSpy).toHaveBeenCalledWith({ email: httpRequest.body.email })
     })
   })
 
   describe('Validation', () => {
+    it('Should return 400 (BadRequest) if Validation returns an error', async () => {
+      const { sut, validationStub } = makeSut()
+      jest.spyOn(validationStub, 'validate').mockReturnValue(new MissingParamError('email'))
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
+    })
+
     it('Should call Validation with correct value', async () => {
       const { sut, validationStub } = makeSut()
       const validateSpy = jest.spyOn(validationStub, 'validate')
@@ -71,12 +72,11 @@ describe('ForgetPassword Controller', () => {
         email: httpRequest.body.email
       })
     })
+  })
 
-    it('Should return 400 (BadRequest) if Validation returns an error', async () => {
-      const { sut, validationStub } = makeSut()
-      jest.spyOn(validationStub, 'validate').mockReturnValue(new MissingParamError('email'))
-      const httpResponse = await sut.handle(httpRequest)
-      expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
-    })
+  test('Should return 200 (Success) if valid email is provide', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(success({ message: 'Email sent successfully' }))
   })
 })
