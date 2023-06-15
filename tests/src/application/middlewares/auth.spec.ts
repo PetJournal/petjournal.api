@@ -123,7 +123,7 @@ describe('Auth Middleware', () => {
     }
   })
 
-  test('Should must treat the token when it has "Bearer" as a suffix', async () => {
+  test('Should must treat the token when it has "Bearer" as a prefix', async () => {
     const { sut, tokenDecoderStub } = makeSut()
     const anyToken = 'any_token'
     const httpRequest = { authorization: `Bearer ${anyToken}` }
