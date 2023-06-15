@@ -34,9 +34,9 @@ const makeSut = (): SutTypes => {
   const sut = new DbForgetPassword(dependencies)
   return {
     sut,
-    guardianRepositoryStub: dependencies.guardianRepository,
-    tokenServiceStub: dependencies.tokenService,
-    emailServiceStub: dependencies.emailService
+    guardianRepositoryStub,
+    tokenServiceStub,
+    emailServiceStub
   }
 }
 

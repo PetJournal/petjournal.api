@@ -4,7 +4,7 @@ import { makeHashService } from '@/tests/utils'
 
 interface SutTypes {
   sut: ForgetPasswordTokenGenerator
-  HashServiceStub: HashGenerator
+  hashServiceStub: HashGenerator
   saveTokenRepositoryStub: SaveTokenRepository
 }
 
@@ -18,12 +18,12 @@ const makeSaveTokenRepository = (): SaveTokenRepository => {
 }
 
 const makeSut = (): SutTypes => {
-  const HashServiceStub = makeHashService()
+  const hashServiceStub = makeHashService()
   const saveTokenRepositoryStub = makeSaveTokenRepository()
-  const sut = new ForgetPasswordTokenGenerator(HashServiceStub, saveTokenRepositoryStub)
+  const sut = new ForgetPasswordTokenGenerator(hashServiceStub, saveTokenRepositoryStub)
   return {
     sut,
-    HashServiceStub,
+    hashServiceStub,
     saveTokenRepositoryStub
   }
 }
@@ -37,15 +37,15 @@ describe('ForgetPasswordTokenGenerator', () => {
   })
 
   it('Should call Encrypter with correct value', async () => {
-    const { sut, HashServiceStub } = makeSut()
-    const encryptSpy = jest.spyOn(HashServiceStub, 'encrypt')
+    const { sut, hashServiceStub } = makeSut()
+    const encryptSpy = jest.spyOn(hashServiceStub, 'encrypt')
     await sut.generate('1')
     expect(encryptSpy).toBeCalled()
   })
 
   it('Should throw if Encrypter throws', async () => {
-    const { sut, HashServiceStub } = makeSut()
-    jest.spyOn(HashServiceStub, 'encrypt').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    const { sut, hashServiceStub } = makeSut()
+    jest.spyOn(hashServiceStub, 'encrypt').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
     const promise = sut.generate('1')
     await expect(promise).rejects.toThrow()
   })

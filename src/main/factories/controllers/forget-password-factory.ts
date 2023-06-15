@@ -13,8 +13,7 @@ export const makeForgetPasswordController = (): Controller => {
   const guardianRepository = new GuardianAccountRepository()
   const salt = Number(env.salt)
   const bcryptAdapter = new BcryptAdapter(salt)
-  const saveTokenRepository = new GuardianAccountRepository()
-  const tokenService = new ForgetPasswordTokenGenerator(bcryptAdapter, saveTokenRepository)
+  const tokenService = new ForgetPasswordTokenGenerator(bcryptAdapter, guardianRepository)
   const transporter = {
     service: 'gmail',
     auth: {
