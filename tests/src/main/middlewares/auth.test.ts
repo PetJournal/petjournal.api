@@ -9,7 +9,7 @@ beforeEach(async () => { await PrismaHelper.connect() })
 afterEach(async () => { await PrismaHelper.disconnect() })
 
 describe('Authentication Middleware', () => {
-  it('Should return 401 if no authorization is provided', async () => {
+  it('Should return 400 if no authorization is provided', async () => {
     app.get('/test_auth', auth, (req, res) => {
       res.send({ userId: req.userId })
     })
