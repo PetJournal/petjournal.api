@@ -16,6 +16,7 @@ describe('VerificationTokenGenerator', () => {
     const { sut } = makeSut()
     const token = await sut.generate()
     expect(token).toBeTruthy()
+    expect(typeof token).toBe('string')
     expect(token).toHaveLength(6)
   })
 })

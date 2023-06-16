@@ -86,7 +86,7 @@ describe('GuardianAccountRepository', () => {
 
       guardian = await sut.loadByEmail(guardianData.email)
 
-      expect(guardian.accessToken).not.toBeFalsy()
+      expect(guardian.accessToken).toBeTruthy()
       expect(guardian.accessToken).toBe(authenticationData.token)
     })
   })
@@ -109,7 +109,7 @@ describe('GuardianAccountRepository', () => {
 
       guardian = await sut.loadByEmail(guardianData.email)
 
-      expect(guardian.verificationToken).not.toBeFalsy()
+      expect(guardian.verificationToken).toBeTruthy()
       expect(guardian.verificationToken).toBe('valid_token')
       expect(guardian.verificationTokenCreatedAt.getMilliseconds()).toBeGreaterThan(verificationTokenCreatedAt.getMilliseconds())
     })
