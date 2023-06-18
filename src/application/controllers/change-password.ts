@@ -1,42 +1,39 @@
 import { type ChangePassword } from '@/domain/use-cases'
-import { type Controller } from '@/application/protocols'
-import { type PasswordValidator } from '@/application/validation'
-import { type HttpRequest, type HttpResponse, success, serverError, badRequest } from '@/application/helpers'
-import { MissingParamError, PasswordMismatchError, PasswordRequirementsError } from '@/application/errors'
+import { type Controller, type Validation } from '@/application/protocols'
+import {
+  type HttpRequest,
+  type HttpResponse,
+  success,
+  serverError,
+  badRequest
+} from '@/application/helpers'
 
 export class ChangePasswordController implements Controller {
   private readonly changePassword: ChangePassword
-  private readonly passwordValidator: PasswordValidator
+  private readonly validation: Validation
 
-  constructor ({ changePassword, passwordValidator }: ChangePasswordController.Dependencies) {
+  constructor ({ changePassword, validation }: ChangePasswordController.Dependencies) {
     this.changePassword = changePassword
-    this.passwordValidator = passwordValidator
+    this.validation = validation
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const requiredFields = ['password', 'passwordConfirmation']
-      if (httpRequest.userId === undefined) {
-        return badRequest(new MissingParamError('id'))
-      }
-      for (const field of requiredFields) {
-        if (httpRequest.body[field] === undefined) {
-          return badRequest(new MissingParamError(field))
-        }
-      }
-      const { userId: id } = httpRequest
-      const { password, passwordConfirmation } = httpRequest.body
+      const requestForValidation = { ...httpRequest.body, userId: httpRequest.userId }
+      const error = this.validation.validate(requestForValidation)
 
-      if (passwordConfirmation !== password) {
-        return badRequest(new PasswordMismatchError())
+      if (error) {
+        return badRequest(error)
       }
 
-      const isValidPassword = this.passwordValidator.isValid(password)
-      if (!isValidPassword) {
-        return badRequest(new PasswordRequirementsError())
-      }
+      const { userId } = httpRequest
+      const { password } = httpRequest.body
 
-      const response = await this.changePassword.change({ id, password })
+      const response = await this.changePassword.change({
+        id: userId as string,
+        password
+      })
+
       if (!response.isSuccess && response.error) {
         return badRequest(response.error)
       }
@@ -51,6 +48,6 @@ export class ChangePasswordController implements Controller {
 export namespace ChangePasswordController {
   export interface Dependencies {
     changePassword: ChangePassword
-    passwordValidator: PasswordValidator
+    validation: Validation
   }
 }

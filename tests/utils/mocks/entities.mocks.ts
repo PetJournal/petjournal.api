@@ -1,54 +1,47 @@
+import { type AddGuardianRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 import { type Guardian } from '@/tests/utils/types'
 
-interface Options {
-  withId?: boolean
-  withAccessToken?: boolean
-  withForgetPassword?: boolean
-  withVerificationTokenCreatedAt?: boolean
-  fields?: Partial<Guardian>
-}
-
-const makeFakeGuardianData = ({
-  withId = false,
-  withAccessToken = false,
-  withForgetPassword = false,
-  withVerificationTokenCreatedAt = false,
-  fields = {}
-}: Options = {}): Guardian => {
+const makeFakeGuardianData = (): Guardian => {
   const fakeGuardian = {
-    firstName: 'valid_first_name',
-    lastName: 'valid_last_name',
-    email: 'valid_email',
-    password: 'valid_password',
-    phone: 'valid_phone',
-    accessToken: null,
-    verificationToken: 'token dumb',
-    verificationTokenCreatedAt: new Date('2023-06-05')
-  }
-
-  if (withId) {
-    Object.assign(fakeGuardian, { id: 'valid_id' })
-  }
-
-  if (withAccessToken) {
-    Object.assign(fakeGuardian, { accessToken: 'valid_token' })
-  }
-
-  if (withForgetPassword) {
-    Object.assign(fakeGuardian, { forgetPasswordToken: 'valid_forget_password' })
-  }
-
-  if (withVerificationTokenCreatedAt) {
-    Object.assign(fakeGuardian, { withVerificationTokenCreatedAt: new Date('2023-06-05') })
-  }
-
-  if (fields) {
-    Object.assign(fakeGuardian, fields)
+    id: 'any_id',
+    firstName: 'any_first_name',
+    lastName: 'any_last_name',
+    email: 'any_email',
+    password: 'any_password',
+    phone: 'any_phone',
+    accessToken: 'any_token',
+    verificationToken: 'any_verification_token',
+    verificationTokenCreatedAt: new Date('03/03/2023')
   }
 
   return fakeGuardian
 }
 
+const mockFakeGuardianAdded = (): AddGuardianRepository.Result => {
+  return {
+    id: 'any_id',
+    firstName: 'any_first_name',
+    lastName: 'any_last_name',
+    email: 'any_email@mail.com',
+    phone: 'any_phone'
+  }
+}
+
+const mockFakeGuardianLoaded = (): LoadGuardianByIdRepository.Result => {
+  return {
+    id: 'any_id',
+    firstName: 'any_first_name',
+    lastName: 'any_last_name',
+    email: 'any_email@mail.com',
+    password: 'any_hashed_password',
+    phone: 'any_phone',
+    accessToken: 'any_hashed_token',
+    verificationToken: 'any_verification_token'
+  }
+}
+
 export {
-  makeFakeGuardianData
+  makeFakeGuardianData,
+  mockFakeGuardianAdded,
+  mockFakeGuardianLoaded
 }

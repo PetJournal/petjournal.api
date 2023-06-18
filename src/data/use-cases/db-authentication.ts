@@ -35,6 +35,7 @@ export class DbAuthentication implements Authentication {
     if (!account) {
       return new NotFoundError('email')
     }
+
     const isValid = await this.hashComparer.compare({
       value: credentials.sensitiveData.value,
       hash: account[credentials.sensitiveData?.field] ?? ''
@@ -42,6 +43,7 @@ export class DbAuthentication implements Authentication {
     if (!isValid) {
       return new UnauthorizedError()
     }
+
     const accessToken = await this.tokenGenerator.generate({ sub: account.id })
     const hashedToken = await this.hashGenerator.encrypt({ value: accessToken })
     await this.updateAccessTokenRepository.updateAccessToken({ id: account.id, token: hashedToken })

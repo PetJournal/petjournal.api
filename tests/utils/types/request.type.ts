@@ -17,10 +17,12 @@ interface SignUpRequest {
     password: string
     passwordConfirmation: string
     phone: string
-    accessToken: string | null
-    isPrivacyPolicyAccepted: boolean
-    verificationToken: string
-    verificationTokenCreatedAt: Date
+  }
+}
+
+interface ForgetPasswordRequest {
+  body: {
+    email: string
   }
 }
 
@@ -43,6 +45,7 @@ export {
   type AuthMiddlewareRequest,
   type LoginRequest,
   type SignUpRequest,
+  type ForgetPasswordRequest,
   type ChangePasswordRequest,
   type WaitingCodeRequest
 }

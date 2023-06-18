@@ -1,4 +1,4 @@
-import { type SaveTokenRepository } from '@/data/protocols/guardian'
+import { type SaveTokenRepository } from '@/data/protocols/db/guardian'
 import { type HashGenerator, type TokenGenerator } from '../protocols'
 
 export class ForgetPasswordTokenGenerator implements TokenGenerator {

@@ -6,7 +6,6 @@ interface Guardian {
   phone: string
   accessToken: string | null
   verificationToken: string
-  verificationTokenCreatedAt: Date
 }
 
 export {

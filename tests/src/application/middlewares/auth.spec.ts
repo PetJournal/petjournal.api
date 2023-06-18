@@ -1,18 +1,18 @@
 import { AuthMiddleware } from '@/application/middlewares'
-import { success, unauthorized } from '@/application/helpers'
 import {
   type TokenDecoder,
   type HashComparer,
   type LoadGuardianByIdRepository
 } from '@/data/protocols'
+import { badRequest, success, unauthorized } from '@/application/helpers'
 import {
-  makeFakePayload,
-  makeFakeAuthorization,
+  makeFakeAuthorizationRequest,
   makeFakeTokenDecoder,
   makeFakeHashComparer,
   makeFakeLoadGuardianByIdRepository,
   makeFakeServerError
 } from '@/tests/utils'
+import { InvalidTokenError, MissingParamError, NotFoundError } from '@/application/errors'
 
 interface SutTypes {
   sut: AuthMiddleware
@@ -35,111 +35,106 @@ const makeSut = (): SutTypes => {
 }
 
 describe('Auth Middleware', () => {
-  describe('test the authorization field', () => {
-    it('Should return 401 if no authorization is provided', async () => {
-      const { sut } = makeSut()
-
-      const httpRequest = makeFakeAuthorization({ data: '' })
-      const httpResponse = await sut.handle(httpRequest)
-
-      expect(httpResponse).toEqual(unauthorized())
-    })
-
-    it('Should return 401 if invalid authorization is provided', async () => {
-      const { sut, tokenDecoderStub } = makeSut()
-      jest.spyOn(tokenDecoderStub, 'decode').mockResolvedValueOnce(false)
-
-      const httpRequest = makeFakeAuthorization({ data: 'invalid_token' })
-      const httpResponse = await sut.handle(httpRequest)
-
-      expect(httpResponse).toEqual(unauthorized())
-    })
-  })
-
-  describe('test the tokenDecoder dependency', () => {
-    it('Should call tokenDecoder with correct value', async () => {
-      const { sut, tokenDecoderStub } = makeSut()
-      const spyDecoder = jest.spyOn(tokenDecoderStub, 'decode')
-
-      const httpRequest = makeFakeAuthorization({ data: 'any_token' })
-      await sut.handle(httpRequest)
-
-      expect(spyDecoder).toHaveBeenCalledWith(httpRequest.authorization)
-    })
-
-    it('Should return 500 if tokenDecoder throws', async () => {
-      const { sut, tokenDecoderStub } = makeSut()
-      jest.spyOn(tokenDecoderStub, 'decode').mockRejectedValueOnce(new Error())
-
-      const httpRequest = makeFakeAuthorization({ data: 'any_token' })
-      const httpResponse = await sut.handle(httpRequest)
-
-      expect(httpResponse).toEqual(makeFakeServerError())
-    })
-  })
-
-  describe('test the loadGuardianById service', () => {
-    it('Should return 401 if invalid payload is provided', async () => {
-      const { sut, tokenDecoderStub, loadGuardianByIdStub } = makeSut()
-      jest.spyOn(tokenDecoderStub, 'decode').mockResolvedValueOnce({})
-      jest.spyOn(loadGuardianByIdStub, 'loadById').mockResolvedValueOnce(undefined)
-
-      const httpRequest = makeFakeAuthorization({ data: 'valid_token' })
-      const httpResponse = await sut.handle(httpRequest)
-
-      expect(httpResponse).toEqual(unauthorized())
-    })
-
-    it('Should return 401 if valid payload is provided with invalid userId', async () => {
-      const { sut, tokenDecoderStub, loadGuardianByIdStub } = makeSut()
-      jest.spyOn(tokenDecoderStub, 'decode').mockResolvedValueOnce({ userId: 'invalid_id' })
-      jest.spyOn(loadGuardianByIdStub, 'loadById').mockResolvedValueOnce(undefined)
-
-      const httpRequest = makeFakeAuthorization({ data: 'valid_token' })
-      const httpResponse = await sut.handle(httpRequest)
-
-      expect(httpResponse).toEqual(unauthorized())
-    })
-
-    it('Should call loadGuardianById with correct value', async () => {
-      const { sut, loadGuardianByIdStub } = makeSut()
-      const spyLoadGuardianById = jest.spyOn(loadGuardianByIdStub, 'loadById')
-
-      const httpRequest = makeFakeAuthorization({ data: 'valid_token' })
-      await sut.handle(httpRequest)
-
-      expect(spyLoadGuardianById).toHaveBeenCalledWith(makeFakePayload().sub)
-    })
-
-    it('Should return 401 if authorization not match with accessToken in database', async () => {
+  const httpRequest = makeFakeAuthorizationRequest()
+  describe('HashComparer', () => {
+    it('Should return 401 (Unauthorized) if value doesn\'t match the hash', async () => {
       const { sut, hashComparerStub } = makeSut()
-      jest.spyOn(hashComparerStub, 'compare').mockResolvedValueOnce(false)
-
-      const httpRequest = makeFakeAuthorization({ data: 'valid_token' })
+      jest.spyOn(hashComparerStub, 'compare').mockResolvedValue(false)
       const httpResponse = await sut.handle(httpRequest)
-
-      expect(httpResponse).toEqual(unauthorized())
+      expect(httpResponse).toEqual(unauthorized(new InvalidTokenError('Invalid token for this user')))
     })
 
-    it('Should return 500 if loadGuardianById throws', async () => {
-      const { sut, loadGuardianByIdStub } = makeSut()
-      jest.spyOn(loadGuardianByIdStub, 'loadById').mockRejectedValueOnce(new Error())
-
-      const httpRequest = makeFakeAuthorization({ data: 'any_token' })
+    it('Should return 500 (ServerError) if HashComparer throws', async () => {
+      const { sut, hashComparerStub } = makeSut()
+      jest.spyOn(hashComparerStub, 'compare').mockRejectedValue(new Error())
       const httpResponse = await sut.handle(httpRequest)
-
       expect(httpResponse).toEqual(makeFakeServerError())
+    })
+
+    it('Should call HashComparer with correct value and hash values', async () => {
+      const { sut, hashComparerStub } = makeSut()
+      const hashCompareSpy = jest.spyOn(hashComparerStub, 'compare')
+      await sut.handle(httpRequest)
+      expect(hashCompareSpy).toHaveBeenCalledWith({
+        hash: 'any_hashed_token',
+        value: httpRequest.authorization
+      })
     })
   })
 
-  describe('test authMiddleware success case', () => {
-    it('Should return 200 if success', async () => {
-      const { sut } = makeSut()
-      const httpRequest = makeFakeAuthorization({ data: 'valid_token' })
-
+  describe('Token Decoder', () => {
+    it('Should return 401 (Unauthorized) if authorization is invalid (expired or malformed)', async () => {
+      const { sut, tokenDecoderStub } = makeSut()
+      jest.spyOn(tokenDecoderStub, 'decode').mockResolvedValue(null)
       const httpResponse = await sut.handle(httpRequest)
-
-      expect(httpResponse).toEqual(success({ userId: makeFakePayload().sub }))
+      expect(httpResponse).toEqual(unauthorized(new InvalidTokenError('Invalid or expired token')))
     })
+
+    it('Should return 500 (ServerError) if TokenDecoder throws', async () => {
+      const { sut, tokenDecoderStub } = makeSut()
+      jest.spyOn(tokenDecoderStub, 'decode').mockRejectedValue(new Error())
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(makeFakeServerError())
+    })
+
+    it('Should call TokenDecoder with correct authorization', async () => {
+      const { sut, tokenDecoderStub } = makeSut()
+      const tokenDecoderSpy = jest.spyOn(tokenDecoderStub, 'decode')
+      await sut.handle(httpRequest)
+      expect(tokenDecoderSpy).toHaveBeenCalledWith(httpRequest.authorization)
+    })
+  })
+
+  describe('LoadByGuardianById', () => {
+    it('Should return 401 (Unauthorized) if hash and value do not match', async () => {
+      const { sut, loadGuardianByIdStub } = makeSut()
+      jest.spyOn(loadGuardianByIdStub, 'loadById').mockResolvedValue(undefined)
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(unauthorized(new NotFoundError('User not found')))
+    })
+
+    it('Should return 500 (ServerError) if LoadByGuardianById throws', async () => {
+      const { sut, loadGuardianByIdStub } = makeSut()
+      jest.spyOn(loadGuardianByIdStub, 'loadById').mockRejectedValue(new Error())
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(makeFakeServerError())
+    })
+
+    it('Should call LoadByGuardianById with correct userId', async () => {
+      const { sut, loadGuardianByIdStub, tokenDecoderStub } = makeSut()
+      const loadByIdSpy = jest.spyOn(loadGuardianByIdStub, 'loadById')
+      const sub = 'any_id'
+      jest.spyOn(tokenDecoderStub, 'decode').mockResolvedValue({ sub })
+      await sut.handle(httpRequest)
+      expect(loadByIdSpy).toHaveBeenCalledWith(sub)
+    })
+  })
+
+  test('Should return 400 (Unauthorized) if authorization is not provided', async () => {
+    const { sut } = makeSut()
+    const httpRequests = [
+      { authorization: '' },
+      { authorization: null },
+      { authorization: undefined }
+    ]
+    for (const request of httpRequests) {
+      const httpResponse = await sut.handle(request)
+      expect(httpResponse).toEqual(badRequest(new MissingParamError('authorization')))
+    }
+  })
+
+  test('Should must treat the token when it has "Bearer" as a prefix', async () => {
+    const { sut, tokenDecoderStub } = makeSut()
+    const anyToken = 'any_token'
+    const httpRequest = { authorization: `Bearer ${anyToken}` }
+    const tokenDecoderSpy = jest.spyOn(tokenDecoderStub, 'decode')
+    await sut.handle(httpRequest)
+    expect(tokenDecoderSpy).toHaveBeenCalledWith(anyToken)
+  })
+
+  test('Should return 200 (OK) and userId', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(success({ userId: 'valid_id' }))
   })
 })

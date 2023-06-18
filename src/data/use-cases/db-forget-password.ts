@@ -1,6 +1,6 @@
 import { type ForgetPassword } from '@/domain/use-cases'
 import { type EmailService, type TokenGenerator } from '@/data/protocols'
-import { type LoadGuardianByEmailRepository } from '@/data/protocols/guardian'
+import { type LoadGuardianByEmailRepository } from '@/data/protocols/db/guardian'
 
 export class DbForgetPassword implements ForgetPassword {
   private readonly loadGuardianByEmailRepository: LoadGuardianByEmailRepository
@@ -15,6 +15,7 @@ export class DbForgetPassword implements ForgetPassword {
 
   async forgetPassword (params: ForgetPassword.Params): Promise<boolean> {
     let success = false
+
     const guardian = await this.loadGuardianByEmailRepository.loadByEmail(params.email)
     if (!guardian) {
       return success
@@ -35,6 +36,7 @@ export class DbForgetPassword implements ForgetPassword {
           Equipe PetJournal
         `
     }
+
     await this.emailService.send(emailOptions)
     success = true
 

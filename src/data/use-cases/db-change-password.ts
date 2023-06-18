@@ -30,8 +30,8 @@ export class DbChangePassword implements ChangePassword {
         error: new NotFoundError('userId')
       }
     }
-    const hashedPassword = await this.hashGenerator.encrypt({ value: account.password })
 
+    const hashedPassword = await this.hashGenerator.encrypt({ value: userData.password })
     await this.updateGuardianPasswordRepository.updatePassword({
       id: userData.id,
       password: hashedPassword

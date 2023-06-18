@@ -1,16 +1,15 @@
+import env from '@/main/config/env'
 import { type Controller } from '@/application/protocols'
 import { WaitingCodeController } from '@/application/controllers'
-import { DbAuthentication } from '@/data/use-cases'
-import { EmailValidatorAdapter } from '@/infra/validators'
 import { BcryptAdapter, JwtAdapter } from '@/infra/cryptography'
 import { GuardianAccountRepository, LoggerPgRepository } from '@/infra/repos/postgresql'
 import { LoggerControllerDecorator } from '@/main/decorators/logger'
-import env from '@/main/config/env'
+import { makeWaitingCodeValidation } from '@/main/factories'
+import { DbAuthentication } from '@/data/use-cases'
 
 export const makeWaitingCodeController = (): Controller => {
   const salt = Number(env.salt)
   const secret = env.secret
-  const emailValidator = new EmailValidatorAdapter()
   const repository = new GuardianAccountRepository()
   const hasher = new BcryptAdapter(salt)
   const tokenGenerator = new JwtAdapter(secret)
@@ -21,11 +20,11 @@ export const makeWaitingCodeController = (): Controller => {
     hashGenerator: hasher,
     tokenGenerator
   })
+  const validation = makeWaitingCodeValidation()
   const loggerPgRepository = new LoggerPgRepository()
   const waitingCodeController = new WaitingCodeController({
-    emailValidator,
-    authentication
+    authentication,
+    validation
   })
-
   return new LoggerControllerDecorator(waitingCodeController, loggerPgRepository)
 }

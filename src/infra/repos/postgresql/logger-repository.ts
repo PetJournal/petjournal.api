@@ -1,4 +1,4 @@
-import { type LoggerErrorRepository } from '@/data/protocols/logger-error-repository'
+import { type LoggerErrorRepository } from '@/data/protocols'
 import { prisma as db } from './prisma'
 
 export class LoggerPgRepository implements LoggerErrorRepository {
