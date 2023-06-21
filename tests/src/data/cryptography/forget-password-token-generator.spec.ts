@@ -1,4 +1,4 @@
-import { ForgetPasswordTokenGenerator } from '@/data/use-cases/forget-password-token-generation'
+import { ForgetPasswordTokenGenerator } from '@/data/cryptography/forget-password-token-generation'
 import { type SaveTokenRepository, type HashGenerator } from '@/data/protocols'
 import { makeFakeHashService } from '@/tests/utils'
 

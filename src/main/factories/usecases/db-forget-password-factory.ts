@@ -1,7 +1,7 @@
 import env from '@/main/config/env'
 import { type ForgetPassword } from '@/domain/use-cases'
-import { DbForgetPassword, ForgetPasswordTokenGenerator } from '@/data/use-cases'
-import { BcryptAdapter } from '@/infra/cryptography'
+import { DbForgetPassword } from '@/data/use-cases'
+import { BcryptAdapter, ForgetPasswordTokenGenerator } from '@/infra/cryptography'
 import { NodeMailerAdapter } from '@/infra/communication'
 import { GuardianAccountRepository } from '@/infra/repos/postgresql'
 

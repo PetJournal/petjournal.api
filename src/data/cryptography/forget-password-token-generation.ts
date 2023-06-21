@@ -1,5 +1,5 @@
 import { type SaveTokenRepository } from '@/data/protocols/db/guardian'
-import { type HashGenerator, type TokenGenerator } from '../protocols'
+import { type HashGenerator, type TokenGenerator } from '@/data/protocols'
 
 export class ForgetPasswordTokenGenerator implements TokenGenerator {
   private readonly encrypter: HashGenerator
