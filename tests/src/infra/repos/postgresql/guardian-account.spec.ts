@@ -54,7 +54,7 @@ describe('GuardianAccountRepository', () => {
   describe('LoadAccountByIdRepository', () => {
     it('Should return a guardian account on success', async () => {
       const sut = makeSut()
-      const guardianData = makeFakeGuardianData({ withId: true })
+      const guardianData = makeFakeGuardianData()
       await sut.add(guardianData)
 
       const guardianByEmail = await sut.loadByEmail(guardianData.email) as any
