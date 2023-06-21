@@ -1,170 +1,89 @@
+import { type Validation } from '@/application/protocols'
 import { type ChangePassword } from '@/domain/use-cases'
-import { type PasswordValidator } from '@/application/validation'
 import { ChangePasswordController } from '@/application/controllers'
 import { badRequest, success } from '@/application/helpers'
-import {
-  PasswordRequirementsError,
-  PasswordMismatchError,
-  MissingParamError,
-  NotFoundError
-} from '@/application/errors'
+import { MissingParamError, NotFoundError } from '@/application/errors'
 import {
   makeFakeChangePasswordRequest,
   makeFakeChangePasswordUseCase,
-  makePasswordValidator,
-  makeFakeServerError
+  makeFakeServerError,
+  makeFakeValidation
 } from '@/tests/utils'
 
 interface SutTypes {
   sut: ChangePasswordController
   changePasswordStub: ChangePassword
-  passwordValidatorStub: PasswordValidator
+  validationStub: Validation
 }
 
 const makeSut = (): SutTypes => {
   const changePasswordStub = makeFakeChangePasswordUseCase()
-  const passwordValidatorStub = makePasswordValidator()
+  const validationStub = makeFakeValidation()
   const dependencies: ChangePasswordController.Dependencies = {
     changePassword: changePasswordStub,
-    passwordValidator: passwordValidatorStub
+    validation: validationStub
   }
   const sut = new ChangePasswordController(dependencies)
   return {
     sut,
     changePasswordStub,
-    passwordValidatorStub
+    validationStub
   }
 }
 
 describe('ChangePasswordController', () => {
-  describe('test the id field', () => {
-    it('Should return 400 if no userId is provided', async () => {
-      const { sut } = makeSut()
-      const httpRequest = makeFakeChangePasswordRequest({ withUserId: false })
-
-      const httpResponse = await sut.handle(httpRequest)
-
-      expect(httpResponse).toEqual(badRequest(new MissingParamError('id')))
-    })
-  })
-
-  describe('test the password field', () => {
-    it('Should return 400 if no password is provided', async () => {
-      const { sut } = makeSut()
-      const httpRequest = makeFakeChangePasswordRequest({ fields: { password: undefined } })
-      const httpResponse = await sut.handle(httpRequest)
-      expect(httpResponse).toEqual(badRequest(new MissingParamError('password')))
-    })
-
-    it('Should return 400 if an invalid password is provided', async () => {
-      const { sut, passwordValidatorStub } = makeSut()
-      jest.spyOn(passwordValidatorStub, 'isValid').mockReturnValueOnce(false)
-
-      const httpRequest = makeFakeChangePasswordRequest({
-        fields: {
-          password: 'invalid_password',
-          passwordConfirmation: 'invalid_password'
-        }
-      })
-      const httpResponse = await sut.handle(httpRequest)
-
-      expect(httpResponse).toEqual(badRequest(new PasswordRequirementsError()))
-    })
-
-    it('Should call PasswordValidator with correct password', async () => {
-      const { sut, passwordValidatorStub } = makeSut()
-      const isValidSpy = jest.spyOn(passwordValidatorStub, 'isValid')
-
-      const httpRequest = makeFakeChangePasswordRequest({
-        fields: {
-          password: 'valid_password',
-          passwordConfirmation: 'valid_password'
-        }
-      })
-      await sut.handle(httpRequest)
-
-      expect(isValidSpy).toHaveBeenCalledWith('valid_password')
-    })
-
-    it('Should return 500 if PasswordValidator throws', async () => {
-      const { sut, passwordValidatorStub } = makeSut()
-      jest.spyOn(passwordValidatorStub, 'isValid').mockImplementationOnce(() => {
-        throw new Error()
-      })
-
-      const httpRequest = makeFakeChangePasswordRequest()
-      const httpResponse = await sut.handle(httpRequest)
-
-      expect(httpResponse).toEqual(makeFakeServerError())
-    })
-  })
-
-  describe('test the passwordConfirmation field', () => {
-    it('Should return 400 if no password confirmation is provided', async () => {
-      const { sut } = makeSut()
-
-      const httpRequest = makeFakeChangePasswordRequest({ fields: { passwordConfirmation: undefined } })
-      const httpResponse = await sut.handle(httpRequest)
-
-      expect(httpResponse).toEqual(badRequest(new MissingParamError('passwordConfirmation')))
-    })
-
-    it('Should return 400 if password is not equal to password confirmation', async () => {
-      const { sut, passwordValidatorStub } = makeSut()
-      jest.spyOn(passwordValidatorStub, 'isValid').mockReturnValueOnce(false)
-
-      const httpRequest = makeFakeChangePasswordRequest({ fields: { passwordConfirmation: 'invalid_password' } })
-      const httpResponse = await sut.handle(httpRequest)
-
-      expect(httpResponse).toEqual(badRequest(new PasswordMismatchError()))
-    })
-  })
-
-  describe('test the execution of the ChangePassword use case', () => {
-    it('Should call ChangePassword with correct values', async () => {
+  const httpRequest = makeFakeChangePasswordRequest()
+  describe('ChangePassword Use case', () => {
+    it('Should return 400 (BadRequest) if invalid userId is provide', async () => {
       const { sut, changePasswordStub } = makeSut()
-      const authSpy = jest.spyOn(changePasswordStub, 'change')
-
-      const httpRequest = makeFakeChangePasswordRequest()
-      await sut.handle(httpRequest)
-
-      expect(authSpy).toHaveBeenCalledWith({
-        id: 'any_id',
-        password: 'any_password'
+      jest.spyOn(changePasswordStub, 'change').mockResolvedValue({
+        isSuccess: false,
+        error: new NotFoundError('userId')
       })
-    })
-
-    it('Should return a 400 if the id does not exist in the repository', async () => {
-      const { sut, changePasswordStub } = makeSut()
-      jest.spyOn(changePasswordStub, 'change').mockReturnValueOnce(Promise.resolve({
-        isSuccess: false, error: new NotFoundError('userId')
-      }))
-
-      const httpRequest = makeFakeChangePasswordRequest()
       const httpResponse = await sut.handle(httpRequest)
-
       expect(httpResponse).toEqual(badRequest(new NotFoundError('userId')))
     })
 
-    it('Should return 500 if ChangePassword throws', async () => {
+    it('Should return 500 (ServerError) if ChangePassword use case throws', async () => {
       const { sut, changePasswordStub } = makeSut()
-      jest.spyOn(changePasswordStub, 'change').mockReturnValueOnce(Promise.reject(new Error()))
-
-      const httpRequest = makeFakeChangePasswordRequest()
+      jest.spyOn(changePasswordStub, 'change').mockRejectedValue(new Error())
       const httpResponse = await sut.handle(httpRequest)
-
       expect(httpResponse).toEqual(makeFakeServerError())
+    })
+
+    it('Should call ForgetPassword with correct values', async () => {
+      const { sut, changePasswordStub } = makeSut()
+      const changePasswordSpy = jest.spyOn(changePasswordStub, 'change')
+      await sut.handle(httpRequest)
+      expect(changePasswordSpy).toHaveBeenCalledWith({
+        id: httpRequest.userId,
+        password: httpRequest.body.password
+      })
     })
   })
 
-  describe('test changePassword controller success case', () => {
-    it('Should return 200 if valid userData are provided', async () => {
-      const { sut } = makeSut()
-
-      const httpRequest = makeFakeChangePasswordRequest()
+  describe('Validation', () => {
+    it('Should return 400 (BadRequest) if Validation returns an error', async () => {
+      const { sut, validationStub } = makeSut()
+      jest.spyOn(validationStub, 'validate').mockReturnValue(new MissingParamError('email'))
       const httpResponse = await sut.handle(httpRequest)
-
-      expect(httpResponse).toEqual(success({ message: 'Password reset completed successfully' }))
+      expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
     })
+
+    it('Should call Validation with correct value', async () => {
+      const { sut, validationStub } = makeSut()
+      const validateSpy = jest.spyOn(validationStub, 'validate')
+      await sut.handle(httpRequest)
+      expect(validateSpy).toHaveBeenCalledWith({
+        userId: httpRequest.userId,
+        ...httpRequest.body
+      })
+    })
+  })
+
+  test('Should return 200 (Success) if valid user data are provide', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(success({ message: 'Password reset completed successfully' }))
   })
 })

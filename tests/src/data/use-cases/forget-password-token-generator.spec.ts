@@ -1,6 +1,6 @@
 import { ForgetPasswordTokenGenerator } from '@/data/use-cases/forget-password-token-generation'
 import { type SaveTokenRepository, type HashGenerator } from '@/data/protocols'
-import { makeHashService } from '@/tests/utils'
+import { makeFakeHashService } from '@/tests/utils'
 
 interface SutTypes {
   sut: ForgetPasswordTokenGenerator
@@ -18,7 +18,7 @@ const makeSaveTokenRepository = (): SaveTokenRepository => {
 }
 
 const makeSut = (): SutTypes => {
-  const hashServiceStub = makeHashService()
+  const hashServiceStub = makeFakeHashService()
   const saveTokenRepositoryStub = makeSaveTokenRepository()
   const sut = new ForgetPasswordTokenGenerator(hashServiceStub, saveTokenRepositoryStub)
   return {

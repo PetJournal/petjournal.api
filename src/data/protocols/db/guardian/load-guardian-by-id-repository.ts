@@ -12,5 +12,6 @@ export namespace LoadGuardianByIdRepository {
     phone: string
     password: string
     accessToken: string | null
+    verificationToken: string
   } | undefined
 }

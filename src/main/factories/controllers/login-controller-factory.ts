@@ -1,25 +1,17 @@
 import { type Controller } from '@/application/protocols'
 import { LoginController } from '@/application/controllers'
-import { DbAuthentication } from '@/data/use-cases'
-import { EmailValidatorAdapter } from '@/infra/validators'
-import { BcryptAdapter, JwtAdapter } from '@/infra/cryptography'
-import { GuardianAccountRepository, LoggerPgRepository } from '@/infra/repos/postgresql'
+import { LoggerPgRepository } from '@/infra/repos/postgresql'
 import { LoggerControllerDecorator } from '@/main/decorators'
-import env from '@/main/config/env'
+import { makeLoginValidation, makeDbAuthentication } from '@/main/factories'
 
 export const makeLoginController = (): Controller => {
-  const salt = Number(env.salt)
-  const secret = env.secret
-  const emailValidator = new EmailValidatorAdapter()
-  const guardianRepository = new GuardianAccountRepository()
-  const hashService = new BcryptAdapter(salt)
-  const tokenService = new JwtAdapter(secret)
-  const authentication = new DbAuthentication({
-    guardianRepository,
-    hashService,
-    tokenService
-  })
+  const authentication = makeDbAuthentication()
+  const validation = makeLoginValidation()
+  const dependencies: LoginController.Dependencies = {
+    authentication,
+    validation
+  }
+  const loginController = new LoginController(dependencies)
   const loggerPgRepository = new LoggerPgRepository()
-  const loginController = new LoginController({ emailValidator, authentication })
   return new LoggerControllerDecorator(loginController, loggerPgRepository)
 }

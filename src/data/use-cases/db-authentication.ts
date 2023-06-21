@@ -29,16 +29,19 @@ export class DbAuthentication implements Authentication {
     if (!account) {
       return new NotFoundError('email')
     }
+
     const isValid = await this.hashService.compare({
       value: credentials.sensitiveData.value,
       hash: account[credentials.sensitiveData?.field] ?? ''
     })
+
     if (!isValid) {
       return new UnauthorizedError()
     }
     const accessToken = await this.tokenService.generate({ sub: account.id })
     const hashedToken = await this.hashService.encrypt({ value: accessToken })
     await this.guardianRepository.updateAccessToken({ id: account.id, token: hashedToken })
+
     return accessToken
   }
 }

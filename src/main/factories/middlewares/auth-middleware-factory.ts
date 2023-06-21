@@ -1,9 +1,9 @@
+import env from '@/main/config/env'
 import { type Middleware } from '@/application/protocols'
 import { AuthMiddleware } from '@/application/middlewares'
-import { JwtAdapter } from '@/infra/cryptography/jwt-adapter'
-import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
-import { BcryptAdapter } from '@/infra/cryptography'
-import env from '@/main/config/env'
+import { GuardianAccountRepository, LoggerPgRepository } from '@/infra/repos/postgresql'
+import { BcryptAdapter, JwtAdapter } from '@/infra/cryptography'
+import { LoggerControllerDecorator } from '@/main/decorators'
 
 export const makeAuthMiddleware = (): Middleware => {
   const secret = env.secret
@@ -11,5 +11,12 @@ export const makeAuthMiddleware = (): Middleware => {
   const tokenService = new JwtAdapter(secret)
   const hashService = new BcryptAdapter(salt)
   const guardianRepository = new GuardianAccountRepository()
-  return new AuthMiddleware({ tokenService, guardianRepository, hashService })
+  const dependencies: AuthMiddleware.Dependencies = {
+    tokenService,
+    hashService,
+    guardianRepository
+  }
+  const authMiddleware = new AuthMiddleware(dependencies)
+  const loggerPgRepository = new LoggerPgRepository()
+  return new LoggerControllerDecorator(authMiddleware, loggerPgRepository)
 }

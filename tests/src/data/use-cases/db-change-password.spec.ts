@@ -1,13 +1,11 @@
 import { type ChangePassword } from '@/domain/use-cases'
 import { type HashGenerator, type LoadGuardianByIdRepository, type UpdateGuardianPasswordRepository } from '@/data/protocols'
 import { DbChangePassword } from '@/data/use-cases'
-import { NotFoundError } from '@/application/errors'
 import {
-  type Guardian,
-  makeFakeGuardianData,
-  makeGuardianRepository,
-  makeHashService
+  makeFakeGuardianRepository,
+  makeFakeHashService
 } from '@/tests/utils'
+import { NotFoundError } from '@/application/errors'
 
 interface SutTypes {
   sut: DbChangePassword
@@ -16,11 +14,8 @@ interface SutTypes {
 }
 
 const makeSut = (): SutTypes => {
-  const hashServiceStub = makeHashService()
-  const guardianRepositoryStub = makeGuardianRepository(
-    makeFakeGuardianData({ withId: true }) as Guardian & { id: string }
-  )
-
+  const hashServiceStub = makeFakeHashService()
+  const guardianRepositoryStub = makeFakeGuardianRepository()
   const dependencies: ChangePassword.Dependencies = {
     hashService: hashServiceStub,
     guardianRepository: guardianRepositoryStub
@@ -34,93 +29,69 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbChangePassword use case', () => {
-  describe('tests HashGenerator', () => {
-    it('Should call hash generator with correct password', async () => {
+  const params: ChangePassword.Params = {
+    id: 'any_id',
+    password: 'any_password'
+  }
+  describe('HashService', () => {
+    it('Should call encrypt method with correct token', async () => {
       const { sut, hashServiceStub } = makeSut()
-      const encryptSpy = jest.spyOn(hashServiceStub, 'encrypt')
-
-      const userData = { id: 'any_id', password: 'valid_password' }
-      await sut.change(userData)
-
-      expect(encryptSpy).toHaveBeenCalledWith({ value: 'valid_password' })
+      const hashGeneratorSpy = jest.spyOn(hashServiceStub, 'encrypt')
+      await sut.change(params)
+      expect(hashGeneratorSpy).toHaveBeenCalledWith({ value: 'any_password' })
     })
 
-    it('Should throw if hash generator throws', async () => {
+    it('Should throw if encrypt method throws', async () => {
       const { sut, hashServiceStub } = makeSut()
-      jest.spyOn(hashServiceStub, 'encrypt').mockRejectedValueOnce(new Error())
-
-      const userData = { id: 'any_id', password: 'any_password' }
-      const promise = sut.change(userData)
-
+      jest.spyOn(hashServiceStub, 'encrypt').mockRejectedValue(new Error())
+      const promise = sut.change(params)
       await expect(promise).rejects.toThrow()
     })
   })
 
-  describe('tests LoadGuardianByIdRepository', () => {
-    it('Should call LoadGuardianByIdRepository with correct values', async () => {
+  describe('GuardianRepository', () => {
+    it('Should call loadById method with correct subject (userId)', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
-      const loadSpy = jest.spyOn(guardianRepositoryStub, 'loadById')
-
-      const userData = { id: 'any_id', password: 'any_password' }
-      await sut.change(userData)
-
-      expect(loadSpy).toHaveBeenCalledWith(userData.id)
+      const loadByEmailSpy = jest.spyOn(guardianRepositoryStub, 'loadById')
+      await sut.change(params)
+      expect(loadByEmailSpy).toHaveBeenCalledWith(params.id)
     })
 
-    it('Should throw if LoadGuardianByIdRepository throws', async () => {
+    it('Should throw if loadById method throws', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'loadById').mockRejectedValueOnce(new Error())
-
-      const userData = { id: 'any_id', password: 'any_password' }
-      const promise = sut.change(userData)
-
+      jest.spyOn(guardianRepositoryStub, 'loadById').mockRejectedValue(new Error())
+      const promise = sut.change(params)
       await expect(promise).rejects.toThrow()
     })
-  })
 
-  describe('tests UpdateGuardianRepository', () => {
-    it('Should call UpdateGuardianRepository with correct values', async () => {
-      const { sut, guardianRepositoryStub } = makeSut()
-      const updateSpy = jest.spyOn(guardianRepositoryStub, 'updatePassword')
-
-      const userData = { id: 'any_id', password: 'any_password' }
-      await sut.change(userData)
-
-      expect(updateSpy).toHaveBeenCalledWith({ id: 'any_id', password: 'hashed_value' })
-    })
-
-    it('Should throw if UpdateGuardianRepository throws', async () => {
-      const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'updatePassword').mockRejectedValueOnce(new Error())
-
-      const userData = { id: 'any_id', password: 'any_password' }
-      const promise = sut.change(userData)
-
-      await expect(promise).rejects.toThrow()
-    })
-  })
-
-  describe('tests DbChangePassword failure cases', () => {
-    it('Should return an isSuccess as false and NotFoundError if id is invalid', async () => {
+    it('Should return not found error if id does not exist', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
       jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValue(undefined)
+      const result = await sut.change(params)
+      expect(result).toEqual({
+        isSuccess: false,
+        error: new NotFoundError('userId')
+      })
+    })
 
-      const userData = { id: 'any_id', password: 'any_password' }
-      const response = await sut.change(userData)
+    it('Should call updatePassword method with correct subject (userId)', async () => {
+      const { sut, guardianRepositoryStub } = makeSut()
+      const updateGuardianPasswordSpy = jest.spyOn(guardianRepositoryStub, 'updatePassword')
+      await sut.change(params)
+      expect(updateGuardianPasswordSpy).toHaveBeenCalledWith({ id: 'any_id', password: 'hashed_value' })
+    })
 
-      expect(response.isSuccess).toBeFalsy()
-      expect(response.error).toBeInstanceOf(NotFoundError)
+    it('Should throw if updatePassword method throws', async () => {
+      const { sut, guardianRepositoryStub } = makeSut()
+      jest.spyOn(guardianRepositoryStub, 'updatePassword').mockRejectedValue(new Error())
+      const promise = sut.change(params)
+      await expect(promise).rejects.toThrow()
     })
   })
 
-  describe('test DbChangePassword success case', () => {
-    it('Should return an isSuccess as true', async () => {
-      const { sut } = makeSut()
-
-      const userData = { id: 'any_id', password: 'any_password' }
-      const response = await sut.change(userData)
-
-      expect(response).toStrictEqual({ isSuccess: true })
-    })
+  test('Should return an isSuccess true when is valid', async () => {
+    const { sut } = makeSut()
+    const result = await sut.change(params)
+    expect(result).toEqual({ isSuccess: true })
   })
 })
