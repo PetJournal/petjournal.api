@@ -23,7 +23,7 @@ export namespace AddGuardian {
   } | undefined
 
   export interface Dependencies {
-    addGuardianRepository: AddGuardianRepository
-    hashGenerator: HashGenerator
+    guardianRepository: AddGuardianRepository
+    hashService: HashGenerator
   }
 }

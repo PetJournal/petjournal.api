@@ -7,32 +7,29 @@ import {
 import { NotFoundError } from '@/application/errors'
 
 export class DbChangePassword implements ChangePassword {
-  private readonly hashGenerator: HashGenerator
-  private readonly loadGuardianByIdRepository: LoadGuardianByIdRepository
-  private readonly updateGuardianPasswordRepository: UpdateGuardianPasswordRepository
+  private readonly hashService: HashGenerator
+  private readonly guardianRepository: LoadGuardianByIdRepository & UpdateGuardianPasswordRepository
 
   constructor ({
-    hashGenerator,
-    loadGuardianByIdRepository,
-    updateGuardianPasswordRepository
+    hashService,
+    guardianRepository
   }: ChangePassword.Dependencies
   ) {
-    this.hashGenerator = hashGenerator
-    this.loadGuardianByIdRepository = loadGuardianByIdRepository
-    this.updateGuardianPasswordRepository = updateGuardianPasswordRepository
+    this.hashService = hashService
+    this.guardianRepository = guardianRepository
   }
 
   async change (userData: ChangePassword.Params): Promise<ChangePassword.Result> {
-    const account = await this.loadGuardianByIdRepository.loadById(userData.id)
+    const account = await this.guardianRepository.loadById(userData.id)
     if (!account) {
       return {
         isSuccess: false,
         error: new NotFoundError('userId')
       }
     }
+    const hashedPassword = await this.hashService.encrypt({ value: userData.password })
 
-    const hashedPassword = await this.hashGenerator.encrypt({ value: userData.password })
-    await this.updateGuardianPasswordRepository.updatePassword({
+    await this.guardianRepository.updatePassword({
       id: userData.id,
       password: hashedPassword
     })

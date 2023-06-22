@@ -20,8 +20,7 @@ export namespace ChangePassword {
   }
 
   export interface Dependencies {
-    loadGuardianByIdRepository: LoadGuardianByIdRepository
-    hashGenerator: HashGenerator
-    updateGuardianPasswordRepository: UpdateGuardianPasswordRepository
+    guardianRepository: LoadGuardianByIdRepository & UpdateGuardianPasswordRepository
+    hashService: HashGenerator
   }
 }

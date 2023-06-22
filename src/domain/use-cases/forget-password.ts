@@ -16,8 +16,8 @@ export namespace ForgetPassword {
   export type Result = boolean
 
   export interface Dependencies {
-    loadGuardianByEmailRepository: LoadGuardianByEmailRepository
-    tokenGenerator: TokenGenerator
+    guardianRepository: LoadGuardianByEmailRepository
+    tokenService: TokenGenerator
     emailService: EmailService
   }
 }

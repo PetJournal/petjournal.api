@@ -6,8 +6,8 @@ import { DbAddGuardian } from '@/data/use-cases'
 
 export const makeDbAddGuardian = (): AddGuardian => {
   const salt = Number(env.salt)
-  const hashGenerator = new BcryptAdapter(salt)
-  const addGuardianRepository = new GuardianAccountRepository()
-  const addGuardian = new DbAddGuardian({ addGuardianRepository, hashGenerator })
+  const hashService = new BcryptAdapter(salt)
+  const guardianRepository = new GuardianAccountRepository()
+  const addGuardian = new DbAddGuardian({ guardianRepository, hashService })
   return addGuardian
 }

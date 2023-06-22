@@ -1,10 +1,10 @@
-import { ForgetPasswordTokenGenerator } from '@/data/use-cases/forget-password-token-generation'
+import { ForgetPasswordTokenGenerator } from '@/data/cryptography/forget-password-token-generation'
 import { type SaveTokenRepository, type HashGenerator } from '@/data/protocols'
-import { makeEncrypter } from '@/tests/utils'
+import { makeFakeHashService } from '@/tests/utils'
 
 interface SutTypes {
   sut: ForgetPasswordTokenGenerator
-  encrypterStub: HashGenerator
+  hashServiceStub: HashGenerator
   saveTokenRepositoryStub: SaveTokenRepository
 }
 
@@ -18,12 +18,12 @@ const makeSaveTokenRepository = (): SaveTokenRepository => {
 }
 
 const makeSut = (): SutTypes => {
-  const encrypterStub = makeEncrypter()
+  const hashServiceStub = makeFakeHashService()
   const saveTokenRepositoryStub = makeSaveTokenRepository()
-  const sut = new ForgetPasswordTokenGenerator(encrypterStub, saveTokenRepositoryStub)
+  const sut = new ForgetPasswordTokenGenerator(hashServiceStub, saveTokenRepositoryStub)
   return {
     sut,
-    encrypterStub,
+    hashServiceStub,
     saveTokenRepositoryStub
   }
 }
@@ -37,15 +37,15 @@ describe('ForgetPasswordTokenGenerator', () => {
   })
 
   it('Should call Encrypter with correct value', async () => {
-    const { sut, encrypterStub } = makeSut()
-    const encryptSpy = jest.spyOn(encrypterStub, 'encrypt')
+    const { sut, hashServiceStub } = makeSut()
+    const encryptSpy = jest.spyOn(hashServiceStub, 'encrypt')
     await sut.generate('1')
     expect(encryptSpy).toBeCalled()
   })
 
   it('Should throw if Encrypter throws', async () => {
-    const { sut, encrypterStub } = makeSut()
-    jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    const { sut, hashServiceStub } = makeSut()
+    jest.spyOn(hashServiceStub, 'encrypt').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
     const promise = sut.generate('1')
     await expect(promise).rejects.toThrow()
   })
@@ -54,7 +54,7 @@ describe('ForgetPasswordTokenGenerator', () => {
     const { sut, saveTokenRepositoryStub } = makeSut()
     const saveTokenSpy = jest.spyOn(saveTokenRepositoryStub, 'saveToken')
     await sut.generate('1')
-    expect(saveTokenSpy).toHaveBeenCalledWith('1', 'hashed_password')
+    expect(saveTokenSpy).toHaveBeenCalledWith('1', 'hashed_value')
   })
 
   it('Should throw if SaveTokenRepository throws', async () => {

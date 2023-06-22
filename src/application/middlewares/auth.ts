@@ -15,14 +15,14 @@ import {
 import { InvalidTokenError, MissingParamError, NotFoundError } from '@/application/errors'
 
 export class AuthMiddleware implements Middleware {
-  private readonly tokenDecoder: TokenDecoder
-  private readonly hashComparer: HashComparer
-  private readonly loadGuardianById: LoadGuardianByIdRepository
+  private readonly tokenService: TokenDecoder
+  private readonly hashService: HashComparer
+  private readonly guardianRepository: LoadGuardianByIdRepository
 
-  constructor ({ tokenDecoder, hashComparer, loadGuardianById }: AuthMiddleware.Dependencies) {
-    this.tokenDecoder = tokenDecoder
-    this.hashComparer = hashComparer
-    this.loadGuardianById = loadGuardianById
+  constructor ({ tokenService, hashService, guardianRepository }: AuthMiddleware.Dependencies) {
+    this.tokenService = tokenService
+    this.hashService = hashService
+    this.guardianRepository = guardianRepository
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -36,21 +36,18 @@ export class AuthMiddleware implements Middleware {
         authorization = authorization.substring(7)
       }
 
-      const payload = await this.tokenDecoder.decode(authorization)
+      const payload = await this.tokenService.decode(authorization)
       if (!payload) {
         return unauthorized(new InvalidTokenError('Invalid or expired token'))
       }
 
       const { sub: userId } = payload
-      const account = await this.loadGuardianById.loadById(userId)
+      const account = await this.guardianRepository.loadById(userId)
       if (!account) {
         return unauthorized(new NotFoundError('User not found'))
       }
 
-      const matchToken = await this.hashComparer.compare({
-        hash: account.accessToken ?? '',
-        value: authorization
-      })
+      const matchToken = await this.hashService.compare({ hash: account.accessToken ?? '', value: authorization })
       if (!matchToken) {
         return unauthorized(new InvalidTokenError('Invalid token for this user'))
       }
@@ -65,8 +62,8 @@ export class AuthMiddleware implements Middleware {
 export namespace AuthMiddleware {
   export const BEARER_PREFIX = 'Bearer '
   export interface Dependencies {
-    tokenDecoder: TokenDecoder
-    hashComparer: HashComparer
-    loadGuardianById: LoadGuardianByIdRepository
+    tokenService: TokenDecoder
+    hashService: HashComparer
+    guardianRepository: LoadGuardianByIdRepository
   }
 }
