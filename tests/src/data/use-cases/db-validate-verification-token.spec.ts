@@ -7,7 +7,7 @@ import {
   makeFakeHashService,
   mockFakeGuardianLoaded
 } from '@/tests/utils'
-import { ExpiredVerificationTokenError, NotFoundError, UnauthorizedError } from '@/application/errors'
+import { VerificationTokenError, NotFoundError } from '@/application/errors'
 import { DbValidateVerificationToken } from '@/data/use-cases/db-validate-verification-token'
 
 interface SutTypes {
@@ -56,7 +56,7 @@ describe('DbCreateAccessToken UseCase', () => {
 
       const result = await sut.validate(fakeValidation)
 
-      expect(result).toStrictEqual(new ExpiredVerificationTokenError())
+      expect(result).toStrictEqual(new VerificationTokenError())
     })
 
     it('Should throw if loadByEmail throws', async () => {
@@ -79,13 +79,13 @@ describe('DbCreateAccessToken UseCase', () => {
   })
 
   describe('test HashComparer', () => {
-    it('should return UnauthorizedError if invalid code is provided', async () => {
+    it('should return VerificationTokenError if invalid code is provided', async () => {
       const { sut, hashServiceStub } = makeSut()
       jest.spyOn(hashServiceStub, 'compare').mockResolvedValueOnce(false)
 
       const result = await sut.validate(fakeValidation)
 
-      expect(result).toStrictEqual(new UnauthorizedError('Verification token mismatch or expired'))
+      expect(result).toStrictEqual(new VerificationTokenError())
     })
 
     it('Should throw if compare throws', async () => {

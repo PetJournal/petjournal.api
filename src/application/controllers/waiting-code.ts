@@ -27,12 +27,12 @@ export class WaitingCodeController implements Controller {
         return badRequest(error)
       }
       const { email, verificationToken } = httpRequest.body
-      const tokenIsValid = await this.validateVerificationToken.validate({
+      const tokenIsValidOrError = await this.validateVerificationToken.validate({
         email,
         verificationToken
       })
-      if (tokenIsValid instanceof Error) {
-        return unauthorized(tokenIsValid)
+      if (tokenIsValidOrError instanceof Error) {
+        return unauthorized(tokenIsValidOrError)
       }
       const accessToken = await this.createAccessToken.create(email)
       return success({ accessToken })
