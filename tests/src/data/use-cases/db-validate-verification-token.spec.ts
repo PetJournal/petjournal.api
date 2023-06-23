@@ -3,9 +3,9 @@ import {
   type HashComparer
 } from '@/data/protocols'
 import {
-  makeFakeGuardianWithIdData,
-  makeLoadGuardianByEmail,
-  makeHashComparer
+  makeFakeGuardianRepository,
+  makeFakeHashService,
+  mockFakeGuardianLoaded
 } from '@/tests/utils'
 import { ExpiredVerificationTokenError, NotFoundError, UnauthorizedError } from '@/application/errors'
 import { DbValidateVerificationToken } from '@/data/use-cases/db-validate-verification-token'
@@ -17,8 +17,8 @@ interface SutTypes {
 }
 
 const makeSut = (): SutTypes => {
-  const guardianRepositoryStub = makeLoadGuardianByEmail(makeFakeGuardianWithIdData())
-  const hashServiceStub = makeHashComparer()
+  const guardianRepositoryStub = makeFakeGuardianRepository()
+  const hashServiceStub = makeFakeHashService()
   const sut = new DbValidateVerificationToken(
     {
       guardianRepository: guardianRepositoryStub,
@@ -50,7 +50,7 @@ describe('DbCreateAccessToken UseCase', () => {
     it('Should return ExpiredVerificationTokenError expired token is provided', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
       jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValueOnce({
-        ...makeFakeGuardianWithIdData(),
+        ...mockFakeGuardianLoaded(),
         verificationTokenCreatedAt: new Date(2023, 0, 0, 0, 0, 0)
       })
 
@@ -105,7 +105,7 @@ describe('DbCreateAccessToken UseCase', () => {
 
       expect(spyHashComparer).toHaveBeenCalledWith({
         value: fakeValidation.verificationToken,
-        hash: makeFakeGuardianWithIdData().verificationToken
+        hash: mockFakeGuardianLoaded().verificationToken
       })
     })
   })

@@ -1,4 +1,3 @@
-import { type Controller } from '@/application/controllers/controller'
 import {
   type HttpRequest,
   type HttpResponse,
@@ -7,35 +6,27 @@ import {
   success,
   serverError
 } from '@/application/helpers/http'
-import { InvalidParamError, MissingParamError } from '@/application/errors'
-import { type EmailValidator } from '../validation/protocols'
-import { type ValidateVerificationToken } from '@/domain/use-cases/validate-verification-token'
-import { type CreateAccessToken } from '@/domain/use-cases/create-access-token'
+import { type Controller, type Validation } from '@/application/protocols'
+import { type CreateAccessToken, type ValidateVerificationToken } from '@/domain/use-cases/'
 
 export class WaitingCodeController implements Controller {
-  private readonly emailValidator: EmailValidator
+  private readonly validation: Validation
   private readonly validateVerificationToken: ValidateVerificationToken
   private readonly createAccessToken: CreateAccessToken
 
-  constructor ({ emailValidator, validateVerificationToken, createAccessToken }: WaitingCodeController.Dependencies) {
-    this.emailValidator = emailValidator
+  constructor ({ validation, validateVerificationToken, createAccessToken }: WaitingCodeController.Dependencies) {
+    this.validation = validation
     this.validateVerificationToken = validateVerificationToken
     this.createAccessToken = createAccessToken
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const requiredFields = ['email', 'verificationToken']
-      for (const field of requiredFields) {
-        if (httpRequest.body[field] === undefined) {
-          return badRequest(new MissingParamError(field))
-        }
+      const error = this.validation.validate(httpRequest.body)
+      if (error) {
+        return badRequest(error)
       }
       const { email, verificationToken } = httpRequest.body
-      const isEmailValid = this.emailValidator.isValid(email)
-      if (!isEmailValid) {
-        return badRequest(new InvalidParamError('email'))
-      }
       const tokenIsValid = await this.validateVerificationToken.validate({
         email,
         verificationToken
@@ -44,9 +35,6 @@ export class WaitingCodeController implements Controller {
         return unauthorized(tokenIsValid)
       }
       const accessToken = await this.createAccessToken.create(email)
-      if (accessToken instanceof Error) {
-        return badRequest(accessToken)
-      }
       return success({ accessToken })
     } catch (error) {
       return serverError(error as Error)
@@ -54,9 +42,9 @@ export class WaitingCodeController implements Controller {
   }
 }
 
-namespace WaitingCodeController {
+export namespace WaitingCodeController {
   export interface Dependencies {
-    emailValidator: EmailValidator
+    validation: Validation
     validateVerificationToken: ValidateVerificationToken
     createAccessToken: CreateAccessToken
   }

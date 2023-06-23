@@ -9,11 +9,6 @@ interface Guardian {
   verificationTokenCreatedAt: Date
 }
 
-interface GuardianWithId extends Guardian {
-  id: string
-}
-
 export {
-  type Guardian,
-  type GuardianWithId
+  type Guardian
 }

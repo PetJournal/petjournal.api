@@ -1,4 +1,4 @@
-import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
+import { GuardianAccountRepository } from '@/infra/repos/postgresql'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 import { makeFakeGuardianData } from '@/tests/utils'
 
@@ -88,6 +88,33 @@ describe('GuardianAccountRepository', () => {
 
       expect(guardian.accessToken).not.toBeFalsy()
       expect(guardian.accessToken).toBe(authenticationData.token)
+    })
+  })
+
+  describe('UpdateGuardianPasswordRepository', () => {
+    it('Should update the account successfully', async () => {
+      const sut = makeSut()
+      const guardianData = makeFakeGuardianData()
+
+      await sut.add(guardianData)
+      let guardian = await sut.loadByEmail(guardianData.email) as any
+
+      const authenticationData = { id: guardian.id, password: 'updated_password' }
+      const response = await sut.updatePassword(authenticationData)
+
+      guardian = await sut.loadByEmail(guardianData.email)
+
+      expect(response).toBeTruthy()
+      expect(guardian.password).toBe(authenticationData.password)
+    })
+
+    it('Should fail when there is no id', async () => {
+      const sut = makeSut()
+
+      const authenticationData = { id: 'invalid_id', password: 'updated_password' }
+      const response = await sut.updatePassword(authenticationData)
+
+      expect(response).toBeFalsy()
     })
   })
 })

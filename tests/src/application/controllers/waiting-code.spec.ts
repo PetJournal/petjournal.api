@@ -1,96 +1,64 @@
-import { WaitingCodeController } from '@/application/controllers/waiting-code'
-import { InvalidParamError, MissingParamError, NotFoundError, UnauthorizedError } from '@/application/errors'
-import { badRequest, success, unauthorized } from '@/application/helpers/http'
-import { type EmailValidator } from '@/application/validation/protocols'
+import { WaitingCodeController } from '@/application/controllers'
+import { MissingParamError, UnauthorizedError } from '@/application/errors'
+import { badRequest, success, unauthorized } from '@/application/helpers'
+import { type Validation } from '@/application/protocols'
 import { type CreateAccessToken, type ValidateVerificationToken } from '@/domain/use-cases'
 import {
-  makeCreateAccessToken,
-  makeEmailValidator,
+  makeFakeCreateAccessTokenUseCase,
   makeFakeServerError,
+  makeFakeValidation,
   makeFakeWaitingCodeRequest,
-  validateVerificationToken
+  makeFakeValidateVerificationTokenUseCase
 } from '@/tests/utils'
 
 interface SutTypes {
   sut: WaitingCodeController
-  emailValidatorStub: EmailValidator
+  validationStub: Validation
   createAccessTokenStub: CreateAccessToken
   validateVerificationTokenStub: ValidateVerificationToken
 }
 
 const makeSut = (): SutTypes => {
-  const emailValidatorStub = makeEmailValidator()
-  const createAccessTokenStub = makeCreateAccessToken()
-  const validateVerificationTokenStub = validateVerificationToken()
-  const sut = new WaitingCodeController({
-    emailValidator: emailValidatorStub,
+  const validationStub = makeFakeValidation()
+  const createAccessTokenStub = makeFakeCreateAccessTokenUseCase()
+  const validateVerificationTokenStub = makeFakeValidateVerificationTokenUseCase()
+  const dependencies: WaitingCodeController.Dependencies = {
+    validation: validationStub,
     createAccessToken: createAccessTokenStub,
     validateVerificationToken: validateVerificationTokenStub
-  })
+  }
+  const sut = new WaitingCodeController(dependencies)
   return {
     sut,
-    emailValidatorStub,
+    validationStub,
     createAccessTokenStub,
     validateVerificationTokenStub
   }
 }
 
 describe('WaitingCode Controller', () => {
-  describe('tests the email field', () => {
-    it('should return bad request if no email is provided', async () => {
-      const { sut } = makeSut()
-      const httpRequest = {
-        body: { verificationToken: 'valid_code' }
-      }
-
+  const httpRequest = makeFakeWaitingCodeRequest()
+  describe('Validation', () => {
+    it('Should return 400 (BadRequest) if Validation returns an error', async () => {
+      const { sut, validationStub } = makeSut()
+      jest.spyOn(validationStub, 'validate').mockReturnValue(new MissingParamError('email'))
       const httpResponse = await sut.handle(httpRequest)
-
       expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
     })
 
-    it('should return bad request if invalid email is provided', async () => {
-      const { sut, emailValidatorStub } = makeSut()
-      jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
-
-      const httpResponse = await sut.handle(makeFakeWaitingCodeRequest())
-
-      expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
-    })
-
-    it('should call EmailValidator with correct email', async () => {
-      const { sut, emailValidatorStub } = makeSut()
-      const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
-
-      await sut.handle(makeFakeWaitingCodeRequest())
-
-      expect(isValidSpy).toHaveBeenCalledWith(makeFakeWaitingCodeRequest().body.email)
-    })
-
-    it('should throws if EmailValidator throws', async () => {
-      const { sut, emailValidatorStub } = makeSut()
-      jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
-
-      const httpResponse = await sut.handle(makeFakeWaitingCodeRequest())
-
-      expect(httpResponse).toEqual(makeFakeServerError())
+    it('Should call Validation with correct value', async () => {
+      const { sut, validationStub } = makeSut()
+      const validateSpy = jest.spyOn(validationStub, 'validate')
+      await sut.handle(httpRequest)
+      expect(validateSpy).toHaveBeenCalledWith({
+        email: httpRequest.body.email,
+        verificationToken: httpRequest.body.verificationToken
+      })
     })
   })
 
-  describe('tests the ValidateVerificationToken', () => {
-    it('should return bad request if no verificationToken is provided', async () => {
-      const { sut } = makeSut()
-      const httpRequest = {
-        body: {
-          email: 'valid_email'
-        }
-      }
-
-      const httpResponse = await sut.handle(httpRequest)
-
-      expect(httpResponse).toEqual(badRequest(new MissingParamError('verificationToken')))
-    })
-
-    it('should return unauthorized if invalid or expired verificationToken is provided', async () => {
+  describe('ValidateVerificationToken', () => {
+    it('should return 401 (Unauthorized) if invalid or expired verificationToken is provided', async () => {
       const { sut, validateVerificationTokenStub } = makeSut()
       const unauthorizedError = new UnauthorizedError('Verification token mismatch or expired')
       jest.spyOn(validateVerificationTokenStub, 'validate').mockResolvedValueOnce(unauthorizedError)
@@ -100,7 +68,7 @@ describe('WaitingCode Controller', () => {
       expect(httpResponse).toEqual(unauthorized(unauthorizedError))
     })
 
-    it('should return serverError if verificationToken throws', async () => {
+    it('should return 500 (ServerError) if verificationToken throws', async () => {
       const { sut, validateVerificationTokenStub } = makeSut()
       jest.spyOn(validateVerificationTokenStub, 'validate').mockRejectedValueOnce(new Error())
 
@@ -111,19 +79,25 @@ describe('WaitingCode Controller', () => {
 
     it('should call validateVerificationToken with correct values', async () => {
       const { sut, validateVerificationTokenStub } = makeSut()
-      const httpRequest = makeFakeWaitingCodeRequest()
       const codeAuthSpy = jest.spyOn(validateVerificationTokenStub, 'validate')
 
       await sut.handle(httpRequest)
 
-      expect(codeAuthSpy).toHaveBeenCalledWith({
-        email: httpRequest.body.email,
-        verificationToken: httpRequest.body.verificationToken
-      })
+      expect(codeAuthSpy).toHaveBeenCalledWith(httpRequest.body)
     })
   })
-  describe('test createAccessToken', () => {
-    it('should call createAccessToken with correct values', async () => {
+
+  describe('CreateAccessToken', () => {
+    it('should return 500 (ServerError) if CreateAccessToken throws', async () => {
+      const { sut, createAccessTokenStub } = makeSut()
+      jest.spyOn(createAccessTokenStub, 'create').mockRejectedValueOnce(new Error())
+
+      const httpResponse = await sut.handle(httpRequest)
+
+      expect(httpResponse).toEqual(makeFakeServerError())
+    })
+
+    it('should call CreateAccessToken with correct values', async () => {
       const { sut, validateVerificationTokenStub, createAccessTokenStub } = makeSut()
       const httpRequest = makeFakeWaitingCodeRequest()
       jest.spyOn(validateVerificationTokenStub, 'validate').mockResolvedValueOnce(true)
@@ -134,30 +108,10 @@ describe('WaitingCode Controller', () => {
       expect(createAccessTokenSpy).toHaveBeenCalledWith(httpRequest.body.email)
     })
 
-    it('should return badRequest if createAccessToken return an error', async () => {
-      const { sut, createAccessTokenStub } = makeSut()
-      jest.spyOn(createAccessTokenStub, 'create').mockResolvedValueOnce(new NotFoundError('email'))
-
-      const httpResponse = await sut.handle(makeFakeWaitingCodeRequest())
-
-      expect(httpResponse).toEqual(badRequest(new NotFoundError('email')))
-    })
-
-    it('should throws if createAccessToken throws', async () => {
-      const { sut, createAccessTokenStub } = makeSut()
-      jest.spyOn(createAccessTokenStub, 'create').mockRejectedValueOnce(new Error())
-
-      const httpResponse = await sut.handle(makeFakeWaitingCodeRequest())
-
-      expect(httpResponse).toEqual(makeFakeServerError())
-    })
-  })
-
-  describe('test success case', () => {
-    it('should return accessToken if valid input is provided', async () => {
+    it('Should return 200 (Success) if valid email is provide', async () => {
       const { sut } = makeSut()
 
-      const httpResponse = await sut.handle(makeFakeWaitingCodeRequest())
+      const httpResponse = await sut.handle(httpRequest)
 
       expect(httpResponse).toEqual(success({ accessToken: 'valid_token' }))
     })

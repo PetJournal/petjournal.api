@@ -13,8 +13,7 @@ export namespace CreateAccessToken {
   export type Params = string
   export type Result = Error | string
   export interface Dependencies {
-    loadGuardianByEmailRepository: LoadGuardianByEmailRepository
-    updateAccessTokenRepository: UpdateAccessTokenRepository
+    guardianRepository: LoadGuardianByEmailRepository & UpdateAccessTokenRepository
     hashService: HashGenerator
     tokenService: TokenGenerator
   }

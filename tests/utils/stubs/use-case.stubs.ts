@@ -1,17 +1,30 @@
-import { type Authentication, type AddGuardian, type CreateAccessToken, type ValidateVerificationToken } from '@/domain/use-cases'
-import { makeFakeGuardianWithIdData } from '../mocks'
+import {
+  type ForgetPassword,
+  type AddGuardian,
+  type Authentication,
+  type CreateAccessToken,
+  type ValidateVerificationToken,
+  type ChangePassword
+} from '@/domain/use-cases'
 
-const makeAddGuardian = (): AddGuardian => {
+const makeFakeAddGuardianUseCase = (): AddGuardian => {
   class AddGuardianStub implements AddGuardian {
     async add (guardian: AddGuardian.Params): Promise<AddGuardian.Result> {
-      const { password, verificationTokenCreatedAt, verificationToken, accessToken, ...result } = makeFakeGuardianWithIdData()
+      const result = {
+        id: 'any_id',
+        firstName: 'any_first_name',
+        lastName: 'any_last_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        phone: 'any_phone'
+      }
       return result
     }
   }
   return new AddGuardianStub()
 }
 
-const makeAuthentication = (): Authentication => {
+const makeFakeAuthenticationUseCase = (): Authentication => {
   class AuthenticationStub implements Authentication {
     async auth (authentication: Authentication.Params): Promise<Authentication.Result> {
       return 'any_token'
@@ -20,7 +33,25 @@ const makeAuthentication = (): Authentication => {
   return new AuthenticationStub()
 }
 
-const makeCreateAccessToken = (): CreateAccessToken => {
+const makeFakeForgetPasswordUseCase = (): ForgetPassword => {
+  class ForgetPasswordStub implements ForgetPassword {
+    async forgetPassword (email: ForgetPassword.Params): Promise<ForgetPassword.Result> {
+      return await Promise.resolve(true)
+    }
+  }
+  return new ForgetPasswordStub()
+}
+
+const makeFakeChangePasswordUseCase = (): ChangePassword => {
+  class ChangePasswordStub implements ChangePassword {
+    async change (userData: ChangePassword.Params): Promise<ChangePassword.Result> {
+      return { isSuccess: true }
+    }
+  }
+  return new ChangePasswordStub()
+}
+
+const makeFakeCreateAccessTokenUseCase = (): CreateAccessToken => {
   class CreateAccessTokenStub implements CreateAccessToken {
     async create (email: string): Promise<CreateAccessToken.Result> {
       return 'valid_token'
@@ -29,7 +60,7 @@ const makeCreateAccessToken = (): CreateAccessToken => {
   return new CreateAccessTokenStub()
 }
 
-const validateVerificationToken = (): ValidateVerificationToken => {
+const makeFakeValidateVerificationTokenUseCase = (): ValidateVerificationToken => {
   class ValidateVerificationTokenStub implements ValidateVerificationToken {
     async validate (input: ValidateVerificationToken.Params): Promise<ValidateVerificationToken.Result> {
       return true
@@ -39,8 +70,10 @@ const validateVerificationToken = (): ValidateVerificationToken => {
 }
 
 export {
-  makeAddGuardian,
-  makeAuthentication,
-  makeCreateAccessToken,
-  validateVerificationToken
+  makeFakeAddGuardianUseCase,
+  makeFakeAuthenticationUseCase,
+  makeFakeForgetPasswordUseCase,
+  makeFakeChangePasswordUseCase,
+  makeFakeCreateAccessTokenUseCase,
+  makeFakeValidateVerificationTokenUseCase
 }

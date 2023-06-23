@@ -1,6 +1,6 @@
 import request from 'supertest'
 import app from '@/main/config/app'
-import { auth } from '@/main/middlewares/auth'
+import { auth } from '@/main/middlewares'
 import { sign } from 'jsonwebtoken'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 
@@ -9,13 +9,13 @@ beforeEach(async () => { await PrismaHelper.connect() })
 afterEach(async () => { await PrismaHelper.disconnect() })
 
 describe('Authentication Middleware', () => {
-  it('Should return 401 if no authorization is provided', async () => {
+  it('Should return 400 if no authorization is provided', async () => {
     app.get('/test_auth', auth, (req, res) => {
       res.send({ userId: req.userId })
     })
     await request(app)
       .get('/test_auth')
-      .expect(401)
+      .expect(400)
   })
 
   it('Should return 401 if token is invalid', async () => {

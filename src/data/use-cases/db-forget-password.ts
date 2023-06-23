@@ -1,27 +1,27 @@
-import { type LoadGuardianByEmailRepository } from '@/data/protocols/guardian'
-import { type TokenGenerator } from '../protocols'
-import { type EmailService } from '@/domain/use-cases'
-import { type ForgetPassword } from '@/domain/use-cases/forget-password'
+import { type ForgetPassword } from '@/domain/use-cases'
+import { type EmailService, type TokenGenerator } from '@/data/protocols'
+import { type LoadGuardianByEmailRepository } from '@/data/protocols/db/guardian'
 
 export class DbForgetPassword implements ForgetPassword {
-  private readonly loadGuardianByEmailRepository: LoadGuardianByEmailRepository
-  private readonly tokenGenerator: TokenGenerator
+  private readonly guardianRepository: LoadGuardianByEmailRepository
+  private readonly tokenService: TokenGenerator
   private readonly emailService: EmailService
 
-  constructor ({ loadGuardianByEmailRepository, tokenGenerator, emailService }: ForgetPassword.Dependencies) {
-    this.loadGuardianByEmailRepository = loadGuardianByEmailRepository
-    this.tokenGenerator = tokenGenerator
+  constructor ({ guardianRepository, tokenService, emailService }: ForgetPassword.Dependencies) {
+    this.guardianRepository = guardianRepository
+    this.tokenService = tokenService
     this.emailService = emailService
   }
 
   async forgetPassword (params: ForgetPassword.Params): Promise<boolean> {
     let success = false
-    const guardian = await this.loadGuardianByEmailRepository.loadByEmail(params.email)
+
+    const guardian = await this.guardianRepository.loadByEmail(params.email)
     if (!guardian) {
       return success
     }
 
-    const token = await this.tokenGenerator.generate(guardian.id)
+    const token = await this.tokenService.generate(guardian.id)
 
     const emailOptions: EmailService.Options = {
       from: 'contato.petjournal@gmail.com',
@@ -36,6 +36,7 @@ export class DbForgetPassword implements ForgetPassword {
           Equipe PetJournal
         `
     }
+
     await this.emailService.send(emailOptions)
     success = true
 
