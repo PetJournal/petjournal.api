@@ -1,29 +1,47 @@
-import { type Guardian, type GuardianWithId } from '../types'
+import { type AddGuardianRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
+import { type Guardian } from '@/tests/utils/types'
 
-const makeFakeGuardianData = (): Guardian => ({
-  firstName: 'valid_first_name',
-  lastName: 'valid_last_name',
-  email: 'valid_email',
-  password: 'valid_password',
-  phone: 'valid_phone',
-  accessToken: null,
-  verificationToken: 'token dumb',
-  verificationTokenCreatedAt: new Date('2023-06-05')
-})
+const makeFakeGuardianData = (): Guardian => {
+  const fakeGuardian = {
+    id: 'any_id',
+    firstName: 'any_first_name',
+    lastName: 'any_last_name',
+    email: 'any_email',
+    password: 'any_password',
+    phone: 'any_phone',
+    accessToken: 'any_token',
+    verificationToken: 'any_verification_token',
+    verificationTokenCreatedAt: new Date('03/03/2023')
+  }
 
-const makeFakeGuardianWithIdData = (): GuardianWithId => ({
-  id: 'valid_id',
-  firstName: 'valid_first_name',
-  lastName: 'valid_last_name',
-  email: 'valid_email',
-  password: 'valid_password',
-  phone: 'valid_phone',
-  accessToken: 'valid_token',
-  verificationToken: 'token dumb',
-  verificationTokenCreatedAt: new Date('2023-06-05')
-})
+  return fakeGuardian
+}
+
+const mockFakeGuardianAdded = (): AddGuardianRepository.Result => {
+  return {
+    id: 'any_id',
+    firstName: 'any_first_name',
+    lastName: 'any_last_name',
+    email: 'any_email@mail.com',
+    phone: 'any_phone'
+  }
+}
+
+const mockFakeGuardianLoaded = (): LoadGuardianByIdRepository.Result => {
+  return {
+    id: 'any_id',
+    firstName: 'any_first_name',
+    lastName: 'any_last_name',
+    email: 'any_email@mail.com',
+    password: 'any_hashed_password',
+    phone: 'any_phone',
+    accessToken: 'any_hashed_token',
+    verificationToken: 'any_verification_token'
+  }
+}
 
 export {
   makeFakeGuardianData,
-  makeFakeGuardianWithIdData
+  mockFakeGuardianAdded,
+  mockFakeGuardianLoaded
 }

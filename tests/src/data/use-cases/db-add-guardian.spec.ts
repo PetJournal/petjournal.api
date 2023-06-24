@@ -1,82 +1,95 @@
+import { type AddGuardian } from '@/domain/use-cases'
 import { type AddGuardianRepository, type HashGenerator } from '@/data/protocols'
 import { DbAddGuardian } from '@/data/use-cases'
-import { makeAddGuardian, makeFakeGuardianData, makeEncrypter } from '@/tests/utils'
+import { makeFakeGuardianRepository, makeFakeHashService } from '@/tests/utils'
 
 interface SutTypes {
   sut: DbAddGuardian
-  encrypterStub: HashGenerator
-  addGuardianRepositoryStub: AddGuardianRepository
+  hashServiceStub: HashGenerator
+  guardianRepositoryStub: AddGuardianRepository
 }
 
 const makeSut = (): SutTypes => {
-  const addGuardianRepositoryStub = makeAddGuardian()
-  const encrypterStub = makeEncrypter()
-  const sut = new DbAddGuardian(addGuardianRepositoryStub, encrypterStub)
+  const guardianRepositoryStub = makeFakeGuardianRepository()
+  const hashServiceStub = makeFakeHashService()
+  const dependencies: AddGuardian.Dependencies = {
+    hashService: hashServiceStub,
+    guardianRepository: guardianRepositoryStub
+  }
+  const sut = new DbAddGuardian(dependencies)
   return {
     sut,
-    addGuardianRepositoryStub,
-    encrypterStub
+    guardianRepositoryStub,
+    hashServiceStub
   }
 }
 
 describe('DbAddGuardian use case', () => {
-  describe('tests encrypter services', () => {
-    it('Should call encrypter with correct password', async () => {
-      const { sut, encrypterStub } = makeSut()
-      const encryptSpy = jest.spyOn(encrypterStub, 'encrypt')
-      const guardianData = makeFakeGuardianData()
+  const params: AddGuardianRepository.Params = {
+    firstName: 'any_first_name',
+    lastName: 'any_last_name',
+    email: 'any_email@mail.com',
+    password: 'any_password',
+    phone: 'any_phone',
+    verificationToken: 'any_verification'
+  }
 
-      await sut.add(guardianData)
-      expect(encryptSpy).toHaveBeenCalledWith({ value: 'valid_password' })
+  describe('HashService', () => {
+    it('Should call encrypt method with correct password', async () => {
+      const { sut, hashServiceStub } = makeSut()
+      const hashGeneratorSpy = jest.spyOn(hashServiceStub, 'encrypt')
+      await sut.add(params)
+      expect(hashGeneratorSpy).toHaveBeenCalledWith({ value: params.password })
     })
 
-    it('Should throw if encrypter throws', async () => {
-      const { sut, encrypterStub } = makeSut()
-      jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(Promise.reject(new Error()))
-      const guardianData = makeFakeGuardianData()
-      const promise = sut.add(guardianData)
+    it('Should throw if encrypt method throws', async () => {
+      const { sut, hashServiceStub } = makeSut()
+      jest.spyOn(hashServiceStub, 'encrypt').mockRejectedValue(new Error())
+      const promise = sut.add(params)
       await expect(promise).rejects.toThrow()
     })
   })
 
-  describe('tests AddGuardianRepository', () => {
-    it('Should call AddGuardianRepository with correct values', async () => {
-      const { sut, addGuardianRepositoryStub } = makeSut()
-      const addSpy = jest.spyOn(addGuardianRepositoryStub, 'add')
-      const { accessToken, ...guardianData } = makeFakeGuardianData()
-
-      await sut.add(guardianData)
-
-      expect(addSpy).toHaveBeenCalledWith({
-        firstName: 'valid_first_name',
-        lastName: 'valid_last_name',
-        email: 'valid_email',
-        phone: 'valid_phone',
-        password: 'hashed_password',
-        verificationToken: 'token dumb',
-        verificationTokenCreatedAt: new Date('2023-06-05')
+  describe('GuardianRepository', () => {
+    it('Should call add method with correct values including an encrypted password', async () => {
+      const { sut, guardianRepositoryStub } = makeSut()
+      const addGuardianRepoSpy = jest.spyOn(guardianRepositoryStub, 'add')
+      await sut.add(params)
+      expect(addGuardianRepoSpy).toHaveBeenCalledWith({
+        firstName: params.firstName,
+        lastName: params.lastName,
+        email: params.email,
+        password: 'hashed_value',
+        phone: params.phone,
+        verificationToken: params.verificationToken
       })
     })
 
-    it('Should throw if AddGuardianRepository throws', async () => {
-      const { sut, addGuardianRepositoryStub } = makeSut()
-      jest.spyOn(addGuardianRepositoryStub, 'add').mockReturnValueOnce(Promise.reject(new Error()))
-
-      const guardianData = makeFakeGuardianData()
-
-      const promise = sut.add(guardianData)
+    it('Should throw if add method throws', async () => {
+      const { sut, guardianRepositoryStub } = makeSut()
+      jest.spyOn(guardianRepositoryStub, 'add').mockRejectedValue(new Error())
+      const promise = sut.add(params)
       await expect(promise).rejects.toThrow()
+    })
+
+    it('Should return undefined if email is already registered', async () => {
+      const { sut, guardianRepositoryStub } = makeSut()
+      jest.spyOn(guardianRepositoryStub, 'add').mockResolvedValue(undefined)
+      const result = await sut.add(params)
+      expect(result).toBeUndefined()
     })
   })
 
-  describe('test dbAddGuardian success case', () => {
-    it('Should return an guardian on success', async () => {
-      const { sut } = makeSut()
-      const { verificationTokenCreatedAt, ...guardianData } = makeFakeGuardianData()
-      const { password, verificationToken, accessToken, ...guardianDataDb } = guardianData
-
-      const guardian = await sut.add(guardianData)
-      expect(guardian).toMatchObject(guardianDataDb)
+  test('Should return a guardian when saving the user successfully', async () => {
+    const { sut } = makeSut()
+    const result = await sut.add(params)
+    expect(result).toHaveProperty('id')
+    expect(result?.id).toBeDefined()
+    expect(result).toMatchObject({
+      firstName: params.firstName,
+      lastName: params.lastName,
+      email: params.email,
+      phone: params.phone
     })
   })
 })

@@ -1,75 +1,79 @@
-import { type HttpRequest } from '@/application/helpers/http'
 import { type TokenDecoder } from '@/data/protocols'
-import { type Authentication } from '@/domain/use-cases'
-import { type WaitingCodeRequest, type LoginRequest, type SignUpRequest } from '@/tests/utils'
+import {
+  type AuthMiddlewareRequest,
+  type LoginRequest,
+  type SignUpRequest,
+  type ForgetPasswordRequest,
+  type ChangePasswordRequest,
+  type WaitingCodeRequest
+} from '@/tests/utils'
 
-const makeFakeAuthorization = ({ data }: { data: string }): HttpRequest => ({
-  authorization: data
-})
+const makeFakeLoginRequest = (): LoginRequest => {
+  const body = {
+    email: 'any_email@mail.com',
+    password: 'any_password'
+  }
 
-const makeFakeSignUpRequest = (fields: Partial<SignUpRequest> = {}): SignUpRequest => {
-  const guardianFake = {
+  return { body }
+}
+
+const makeFakeSignUpRequest = (): SignUpRequest => {
+  const body = {
     firstName: 'any_first_name',
     lastName: 'any_last_name',
     email: 'any_email@mail.com',
     password: 'any_password',
     passwordConfirmation: 'any_password',
-    phone: 'any_phone',
-    accessToken: 'any_token',
-    isPrivacyPolicyAccepted: true,
-    verificationToken: 'any_verication_token',
-    verificationTokenCreatedAt: new Date()
+    phone: 'any_phone'
   }
 
-  return {
-    ...guardianFake,
-    ...fields
-  }
+  return { body }
 }
 
-const makeFakeLogin = (): LoginRequest => ({
-  email: 'any_email@mail.com',
-  password: 'any_password'
-})
-
-const makeFakeAuth = (): Authentication.Params => ({
-  email: 'any_email@mail.com',
-  sensitiveData: { field: 'any_field', value: 'any_data' }
-})
-
-const makeFakeLoginRequest = (): HttpRequest => ({
-  body: makeFakeLogin()
-})
-
-const makeFakeWaitingCode = (): WaitingCodeRequest => ({
-  email: 'valid_email',
-  forgetPasswordCode: 'valid_code'
-})
-
-const makeFakeWaitingCodeRequest = (): HttpRequest => ({
-  body: makeFakeWaitingCode()
-})
-
-const makeFakePayload = (): TokenDecoder.Result => ({
-  sub: 'valid_id'
-})
-
-const makeFakeForgetPasswordRequest = (): HttpRequest => {
-  return {
-    body: {
-      email: 'any_email@mail.com'
-    }
+const makeFakeForgetPasswordRequest = (): ForgetPasswordRequest => {
+  const body = {
+    email: 'any_email@mail.com'
   }
+
+  return { body }
+}
+
+const makeFakeChangePasswordRequest = (): ChangePasswordRequest => {
+  const body = {
+    password: 'any_password',
+    passwordConfirmation: 'any_password'
+  }
+
+  return { body }
+}
+
+const makeFakeWaitingCodeRequest = (): WaitingCodeRequest => {
+  const body = {
+    email: 'valid_email',
+    forgetPasswordCode: 'valid_code'
+  }
+
+  return { body }
+}
+
+const makeFakeAuthorizationRequest = (): AuthMiddlewareRequest => {
+  const authorization = 'any_id'
+
+  return { authorization }
+}
+
+const makeFakePayload = (): TokenDecoder.Result => {
+  const sub = 'valid_id'
+
+  return { sub }
 }
 
 export {
   makeFakeSignUpRequest,
-  makeFakeLogin,
   makeFakeLoginRequest,
-  makeFakeAuthorization,
-  makeFakeWaitingCode,
+  makeFakeForgetPasswordRequest,
+  makeFakeChangePasswordRequest,
   makeFakeWaitingCodeRequest,
-  makeFakePayload,
-  makeFakeAuth,
-  makeFakeForgetPasswordRequest
+  makeFakeAuthorizationRequest,
+  makeFakePayload
 }

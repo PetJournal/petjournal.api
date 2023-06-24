@@ -1,4 +1,4 @@
-import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
+import { GuardianAccountRepository } from '@/infra/repos/postgresql'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 import { makeFakeGuardianData } from '@/tests/utils'
 
@@ -112,6 +112,15 @@ describe('GuardianAccountRepository', () => {
       expect(guardian.verificationToken).toBeTruthy()
       expect(guardian.verificationToken).toBe('valid_token')
       expect(guardian.verificationTokenCreatedAt.getMilliseconds()).toBeGreaterThan(verificationTokenCreatedAt.getMilliseconds())
+    })
+
+    it('Should fail when there is no id', async () => {
+      const sut = makeSut()
+
+      const authenticationData = { id: 'invalid_id', password: 'updated_password' }
+      const response = await sut.updatePassword(authenticationData)
+
+      expect(response).toBeFalsy()
     })
   })
 })

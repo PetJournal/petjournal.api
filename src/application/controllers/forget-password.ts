@@ -1,31 +1,27 @@
 import { type ForgetPassword } from '@/domain/use-cases'
-import { InvalidParamError, MissingParamError, NotFoundError } from '../errors'
-import { type HttpRequest, type HttpResponse, badRequest, success, serverError } from '../helpers/http'
-import { type EmailValidator } from '../validation/protocols'
-import { type Controller } from './controller'
+import { type Controller, type Validation } from '@/application/protocols'
+import { type HttpRequest, type HttpResponse, badRequest, success, serverError } from '@/application/helpers'
+import { NotFoundError } from '@/application/errors'
 
 export class ForgetPasswordController implements Controller {
-  private readonly emailValidator: EmailValidator
+  private readonly validation: Validation
   private readonly forgetPassword: ForgetPassword
 
-  constructor ({ emailValidator, forgetPassword }: ForgetPasswordController.Dependencies) {
-    this.emailValidator = emailValidator
+  constructor ({ validation, forgetPassword }: ForgetPasswordController.Dependencies) {
+    this.validation = validation
     this.forgetPassword = forgetPassword
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
+      const error = this.validation.validate(httpRequest.body)
+      if (error) {
+        return badRequest(error)
+      }
       const { email } = httpRequest.body
-      if (!email) {
-        return badRequest(new MissingParamError('email'))
-      }
-
-      const isValidEmail = this.emailValidator.isValid(email)
-      if (!isValidEmail) {
-        return badRequest(new InvalidParamError('email'))
-      }
 
       const isSuccess = await this.forgetPassword.forgetPassword({ email })
+
       if (!isSuccess) {
         return badRequest(new NotFoundError('email'))
       }
@@ -39,7 +35,7 @@ export class ForgetPasswordController implements Controller {
 
 export namespace ForgetPasswordController {
   export interface Dependencies {
-    emailValidator: EmailValidator
+    validation: Validation
     forgetPassword: ForgetPassword
   }
 }

@@ -1,11 +1,21 @@
-import { accessTokenSchema, errorSchema, forgetPasswordSchema, guardianSchema, loginParamsSchema, signUpParamsSchema, waitingCodeParamsSchema } from '@/main/docs/schemas/'
+import {
+  accessTokenSchema,
+  changePasswordParamsSchema,
+  errorSchema,
+  forgetPasswordSchema,
+  guardianSchema,
+  loginParamsSchema,
+  signUpParamsSchema,
+  waitingCodeParamsSchema
+} from '@/main/docs/schemas/'
 
 export default {
   error: errorSchema,
   accessToken: accessTokenSchema,
-  forgetPasswordParams: forgetPasswordSchema,
   guardian: guardianSchema,
   loginParams: loginParamsSchema,
   signUpParams: signUpParamsSchema,
+  forgetPasswordParams: forgetPasswordSchema,
+  changePasswordParams: changePasswordParamsSchema,
   waitingCodeParams: waitingCodeParamsSchema
 }

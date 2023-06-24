@@ -1,42 +1,17 @@
-import { type Controller } from '@/application/controllers/controller'
-import { ForgetPasswordController } from '@/application/controllers/forget-password'
-import { EmailValidatorAdapter } from '@/application/validation/validators'
-import { DbForgetPassword } from '@/data/use-cases'
-import { VerificationTokenGenerator } from '@/infra/cryptography/verification-token-adapter'
-import { BcryptAdapter } from '@/infra/cryptography/bcrypt-adapter'
-import { NodeMailerAdapter } from '@/infra/node-mailer-adapter'
-import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
-import { LoggerPgRepository } from '@/infra/repos/postgresql/logger-repository'
-import env from '@/main/config/env'
-import { LoggerControllerDecorator } from '@/main/decorators/logger'
+import { type Controller } from '@/application/protocols'
+import { ForgetPasswordController } from '@/application/controllers'
+import { LoggerControllerDecorator } from '@/main/decorators'
+import { LoggerPgRepository } from '@/infra/repos/postgresql'
+import { makeForgetPasswordValidation, makeDbForgetPassword } from '@/main/factories'
 
 export const makeForgetPasswordController = (): Controller => {
-  const emailValidator = new EmailValidatorAdapter()
-  const loadGuardianByEmailRepository = new GuardianAccountRepository()
-  const salt = Number(env.salt)
-  const bcryptAdapter = new BcryptAdapter(salt)
-  const updateVerificationTokenRepository = new GuardianAccountRepository()
-  const tokenGenerator = new VerificationTokenGenerator()
-  const transporter = {
-    service: 'gmail',
-    auth: {
-      user: env.mailUser,
-      pass: env.mailPass
-    }
-  }
-  const nodeMailerAdapter = new NodeMailerAdapter(transporter)
-  const dbForgetPassword = new DbForgetPassword({
-    loadGuardianByEmailRepository,
-    hashService: bcryptAdapter,
-    updateVerificationTokenRepository,
-    tokenGenerator,
-    emailService: nodeMailerAdapter
-  })
+  const forgetPassword = makeDbForgetPassword()
+  const validation = makeForgetPasswordValidation()
   const dependencies: ForgetPasswordController.Dependencies = {
-    emailValidator,
-    forgetPassword: dbForgetPassword
+    validation,
+    forgetPassword
   }
-  const loggerPgRepository = new LoggerPgRepository()
   const forgetPasswordController = new ForgetPasswordController(dependencies)
+  const loggerPgRepository = new LoggerPgRepository()
   return new LoggerControllerDecorator(forgetPasswordController, loggerPgRepository)
 }

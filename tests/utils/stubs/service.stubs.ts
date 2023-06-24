@@ -1,105 +1,102 @@
-import { makeFakeGuardianData, makeFakePayload } from '../mocks'
+
 import {
-  type TokenDecoder,
-  type HashGenerator,
-  type LoadGuardianByIdRepository,
-  type LoadGuardianByEmailRepository,
+  makeFakePayload,
+  mockFakeGuardianAdded,
+  mockFakeGuardianLoaded
+} from '@/tests/utils'
+import {
+  type EmailService,
+  type AddGuardianRepository,
   type HashComparer,
+  type HashGenerator,
+  type LoadGuardianByEmailRepository,
+  type LoadGuardianByIdRepository,
+  type TokenDecoder,
   type TokenGenerator,
   type UpdateAccessTokenRepository,
-  type UpdateVerificationTokenRepository
+  type UpdateVerificationTokenRepository,
+  type UpdateGuardianPasswordRepository
 } from '@/data/protocols'
-import { type Guardian } from '@prisma/client'
 
-const makeEncrypter = (): HashGenerator => {
-  class EncrypterStub implements HashGenerator {
-    async encrypt (input: HashGenerator.Params): Promise<HashGenerator.Result> {
-      return 'hashed_password'
+const makeFakeGuardianRepository = ():
+AddGuardianRepository &
+LoadGuardianByEmailRepository &
+LoadGuardianByIdRepository &
+UpdateAccessTokenRepository &
+UpdateGuardianPasswordRepository &
+UpdateVerificationTokenRepository => {
+  class GuardianRepositoryStub implements
+  AddGuardianRepository,
+  LoadGuardianByEmailRepository,
+  LoadGuardianByIdRepository,
+  UpdateAccessTokenRepository,
+  UpdateGuardianPasswordRepository,
+  UpdateVerificationTokenRepository {
+    async add (guardian: AddGuardianRepository.Params): Promise<AddGuardianRepository.Result> {
+      return mockFakeGuardianAdded()
     }
-  }
-  return new EncrypterStub()
-}
 
-const makeHashComparer = (): HashComparer => {
-  class HashComparerStub implements HashComparer {
-    async compare ({ value, hash }: HashComparer.Params): Promise<HashComparer.Result> {
+    async loadByEmail (email: string): Promise<LoadGuardianByEmailRepository.Result> {
+      return mockFakeGuardianLoaded()
+    }
+
+    async loadById (id: string): Promise<LoadGuardianByIdRepository.Result> {
+      return mockFakeGuardianLoaded()
+    }
+
+    async updateAccessToken (authentication: UpdateAccessTokenRepository.Params): Promise<boolean> {
       return true
     }
-  }
-  return new HashComparerStub()
-}
 
-const makeHashGenerator = (): HashGenerator => {
-  class HashComparerStub implements HashGenerator {
-    async encrypt ({ value }: HashGenerator.Params): Promise<HashGenerator.Result> {
-      return 'hashed_value'
-    }
-  }
-  return new HashComparerStub()
-}
-
-const makeTokenGenerator = (): TokenGenerator => {
-  class TokenGeneratorStub implements TokenGenerator {
-    async generate (payload: any): Promise<string> {
-      return 'any_token'
-    }
-  }
-  return new TokenGeneratorStub()
-}
-
-const makeTokenDecoder = (): TokenDecoder => {
-  class TokenDecoderStub implements TokenDecoder {
-    async decode (token: TokenDecoder.Params): Promise<TokenDecoder.Result> {
-      return makeFakePayload()
-    }
-  }
-  return new TokenDecoderStub()
-}
-
-const makeLoadGuardianById = (): LoadGuardianByIdRepository => {
-  class LoadGuardianByIdStub implements LoadGuardianByIdRepository {
-    async loadById (id: LoadGuardianByIdRepository.Params): Promise<LoadGuardianByIdRepository.Result> {
-      return makeFakeGuardianData() as Guardian
-    }
-  }
-  return new LoadGuardianByIdStub()
-}
-
-const makeLoadGuardianByEmail = (data: Guardian): LoadGuardianByEmailRepository => {
-  class LoadGuardianByEmailRepositoryStub implements LoadGuardianByEmailRepository {
-    async loadByEmail (email: LoadGuardianByEmailRepository.Params): Promise<LoadGuardianByEmailRepository.Result> {
-      return data
-    }
-  }
-  return new LoadGuardianByEmailRepositoryStub()
-}
-
-const makeUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
-  class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
-    async updateAccessToken (authentication: UpdateAccessTokenRepository.Params): Promise<UpdateAccessTokenRepository.Result> {
+    async updatePassword (userData: UpdateGuardianPasswordRepository.Params): Promise<UpdateGuardianPasswordRepository.Result> {
       return true
     }
-  }
-  return new UpdateAccessTokenRepositoryStub()
-}
 
-const makeUpdateVerificationTokenRepository = (): UpdateVerificationTokenRepository => {
-  class UpdateVerificationTokenRepositoryStub implements UpdateVerificationTokenRepository {
     async updateVerificationToken (credentials: UpdateVerificationTokenRepository.Params): Promise<UpdateVerificationTokenRepository.Result> {
       return true
     }
   }
-  return new UpdateVerificationTokenRepositoryStub()
+  return new GuardianRepositoryStub()
+}
+
+const makeFakeHashService = (): HashGenerator & HashComparer => {
+  class HashServiceStub implements HashGenerator, HashComparer {
+    async compare (input: HashComparer.Params): Promise<boolean> {
+      return true
+    }
+
+    async encrypt (input: HashGenerator.Params): Promise<string> {
+      return 'hashed_value'
+    }
+  }
+  return new HashServiceStub()
+}
+
+const makeFakeTokenService = (): TokenGenerator & TokenDecoder => {
+  class TokenServiceStub implements TokenGenerator, TokenDecoder {
+    async generate (payload: any): Promise<string> {
+      return 'any_token'
+    }
+
+    async decode (token: TokenDecoder.Params): Promise<TokenDecoder.Result> {
+      return makeFakePayload()
+    }
+  }
+  return new TokenServiceStub()
+}
+
+const makeFakeEmailService = (): EmailService => {
+  class EmailServiceStub implements EmailService {
+    async send (options: EmailService.Options): Promise<boolean> {
+      return await Promise.resolve(true)
+    }
+  }
+  return new EmailServiceStub()
 }
 
 export {
-  makeEncrypter,
-  makeHashComparer,
-  makeHashGenerator,
-  makeTokenGenerator,
-  makeTokenDecoder,
-  makeLoadGuardianById,
-  makeLoadGuardianByEmail,
-  makeUpdateAccessTokenRepository,
-  makeUpdateVerificationTokenRepository
+  makeFakeGuardianRepository,
+  makeFakeHashService,
+  makeFakeEmailService,
+  makeFakeTokenService
 }

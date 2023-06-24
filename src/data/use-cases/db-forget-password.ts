@@ -1,36 +1,33 @@
-import {
-  type LoadGuardianByEmailRepository,
-  type HashGenerator,
-  type UpdateVerificationTokenRepository,
-  type TokenGenerator
-} from '@/data/protocols'
-import { type EmailService, type ForgetPassword } from '@/domain/use-cases'
+import { type ForgetPassword } from '@/domain/use-cases'
+import { type EmailService, type TokenGenerator, type HashGenerator } from '@/data/protocols'
+import { type UpdateVerificationTokenRepository, type LoadGuardianByEmailRepository } from '@/data/protocols/db/guardian'
 
 export class DbForgetPassword implements ForgetPassword {
-  private readonly loadGuardianByEmailRepository: LoadGuardianByEmailRepository
-  private readonly updateVerificationTokenRepository: UpdateVerificationTokenRepository
-  private readonly hashService: HashGenerator
-  private readonly tokenGenerator: TokenGenerator
+  private readonly guardianRepository: LoadGuardianByEmailRepository & UpdateVerificationTokenRepository
+  private readonly tokenService: TokenGenerator
   private readonly emailService: EmailService
+  private readonly hashService: HashGenerator
 
-  constructor ({ loadGuardianByEmailRepository, tokenGenerator, emailService, hashService, updateVerificationTokenRepository }: ForgetPassword.Dependencies) {
-    this.loadGuardianByEmailRepository = loadGuardianByEmailRepository
-    this.tokenGenerator = tokenGenerator
+  constructor ({ guardianRepository, emailService, tokenService, hashService }: ForgetPassword.Dependencies) {
+    this.guardianRepository = guardianRepository
+    this.tokenService = tokenService
     this.emailService = emailService
     this.hashService = hashService
-    this.updateVerificationTokenRepository = updateVerificationTokenRepository
   }
 
   async forgetPassword (params: ForgetPassword.Params): Promise<boolean> {
     let success = false
-    const guardian = await this.loadGuardianByEmailRepository.loadByEmail(params.email)
+
+    const guardian = await this.guardianRepository.loadByEmail(params.email)
     if (!guardian) {
       return success
     }
 
-    const token = await this.tokenGenerator.generate(guardian.id)
+    const token = await this.tokenService.generate(guardian.id)
+
     const hashedToken = await this.hashService.encrypt({ value: token })
-    await this.updateVerificationTokenRepository.updateVerificationToken({
+
+    await this.guardianRepository.updateVerificationToken({
       userId: guardian.id,
       token: hashedToken
     })
@@ -48,6 +45,7 @@ export class DbForgetPassword implements ForgetPassword {
           Equipe PetJournal
         `
     }
+
     await this.emailService.send(emailOptions)
     success = true
 

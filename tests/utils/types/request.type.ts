@@ -1,22 +1,51 @@
-import { type Guardian } from './guardian.type'
+interface AuthMiddlewareRequest {
+  authorization: string
+}
 
 interface LoginRequest {
-  email: string
-  password: string
+  body: {
+    email: string
+    password: string
+  }
+}
+
+interface SignUpRequest {
+  body: {
+    firstName: string
+    lastName: string
+    email: string
+    password: string
+    passwordConfirmation: string
+    phone: string
+  }
+}
+
+interface ForgetPasswordRequest {
+  body: {
+    email: string
+  }
+}
+
+interface ChangePasswordRequest {
+  userId?: string
+  body: {
+    password: string
+    passwordConfirmation: string
+  }
 }
 
 interface WaitingCodeRequest {
-  email: string
-  forgetPasswordCode: string
-}
-
-interface SignUpRequest extends Guardian {
-  passwordConfirmation: string
-  isPrivacyPolicyAccepted: boolean
+  body: {
+    email: string
+    forgetPasswordCode: string
+  }
 }
 
 export {
-  type SignUpRequest,
+  type AuthMiddlewareRequest,
   type LoginRequest,
+  type SignUpRequest,
+  type ForgetPasswordRequest,
+  type ChangePasswordRequest,
   type WaitingCodeRequest
 }

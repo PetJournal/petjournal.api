@@ -1,51 +1,69 @@
-import { type Middleware } from '@/application/middlewares/middleware'
-import { serverError, type HttpRequest, type HttpResponse, unauthorized, success } from '../helpers/http'
-import { type TokenDecoder } from '@/data/protocols/cryptography/token-decoder'
-import { type LoadGuardianByIdRepository } from '@/data/protocols/guardian/load-guardian-by-id-repository'
-import { type HashComparer } from '@/data/protocols'
+import { type Middleware } from '@/application/protocols'
+import {
+  type HashComparer,
+  type TokenDecoder,
+  type LoadGuardianByIdRepository
+} from '@/data/protocols'
+import {
+  type HttpRequest,
+  type HttpResponse,
+  success,
+  unauthorized,
+  badRequest,
+  serverError
+} from '@/application/helpers'
+import { InvalidTokenError, MissingParamError, NotFoundError } from '@/application/errors'
 
 export class AuthMiddleware implements Middleware {
-  private readonly tokenDecoder: TokenDecoder
-  private readonly hashComparer: HashComparer
-  private readonly loadGuardianById: LoadGuardianByIdRepository
+  private readonly tokenService: TokenDecoder
+  private readonly hashService: HashComparer
+  private readonly guardianRepository: LoadGuardianByIdRepository
 
-  constructor ({ tokenDecoder, hashComparer, loadGuardianById }: AuthMiddleware.Dependencies) {
-    this.tokenDecoder = tokenDecoder
-    this.hashComparer = hashComparer
-    this.loadGuardianById = loadGuardianById
+  constructor ({ tokenService, hashService, guardianRepository }: AuthMiddleware.Dependencies) {
+    this.tokenService = tokenService
+    this.hashService = hashService
+    this.guardianRepository = guardianRepository
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       if (!httpRequest.authorization) {
-        return unauthorized()
+        return badRequest(new MissingParamError('authorization'))
       }
-      const { authorization } = httpRequest
-      const payload = await this.tokenDecoder.decode(authorization)
+
+      let { authorization } = httpRequest
+      if (authorization.startsWith(AuthMiddleware.BEARER_PREFIX)) {
+        authorization = authorization.substring(7)
+      }
+
+      const payload = await this.tokenService.decode(authorization)
       if (!payload) {
-        return unauthorized()
+        return unauthorized(new InvalidTokenError('Invalid or expired token'))
       }
+
       const { sub: userId } = payload
-      const account = await this.loadGuardianById.loadById(userId)
+      const account = await this.guardianRepository.loadById(userId)
       if (!account) {
-        return unauthorized()
+        return unauthorized(new NotFoundError('User not found'))
       }
-      const matchToken = await this.hashComparer.compare({ hash: account.accessToken ?? '', value: authorization })
+
+      const matchToken = await this.hashService.compare({ hash: account.accessToken ?? '', value: authorization })
       if (!matchToken) {
-        return unauthorized()
+        return unauthorized(new InvalidTokenError('Invalid token for this user'))
       }
+
       return success({ userId })
     } catch (error) {
-      console.error(error)
       return serverError(error as Error)
     }
   }
 }
 
 export namespace AuthMiddleware {
+  export const BEARER_PREFIX = 'Bearer '
   export interface Dependencies {
-    tokenDecoder: TokenDecoder
-    hashComparer: HashComparer
-    loadGuardianById: LoadGuardianByIdRepository
+    tokenService: TokenDecoder
+    hashService: HashComparer
+    guardianRepository: LoadGuardianByIdRepository
   }
 }

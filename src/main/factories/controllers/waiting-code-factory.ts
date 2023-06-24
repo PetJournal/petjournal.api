@@ -1,34 +1,16 @@
-import { type Controller } from '@/application/controllers/controller'
-import { WaitingCodeController } from '@/application/controllers/waiting-code'
-import { EmailValidatorAdapter } from '@/application/validation/validators'
-import { DbAuthentication } from '@/data/use-cases'
-import { BcryptAdapter } from '@/infra/cryptography/bcrypt-adapter'
-import { JwtAdapter } from '@/infra/cryptography/jwt-adapter'
-import { GuardianAccountRepository } from '@/infra/repos/postgresql/guardian-account-repository'
-import { LoggerPgRepository } from '@/infra/repos/postgresql/logger-repository'
-
-import env from '@/main/config/env'
+import { type Controller } from '@/application/protocols'
+import { WaitingCodeController } from '@/application/controllers'
 import { LoggerControllerDecorator } from '@/main/decorators/logger'
+import { makeDbAuthentication, makeWaitingCodeValidation } from '@/main/factories'
+import { LoggerPgRepository } from '@/infra/repos/postgresql'
 
 export const makeWaitingCodeController = (): Controller => {
-  const salt = Number(env.salt)
-  const secret = env.secret
-  const emailValidator = new EmailValidatorAdapter()
-  const repository = new GuardianAccountRepository()
-  const hasher = new BcryptAdapter(salt)
-  const tokenGenerator = new JwtAdapter(secret)
-  const authentication = new DbAuthentication({
-    loadGuardianByEmailRepository: repository,
-    updateAccessTokenRepository: repository,
-    hashComparer: hasher,
-    hashGenerator: hasher,
-    tokenGenerator
-  })
+  const authentication = makeDbAuthentication()
+  const validation = makeWaitingCodeValidation()
   const loggerPgRepository = new LoggerPgRepository()
   const waitingCodeController = new WaitingCodeController({
-    emailValidator,
-    authentication
+    authentication,
+    validation
   })
-
   return new LoggerControllerDecorator(waitingCodeController, loggerPgRepository)
 }
