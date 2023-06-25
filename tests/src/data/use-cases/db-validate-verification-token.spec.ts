@@ -8,7 +8,7 @@ import {
   mockFakeGuardianLoaded
 } from '@/tests/utils'
 import { VerificationTokenError, NotFoundError } from '@/application/errors'
-import { DbValidateVerificationToken } from '@/data/use-cases/db-validate-verification-token'
+import { DbValidateVerificationToken } from '@/data/use-cases'
 
 interface SutTypes {
   sut: DbValidateVerificationToken
@@ -37,7 +37,7 @@ describe('DbCreateAccessToken UseCase', () => {
     verificationToken: 'valid_token'
   }
 
-  describe('tests guardianRepository', () => {
+  describe('GuardianRepository', () => {
     it('Should return NotFoundError if not found email is provided', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
       jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValueOnce(undefined)
@@ -79,7 +79,7 @@ describe('DbCreateAccessToken UseCase', () => {
   })
 
   describe('test HashComparer', () => {
-    it('should return VerificationTokenError if invalid code is provided', async () => {
+    it('Should return VerificationTokenError if invalid code is provided', async () => {
       const { sut, hashServiceStub } = makeSut()
       jest.spyOn(hashServiceStub, 'compare').mockResolvedValueOnce(false)
 
@@ -97,21 +97,22 @@ describe('DbCreateAccessToken UseCase', () => {
       await expect(promise).rejects.toThrow()
     })
 
-    it('should call compare with correct values', async () => {
+    it('Should call compare with correct values', async () => {
       const { sut, hashServiceStub } = makeSut()
       const spyHashComparer = jest.spyOn(hashServiceStub, 'compare')
+      const { verificationToken } = mockFakeGuardianLoaded()
 
       await sut.validate(fakeValidation)
 
       expect(spyHashComparer).toHaveBeenCalledWith({
         value: fakeValidation.verificationToken,
-        hash: mockFakeGuardianLoaded().verificationToken
+        hash: verificationToken
       })
     })
   })
 
   describe('When success', () => {
-    it('should return true if a valid access token is provided', async () => {
+    it('Should return true if a valid access token is provided', async () => {
       const { sut } = makeSut()
 
       const result = await sut.validate(fakeValidation)

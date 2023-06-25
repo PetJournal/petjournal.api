@@ -5,7 +5,7 @@ import {
   type HashGenerator,
   type LoadGuardianByEmailRepository
 } from '@/data/protocols'
-import { type CreateAccessToken } from '@/domain/use-cases/create-access-token'
+import { type CreateAccessToken } from '@/domain/use-cases'
 
 export class DbCreateAccessToken implements CreateAccessToken {
   private readonly guardianRepository: LoadGuardianByEmailRepository & UpdateAccessTokenRepository

@@ -3,7 +3,7 @@ import {
   type LoadGuardianByEmailRepository,
   type HashComparer
 } from '@/data/protocols'
-import { type ValidateVerificationToken } from '@/domain/use-cases/validate-verification-token'
+import { type ValidateVerificationToken } from '@/domain/use-cases'
 import env from '@/main/config/env'
 
 export class DbValidateVerificationToken implements ValidateVerificationToken {

@@ -5,7 +5,7 @@ import {
   unauthorized,
   success,
   serverError
-} from '@/application/helpers/http'
+} from '@/application/helpers'
 import { type Controller, type Validation } from '@/application/protocols'
 import { type CreateAccessToken, type ValidateVerificationToken } from '@/domain/use-cases/'
 
