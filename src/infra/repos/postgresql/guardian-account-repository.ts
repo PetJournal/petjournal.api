@@ -5,10 +5,10 @@ import {
   type LoadGuardianByEmailRepository,
   type UpdateAccessTokenRepository,
   type UpdateGuardianPasswordRepository,
-  type SaveTokenRepository
+  type UpdateVerificationTokenRepository
 } from '@/data/protocols'
 
-export class GuardianAccountRepository implements AddGuardianRepository, LoadGuardianByEmailRepository, LoadGuardianByIdRepository, UpdateAccessTokenRepository, UpdateGuardianPasswordRepository, SaveTokenRepository {
+export class GuardianAccountRepository implements AddGuardianRepository, LoadGuardianByEmailRepository, LoadGuardianByIdRepository, UpdateAccessTokenRepository, UpdateGuardianPasswordRepository, UpdateVerificationTokenRepository {
   async add (guardianData: AddGuardianRepository.Params): Promise<AddGuardianRepository.Result> {
     const guardianHasEmailRegistered = await db.guardian.findUnique({
       where: { email: guardianData.email }
@@ -54,16 +54,16 @@ export class GuardianAccountRepository implements AddGuardianRepository, LoadGua
     return Boolean(result)
   }
 
-  async saveToken (accountId: string, token: string): Promise<SaveTokenRepository.Result> {
+  async updateVerificationToken (credentials: UpdateVerificationTokenRepository.Params): Promise<UpdateVerificationTokenRepository.Result> {
     let success: boolean = false
     const guardian = await db.guardian.findUnique({
-      where: { id: accountId }
+      where: { id: credentials.userId }
     })
 
     if (guardian) {
       await db.guardian.update({
-        where: { id: accountId },
-        data: { verificationToken: token }
+        where: { id: credentials.userId },
+        data: { verificationToken: credentials.token, verificationTokenCreatedAt: new Date() }
       })
 
       success = true

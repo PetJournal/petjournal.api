@@ -11,9 +11,9 @@ export const makeDbAuthentication = (): Authentication => {
   const tokenService = new JwtAdapter(secret)
   const guardianRepository = new GuardianAccountRepository()
   const authentication = new DbAuthentication({
+    guardianRepository,
     hashService,
-    tokenService,
-    guardianRepository
+    tokenService
   })
   return authentication
 }

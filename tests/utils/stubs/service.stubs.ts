@@ -14,6 +14,7 @@ import {
   type TokenDecoder,
   type TokenGenerator,
   type UpdateAccessTokenRepository,
+  type UpdateVerificationTokenRepository,
   type UpdateGuardianPasswordRepository
 } from '@/data/protocols'
 
@@ -22,13 +23,15 @@ AddGuardianRepository &
 LoadGuardianByEmailRepository &
 LoadGuardianByIdRepository &
 UpdateAccessTokenRepository &
-UpdateGuardianPasswordRepository => {
+UpdateGuardianPasswordRepository &
+UpdateVerificationTokenRepository => {
   class GuardianRepositoryStub implements
   AddGuardianRepository,
   LoadGuardianByEmailRepository,
   LoadGuardianByIdRepository,
   UpdateAccessTokenRepository,
-  UpdateGuardianPasswordRepository {
+  UpdateGuardianPasswordRepository,
+  UpdateVerificationTokenRepository {
     async add (guardian: AddGuardianRepository.Params): Promise<AddGuardianRepository.Result> {
       return mockFakeGuardianAdded()
     }
@@ -46,6 +49,10 @@ UpdateGuardianPasswordRepository => {
     }
 
     async updatePassword (userData: UpdateGuardianPasswordRepository.Params): Promise<UpdateGuardianPasswordRepository.Result> {
+      return true
+    }
+
+    async updateVerificationToken (credentials: UpdateVerificationTokenRepository.Params): Promise<UpdateVerificationTokenRepository.Result> {
       return true
     }
   }

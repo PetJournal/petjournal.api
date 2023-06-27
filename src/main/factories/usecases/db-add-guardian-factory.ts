@@ -8,6 +8,9 @@ export const makeDbAddGuardian = (): AddGuardian => {
   const salt = Number(env.salt)
   const hashService = new BcryptAdapter(salt)
   const guardianRepository = new GuardianAccountRepository()
-  const addGuardian = new DbAddGuardian({ guardianRepository, hashService })
+  const addGuardian = new DbAddGuardian({
+    guardianRepository,
+    hashService
+  })
   return addGuardian
 }

@@ -21,6 +21,7 @@ export class ForgetPasswordController implements Controller {
       const { email } = httpRequest.body
 
       const isSuccess = await this.forgetPassword.forgetPassword({ email })
+
       if (!isSuccess) {
         return badRequest(new NotFoundError('email'))
       }

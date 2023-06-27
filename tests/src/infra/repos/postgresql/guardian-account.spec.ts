@@ -86,26 +86,32 @@ describe('GuardianAccountRepository', () => {
 
       guardian = await sut.loadByEmail(guardianData.email)
 
-      expect(guardian.accessToken).not.toBeFalsy()
+      expect(guardian.accessToken).toBeTruthy()
       expect(guardian.accessToken).toBe(authenticationData.token)
     })
   })
 
-  describe('UpdateGuardianPasswordRepository', () => {
-    it('Should update the account successfully', async () => {
+  describe('UpdateVerificationTokenRepository', () => {
+    it('Should update the verificationToken successfully', async () => {
       const sut = makeSut()
       const guardianData = makeFakeGuardianData()
 
       await sut.add(guardianData)
       let guardian = await sut.loadByEmail(guardianData.email) as any
+      const verificationTokenCreatedAt = guardian.verificationTokenCreatedAt
 
-      const authenticationData = { id: guardian.id, password: 'updated_password' }
-      const response = await sut.updatePassword(authenticationData)
+      jest.advanceTimersByTime(1)
+
+      await sut.updateVerificationToken({
+        userId: guardian.id,
+        token: 'valid_token'
+      })
 
       guardian = await sut.loadByEmail(guardianData.email)
 
-      expect(response).toBeTruthy()
-      expect(guardian.password).toBe(authenticationData.password)
+      expect(guardian.verificationToken).toBeTruthy()
+      expect(guardian.verificationToken).toBe('valid_token')
+      expect(guardian.verificationTokenCreatedAt.getMilliseconds()).toBeGreaterThan(verificationTokenCreatedAt.getMilliseconds())
     })
 
     it('Should fail when there is no id', async () => {

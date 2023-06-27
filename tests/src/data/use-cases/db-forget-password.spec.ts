@@ -1,38 +1,45 @@
 import {
   type TokenGenerator,
   type LoadGuardianByEmailRepository,
-  type EmailService
+  type EmailService,
+  type HashGenerator,
+  type UpdateVerificationTokenRepository
 } from '@/data/protocols'
 import { DbForgetPassword } from '@/data/use-cases'
 import { type ForgetPassword } from '@/domain/use-cases'
 import {
   makeFakeEmailService,
   makeFakeGuardianRepository,
+  makeFakeHashService,
   makeFakeTokenService
 } from '@/tests/utils'
 
 interface SutTypes {
   sut: DbForgetPassword
-  guardianRepositoryStub: LoadGuardianByEmailRepository
+  guardianRepositoryStub: LoadGuardianByEmailRepository & UpdateVerificationTokenRepository
   tokenServiceStub: TokenGenerator
   emailServiceStub: EmailService
+  hashServiceStub: HashGenerator
 }
 
 const makeSut = (): SutTypes => {
   const guardianRepositoryStub = makeFakeGuardianRepository()
   const tokenServiceStub = makeFakeTokenService()
   const emailServiceStub = makeFakeEmailService()
+  const hashServiceStub = makeFakeHashService()
   const dependencies: ForgetPassword.Dependencies = {
     guardianRepository: guardianRepositoryStub,
     tokenService: tokenServiceStub,
-    emailService: emailServiceStub
+    emailService: emailServiceStub,
+    hashService: hashServiceStub
   }
   const sut = new DbForgetPassword(dependencies)
   return {
     sut,
     guardianRepositoryStub,
     tokenServiceStub,
-    emailServiceStub
+    emailServiceStub,
+    hashServiceStub
   }
 }
 
@@ -104,6 +111,31 @@ describe('DbForgetPassword UseCase', () => {
 
     it('Should return false if email does not exist', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
+      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValue(undefined)
+      const result = await sut.forgetPassword(params)
+      expect(result).toBeFalsy()
+    })
+
+    it('Should call updateVerificationToken method with correct value', async () => {
+      const { sut, guardianRepositoryStub } = makeSut()
+      const updateVerificationTokenSpy = jest.spyOn(guardianRepositoryStub, 'updateVerificationToken')
+      await sut.forgetPassword(params)
+      expect(updateVerificationTokenSpy).toHaveBeenCalledWith({
+        userId: 'any_id',
+        token: 'hashed_value'
+      })
+    })
+
+    it('Should throw if updateVerificationToken method throws', async () => {
+      const { sut, guardianRepositoryStub } = makeSut()
+      jest.spyOn(guardianRepositoryStub, 'updateVerificationToken').mockRejectedValue(new Error())
+      const promise = sut.forgetPassword(params)
+      await expect(promise).rejects.toThrow()
+    })
+
+    it('Should return false if userId does not exist', async () => {
+      const { sut, guardianRepositoryStub } = makeSut()
+      jest.spyOn(guardianRepositoryStub, 'updateVerificationToken').mockResolvedValue(false)
       jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValue(undefined)
       const result = await sut.forgetPassword(params)
       expect(result).toBeFalsy()

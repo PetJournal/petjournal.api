@@ -9,8 +9,8 @@ export const makeDbChangePassword = (): ChangePassword => {
   const guardianRepository = new GuardianAccountRepository()
   const hashService = new BcryptAdapter(salt)
   const changePassword = new DbChangePassword({
-    hashService,
-    guardianRepository
+    guardianRepository,
+    hashService
   })
   return changePassword
 }

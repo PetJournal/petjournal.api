@@ -1,7 +1,9 @@
 import {
   type LoadGuardianByEmailRepository,
+  type UpdateVerificationTokenRepository,
   type TokenGenerator,
-  type EmailService
+  type EmailService,
+  type HashGenerator
 } from '@/data/protocols'
 
 export interface ForgetPassword {
@@ -16,8 +18,9 @@ export namespace ForgetPassword {
   export type Result = boolean
 
   export interface Dependencies {
-    guardianRepository: LoadGuardianByEmailRepository
-    tokenService: TokenGenerator
+    guardianRepository: LoadGuardianByEmailRepository & UpdateVerificationTokenRepository
     emailService: EmailService
+    tokenService: TokenGenerator
+    hashService: HashGenerator
   }
 }
