@@ -40,6 +40,9 @@ export class AuthMiddleware implements Middleware {
       if (!payload) {
         return unauthorized(new InvalidTokenError('Invalid or expired token'))
       }
+      if (!payload.sub) {
+        return unauthorized(new InvalidTokenError('Invalid or expired token'))
+      }
 
       const { sub: userId } = payload
       const account = await this.guardianRepository.loadById(userId)

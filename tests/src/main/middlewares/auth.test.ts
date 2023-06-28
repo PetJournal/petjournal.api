@@ -3,6 +3,7 @@ import app from '@/main/config/app'
 import { auth } from '@/main/middlewares'
 import { sign } from 'jsonwebtoken'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
+import env from '@/main/config/env'
 
 beforeEach(async () => { await PrismaHelper.connect() })
 
@@ -30,7 +31,7 @@ describe('Authentication Middleware', () => {
   })
 
   it('Should return 401 if token payload is empty', async () => {
-    const tokenWithPayloadEmpty = sign({ payload: {} }, 'secret')
+    const tokenWithPayloadEmpty = sign({ payload: {} }, env.secret)
     app.get('/test_auth', auth, (req, res) => {
       res.send({ userId: req.userId })
     })
