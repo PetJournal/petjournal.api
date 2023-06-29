@@ -37,7 +37,7 @@ export class AuthMiddleware implements Middleware {
       }
 
       const payload = await this.tokenService.decode(authorization)
-      if (!payload) {
+      if (!payload || !payload.sub) {
         return unauthorized(new InvalidTokenError('Invalid or expired token'))
       }
 

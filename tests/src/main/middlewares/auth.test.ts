@@ -1,8 +1,9 @@
 import request from 'supertest'
 import app from '@/main/config/app'
 import { auth } from '@/main/middlewares'
-import { sign } from 'jsonwebtoken'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
+import env from '@/main/config/env'
+import { JwtAdapter } from '@/infra/cryptography'
 
 beforeEach(async () => { await PrismaHelper.connect() })
 
@@ -30,7 +31,8 @@ describe('Authentication Middleware', () => {
   })
 
   it('Should return 401 if token payload is empty', async () => {
-    const tokenWithPayloadEmpty = sign({ payload: {} }, 'secret')
+    const jwtAdapter = new JwtAdapter(env.secret)
+    const tokenWithPayloadEmpty = await jwtAdapter.generate({ payload: {} })
     app.get('/test_auth', auth, (req, res) => {
       res.send({ userId: req.userId })
     })
