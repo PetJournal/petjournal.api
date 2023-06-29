@@ -37,7 +37,7 @@ interface ChangePasswordRequest {
 interface WaitingCodeRequest {
   body: {
     email: string
-    forgetPasswordCode: string
+    verificationToken: string
   }
 }
 

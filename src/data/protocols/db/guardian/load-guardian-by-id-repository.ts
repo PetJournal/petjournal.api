@@ -13,5 +13,6 @@ export namespace LoadGuardianByIdRepository {
     password: string
     accessToken: string | null
     verificationToken: string
+    verificationTokenCreatedAt: Date
   } | undefined
 }

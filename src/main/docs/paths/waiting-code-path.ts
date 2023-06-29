@@ -1,7 +1,7 @@
 export const waitingCodePath = {
   post: {
     tags: ['recovery-password'],
-    summary: 'send email and forgetPasswordCode for recovery password',
+    summary: 'send email and verificationToken for recovery password',
     description: '',
     requestBody: {
       required: true,
@@ -12,7 +12,7 @@ export const waitingCodePath = {
           },
           example: {
             email: 'johndoe@email.com',
-            forgetPasswordCode: '123456'
+            verificationToken: '123456'
           }
         }
       }
@@ -39,7 +39,7 @@ export const waitingCodePath = {
               $ref: '#/schemas/error'
             },
             example: {
-              error: 'Forget password code mismatch'
+              error: 'Verification code mismatch'
             }
           }
         }

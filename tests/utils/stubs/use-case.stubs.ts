@@ -1,8 +1,10 @@
 import {
+  type ForgetPassword,
   type AddGuardian,
   type Authentication,
-  type ChangePassword,
-  type ForgetPassword
+  type CreateAccessToken,
+  type ValidateVerificationToken,
+  type ChangePassword
 } from '@/domain/use-cases'
 
 const makeFakeAddGuardianUseCase = (): AddGuardian => {
@@ -49,9 +51,29 @@ const makeFakeChangePasswordUseCase = (): ChangePassword => {
   return new ChangePasswordStub()
 }
 
+const makeFakeCreateAccessTokenUseCase = (): CreateAccessToken => {
+  class CreateAccessTokenStub implements CreateAccessToken {
+    async create (email: string): Promise<CreateAccessToken.Result> {
+      return 'valid_token'
+    }
+  }
+  return new CreateAccessTokenStub()
+}
+
+const makeFakeValidateVerificationTokenUseCase = (): ValidateVerificationToken => {
+  class ValidateVerificationTokenStub implements ValidateVerificationToken {
+    async validate (input: ValidateVerificationToken.Params): Promise<ValidateVerificationToken.Result> {
+      return true
+    }
+  }
+  return new ValidateVerificationTokenStub()
+}
+
 export {
   makeFakeAddGuardianUseCase,
   makeFakeAuthenticationUseCase,
   makeFakeForgetPasswordUseCase,
-  makeFakeChangePasswordUseCase
+  makeFakeChangePasswordUseCase,
+  makeFakeCreateAccessTokenUseCase,
+  makeFakeValidateVerificationTokenUseCase
 }

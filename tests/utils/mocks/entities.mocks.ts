@@ -11,13 +11,13 @@ const makeFakeGuardianData = (): Guardian => {
     phone: 'any_phone',
     accessToken: 'any_token',
     verificationToken: 'any_verification_token',
-    verificationTokenCreatedAt: new Date('03/03/2023')
+    verificationTokenCreatedAt: new Date()
   }
 
   return fakeGuardian
 }
 
-const mockFakeGuardianAdded = (): AddGuardianRepository.Result => {
+const mockFakeGuardianAdded = (): Exclude<AddGuardianRepository.Result, undefined> => {
   return {
     id: 'any_id',
     firstName: 'any_first_name',
@@ -27,7 +27,7 @@ const mockFakeGuardianAdded = (): AddGuardianRepository.Result => {
   }
 }
 
-const mockFakeGuardianLoaded = (): LoadGuardianByIdRepository.Result => {
+const mockFakeGuardianLoaded = (): Exclude<LoadGuardianByIdRepository.Result, undefined> => {
   return {
     id: 'any_id',
     firstName: 'any_first_name',
@@ -36,7 +36,8 @@ const mockFakeGuardianLoaded = (): LoadGuardianByIdRepository.Result => {
     password: 'any_hashed_password',
     phone: 'any_phone',
     accessToken: 'any_hashed_token',
-    verificationToken: 'any_verification_token'
+    verificationToken: 'any_verification_token',
+    verificationTokenCreatedAt: new Date()
   }
 }
 

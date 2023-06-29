@@ -1,5 +1,3 @@
-import { type Authentication } from '@/domain/use-cases'
-import { type Controller, type Validation } from '@/application/protocols'
 import {
   type HttpRequest,
   type HttpResponse,
@@ -7,15 +5,19 @@ import {
   unauthorized,
   success,
   serverError
-} from '@/application/helpers/http'
+} from '@/application/helpers'
+import { type Controller, type Validation } from '@/application/protocols'
+import { type CreateAccessToken, type ValidateVerificationToken } from '@/domain/use-cases/'
 
 export class WaitingCodeController implements Controller {
   private readonly validation: Validation
-  private readonly authentication: Authentication
+  private readonly validateVerificationToken: ValidateVerificationToken
+  private readonly createAccessToken: CreateAccessToken
 
-  constructor ({ validation, authentication }: WaitingCodeController.Dependencies) {
-    this.authentication = authentication
+  constructor ({ validation, validateVerificationToken, createAccessToken }: WaitingCodeController.Dependencies) {
     this.validation = validation
+    this.validateVerificationToken = validateVerificationToken
+    this.createAccessToken = createAccessToken
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -24,27 +26,26 @@ export class WaitingCodeController implements Controller {
       if (error) {
         return badRequest(error)
       }
-      const { email, forgetPasswordCode } = httpRequest.body
-
-      const result = await this.authentication.auth({
+      const { email, verificationToken } = httpRequest.body
+      const tokenIsValidOrError = await this.validateVerificationToken.validate({
         email,
-        sensitiveData: { field: 'forgetPasswordCode', value: forgetPasswordCode }
+        verificationToken
       })
-
-      if (result instanceof Error) {
-        return unauthorized(result)
+      if (tokenIsValidOrError instanceof Error) {
+        return unauthorized(tokenIsValidOrError)
       }
-
-      return success({ accessToken: result })
+      const accessToken = await this.createAccessToken.create(email)
+      return success({ accessToken })
     } catch (error) {
       return serverError(error as Error)
     }
   }
 }
 
-namespace WaitingCodeController {
+export namespace WaitingCodeController {
   export interface Dependencies {
-    authentication: Authentication
     validation: Validation
+    validateVerificationToken: ValidateVerificationToken
+    createAccessToken: CreateAccessToken
   }
 }

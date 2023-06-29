@@ -4,7 +4,7 @@ import { EmailValidatorAdapter } from '@/infra/validators'
 
 export const makeWaitingCodeValidation = (): ValidationComposite => {
   const validations: Validation[] = []
-  const requiredFields = ['email', 'forgetPasswordCode']
+  const requiredFields = ['email', 'verificationToken']
 
   for (const field of requiredFields) {
     validations.push(new RequiredFieldValidation(field))

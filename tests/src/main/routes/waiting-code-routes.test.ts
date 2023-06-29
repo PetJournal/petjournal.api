@@ -18,7 +18,7 @@ describe('waiting-code-routes', () => {
       await request(app)
         .post('/api/waiting-code')
         .send({
-          forgetPasswordCode: 'valide_code'
+          verificationToken: 'valid_code'
         }).expect(400)
     })
 
@@ -27,7 +27,7 @@ describe('waiting-code-routes', () => {
         .post('/api/waiting-code')
         .send({
           email: 'incorrect@email.com',
-          forgetPasswordCode: 'valide_code'
+          verificationToken: 'valid_code'
         }).expect(401)
     })
   })

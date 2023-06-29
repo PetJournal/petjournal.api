@@ -17,8 +17,8 @@ interface SutTypes {
 }
 
 const makeSut = (): SutTypes => {
-  const forgetPasswordStub = makeFakeForgetPasswordUseCase()
   const validationStub = makeFakeValidation()
+  const forgetPasswordStub = makeFakeForgetPasswordUseCase()
   const dependencies: ForgetPasswordController.Dependencies = {
     forgetPassword: forgetPasswordStub,
     validation: validationStub

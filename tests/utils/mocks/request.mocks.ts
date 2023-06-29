@@ -50,7 +50,7 @@ const makeFakeChangePasswordRequest = (): ChangePasswordRequest => {
 const makeFakeWaitingCodeRequest = (): WaitingCodeRequest => {
   const body = {
     email: 'valid_email',
-    forgetPasswordCode: 'valid_code'
+    verificationToken: 'valid_code'
   }
 
   return { body }

@@ -13,6 +13,7 @@ export namespace LoadGuardianByEmailRepository {
     phone: string
     password: string
     accessToken: string | null
-    verificationToken: string | null
+    verificationToken: string
+    verificationTokenCreatedAt: Date
   } | undefined
 }
