@@ -4,7 +4,7 @@ import {
   forgetPasswordPath,
   changePasswordPath,
   waitingCodePath
-} from '@/main/docs/paths/'
+} from './paths/'
 
 export default {
   '/signup': signUpPath,
