@@ -1,4 +1,4 @@
-import { badRequest, conflict, unauthorized, serverError, passwordMismatchError, passwordRequirementsError, securitySchemes } from '@/main/docs/components/'
+import { badRequest, conflict, unauthorized, serverError, passwordMismatchError, passwordRequirementsError, securitySchemes } from './components/'
 
 export default {
   securitySchemes,

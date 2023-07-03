@@ -7,7 +7,7 @@ import {
   loginParamsSchema,
   signUpParamsSchema,
   waitingCodeParamsSchema
-} from '@/main/docs/schemas/'
+} from './schemas/'
 
 export default {
   error: errorSchema,
