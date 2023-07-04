@@ -43,13 +43,66 @@ docker compose -f docker-compose.dev.yml up -d
 
 6. Rode o comando `yarn` para instalar as dependências do projeto;
 
-7. Após a correta configuração acima, rode a aplicação com o comando `yarn dev`. Você deve receber a seguinte mensagem de confirmação:
+7. Faça as migrações no banco de dados;
+```bash
+npx prisma migrate dev
+```
 
+8. Rode o comando `yarn build` para transpilar o código typescript para javascript;
+
+9. Após a correta configuração acima, rode a aplicação com o comando `yarn start`. Você deve receber a seguinte mensagem de confirmação:
 ```bash
 Server running at http://localhost:<porta>
 ```
 
-8. Para visualizar a documentação com as rotas disponíveis, acesse `localhost:<porta>/api/docs`.
+10. Para visualizar a documentação com as rotas disponíveis, acesse `localhost:<porta>/api/docs`.
+
+## Variáveis de ambiente
+
+`NODE_ENV`: Essa variável define o ambiente que a aplicação está sendo executada. Exemplo: `NODE_ENV=development`.
+
+---
+Variáveis relacionadas as configurações do banco de dados. Como exemplo são os valores padrões para o desenvolvimento.
+
+`POSTGRES_USER`: Usuário do Postgres. Exemplo: `POSTGRES_USER=admin`.
+
+`POSTGRES_PASSWORD`: Senha do Postgres. Exemplo: `POSTGRES_PASSWORD=admin`.
+
+`POSTGRES_DB`: Nome do banco de dados. Exemplo: `POSTGRES_DB=database`.
+
+`PG_HOST`: Endereço do BD. Exemplo: `PG_HOST=localhost`.
+
+`PG_PORT`: Porta do BD. Exemplo: `PG_PORT=54320`.
+
+`DATABASE_URL`: Url fornecida pelos provedores. Exemplo `DATABASE_URL="postgresql://admin:admin@localhost:54320/database?schema=public"`
+
+---
+Variáveis relacionadas as configurações de serviços externos.
+
+`PORT`: Porta da aplicação. Exemplo: `PORT=3333`.
+
+`SALT`: Valor relacionado ao algoritmo de encriptação do Bcrypt. Exemplo: `SALT=12`.
+
+`SECRET`: Chave secreta para a criação do token jwt. Exemplo: `SECRET=supersecretkey`.
+
+`EXPIRY_TIME_SECONDS`: Tempo de expiração em segundos para o código de recuperação de senha. Exemplo `EXPIRY_TIME_SECONDS=3000`.
+
+`MAIL_SERVICE`: Provedor do serviço de email, relacionada à biblioteca de envio de email. Exemplo: `MAIL_SERVICE="gmail"`.
+
+`MAIL_USER`: Email utilizado pela biblioteca. Exemplo: `MAIL_USER="mail_user@mail.com"`.
+
+`MAIL_PASS`: *Credenciais fornecidas pelo provedor de email. Exemplo: `MAIL_PASS="mail_pass"`.
+
+---
+
+\* Exemplo de como obter o `MAIL_PASS` no provedor de email Gmail:
+1. Clica na sua foto no canto e vá em "Gerenciar sua conta do Google".
+2. Na esquerda clique em "segurança".
+3. Procure pela opção de "Verificação em duas etapas" e ative ela,
+4. após isso ainda na aba de Verificação em duas etapas, procure por "Senha de app".
+5. Selecione o app, escolha um nome e clique em gerar.
+6. No fim terá uma senha gerada. Só copiar e usar nas credenciais do `MAIL_PASS`.
+
 
 <a href='#top'>🔼 Voltar ao topo</a>
 
