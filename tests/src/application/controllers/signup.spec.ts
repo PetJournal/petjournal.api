@@ -32,7 +32,7 @@ describe('SignUp Controller', () => {
   describe('AddGuardian', () => {
     it('Should return 409 (Conflict) if AddGuardian returns undefined', async () => {
       const { sut, addGuardianStub } = makeSut()
-      jest.spyOn(addGuardianStub, 'add').mockResolvedValue(undefined)
+      jest.spyOn(addGuardianStub, 'add').mockResolvedValue(null)
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(conflict(new ConflictGuardianError()))
     })

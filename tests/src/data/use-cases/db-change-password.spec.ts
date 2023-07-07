@@ -66,7 +66,7 @@ describe('DbChangePassword use case', () => {
 
     it('Should return not found error if id does not exist', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValue(undefined)
+      jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValue(null)
       const result = await sut.change(params)
       expect(result).toEqual({
         isSuccess: false,
@@ -78,7 +78,7 @@ describe('DbChangePassword use case', () => {
       const { sut, guardianRepositoryStub } = makeSut()
       const updateGuardianPasswordSpy = jest.spyOn(guardianRepositoryStub, 'updatePassword')
       await sut.change(params)
-      expect(updateGuardianPasswordSpy).toHaveBeenCalledWith({ id: 'any_id', password: 'hashed_value' })
+      expect(updateGuardianPasswordSpy).toHaveBeenCalledWith({ userId: 'any_id', password: 'hashed_value' })
     })
 
     it('Should throw if updatePassword method throws', async () => {

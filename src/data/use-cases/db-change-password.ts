@@ -30,7 +30,7 @@ export class DbChangePassword implements ChangePassword {
     const hashedPassword = await this.hashService.encrypt({ value: userData.password })
 
     await this.guardianRepository.updatePassword({
-      id: userData.id,
+      userId: userData.id,
       password: hashedPassword
     })
 

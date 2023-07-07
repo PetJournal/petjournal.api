@@ -7,8 +7,7 @@ import {
 import {
   makeFakeGuardianRepository,
   makeFakeHashService,
-  makeFakeTokenService,
-  mockFakeGuardianLoaded
+  makeFakeTokenService
 } from '@/tests/utils'
 import { NotFoundError } from '@/application/errors'
 import { DbCreateAccessToken } from '@/data/use-cases/db-create-access-token'
@@ -44,7 +43,7 @@ describe('DbCreateAccessToken UseCase', () => {
   describe('tests guardianRepository', () => {
     it('Should return NotFoundError if not found email is provided', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValueOnce(undefined)
+      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValueOnce(null)
 
       const result = await sut.create(fakeEmail)
 
@@ -77,7 +76,7 @@ describe('DbCreateAccessToken UseCase', () => {
 
       await sut.create(fakeEmail)
 
-      expect(spyTokenService).toHaveBeenCalledWith({ sub: mockFakeGuardianLoaded().id })
+      expect(spyTokenService).toHaveBeenCalledWith({ sub: 'any_id' })
     })
   })
 
@@ -100,7 +99,7 @@ describe('DbCreateAccessToken UseCase', () => {
 
       await sut.create(fakeEmail)
 
-      expect(updateSpy).toHaveBeenCalledWith({ id: 'any_id', token: 'hashed_value' })
+      expect(updateSpy).toHaveBeenCalledWith({ userId: 'any_id', token: 'hashed_value' })
     })
 
     it('Should throw if updateAccessToken throws', async () => {

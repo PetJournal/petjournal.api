@@ -40,8 +40,8 @@ export class DbAuthentication implements Authentication {
     }
     const accessToken = await this.tokenService.generate({ sub: account.id })
     const hashedToken = await this.hashService.encrypt({ value: accessToken })
-    await this.guardianRepository.updateAccessToken({ id: account.id, token: hashedToken })
 
+    await this.guardianRepository.updateAccessToken({ userId: account.id, token: hashedToken })
     return accessToken
   }
 }

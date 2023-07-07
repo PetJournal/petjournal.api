@@ -115,7 +115,7 @@ describe('DbAuthentication UseCase', () => {
 
     it('Should return not found error if email does not exist', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValue(undefined)
+      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValue(null)
       const result = await sut.auth(params)
       expect(result).toEqual(new NotFoundError('email'))
     })
@@ -124,7 +124,7 @@ describe('DbAuthentication UseCase', () => {
       const { sut, guardianRepositoryStub } = makeSut()
       const updateAccessTokenSpy = jest.spyOn(guardianRepositoryStub, 'updateAccessToken')
       await sut.auth(params)
-      expect(updateAccessTokenSpy).toHaveBeenCalledWith({ id: 'any_id', token: 'hashed_value' })
+      expect(updateAccessTokenSpy).toHaveBeenCalledWith({ userId: 'any_id', token: 'hashed_value' })
     })
 
     it('Should throw if updateAccessToken throws', async () => {

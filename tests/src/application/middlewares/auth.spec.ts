@@ -88,7 +88,7 @@ describe('Auth Middleware', () => {
   describe('GuardianRepository', () => {
     it('Should return 401 (Unauthorized) if hash and value do not match', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValue(undefined)
+      jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValue(null)
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(unauthorized(new NotFoundError('User not found')))
     })

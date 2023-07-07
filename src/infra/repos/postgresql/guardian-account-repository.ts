@@ -1,6 +1,7 @@
 import { prisma as db } from './prisma'
 import {
   type AddGuardianRepository,
+  type CheckUserId,
   type LoadGuardianByIdRepository,
   type LoadGuardianByEmailRepository,
   type UpdateAccessTokenRepository,
@@ -8,19 +9,28 @@ import {
   type UpdateVerificationTokenRepository
 } from '@/data/protocols'
 
-export class GuardianAccountRepository implements AddGuardianRepository, LoadGuardianByEmailRepository, LoadGuardianByIdRepository, UpdateAccessTokenRepository, UpdateGuardianPasswordRepository, UpdateVerificationTokenRepository {
+export class GuardianAccountRepository implements
+  AddGuardianRepository,
+  CheckUserId,
+  LoadGuardianByEmailRepository,
+  LoadGuardianByIdRepository,
+  UpdateAccessTokenRepository,
+  UpdateGuardianPasswordRepository,
+  UpdateVerificationTokenRepository {
   async add (guardianData: AddGuardianRepository.Params): Promise<AddGuardianRepository.Result> {
-    const guardianHasEmailRegistered = await db.guardian.findUnique({
-      where: { email: guardianData.email }
+    const guardianHasEmailOrPhoneRegistered = await db.guardian.findFirst({
+      where: {
+        OR: [
+          { email: guardianData.email },
+          { phone: guardianData.phone }
+        ]
+      }
     })
 
-    const guardianHasPhoneRegistered = await db.guardian.findUnique({
-      where: { phone: guardianData.phone }
-    })
-
-    if (guardianHasEmailRegistered ?? guardianHasPhoneRegistered) {
-      return undefined
+    if (guardianHasEmailOrPhoneRegistered) {
+      return null
     }
+
     return await db.guardian.create({
       data: guardianData,
       select: {
@@ -28,60 +38,72 @@ export class GuardianAccountRepository implements AddGuardianRepository, LoadGua
         firstName: true,
         lastName: true,
         email: true,
-        phone: true,
-        verificationToken: true
+        phone: true
       }
     })
   }
 
-  async loadByEmail (email: LoadGuardianByEmailRepository.Params): Promise<LoadGuardianByEmailRepository.Result> {
-    const guardian = await db.guardian.findUnique({ where: { email } })
-    if (guardian) {
-      return guardian
-    }
-  }
-
-  async loadById (id: LoadGuardianByIdRepository.Params): Promise<LoadGuardianByIdRepository.Result> {
-    const guardian = await db.guardian.findUnique({ where: { id } })
-    if (guardian) {
-      return guardian
-    }
-  }
-
-  async updateAccessToken (authentication: UpdateAccessTokenRepository.Params): Promise<UpdateAccessTokenRepository.Result> {
-    const { id, token } = authentication
-    const result = await db.guardian.update({ where: { id }, data: { accessToken: token } })
+  async checkUserId (userId: CheckUserId.Params): Promise<CheckUserId.Result> {
+    const result = await db.guardian.findUnique({ where: { id: userId } })
     return Boolean(result)
   }
 
-  async updateVerificationToken (credentials: UpdateVerificationTokenRepository.Params): Promise<UpdateVerificationTokenRepository.Result> {
-    let success: boolean = false
-    const guardian = await db.guardian.findUnique({
-      where: { id: credentials.userId }
-    })
-
-    if (guardian) {
-      await db.guardian.update({
-        where: { id: credentials.userId },
-        data: { verificationToken: credentials.token, verificationTokenCreatedAt: new Date() }
-      })
-
-      success = true
-    }
-
-    return success
+  async loadByEmail (email: LoadGuardianByEmailRepository.Params): Promise<LoadGuardianByEmailRepository.Result> {
+    return await db.guardian.findUnique({ where: { email } })
   }
 
-  async updatePassword (userData: UpdateGuardianPasswordRepository.Params): Promise<UpdateGuardianPasswordRepository.Result> {
-    const guardian = await db.guardian.findUnique({
-      where: { id: userData.id }
-    })
-    if (guardian) {
-      await db.guardian.update({
-        where: { id: userData.id },
-        data: { password: userData.password }
-      })
+  async loadById (id: LoadGuardianByIdRepository.Params): Promise<LoadGuardianByIdRepository.Result> {
+    return await db.guardian.findUnique({ where: { id } })
+  }
+
+  async updateAccessToken (params: UpdateAccessTokenRepository.Params): Promise<UpdateAccessTokenRepository.Result> {
+    const { userId, token } = params
+
+    const result = await this.checkUserId(userId)
+
+    if (!result) {
+      return false
     }
-    return Boolean(guardian)
+
+    await db.guardian.update({
+      where: { id: userId },
+      data: { accessToken: token }
+    })
+
+    return true
+  }
+
+  async updateVerificationToken (params: UpdateVerificationTokenRepository.Params): Promise<UpdateVerificationTokenRepository.Result> {
+    const { userId, token } = params
+
+    const result = await this.checkUserId(userId)
+
+    if (!result) {
+      return false
+    }
+
+    await db.guardian.update({
+      where: { id: userId },
+      data: { verificationToken: token, verificationTokenCreatedAt: new Date() }
+    })
+
+    return true
+  }
+
+  async updatePassword (params: UpdateGuardianPasswordRepository.Params): Promise<UpdateGuardianPasswordRepository.Result> {
+    const { userId, password } = params
+
+    const result = await this.checkUserId(userId)
+
+    if (!result) {
+      return false
+    }
+
+    await db.guardian.update({
+      where: { id: userId },
+      data: { password }
+    })
+
+    return true
   }
 }

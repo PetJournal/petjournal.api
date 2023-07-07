@@ -24,18 +24,22 @@ export class DbValidateVerificationToken implements ValidateVerificationToken {
     if (!guardian) {
       return new NotFoundError('email')
     }
+
     const limitExpiresDate = new Date(guardian.verificationTokenCreatedAt)
     limitExpiresDate.setSeconds(limitExpiresDate.getSeconds() + Number(env.expiryTimeSeconds))
     if (limitExpiresDate < new Date()) {
       return new VerificationTokenError()
     }
+
     const isValid = await this.hashService.compare({
       value: input.verificationToken,
       hash: guardian.verificationToken
     })
+
     if (!isValid) {
       return new VerificationTokenError()
     }
+
     return isValid
   }
 }

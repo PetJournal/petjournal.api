@@ -13,8 +13,8 @@ const makeSetup = async (): Promise<{ accessToken: string }> => {
       firstName: 'John',
       lastName: 'Doe',
       email: 'johndoe@email.com',
-      password: 'Test@123',
-      passwordConfirmation: 'Test@123',
+      password: 'Test@1234',
+      passwordConfirmation: 'Test@1234',
       phone: '11987654321',
       isPrivacyPolicyAccepted: true
     })
@@ -23,7 +23,7 @@ const makeSetup = async (): Promise<{ accessToken: string }> => {
     .post('/api/login')
     .send({
       email: 'johndoe@email.com',
-      password: 'Test@123'
+      password: 'Test@1234'
     })
 
   return body
@@ -36,7 +36,7 @@ describe('PATCH - /api/guardian/change-password Route', () => {
       .patch('/api/guardian/change-password')
       .set('Authorization', accessToken)
       .send({
-        passwordConfirmation: 'Test@123'
+        passwordConfirmation: 'Test@1234'
       })
 
     expect(response.body.error).toBe('Missing param: password')
@@ -49,7 +49,7 @@ describe('PATCH - /api/guardian/change-password Route', () => {
       .patch('/api/guardian/change-password')
       .set('Authorization', accessToken)
       .send({
-        password: 'Test@123'
+        password: 'Test@1234'
       })
 
     expect(response.body.error).toBe('Missing param: passwordConfirmation')
@@ -76,8 +76,8 @@ describe('PATCH - /api/guardian/change-password Route', () => {
       .patch('/api/guardian/change-password')
       .set('Authorization', accessToken)
       .send({
-        password: 'Test123@',
-        passwordConfirmation: 'Invalid_Test123@'
+        password: 'Test1234@',
+        passwordConfirmation: 'Invalid_Test1234@'
       })
 
     expect(response.body.error).toBe('Passwords must be identical')
@@ -90,8 +90,8 @@ describe('PATCH - /api/guardian/change-password Route', () => {
       .patch('/api/guardian/change-password')
       .set('Authorization', accessToken)
       .send({
-        password: 'Teste123@',
-        passwordConfirmation: 'Teste123@'
+        password: 'Test1234@',
+        passwordConfirmation: 'Test1234@'
       })
 
     expect(response.body.message).toBe('Password reset completed successfully')

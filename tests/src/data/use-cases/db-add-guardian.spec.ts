@@ -74,17 +74,17 @@ describe('DbAddGuardian use case', () => {
 
     it('Should return undefined if email is already registered', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'add').mockResolvedValue(undefined)
+      jest.spyOn(guardianRepositoryStub, 'add').mockResolvedValue(null)
       const result = await sut.add(params)
-      expect(result).toBeUndefined()
+      expect(result).toBeNull()
     })
   })
 
   test('Should return a guardian when saving the user successfully', async () => {
     const { sut } = makeSut()
-    const result = await sut.add(params)
+    const result = await sut.add(params) as any
     expect(result).toHaveProperty('id')
-    expect(result?.id).toBeDefined()
+    expect(result.id).toBeDefined()
     expect(result).toMatchObject({
       firstName: params.firstName,
       lastName: params.lastName,

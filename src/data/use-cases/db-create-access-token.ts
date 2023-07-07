@@ -28,9 +28,12 @@ export class DbCreateAccessToken implements CreateAccessToken {
     if (!guardian) {
       return new NotFoundError('email')
     }
+
     const accessToken = await this.tokenService.generate({ sub: guardian.id })
+
     const hashedToken = await this.hashService.encrypt({ value: accessToken })
-    await this.guardianRepository.updateAccessToken({ id: guardian.id, token: hashedToken })
+
+    await this.guardianRepository.updateAccessToken({ userId: guardian.id, token: hashedToken })
     return accessToken
   }
 }
