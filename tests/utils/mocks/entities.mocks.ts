@@ -1,21 +1,4 @@
 import { type AddGuardianRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
-import { type Guardian } from '@/tests/utils/types'
-
-const makeFakeGuardianData = (): Guardian => {
-  const fakeGuardian = {
-    id: 'any_id',
-    firstName: 'any_first_name',
-    lastName: 'any_last_name',
-    email: 'any_email',
-    password: 'any_password',
-    phone: 'any_phone',
-    accessToken: 'any_token',
-    verificationToken: 'any_verification_token',
-    verificationTokenCreatedAt: new Date()
-  }
-
-  return fakeGuardian
-}
 
 const mockFakeGuardianAdded = (): Exclude<AddGuardianRepository.Result, undefined> => {
   return {
@@ -42,7 +25,6 @@ const mockFakeGuardianLoaded = (): Exclude<LoadGuardianByIdRepository.Result, un
 }
 
 export {
-  makeFakeGuardianData,
   mockFakeGuardianAdded,
   mockFakeGuardianLoaded
 }
