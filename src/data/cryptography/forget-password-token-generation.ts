@@ -2,18 +2,21 @@ import { type SaveTokenRepository } from '@/data/protocols/db/guardian'
 import { type HashGenerator, type TokenGenerator } from '@/data/protocols'
 
 export class ForgetPasswordTokenGenerator implements TokenGenerator {
-  private readonly encrypter: HashGenerator
+  private readonly hashService: HashGenerator
   private readonly saveToken: SaveTokenRepository
 
-  constructor (encrypter: HashGenerator, saveToken: SaveTokenRepository) {
-    this.encrypter = encrypter
+  constructor (hashService: HashGenerator, saveToken: SaveTokenRepository) {
+    this.hashService = hashService
     this.saveToken = saveToken
   }
 
   async generate (userId: string): Promise<string> {
     const token = Math.floor(100000 + Math.random() * 900000).toString()
-    const encryptedToken = await this.encrypter.encrypt({ value: token })
-    await this.saveToken.saveToken(userId, encryptedToken)
+    const encryptedToken = await this.hashService.encrypt({ value: token })
+    await this.saveToken.saveToken({
+      userId,
+      token: encryptedToken
+    })
     return token
   }
 }

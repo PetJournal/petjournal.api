@@ -1,7 +1,12 @@
 export interface SaveTokenRepository {
-  saveToken: (userId: string, token: string) => Promise<SaveTokenRepository.Result>
+  saveToken: (params: SaveTokenRepository.Params) => Promise<SaveTokenRepository.Result>
 }
 
 export namespace SaveTokenRepository {
+  export type Params = {
+    userId: string
+    token: string
+  }
+
   export type Result = boolean
 }
