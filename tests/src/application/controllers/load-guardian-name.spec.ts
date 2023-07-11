@@ -1,4 +1,5 @@
 import { LoadGuardianNameController } from '@/application/controllers'
+import { success } from '@/application/helpers'
 import { type GetGuardianName } from '@/domain/use-cases'
 import { makeFakeServerError, makeGetGuardianName } from '@/tests/utils'
 
@@ -29,5 +30,12 @@ describe('LoadGuardianName Controller', () => {
     jest.spyOn(getGuardianNameStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
     const httpResponse = await sut.handle({ userId: 'any_user_id' })
     expect(httpResponse).toEqual(makeFakeServerError())
+  })
+
+  it('Should return guardian name on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle({ userId: 'any_user_id' })
+    expect(httpResponse.statusCode).toBe(200)
+    expect(httpResponse).toEqual(success({ firstName: 'any_first_name', lastName: 'any_last_name' }))
   })
 })
