@@ -72,8 +72,11 @@ const makeFakeValidateVerificationTokenUseCase = (): ValidateVerificationToken =
 
 const makeGetGuardianName = (): GetGuardianName => {
   class GetGuardianNameStub implements GetGuardianName {
-    async load (userId: string): Promise<string> {
-      return 'any_first_name any_last_name'
+    async load (userId: string): Promise<GetGuardianName.Result> {
+      return {
+        firstName: 'any_first_name',
+        lastName: 'any_last_name'
+      }
     }
   }
   return new GetGuardianNameStub()
