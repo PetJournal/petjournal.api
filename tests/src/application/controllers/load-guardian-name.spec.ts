@@ -1,6 +1,6 @@
 import { LoadGuardianNameController } from '@/application/controllers'
-import { type GetGuardianName } from '@/domain/use-cases/get-guardian-name'
-import { makeGetGuardianName } from '@/tests/utils'
+import { type GetGuardianName } from '@/domain/use-cases'
+import { makeFakeServerError, makeGetGuardianName } from '@/tests/utils'
 
 interface SutTypes {
   sut: LoadGuardianNameController
@@ -22,5 +22,12 @@ describe('LoadGuardianName Controller', () => {
     const getGuardianNameSpy = jest.spyOn(getGuardianNameStub, 'load')
     await sut.handle({ userId: 'any_user_id' })
     expect(getGuardianNameSpy).toHaveBeenCalledWith('any_user_id')
+  })
+
+  it('Should throw if GetGuardianName throws', async () => {
+    const { sut, getGuardianNameStub } = makeSut()
+    jest.spyOn(getGuardianNameStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
+    const httpResponse = await sut.handle({ userId: 'any_user_id' })
+    expect(httpResponse).toEqual(makeFakeServerError())
   })
 })
