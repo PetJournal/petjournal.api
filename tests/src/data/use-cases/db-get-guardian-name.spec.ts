@@ -39,4 +39,10 @@ describe('DbGetGuardianName', () => {
     const promise = sut.load('any_id')
     await expect(promise).rejects.toThrow()
   })
+
+  it('Should return a guardian name on success', async () => {
+    const { sut } = makeSut()
+    const guardianName = await sut.load('any_id')
+    expect(guardianName).toEqual({ firstName: 'any_first_name', lastName: 'any_last_name' })
+  })
 })
