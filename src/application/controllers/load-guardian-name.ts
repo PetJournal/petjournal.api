@@ -11,10 +11,8 @@ export class LoadGuardianNameController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      if (httpRequest.userId) {
-        await this.getGuardianName.load(httpRequest.userId)
-      }
-      return success('')
+      const guardianName = await this.getGuardianName.load(httpRequest.userId as string)
+      return success(guardianName)
     } catch (error) {
       return serverError(error as Error)
     }
