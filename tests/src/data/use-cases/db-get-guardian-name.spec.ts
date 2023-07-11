@@ -32,4 +32,11 @@ describe('DbGetGuardianName', () => {
     const guardian = await sut.load('any_id')
     expect(guardian).toBe(undefined)
   })
+
+  it('Should throw if guardianRepository throws', async () => {
+    const { sut, guardianRepositoryStub } = makeSut()
+    jest.spyOn(guardianRepositoryStub, 'loadById').mockReturnValueOnce(Promise.reject(new Error()))
+    const promise = sut.load('any_id')
+    await expect(promise).rejects.toThrow()
+  })
 })
