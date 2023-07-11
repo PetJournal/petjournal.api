@@ -4,8 +4,8 @@ export interface GetGuardianName {
 
 export namespace GetGuardianName {
   export type Params = string
-  export interface Result {
+  export type Result = {
     firstName: string
     lastName: string
-  }
+  } | undefined
 }
