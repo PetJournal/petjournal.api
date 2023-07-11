@@ -1,5 +1,5 @@
 import { type GetGuardianName } from '@/domain/use-cases'
-import { success, type HttpRequest, type HttpResponse } from '../helpers'
+import { success, type HttpRequest, type HttpResponse, serverError } from '../helpers'
 import { type Controller } from '../protocols'
 
 export class LoadGuardianNameController implements Controller {
@@ -10,10 +10,14 @@ export class LoadGuardianNameController implements Controller {
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    if (httpRequest.userId) {
-      await this.getGuardianName.load(httpRequest.userId)
+    try {
+      if (httpRequest.userId) {
+        await this.getGuardianName.load(httpRequest.userId)
+      }
+      return success('')
+    } catch (error) {
+      return serverError(error as Error)
     }
-    return success('')
   }
 }
 
