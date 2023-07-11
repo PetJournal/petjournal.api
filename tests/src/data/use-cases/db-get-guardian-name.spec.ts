@@ -25,4 +25,11 @@ describe('DbGetGuardianName', () => {
       expect(loadByIdSpy).toHaveBeenCalledWith('any_id')
     })
   })
+
+  it('Should return undefined if guardianRepository returns undefined', async () => {
+    const { sut, guardianRepositoryStub } = makeSut()
+    jest.spyOn(guardianRepositoryStub, 'loadById').mockReturnValueOnce(Promise.resolve(undefined))
+    const guardian = await sut.load('any_id')
+    expect(guardian).toBe(undefined)
+  })
 })
