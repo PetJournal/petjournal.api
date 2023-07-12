@@ -33,7 +33,7 @@ export class SignUpController implements Controller {
         email,
         phone,
         password,
-        verificationToken: 'token dumb'
+        verificationToken: ''
       })
 
       if (!guardian) {

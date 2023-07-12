@@ -29,7 +29,7 @@ export class GuardianAccountRepository implements AddGuardianRepository, LoadGua
         lastName: true,
         email: true,
         phone: true,
-        verificationToken: true
+        verificationToken: false
       }
     })
   }
