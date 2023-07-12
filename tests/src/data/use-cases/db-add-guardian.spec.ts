@@ -1,7 +1,7 @@
 import { type AddGuardian } from '@/domain/use-cases'
 import { type AddGuardianRepository, type HashGenerator } from '@/data/protocols'
 import { DbAddGuardian } from '@/data/use-cases'
-import { makeFakeGuardianRepository, makeFakeHashService } from '@/tests/utils'
+import { makeFakeGuardianRepository, makeFakeHashService, mockHashService } from '@/tests/utils'
 
 interface SutTypes {
   sut: DbAddGuardian
@@ -59,7 +59,7 @@ describe('DbAddGuardian use case', () => {
         firstName: params.firstName,
         lastName: params.lastName,
         email: params.email,
-        password: 'hashed_value',
+        password: mockHashService.hashedValue,
         phone: params.phone,
         verificationToken: params.verificationToken
       })

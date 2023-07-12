@@ -11,7 +11,9 @@ import {
   makeFakeEmailService,
   makeFakeGuardianRepository,
   makeFakeHashService,
-  makeFakeTokenService
+  makeFakeTokenService,
+  mockGuardianEntity,
+  mockHashService
 } from '@/tests/utils'
 
 interface SutTypes {
@@ -53,7 +55,7 @@ describe('DbForgetPassword UseCase', () => {
       const { sut, tokenServiceStub } = makeSut()
       const tokenGeneratorSpy = jest.spyOn(tokenServiceStub, 'generate')
       await sut.forgetPassword(params)
-      expect(tokenGeneratorSpy).toHaveBeenCalledWith('any_id')
+      expect(tokenGeneratorSpy).toHaveBeenCalledWith(mockGuardianEntity.id)
     })
 
     it('Should throw if generate method throws', async () => {
@@ -121,8 +123,8 @@ describe('DbForgetPassword UseCase', () => {
       const updateVerificationTokenSpy = jest.spyOn(guardianRepositoryStub, 'updateVerificationToken')
       await sut.forgetPassword(params)
       expect(updateVerificationTokenSpy).toHaveBeenCalledWith({
-        userId: 'any_id',
-        token: 'hashed_value'
+        userId: mockGuardianEntity.id,
+        token: mockHashService.hashedValue
       })
     })
 

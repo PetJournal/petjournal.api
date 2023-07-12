@@ -1,5 +1,6 @@
 import { GuardianAccountRepository } from '@/infra/repos/postgresql'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
+import { mockGuardianEntity } from '@/tests/utils'
 
 beforeEach(async () => { await PrismaHelper.connect() })
 
@@ -64,7 +65,7 @@ describe('GuardianAccountRepository', () => {
   describe('CheckUserIdRepository', () => {
     it('Should return false when the userId does not exist', async () => {
       const sut = makeSut()
-      const invalidId = 'any_id'
+      const invalidId = 'invalid_id'
       const response = await sut.checkUserId(invalidId)
       expect(response).toBeFalsy()
     })
@@ -126,14 +127,20 @@ describe('GuardianAccountRepository', () => {
   describe('UpdateAccessTokenRepository', () => {
     it('Should return false when invalid userId is provide', async () => {
       const sut = makeSut()
-      const response = await sut.updateAccessToken({ userId: 'any_id', token: 'any_token' })
+      const response = await sut.updateAccessToken({
+        userId: mockGuardianEntity.id,
+        token: 'any_token'
+      })
       expect(response).toBeFalsy()
     })
 
     it('Should return true when accessToken is updated', async () => {
       const sut = makeSut()
       const { id } = await sut.add(input) as any
-      const response = sut.updateAccessToken({ userId: id, token: 'any_token' })
+      const response = sut.updateAccessToken({
+        userId: id,
+        token: 'any_token'
+      })
       expect(response).toBeTruthy()
     })
   })
@@ -160,10 +167,11 @@ describe('GuardianAccountRepository', () => {
 
     it('Should fail when there is no id', async () => {
       const sut = makeSut()
-
-      const authenticationData = { userId: 'invalid_id', password: 'updated_password' }
+      const authenticationData = {
+        userId: 'invalid_id',
+        password: 'updated_password'
+      }
       const response = await sut.updatePassword(authenticationData)
-
       expect(response).toBeFalsy()
     })
   })
@@ -171,14 +179,20 @@ describe('GuardianAccountRepository', () => {
   describe('UpdatePasswordRepository', () => {
     it('Should return false when invalid userId is provide', async () => {
       const sut = makeSut()
-      const response = await sut.updatePassword({ userId: 'any_id', password: 'any_password' })
+      const response = await sut.updatePassword({
+        userId: mockGuardianEntity.id,
+        password: mockGuardianEntity.password
+      })
       expect(response).toBeFalsy()
     })
 
     it('Should return true when password is updated', async () => {
       const sut = makeSut()
       const { id } = await sut.add(input) as any
-      const response = sut.updatePassword({ userId: id, password: 'any_password' })
+      const response = sut.updatePassword({
+        userId: id,
+        password: mockGuardianEntity.password
+      })
       expect(response).toBeTruthy()
     })
   })

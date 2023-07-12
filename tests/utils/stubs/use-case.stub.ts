@@ -27,7 +27,7 @@ const makeFakeAddGuardianUseCase = (): AddGuardian => {
         lastName: mockGuardianUseCase.lastName,
         email: mockGuardianUseCase.email,
         password: mockGuardianUseCase.password,
-        phone: mockGuardianUseCase.password
+        phone: mockGuardianUseCase.phone
       }
       return result
     }
