@@ -8,10 +8,21 @@ import {
   type WaitingCodeRequest
 } from '@/tests/utils'
 
+const mockGuardianRequest = {
+  id: 'any_id',
+  firstName: 'any_first_name',
+  lastName: 'any_last_name',
+  email: 'any_email@mail.com',
+  password: 'any_password',
+  passwordConfirmation: 'any_password',
+  phone: 'any_phone',
+  verificationToken: 'valid_code'
+}
+
 const makeFakeLoginRequest = (): LoginRequest => {
   const body = {
-    email: 'any_email@mail.com',
-    password: 'any_password'
+    email: mockGuardianRequest.email,
+    password: mockGuardianRequest.password
   }
 
   return { body }
@@ -19,12 +30,12 @@ const makeFakeLoginRequest = (): LoginRequest => {
 
 const makeFakeSignUpRequest = (): SignUpRequest => {
   const body = {
-    firstName: 'any_first_name',
-    lastName: 'any_last_name',
-    email: 'any_email@mail.com',
-    password: 'any_password',
-    passwordConfirmation: 'any_password',
-    phone: 'any_phone'
+    firstName: mockGuardianRequest.firstName,
+    lastName: mockGuardianRequest.lastName,
+    email: mockGuardianRequest.email,
+    password: mockGuardianRequest.password,
+    passwordConfirmation: mockGuardianRequest.passwordConfirmation,
+    phone: mockGuardianRequest.phone
   }
 
   return { body }
@@ -32,7 +43,7 @@ const makeFakeSignUpRequest = (): SignUpRequest => {
 
 const makeFakeForgetPasswordRequest = (): ForgetPasswordRequest => {
   const body = {
-    email: 'any_email@mail.com'
+    email: mockGuardianRequest.email
   }
 
   return { body }
@@ -40,8 +51,8 @@ const makeFakeForgetPasswordRequest = (): ForgetPasswordRequest => {
 
 const makeFakeChangePasswordRequest = (): ChangePasswordRequest => {
   const body = {
-    password: 'any_password',
-    passwordConfirmation: 'any_password'
+    password: mockGuardianRequest.password,
+    passwordConfirmation: mockGuardianRequest.passwordConfirmation
   }
 
   return { body }
@@ -49,15 +60,15 @@ const makeFakeChangePasswordRequest = (): ChangePasswordRequest => {
 
 const makeFakeWaitingCodeRequest = (): WaitingCodeRequest => {
   const body = {
-    email: 'valid_email',
-    verificationToken: 'valid_code'
+    email: mockGuardianRequest.email,
+    verificationToken: mockGuardianRequest.verificationToken
   }
 
   return { body }
 }
 
 const makeFakeAuthorizationRequest = (): AuthMiddlewareRequest => {
-  const authorization = 'any_id'
+  const authorization = mockGuardianRequest.id
 
   return { authorization }
 }

@@ -1,6 +1,4 @@
-
 import {
-  makeFakePayload,
   mockFakeGuardianAdded,
   mockFakeGuardianLoaded
 } from '@/tests/utils'
@@ -17,6 +15,15 @@ import {
   type UpdateVerificationTokenRepository,
   type UpdateGuardianPasswordRepository
 } from '@/data/protocols'
+
+const mockHashService = {
+  hashedValue: 'hashed_value'
+}
+
+const mockTokenService = {
+  anyToken: 'any_token',
+  validId: { sub: 'valid_id' }
+}
 
 const makeFakeGuardianRepository = ():
 AddGuardianRepository &
@@ -66,7 +73,7 @@ const makeFakeHashService = (): HashGenerator & HashComparer => {
     }
 
     async encrypt (input: HashGenerator.Params): Promise<string> {
-      return 'hashed_value'
+      return mockHashService.hashedValue
     }
   }
   return new HashServiceStub()
@@ -75,11 +82,11 @@ const makeFakeHashService = (): HashGenerator & HashComparer => {
 const makeFakeTokenService = (): TokenGenerator & TokenDecoder => {
   class TokenServiceStub implements TokenGenerator, TokenDecoder {
     async generate (payload: any): Promise<string> {
-      return 'any_token'
+      return mockTokenService.anyToken
     }
 
     async decode (token: TokenDecoder.Params): Promise<TokenDecoder.Result> {
-      return makeFakePayload()
+      return mockTokenService.validId
     }
   }
   return new TokenServiceStub()
@@ -95,6 +102,8 @@ const makeFakeEmailService = (): EmailService => {
 }
 
 export {
+  mockHashService,
+  mockTokenService,
   makeFakeGuardianRepository,
   makeFakeHashService,
   makeFakeEmailService,
