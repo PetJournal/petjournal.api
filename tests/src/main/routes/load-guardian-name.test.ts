@@ -27,7 +27,7 @@ describe('LoadGuardianName route', () => {
       })
 
     await request(app)
-      .get('/api/load-guardian-name')
+      .get('/api/guardian/name')
       .set('Authorization', `Bearer ${body.accessToken as string}`)
       .expect(200)
   })
@@ -52,7 +52,7 @@ describe('LoadGuardianName route', () => {
       })
 
     await request(app)
-      .get('/api/load-guardian-name')
+      .get('/api/guardian/name')
       .set('Authorization', '')
       .expect(400)
   })
@@ -77,7 +77,7 @@ describe('LoadGuardianName route', () => {
       })
 
     await request(app)
-      .get('/api/load-guardian-name')
+      .get('/api/guardian/name')
       .set('Authorization', 'Bearer invalid_token')
       .expect(401)
   })
