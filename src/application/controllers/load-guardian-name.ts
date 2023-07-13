@@ -1,6 +1,6 @@
 import { type GetGuardianName } from '@/domain/use-cases'
-import { success, type HttpRequest, type HttpResponse, serverError } from '../helpers'
-import { type Controller } from '../protocols'
+import { success, type HttpRequest, type HttpResponse, serverError } from '@/application/helpers'
+import { type Controller } from '@/application/protocols'
 
 export class LoadGuardianNameController implements Controller {
   private readonly getGuardianName: GetGuardianName
