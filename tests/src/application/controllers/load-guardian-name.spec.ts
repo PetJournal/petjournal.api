@@ -35,7 +35,6 @@ describe('LoadGuardianName Controller', () => {
   it('Should return guardian name on success', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle({ userId: 'any_user_id' })
-    expect(httpResponse.statusCode).toBe(200)
     expect(httpResponse).toEqual(success({ firstName: 'any_first_name', lastName: 'any_last_name' }))
   })
 })
