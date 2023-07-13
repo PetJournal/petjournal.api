@@ -19,18 +19,18 @@ export class DbChangePassword implements ChangePassword {
     this.guardianRepository = guardianRepository
   }
 
-  async change (userData: ChangePassword.Params): Promise<ChangePassword.Result> {
-    const account = await this.guardianRepository.loadById(userData.id)
+  async change (guardianData: ChangePassword.Params): Promise<ChangePassword.Result> {
+    const account = await this.guardianRepository.loadById(guardianData.id)
     if (!account) {
       return {
         isSuccess: false,
         error: new NotFoundError('userId')
       }
     }
-    const hashedPassword = await this.hashService.encrypt({ value: userData.password })
+    const hashedPassword = await this.hashService.encrypt({ value: guardianData.password })
 
     await this.guardianRepository.updatePassword({
-      userId: userData.id,
+      userId: guardianData.id,
       password: hashedPassword
     })
 

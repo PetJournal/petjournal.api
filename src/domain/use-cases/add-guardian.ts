@@ -1,11 +1,11 @@
 import { type AddGuardianRepository, type HashGenerator } from '@/data/protocols'
 
 export interface AddGuardian {
-  add: (params: AddGuardian.Params) => Promise<AddGuardian.Result>
+  add: (guardianData: AddGuardian.Params) => Promise<AddGuardian.Result>
 }
 
 export namespace AddGuardian {
-  export interface Params {
+  export type Params = {
     firstName: string
     lastName: string
     email: string
@@ -22,7 +22,7 @@ export namespace AddGuardian {
     phone: string
   } | null
 
-  export interface Dependencies {
+  export type Dependencies = {
     guardianRepository: AddGuardianRepository
     hashService: HashGenerator
   }

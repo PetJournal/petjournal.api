@@ -3,9 +3,10 @@ export interface HashComparer {
 }
 
 export namespace HashComparer {
-  export interface Params {
+  export type Params = {
     value: string
     hash: string
   }
+
   export type Result = boolean
 }

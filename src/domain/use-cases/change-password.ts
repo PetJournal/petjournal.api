@@ -5,21 +5,21 @@ import {
 } from '@/data/protocols'
 
 export interface ChangePassword {
-  change: (userData: ChangePassword.Params) => Promise<ChangePassword.Result>
+  change: (guardianData: ChangePassword.Params) => Promise<ChangePassword.Result>
 }
 
 export namespace ChangePassword {
-  export interface Params {
+  export type Params = {
     id: string
     password: string
   }
 
-  export interface Result {
+  export type Result = {
     isSuccess: boolean
     error?: Error
   }
 
-  export interface Dependencies {
+  export type Dependencies = {
     guardianRepository: LoadGuardianByIdRepository & UpdateGuardianPasswordRepository
     hashService: HashGenerator
   }

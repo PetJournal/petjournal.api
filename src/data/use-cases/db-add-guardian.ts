@@ -10,8 +10,8 @@ export class DbAddGuardian implements AddGuardian {
     this.hashService = hashService
   }
 
-  async add (params: AddGuardian.Params): Promise<AddGuardian.Result> {
-    const hashedPassword = await this.hashService.encrypt({ value: params.password })
-    return await this.guardianRepository.add(Object.assign({}, params, { password: hashedPassword }))
+  async add (guardianData: AddGuardian.Params): Promise<AddGuardian.Result> {
+    const hashedPassword = await this.hashService.encrypt({ value: guardianData.password })
+    return await this.guardianRepository.add(Object.assign({}, guardianData, { password: hashedPassword }))
   }
 }

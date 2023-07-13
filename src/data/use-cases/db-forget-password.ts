@@ -15,10 +15,10 @@ export class DbForgetPassword implements ForgetPassword {
     this.hashService = hashService
   }
 
-  async forgetPassword (params: ForgetPassword.Params): Promise<boolean> {
+  async forgetPassword (guardianData: ForgetPassword.Params): Promise<boolean> {
     let success = false
 
-    const guardian = await this.guardianRepository.loadByEmail(params.email)
+    const guardian = await this.guardianRepository.loadByEmail(guardianData.email)
     if (!guardian) {
       return success
     }
@@ -34,7 +34,7 @@ export class DbForgetPassword implements ForgetPassword {
 
     const emailOptions: EmailService.Options = {
       from: 'contato.petjournal@gmail.com',
-      to: params.email,
+      to: guardianData.email,
       subject: `${guardian.firstName} ${guardian.lastName}, aqui está seu código`,
       text: `
           Olá ${guardian.firstName} ${guardian.lastName},\n

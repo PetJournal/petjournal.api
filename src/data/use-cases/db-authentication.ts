@@ -24,15 +24,15 @@ export class DbAuthentication implements Authentication {
     this.tokenService = tokenService
   }
 
-  async auth (credentials: Authentication.Params): Promise<Authentication.Result> {
-    const account = await this.guardianRepository.loadByEmail(credentials.email)
+  async auth (credentialsData: Authentication.Params): Promise<Authentication.Result> {
+    const account = await this.guardianRepository.loadByEmail(credentialsData.email)
     if (!account) {
       return new NotFoundError('email')
     }
 
     const isValid = await this.hashService.compare({
-      value: credentials.sensitiveData.value,
-      hash: account[credentials.sensitiveData?.field] ?? ''
+      value: credentialsData.sensitiveData.value,
+      hash: account[credentialsData.sensitiveData?.field] ?? ''
     })
 
     if (!isValid) {
