@@ -25,9 +25,9 @@ describe('LoadGuardianName Controller', () => {
     expect(getGuardianNameSpy).toHaveBeenCalledWith('any_user_id')
   })
 
-  it('Should throw if GetGuardianName throws', async () => {
+  it('Should returns 500 (ServerError) if GetGuardianName throws', async () => {
     const { sut, getGuardianNameStub } = makeSut()
-    jest.spyOn(getGuardianNameStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
+    jest.spyOn(getGuardianNameStub, 'load').mockRejectedValueOnce(new Error())
     const httpResponse = await sut.handle({ userId: 'any_user_id' })
     expect(httpResponse).toEqual(makeFakeServerError())
   })
