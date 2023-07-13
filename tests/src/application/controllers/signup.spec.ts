@@ -30,7 +30,7 @@ const makeSut = (): SutTypes => {
 describe('SignUp Controller', () => {
   const httpRequest = makeFakeSignUpRequest()
   describe('AddGuardian', () => {
-    it('Should return 409 (Conflict) if AddGuardian returns undefined', async () => {
+    it('Should return 409 (Conflict) if AddGuardian returns null', async () => {
       const { sut, addGuardianStub } = makeSut()
       jest.spyOn(addGuardianStub, 'add').mockResolvedValue(null)
       const httpResponse = await sut.handle(httpRequest)
