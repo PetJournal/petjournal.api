@@ -41,11 +41,20 @@ interface WaitingCodeRequest {
   }
 }
 
+interface PetRegistryRequest {
+  body: {
+    guardianId: string
+    specieId: string
+    otherAlias: string | undefined
+  }
+}
+
 export {
   type AuthMiddlewareRequest,
   type LoginRequest,
   type SignUpRequest,
   type ForgetPasswordRequest,
   type ChangePasswordRequest,
-  type WaitingCodeRequest
+  type WaitingCodeRequest,
+  type PetRegistryRequest
 }

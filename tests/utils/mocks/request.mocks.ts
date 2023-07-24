@@ -5,7 +5,8 @@ import {
   type SignUpRequest,
   type ForgetPasswordRequest,
   type ChangePasswordRequest,
-  type WaitingCodeRequest
+  type WaitingCodeRequest,
+  type PetRegistryRequest
 } from '@/tests/utils'
 
 const makeFakeLoginRequest = (): LoginRequest => {
@@ -68,6 +69,16 @@ const makeFakePayload = (): TokenDecoder.Result => {
   return { sub }
 }
 
+const makeFakePetRegistryRequest = (): PetRegistryRequest => {
+  const body = {
+    guardianId: 'valid_guardian_id',
+    specieId: 'valid_specie_id',
+    otherAlias: ''
+  }
+
+  return { body }
+}
+
 export {
   makeFakeSignUpRequest,
   makeFakeLoginRequest,
@@ -75,5 +86,6 @@ export {
   makeFakeChangePasswordRequest,
   makeFakeWaitingCodeRequest,
   makeFakeAuthorizationRequest,
-  makeFakePayload
+  makeFakePayload,
+  makeFakePetRegistryRequest
 }
