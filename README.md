@@ -37,7 +37,7 @@ git clone https://github.com/PetJournal/petjournal.api.git
 docker compose -f docker-compose.dev.yml up -d
 ```
 
-4. Garanta que o [**Node.js**](https://nodejs.org/en/download/) está instalado em sua máquina e então habilite o gerenciador de pacotes yarn usando o comando `corepack enable`;
+4. Garanta que o [**Node.js**](https://nodejs.org/en/download/) está instalado em sua máquina e então habilite o gerenciador de pacotes `yarn` usando o comando `corepack enable`;
 
 5. Acesse a pasta do projeto com seu terminal;
 
@@ -50,14 +50,16 @@ npx prisma migrate dev
 
 8. Rode o comando `yarn build` para transpilar o código typescript para javascript;
 
-9. Após a correta configuração acima, rode a aplicação com o comando `yarn start`. Você deve receber a seguinte mensagem de confirmação:
+9. Rode a aplicação com o comando `yarn start`. Você deve receber a seguinte mensagem de confirmação:
 ```bash
-Server running at http://localhost:<porta>
+Server running at http://localhost:<port>
 ```
 
-10. Para visualizar a documentação com as rotas disponíveis, acesse `localhost:<porta>/api/docs`.
+10. Para visualizar a documentação com as rotas disponíveis, acesse `localhost:<port>/api/docs`.
 
 ## Variáveis de ambiente
+
+⚠️ É imprescindível que todas as variáveis estejam devidamente configuradas. ⚠️
 
 `NODE_ENV`: Essa variável define o ambiente que a aplicação está sendo executada. Exemplo: `NODE_ENV=development`.
 
@@ -125,7 +127,7 @@ API of the Pet Journal platform that helps you take care of your pet.
 ```bash
 git clone https://github.com/PetJournal/petjournal.api.git
 ```
-1. Create a copy of the file `.env.example` with the name `.env`. In this file, replace the values for the variables with your favorite localhost port, the user name and password for the PostgreSQL database.
+1. Create a copy of the file `.env.example` with the name `.env`. In this file, replace the values for the variables with your favorite `localhost` port, the user name and password for the PostgreSQL database.
 
 > The app will only work properly if these data are correctly set in `.env` file.
 
@@ -140,15 +142,72 @@ docker compose -f docker-compose.dev.yml up -d
 
 5. Access the project root folder on your terminal;
 
-6. Run the `yarn` command to install the project dependencies;
+6. Run `yarn` command to install the project dependencies;
 
-7. To start the application, run `yarn dev` on your terminal. You should receive the following message:
+7. Perform database migrations;
+
+```bash
+npx prisma migrate dev
+```
+
+8. Run `yarn build` to "transpile" typescript code to javascript;
+
+9. Run `yarn start` on your terminal to start application. You should receive the following message:
 
 ```bash
 Server running at http://localhost:<port>}
 ```
 
-8. To view the documentation with the available routes, access `localhost:<port>/api/docs`.
+10. To view the documentation with the available routes, access `localhost:<port>/api/docs`.
+
+## Environment variables
+
+⚠️ It is necessary that all variables are properly configured. ⚠️
+
+`NODE_ENV`: This variable define which environment the application is running. Example: `NODE_ENV=development`.
+
+---
+Variables related to database settings. As an example are the default values for development.
+
+
+`POSTGRES_USER`: Postgres user. Example: `POSTGRES_USER=admin`.
+
+`POSTGRES_PASSWORD`: Postgres password. Exemple: `POSTGRES_PASSWORD=admin`.
+
+`POSTGRES_DB`: Database name. Exemple: `POSTGRES_DB=database`.
+
+`PG_HOST`: Database address. Exemple: `PG_HOST=localhost`.
+
+`PG_PORT`: Database port. Exemple: `PG_PORT=54320`.
+
+`DATABASE_URL`: Url provided by database providers. Exemple `DATABASE_URL="postgresql://admin:admin@localhost:54320/database?schema=public"`
+
+---
+Variables related to settings by third party services.
+
+`PORT`: Application port. Exemple: `PORT=3333`.
+
+`SALT`: Value related to Bcrypt encryption algorithm settings. Exemple: `SALT=12`.
+
+`SECRET`: Secret key to creation of JWT. Exemple: `SECRET=supersecretkey`.
+
+`EXPIRY_TIME_SECONDS`: Expiry time seconds to password recovery code. Exemple `EXPIRY_TIME_SECONDS=3000`.
+
+`MAIL_SERVICE`: Provedor do serviço de email, relacionada à biblioteca de envio de email. Exemple: `MAIL_SERVICE="gmail"`.
+
+`MAIL_USER`: E-mail used by the library. Exemple: `MAIL_USER="mail_user@mail.com"`.
+
+`MAIL_PASS`: *Credentials provided by the email provider. Exemple: `MAIL_PASS="mail_pass"`.
+
+---
+
+\* Example of how to get `MAIL_PASS` in email provider Gmail:
+1. Click on your photo in the corner and go to "Manage your Google account".
+2. On the left click on "Security".
+3. Look for the "Two-Step Verification" option and enable it.
+4. After that, still on the 2-Step Verification tab, look for "App Password".
+5. Select the app, choose a name and click generate.
+6. At the end you will have a password generated. Just copy and use the `MAIL_PASS` credentials.
 
 <a href='#top'>🔼 Back to top</a>
 
