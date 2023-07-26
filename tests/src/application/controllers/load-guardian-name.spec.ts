@@ -1,33 +1,33 @@
 import { LoadGuardianNameController } from '@/application/controllers'
 import { success } from '@/application/helpers'
-import { type GetGuardianName } from '@/domain/use-cases'
-import { makeFakeServerError, makeGetGuardianName } from '@/tests/utils'
+import { type LoadGuardianName } from '@/domain/use-cases'
+import { makeFakeServerError, makeLoadGuardianNameUseCase } from '@/tests/utils'
 
 interface SutTypes {
   sut: LoadGuardianNameController
-  getGuardianNameStub: GetGuardianName
+  loadGuardianNameStub: LoadGuardianName
 }
 
 const makeSut = (): SutTypes => {
-  const getGuardianNameStub = makeGetGuardianName()
-  const sut = new LoadGuardianNameController({ getGuardianName: getGuardianNameStub })
+  const loadGuardianNameStub = makeLoadGuardianNameUseCase()
+  const sut = new LoadGuardianNameController({ loadGuardianName: loadGuardianNameStub })
   return {
     sut,
-    getGuardianNameStub
+    loadGuardianNameStub
   }
 }
 
 describe('LoadGuardianName Controller', () => {
-  it('Should call GetGuardianName with correct values', async () => {
-    const { sut, getGuardianNameStub } = makeSut()
-    const getGuardianNameSpy = jest.spyOn(getGuardianNameStub, 'load')
+  it('Should call LoadGuardianName with correct values', async () => {
+    const { sut, loadGuardianNameStub } = makeSut()
+    const getGuardianNameSpy = jest.spyOn(loadGuardianNameStub, 'load')
     await sut.handle({ userId: 'any_user_id' })
     expect(getGuardianNameSpy).toHaveBeenCalledWith('any_user_id')
   })
 
-  it('Should returns 500 (ServerError) if GetGuardianName throws', async () => {
-    const { sut, getGuardianNameStub } = makeSut()
-    jest.spyOn(getGuardianNameStub, 'load').mockRejectedValueOnce(new Error())
+  it('Should returns 500 (ServerError) if LoadGuardianName throws', async () => {
+    const { sut, loadGuardianNameStub } = makeSut()
+    jest.spyOn(loadGuardianNameStub, 'load').mockRejectedValueOnce(new Error())
     const httpResponse = await sut.handle({ userId: 'any_user_id' })
     expect(httpResponse).toEqual(makeFakeServerError())
   })

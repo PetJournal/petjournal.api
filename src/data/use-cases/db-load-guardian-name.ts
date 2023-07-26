@@ -1,14 +1,14 @@
-import { type GetGuardianName } from '@/domain/use-cases'
+import { type LoadGuardianName } from '@/domain/use-cases'
 import { type LoadGuardianByIdRepository } from '../protocols'
 
-export class DbGetGuardianName implements GetGuardianName {
+export class DbLoadGuardianName implements LoadGuardianName {
   private readonly guardianRepository: LoadGuardianByIdRepository
 
-  constructor ({ guardianRepository }: DbGetGuardianName.Dependencies) {
+  constructor ({ guardianRepository }: DbLoadGuardianName.Dependencies) {
     this.guardianRepository = guardianRepository
   }
 
-  async load (userId: GetGuardianName.Params): Promise<GetGuardianName.Result> {
+  async load (userId: LoadGuardianName.Params): Promise<LoadGuardianName.Result> {
     const guardian = await this.guardianRepository.loadById(userId)
     if (!guardian) {
       return undefined
@@ -17,7 +17,7 @@ export class DbGetGuardianName implements GetGuardianName {
   }
 }
 
-export namespace DbGetGuardianName {
+export namespace DbLoadGuardianName {
   export interface Dependencies {
     guardianRepository: LoadGuardianByIdRepository
   }

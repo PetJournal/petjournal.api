@@ -1,22 +1,22 @@
 import { type LoadGuardianByIdRepository } from '@/data/protocols'
-import { DbGetGuardianName } from '@/data/use-cases'
+import { DbLoadGuardianName } from '@/data/use-cases'
 import { makeFakeGuardianRepository } from '@/tests/utils'
 
 interface SutTypes {
-  sut: DbGetGuardianName
+  sut: DbLoadGuardianName
   guardianRepositoryStub: LoadGuardianByIdRepository
 }
 
 const makeSut = (): SutTypes => {
   const guardianRepositoryStub = makeFakeGuardianRepository()
-  const sut = new DbGetGuardianName({ guardianRepository: guardianRepositoryStub })
+  const sut = new DbLoadGuardianName({ guardianRepository: guardianRepositoryStub })
   return {
     sut,
     guardianRepositoryStub
   }
 }
 
-describe('DbGetGuardianName', () => {
+describe('DbLoadGuardianName', () => {
   describe('GuardianRepository', () => {
     it('Should call loadById method with correct value', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
