@@ -1,6 +1,6 @@
+import { type LoadGuardianName } from '@/domain/use-cases'
 import { LoadGuardianNameController } from '@/application/controllers'
 import { success } from '@/application/helpers'
-import { type LoadGuardianName } from '@/domain/use-cases'
 import { makeFakeServerError, makeLoadGuardianNameUseCase } from '@/tests/utils'
 
 interface SutTypes {

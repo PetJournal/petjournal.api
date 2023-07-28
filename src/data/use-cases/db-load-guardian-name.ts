@@ -1,5 +1,5 @@
 import { type LoadGuardianName } from '@/domain/use-cases'
-import { type LoadGuardianByIdRepository } from '../protocols'
+import { type LoadGuardianByIdRepository } from '@/data/protocols'
 
 export class DbLoadGuardianName implements LoadGuardianName {
   private readonly guardianRepository: LoadGuardianByIdRepository

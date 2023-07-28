@@ -1,5 +1,5 @@
 import { LoadGuardianNameController } from '@/application/controllers'
-import { makeDbLoadGuardianName } from '../usecases'
+import { makeDbLoadGuardianName } from '@/main/factories/usecases'
 import { LoggerControllerDecorator } from '@/main/decorators'
 import { LoggerPgRepository } from '@/infra/repos/postgresql'
 import { type Controller } from '@/application/protocols'
