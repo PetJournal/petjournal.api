@@ -7,5 +7,5 @@ export namespace LoadGuardianName {
   export type Result = {
     firstName: string
     lastName: string
-  } | undefined
+  } | null
 }

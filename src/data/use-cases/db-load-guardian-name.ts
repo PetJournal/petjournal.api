@@ -11,7 +11,7 @@ export class DbLoadGuardianName implements LoadGuardianName {
   async load (userId: LoadGuardianName.Params): Promise<LoadGuardianName.Result> {
     const guardian = await this.guardianRepository.loadById(userId)
     if (!guardian) {
-      return undefined
+      return null
     }
     return { firstName: guardian.firstName, lastName: guardian.lastName }
   }
