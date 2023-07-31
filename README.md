@@ -34,28 +34,30 @@ git clone https://github.com/PetJournal/petjournal.api.git
 
 3. Para iniciar o banco de dados PostgreSQL, rode o comando:
 ```bash
-docker compose -f docker-compose.dev.yml up -d
+# docker compose -f docker-compose.dev.yml up -d
+yarn docker:up
 ```
 
-4. Garanta que o [**Node.js**](https://nodejs.org/en/download/) está instalado em sua máquina e então habilite o gerenciador de pacotes `yarn` usando o comando `corepack enable`;
+1. Garanta que o [**Node.js**](https://nodejs.org/en/download/) está instalado em sua máquina e então habilite o gerenciador de pacotes `yarn` usando o comando `corepack enable`;
 
-5. Acesse a pasta do projeto com seu terminal;
+2. Acesse a pasta do projeto com seu terminal;
 
-6. Rode o comando `yarn` para instalar as dependências do projeto;
+3. Rode o comando `yarn` para instalar as dependências do projeto;
 
-7. Faça as migrações no banco de dados;
+4. Faça as migrações no banco de dados;
 ```bash
-npx prisma migrate dev
+# npx prisma migrate dev
+yarn migrate
 ```
 
-8. Rode o comando `yarn build` para transpilar o código typescript para javascript;
+1. Rode o comando `yarn build` para transpilar o código typescript para javascript;
 
-9. Rode a aplicação com o comando `yarn start`. Você deve receber a seguinte mensagem de confirmação:
+2. Rode a aplicação com o comando `yarn start`. Você deve receber a seguinte mensagem de confirmação:
 ```bash
 Server running at http://localhost:<port>
 ```
 
-10. Para visualizar a documentação com as rotas disponíveis, acesse `localhost:<port>/api/docs`.
+1.  Para visualizar a documentação com as rotas disponíveis, acesse `localhost:<port>/api/docs`.
 
 ## Variáveis de ambiente
 
@@ -97,13 +99,13 @@ Variáveis relacionadas as configurações de serviços externos.
 
 ---
 
-\* Exemplo de como obter o `MAIL_PASS` no provedor de email Gmail:
-1. Clica na sua foto no canto e vá em "Gerenciar sua conta do Google".
-2. Na esquerda clique em "segurança".
-3. Procure pela opção de "Verificação em duas etapas" e ative ela,
-4. após isso ainda na aba de Verificação em duas etapas, procure por "Senha de app".
-5. Selecione o app, escolha um nome e clique em gerar.
-6. No fim terá uma senha gerada. Só copiar e usar nas credenciais do `MAIL_PASS`.
+\* Exemplo de como obter o `MAIL_PASS` no provedor de email Gmail: 
+
+1. Entre nas configurações de segurança da sua conta do Gmail.
+2. Procure pela opção de "Verificação em duas etapas" e ative ela.
+3. Ainda na aba de Verificação em duas etapas, procure por "Senhas de app".
+4. Selecione o app, escolha um nome e clique em gerar.
+5. No fim terá uma senha gerada. Só copiar e usar nas credenciais do `MAIL_PASS`.
 
 
 <a href='#top'>🔼 Voltar ao topo</a>
@@ -135,7 +137,7 @@ git clone https://github.com/PetJournal/petjournal.api.git
 
 3. To start the PostgreSQL database, run the command:
 ```bash
-docker compose -f docker-compose.dev.yml up -d
+yarn docker:up
 ```
 
 4. Ensure that [**Node.js**](https://nodejs.org/en/download/) is installed on your machine and then enable the `yarn` package manager using the `corepack enable` command;
@@ -147,7 +149,7 @@ docker compose -f docker-compose.dev.yml up -d
 7. Perform database migrations;
 
 ```bash
-npx prisma migrate dev
+yarn migrate
 ```
 
 8. Run `yarn build` to "transpile" typescript code to javascript;
@@ -202,12 +204,11 @@ Variables related to settings by third party services.
 ---
 
 \* Example of how to get `MAIL_PASS` in email provider Gmail:
-1. Click on your photo in the corner and go to "Manage your Google account".
-2. On the left click on "Security".
-3. Look for the "Two-Step Verification" option and enable it.
-4. After that, still on the 2-Step Verification tab, look for "App Password".
-5. Select the app, choose a name and click generate.
-6. At the end you will have a password generated. Just copy and use the `MAIL_PASS` credentials.
+1. Enter the security settings of your Gmail account.
+2. Look for the "Two-Step Verification" option and enable it.
+3. After that, still on the 2-Step Verification tab, look for "App Password".
+4. Select the app, choose a name and click generate.
+5. At the end you will have a password generated. Just copy and use the `MAIL_PASS` credentials.
 
 <a href='#top'>🔼 Back to top</a>
 
