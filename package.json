@@ -9,6 +9,8 @@
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "lint": "eslint .",
     "lint:fix": "yarn run lint --fix",
+    "docker:up": "docker compose -f docker-compose.dev.yml up -d",
+    "migrate": "prisma migrate dev",
     "test": "jest --passWithNoTests --no-cache --runInBand --silent --noStackTrace",
     "test:watch": "yarn test --watch",
     "test:verbose": "jest --passWithNoTests --no-cache --runInBand",
