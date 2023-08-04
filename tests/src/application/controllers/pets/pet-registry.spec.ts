@@ -1,24 +1,7 @@
-import { type HttpRequest, type HttpResponse, badRequest } from '@/application/helpers'
-import { type Controller, type Validation } from '@/application/protocols'
+import { PetRegistryController } from '@/application/controllers'
+import { badRequest } from '@/application/helpers'
+import { type Validation } from '@/application/protocols'
 import { makeFakePetRegistryRequest, makeFakeValidation } from '@/tests/utils'
-
-export class PetRegistryController implements Controller {
-  private readonly validation: Validation
-
-  constructor ({ validation }: PetRegistryController.Dependencies) {
-    this.validation = validation
-  }
-
-  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    return badRequest(new Error())
-  }
-}
-
-export namespace PetRegistryController {
-  export interface Dependencies {
-    validation: Validation
-  }
-}
 
 interface SutTypes {
   sut: PetRegistryController
@@ -44,6 +27,17 @@ describe('PetRegistry Controller', () => {
       const httpResponse = await sut.handle(httpRequest)
 
       expect(httpResponse).toEqual(badRequest(new Error()))
+    })
+
+    it('Should call Validation with correct values', async () => {
+      const { sut, validationStub } = makeSut()
+      const validateSpy = jest.spyOn(validationStub, 'validate')
+      await sut.handle(httpRequest)
+      expect(validateSpy).toHaveBeenCalledWith({
+        guardianId: httpRequest.body.guardianId,
+        specieId: httpRequest.body.specieId,
+        otherAlias: httpRequest.body.otherAlias
+      })
     })
   })
 })
