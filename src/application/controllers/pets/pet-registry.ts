@@ -23,6 +23,9 @@ export class PetRegistryController implements Controller {
         guardianId,
         specieId
       })
+      if (!result.isSuccess) {
+        return badRequest(result.error as Error)
+      }
       return create({
         id: result.id,
         specie: result.specie
