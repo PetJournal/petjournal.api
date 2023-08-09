@@ -6,6 +6,8 @@ import {
   type ValidateVerificationToken,
   type ChangePassword
 } from '@/domain/use-cases'
+import { type AddPet } from '@/domain/use-cases/pet/add-pet'
+import { makeFakeGuardianData } from '../mocks'
 
 const makeFakeAddGuardianUseCase = (): AddGuardian => {
   class AddGuardianStub implements AddGuardian {
@@ -69,8 +71,22 @@ const makeFakeValidateVerificationTokenUseCase = (): ValidateVerificationToken =
   return new ValidateVerificationTokenStub()
 }
 
+const makeFakeAddPetUseCase = (): AddPet => {
+  class AddGuardianStub implements AddPet {
+    async add (petData: AddPet.Params): Promise<AddPet.Result> {
+      const result = {
+        id: 'any_id',
+        guardian: makeFakeGuardianData()
+      }
+      return result
+    }
+  }
+  return new AddGuardianStub()
+}
+
 export {
   makeFakeAddGuardianUseCase,
+  makeFakeAddPetUseCase,
   makeFakeAuthenticationUseCase,
   makeFakeForgetPasswordUseCase,
   makeFakeChangePasswordUseCase,
