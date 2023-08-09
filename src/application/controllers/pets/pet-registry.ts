@@ -19,11 +19,14 @@ export class PetRegistryController implements Controller {
       }
       const guardianId = httpRequest.userId as string
       const { specieId } = httpRequest.body
-      const pet = await this.addPet.add({
+      const result = await this.addPet.add({
         guardianId,
         specieId
       })
-      return create(pet)
+      return create({
+        id: result.id,
+        specie: result.specie
+      })
     } catch (error) {
       return serverError(error as Error)
     }

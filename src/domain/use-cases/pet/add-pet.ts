@@ -1,4 +1,4 @@
-import { type Guardian } from '@/tests/utils'
+import { type LoadGuardianByIdRepository } from '@/data/protocols'
 
 export interface AddPet {
   add: (petData: AddPet.Params) => Promise<AddPet.Result>
@@ -10,13 +10,17 @@ export namespace AddPet {
     specieId: string
   }
 
-  export type Result = {
-    id: string
-    guardian: Guardian
-    // specie: Specie
-  } | undefined
+  export interface Result {
+    isSuccess: boolean
+    error?: Error
+    id?: string
+    specie?: {
+      id: string
+      name: string
+    }
+  }
 
   export interface Dependencies {
-    guardianRepository: AddPet
+    guardianRepository: LoadGuardianByIdRepository
   }
 }

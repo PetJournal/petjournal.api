@@ -75,8 +75,12 @@ const makeFakeAddPetUseCase = (): AddPet => {
   class AddGuardianStub implements AddPet {
     async add (petData: AddPet.Params): Promise<AddPet.Result> {
       const result = {
+        isSuccess: true,
         id: 'any_id',
-        guardian: makeFakeGuardianData()
+        specie: {
+          id: 'any_id',
+          name: 'any_name'
+        }
       }
       return result
     }
