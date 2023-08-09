@@ -42,6 +42,7 @@ interface WaitingCodeRequest {
 }
 
 interface PetRegistryRequest {
+  userId?: string
   body: {
     guardianId: string
     specieId: string

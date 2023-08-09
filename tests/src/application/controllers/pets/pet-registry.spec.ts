@@ -28,8 +28,22 @@ describe('PetRegistry Controller', () => {
     it('should return 500 (ServerError) if add throws', async () => {
       const { sut, addPetStub } = makeSut()
       jest.spyOn(addPetStub, 'add').mockRejectedValue(new Error())
+
       const httpResponse = await sut.handle(httpRequest)
+
       expect(httpResponse).toEqual(makeFakeServerError())
+    })
+
+    it('Should call add with correct values', async () => {
+      const { sut, addPetStub } = makeSut()
+      const addPetSpy = jest.spyOn(addPetStub, 'add')
+
+      await sut.handle(httpRequest)
+
+      expect(addPetSpy).toHaveBeenCalledWith({
+        guardianId: httpRequest.userId,
+        specieId: httpRequest.body.specieId
+      })
     })
   })
 
