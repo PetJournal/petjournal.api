@@ -1,4 +1,4 @@
-import { type LoadGuardianByIdRepository } from '@/data/protocols'
+import { type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 
 export interface AddPet {
   add: (petData: AddPet.Params) => Promise<AddPet.Result>
@@ -22,5 +22,6 @@ export namespace AddPet {
 
   export interface Dependencies {
     guardianRepository: LoadGuardianByIdRepository
+    petRepository: AddPetRepository
   }
 }

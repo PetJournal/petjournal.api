@@ -1,12 +1,14 @@
 import { NotFoundError } from '@/application/errors'
-import { type LoadGuardianByIdRepository } from '@/data/protocols'
+import { type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 import { type AddPet } from '@/domain/use-cases'
 
 export class DbAddPet implements AddPet {
   private readonly guardianRepository: LoadGuardianByIdRepository
+  private readonly petRepository: AddPetRepository
 
-  constructor ({ guardianRepository }: AddPet.Dependencies) {
+  constructor ({ guardianRepository, petRepository }: AddPet.Dependencies) {
     this.guardianRepository = guardianRepository
+    this.petRepository = petRepository
   }
 
   async add (petData: AddPet.Params): Promise<AddPet.Result> {
@@ -17,10 +19,11 @@ export class DbAddPet implements AddPet {
         error: new NotFoundError('userId')
       }
     }
+    await this.petRepository.add(petData)
     return {
       isSuccess: true,
       specie: {
-        id: '1',
+        id: 'any_specie_id',
         name: 'any_specie'
       }
     }
