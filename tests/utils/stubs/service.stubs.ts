@@ -15,7 +15,8 @@ import {
   type TokenGenerator,
   type UpdateAccessTokenRepository,
   type UpdateVerificationTokenRepository,
-  type UpdateGuardianPasswordRepository
+  type UpdateGuardianPasswordRepository,
+  type AddPetRepository
 } from '@/data/protocols'
 
 const makeFakeGuardianRepository = ():
@@ -59,6 +60,20 @@ UpdateVerificationTokenRepository => {
   return new GuardianRepositoryStub()
 }
 
+const makeFakePetRepository = (): AddPetRepository => {
+  class PetRepositoryStub implements AddPetRepository {
+    async add (guardian: AddPetRepository.Params): Promise<AddPetRepository.Result> {
+      return {
+        id: 'any_id',
+        guardianId: 'any_guardian_id',
+        specieId: 'any_specie_id'
+      }
+    }
+  }
+
+  return new PetRepositoryStub()
+}
+
 const makeFakeHashService = (): HashGenerator & HashComparer => {
   class HashServiceStub implements HashGenerator, HashComparer {
     async compare (input: HashComparer.Params): Promise<boolean> {
@@ -96,6 +111,7 @@ const makeFakeEmailService = (): EmailService => {
 
 export {
   makeFakeGuardianRepository,
+  makeFakePetRepository,
   makeFakeHashService,
   makeFakeEmailService,
   makeFakeTokenService

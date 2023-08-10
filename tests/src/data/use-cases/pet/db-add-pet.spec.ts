@@ -1,22 +1,26 @@
 import { NotFoundError } from '@/application/errors'
-import { type LoadGuardianByIdRepository } from '@/data/protocols'
+import { type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 import { DbAddPet } from '@/data/use-cases'
 import { type AddPet } from '@/domain/use-cases'
-import { makeFakeGuardianRepository } from '@/tests/utils'
+import { makeFakeGuardianRepository, makeFakePetRepository } from '@/tests/utils'
 
 interface SutTypes {
   sut: DbAddPet
   guardianRepositoryStub: LoadGuardianByIdRepository
+  petRepositoryStub: AddPetRepository
 }
 
 const makeSut = (): SutTypes => {
   const guardianRepositoryStub = makeFakeGuardianRepository()
+  const petRepositoryStub = makeFakePetRepository()
   const sut = new DbAddPet({
-    guardianRepository: guardianRepositoryStub
+    guardianRepository: guardianRepositoryStub,
+    petRepository: petRepositoryStub
   })
   return {
     sut,
-    guardianRepositoryStub
+    guardianRepositoryStub,
+    petRepositoryStub
   }
 }
 
@@ -25,6 +29,7 @@ describe('DbAddPet Use Case', () => {
     guardianId: 'any_guardian_id',
     specieId: 'any_specie_id'
   }
+
   describe('GuardianRepository', () => {
     it('Should call loadById method with correct values', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
@@ -54,6 +59,17 @@ describe('DbAddPet Use Case', () => {
         isSuccess: false,
         error: new NotFoundError('userId')
       })
+    })
+  })
+
+  describe('PetRepository', () => {
+    it('Should throw if add method throws', async () => {
+      const { sut, petRepositoryStub } = makeSut()
+      jest.spyOn(petRepositoryStub, 'add').mockRejectedValue(new Error())
+
+      const promise = sut.add(params)
+
+      await expect(promise).rejects.toThrow()
     })
   })
 })
