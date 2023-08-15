@@ -30,34 +30,33 @@ git clone https://github.com/PetJournal/petjournal.api.git
 1. Crie uma cópia do arquivo `.env.example` com o nome `.env`. Neste arquivo, substitua os valores das variáveis pela porta de sua preferência para o `localhost`, além do nome de usuário e senha do seu banco de dados PostgreSQL.
 > A aplicação só funcionará com esses dados corretamente inseridos no arquivo `.env`.
 
-2. Inicie o [Docker](https://www.docker.com/) em sua máquina;
 
-3. Para iniciar o banco de dados PostgreSQL, rode o comando:
+2. Garanta que o [**Node.js**](https://nodejs.org/en/download/) está instalado em sua máquina e então habilite o gerenciador de pacotes `yarn`.
+
+3. Acesse a pasta do projeto com seu terminal.
+
+4. Rode o comando `yarn` para instalar as dependências do projeto.
+
+5. Inicie o [**Docker**](https://www.docker.com/) em sua máquina.
+
+6. Para iniciar o banco de dados PostgreSQL, rode o comando.
 ```bash
-# docker compose -f docker-compose.dev.yml up -d
 yarn docker:up
 ```
 
-1. Garanta que o [**Node.js**](https://nodejs.org/en/download/) está instalado em sua máquina e então habilite o gerenciador de pacotes `yarn` usando o comando `corepack enable`;
-
-2. Acesse a pasta do projeto com seu terminal;
-
-3. Rode o comando `yarn` para instalar as dependências do projeto;
-
-4. Faça as migrações no banco de dados;
+7. Faça as migrações no banco de dados.
 ```bash
-# npx prisma migrate dev
 yarn migrate
 ```
 
-1. Rode o comando `yarn build` para transpilar o código typescript para javascript;
+8. Rode o comando `yarn build` para transpilar o código typescript para javascript.
 
-2. Rode a aplicação com o comando `yarn start`. Você deve receber a seguinte mensagem de confirmação:
+9. Rode a aplicação com o comando `yarn start`. Você deve receber a seguinte mensagem de confirmação:
 ```bash
 Server running at http://localhost:<port>
 ```
 
-1.  Para visualizar a documentação com as rotas disponíveis, acesse `localhost:<port>/api/docs`.
+10.  Para visualizar a documentação com as rotas disponíveis, acesse `localhost:<port>/api/docs`.
 
 ## Variáveis de ambiente
 
@@ -133,26 +132,26 @@ git clone https://github.com/PetJournal/petjournal.api.git
 
 > The app will only work properly if these data are correctly set in `.env` file.
 
-2. Start [Docker](https://www.docker.com/) on your machine;
+2. Ensure that [**Node.js**](https://nodejs.org/en/download/) is installed on your machine and then enable the `yarn`.
 
-3. To start the PostgreSQL database, run the command:
+3. Access the project root folder on your terminal.
+
+4. Run `yarn` command to install the project dependencies.
+
+5. Start [**Docker**](https://www.docker.com/) on your machine.
+
+6. To start the PostgreSQL database, run the command:
 ```bash
 yarn docker:up
 ```
 
-4. Ensure that [**Node.js**](https://nodejs.org/en/download/) is installed on your machine and then enable the `yarn` package manager using the `corepack enable` command;
-
-5. Access the project root folder on your terminal;
-
-6. Run `yarn` command to install the project dependencies;
-
-7. Perform database migrations;
+7. Perform database migrations.
 
 ```bash
 yarn migrate
 ```
 
-8. Run `yarn build` to "transpile" typescript code to javascript;
+8. Run `yarn build` to "transpile" typescript code to javascript.
 
 9. Run `yarn start` on your terminal to start application. You should receive the following message:
 
