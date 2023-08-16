@@ -44,15 +44,6 @@ describe('DbAddPet Use Case', () => {
       expect(loadByEmailSpy).toHaveBeenCalledWith(params.guardianId)
     })
 
-    it('Should throw if loadById method throws', async () => {
-      const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'loadById').mockRejectedValue(new Error())
-
-      const promise = sut.add(params)
-
-      await expect(promise).rejects.toThrow()
-    })
-
     it('Should return not found error if incorrect guardianId is provided', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
       jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValueOnce(undefined)
@@ -64,9 +55,27 @@ describe('DbAddPet Use Case', () => {
         error: new NotFoundError('userId')
       })
     })
+
+    it('Should throw if loadById method throws', async () => {
+      const { sut, guardianRepositoryStub } = makeSut()
+      jest.spyOn(guardianRepositoryStub, 'loadById').mockRejectedValue(new Error())
+
+      const promise = sut.add(params)
+
+      await expect(promise).rejects.toThrow()
+    })
   })
 
   describe('SpecieRepository', () => {
+    it('Should call loadById method with correct values', async () => {
+      const { sut, specieRepositoryStub } = makeSut()
+      const loadByEmailSpy = jest.spyOn(specieRepositoryStub, 'loadById')
+
+      await sut.add(params)
+
+      expect(loadByEmailSpy).toHaveBeenCalledWith(params.specieId)
+    })
+
     it('should return not found error if incorrect specieId is provided', async () => {
       const { sut, specieRepositoryStub } = makeSut()
       jest.spyOn(specieRepositoryStub, 'loadById').mockResolvedValueOnce(undefined)
