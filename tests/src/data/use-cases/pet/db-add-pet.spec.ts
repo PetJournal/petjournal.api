@@ -87,6 +87,15 @@ describe('DbAddPet Use Case', () => {
         error: new NotFoundError('specieId')
       })
     })
+
+    it('Should throw if loadById method throws', async () => {
+      const { sut, specieRepositoryStub } = makeSut()
+      jest.spyOn(specieRepositoryStub, 'loadById').mockRejectedValue(new Error())
+
+      const promise = sut.add(params)
+
+      await expect(promise).rejects.toThrow()
+    })
   })
 
   describe('PetRepository', () => {
