@@ -1,9 +1,9 @@
 import { PetRegistryController } from '@/application/controllers'
 import { NotFoundError } from '@/application/errors'
-import { badRequest } from '@/application/helpers'
+import { badRequest, create } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type AddPet } from '@/domain/use-cases'
-import { makeFakeAddPetUseCase, makeFakePetRegistryRequest, makeFakeServerError, makeFakeValidation } from '@/tests/utils'
+import { makeFakeAddPetUseCase, makeFakePetRegistryRequest, makeFakeServerError, makeFakeValidation, mockFakePetAdded } from '@/tests/utils'
 
 interface SutTypes {
   sut: PetRegistryController
@@ -73,12 +73,22 @@ describe('PetRegistry Controller', () => {
     it('Should call Validation with correct values', async () => {
       const { sut, validationStub } = makeSut()
       const validateSpy = jest.spyOn(validationStub, 'validate')
+
       await sut.handle(httpRequest)
+
       expect(validateSpy).toHaveBeenCalledWith({
         guardianId: httpRequest.body.guardianId,
         specieId: httpRequest.body.specieId,
         otherAlias: httpRequest.body.otherAlias
       })
     })
+  })
+
+  it('should return 201 (Created) if valid data is provided', async () => {
+    const { sut } = makeSut()
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual(create(mockFakePetAdded()))
   })
 })

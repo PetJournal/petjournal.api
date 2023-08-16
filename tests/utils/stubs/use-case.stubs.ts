@@ -7,7 +7,6 @@ import {
   type ChangePassword
 } from '@/domain/use-cases'
 import { type AddPet } from '@/domain/use-cases/pet/add-pet'
-import { makeFakeGuardianData } from '../mocks'
 
 const makeFakeAddGuardianUseCase = (): AddGuardian => {
   class AddGuardianStub implements AddGuardian {
