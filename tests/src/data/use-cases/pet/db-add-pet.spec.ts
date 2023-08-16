@@ -99,6 +99,18 @@ describe('DbAddPet Use Case', () => {
   })
 
   describe('PetRepository', () => {
+    it('Should call add method with correct values', async () => {
+      const { sut, petRepositoryStub } = makeSut()
+      const addSpy = jest.spyOn(petRepositoryStub, 'add')
+
+      await sut.add(params)
+
+      expect(addSpy).toHaveBeenCalledWith({
+        guardianId: params.guardianId,
+        specieId: params.specieId
+      })
+    })
+
     it('Should throw if add method throws', async () => {
       const { sut, petRepositoryStub } = makeSut()
       jest.spyOn(petRepositoryStub, 'add').mockRejectedValue(new Error())
