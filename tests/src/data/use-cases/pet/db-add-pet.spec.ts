@@ -2,7 +2,7 @@ import { NotFoundError } from '@/application/errors'
 import { type LoadSpecieByIdRepository, type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 import { DbAddPet } from '@/data/use-cases'
 import { type AddPet } from '@/domain/use-cases'
-import { makeFakeGuardianRepository, makeFakePetRepository, makeFakeSpecieRepository } from '@/tests/utils'
+import { makeFakeGuardianRepository, makeFakePetRepository, makeFakeSpecieRepository, mockFakePetAdded } from '@/tests/utils'
 
 interface SutTypes {
   sut: DbAddPet
@@ -118,6 +118,17 @@ describe('DbAddPet Use Case', () => {
       const promise = sut.add(params)
 
       await expect(promise).rejects.toThrow()
+    })
+  })
+
+  it('Should return pet data when saving the pet successfully', async () => {
+    const { sut } = makeSut()
+
+    const result = await sut.add(params)
+
+    expect(result).toEqual({
+      isSuccess: true,
+      data: mockFakePetAdded()
     })
   })
 })
