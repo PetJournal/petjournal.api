@@ -4,7 +4,8 @@ import {
   type Authentication,
   type CreateAccessToken,
   type ValidateVerificationToken,
-  type ChangePassword
+  type ChangePassword,
+  type AppointOtherSpecie
 } from '@/domain/use-cases'
 import { type AddPet } from '@/domain/use-cases/pet/add-pet'
 import { mockFakePetAdded } from '../mocks'
@@ -84,6 +85,20 @@ const makeFakeAddPetUseCase = (): AddPet => {
   return new AddGuardianStub()
 }
 
+const makeFakeAppointOtherSpecieUseCase = (): AppointOtherSpecie => {
+  class AppointOtherSpecieStub implements AppointOtherSpecie {
+    async appoint (specie: AppointOtherSpecie.Params): Promise<AppointOtherSpecie.Result> {
+      return {
+        id: 'any_specie_id',
+        name: 'any_name',
+        otherAlias: null
+      }
+    }
+  }
+
+  return new AppointOtherSpecieStub()
+}
+
 export {
   makeFakeAddGuardianUseCase,
   makeFakeAddPetUseCase,
@@ -91,5 +106,6 @@ export {
   makeFakeForgetPasswordUseCase,
   makeFakeChangePasswordUseCase,
   makeFakeCreateAccessTokenUseCase,
-  makeFakeValidateVerificationTokenUseCase
+  makeFakeValidateVerificationTokenUseCase,
+  makeFakeAppointOtherSpecieUseCase
 }

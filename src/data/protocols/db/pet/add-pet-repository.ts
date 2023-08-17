@@ -9,6 +9,7 @@ export namespace AddPetRepository {
   export interface Params {
     guardianId: string
     specieId: string
+    otherAlias?: string
   }
 
   type GuardianResultDb = Pick<Guardian, 'firstName' | 'lastName' | 'email' | 'phone'> | {
