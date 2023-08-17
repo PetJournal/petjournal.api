@@ -1,5 +1,4 @@
-import { type AddGuardianRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
-import { type AddPet } from '@/domain/use-cases'
+import { type AddPetRepository, type AddGuardianRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 import { type Guardian } from '@/tests/utils/types'
 
 const makeFakeGuardianData = (): Guardian => {
@@ -28,12 +27,20 @@ const mockFakeGuardianAdded = (): Exclude<AddGuardianRepository.Result, undefine
   }
 }
 
-const mockFakePetAdded = (): Omit<AddPet.Result, 'isSuccess' | 'error'> => {
+const mockFakePetAdded = (): AddPetRepository.Result => {
   return {
     id: 'any_id',
+    guardian: {
+      id: 'any_guardian_id',
+      firstName: 'any_first_name',
+      lastName: 'any_last_name',
+      email: 'any_email',
+      phone: 'any_phone'
+    },
     specie: {
-      id: 'any_id',
-      name: 'any_name'
+      id: 'any_specie_id',
+      name: 'any_name',
+      otherAlias: null
     }
   }
 }

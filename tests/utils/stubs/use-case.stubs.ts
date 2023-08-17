@@ -7,6 +7,7 @@ import {
   type ChangePassword
 } from '@/domain/use-cases'
 import { type AddPet } from '@/domain/use-cases/pet/add-pet'
+import { mockFakePetAdded } from '../mocks'
 
 const makeFakeAddGuardianUseCase = (): AddGuardian => {
   class AddGuardianStub implements AddGuardian {
@@ -75,11 +76,7 @@ const makeFakeAddPetUseCase = (): AddPet => {
     async add (petData: AddPet.Params): Promise<AddPet.Result> {
       const result = {
         isSuccess: true,
-        id: 'any_id',
-        specie: {
-          id: 'any_id',
-          name: 'any_name'
-        }
+        data: mockFakePetAdded()
       }
       return result
     }

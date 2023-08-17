@@ -13,11 +13,7 @@ export namespace AddPet {
   export interface Result {
     isSuccess: boolean
     error?: Error
-    id?: string
-    specie?: {
-      id: string
-      name: string
-    }
+    data?: AddPetRepository.Result
   }
 
   export interface Dependencies {

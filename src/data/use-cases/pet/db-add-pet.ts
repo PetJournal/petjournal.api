@@ -1,5 +1,7 @@
 import { NotFoundError } from '@/application/errors'
 import { type LoadSpecieByIdRepository, type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
+import { type Guardian } from '@/domain/models/guardian'
+import { type Specie } from '@/domain/models/specie'
 import { type AddPet } from '@/domain/use-cases'
 
 export class DbAddPet implements AddPet {
@@ -28,12 +30,13 @@ export class DbAddPet implements AddPet {
         error: new NotFoundError('specieId')
       }
     }
-    await this.petRepository.add(petData)
+    const pet = await this.petRepository.add(petData)
     return {
       isSuccess: true,
-      specie: {
-        id: 'any_specie_id',
-        name: 'any_specie'
+      data: {
+        id: pet?.id as string,
+        guardian: pet?.guardian as Guardian,
+        specie: pet?.specie as Specie
       }
     }
   }

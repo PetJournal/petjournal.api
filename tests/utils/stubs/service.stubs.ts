@@ -2,7 +2,8 @@
 import {
   makeFakePayload,
   mockFakeGuardianAdded,
-  mockFakeGuardianLoaded
+  mockFakeGuardianLoaded,
+  mockFakePetAdded
 } from '@/tests/utils'
 import {
   type EmailService,
@@ -64,11 +65,7 @@ UpdateVerificationTokenRepository => {
 const makeFakePetRepository = (): AddPetRepository => {
   class PetRepositoryStub implements AddPetRepository {
     async add (petData: AddPetRepository.Params): Promise<AddPetRepository.Result> {
-      return {
-        id: 'any_id',
-        guardianId: 'any_guardian_id',
-        specieId: 'any_specie_id'
-      }
+      return mockFakePetAdded()
     }
   }
 
