@@ -1,37 +1,42 @@
 import { NotFoundError } from '@/application/errors'
 import { type LoadSpecieByIdRepository, type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 import { DbAddPet } from '@/data/use-cases'
-import { type AddPet } from '@/domain/use-cases'
-import { makeFakeGuardianRepository, makeFakePetRepository, makeFakeSpecieRepository, mockFakePetAdded } from '@/tests/utils'
+import { type AppointOtherSpecie, type AddPet } from '@/domain/use-cases'
+import { makeFakeAppointOtherSpecieUseCase, makeFakeGuardianRepository, makeFakePetRepository, makeFakeSpecieRepository, mockFakePetAdded, mockFakeSpecieAdded } from '@/tests/utils'
 
 interface SutTypes {
   sut: DbAddPet
   guardianRepositoryStub: LoadGuardianByIdRepository
   specieRepositoryStub: LoadSpecieByIdRepository
   petRepositoryStub: AddPetRepository
+  appointOtherSpecieStub: AppointOtherSpecie
 }
 
 const makeSut = (): SutTypes => {
   const guardianRepositoryStub = makeFakeGuardianRepository()
   const specieRepositoryStub = makeFakeSpecieRepository()
   const petRepositoryStub = makeFakePetRepository()
+  const appointOtherSpecieStub = makeFakeAppointOtherSpecieUseCase()
   const sut = new DbAddPet({
     guardianRepository: guardianRepositoryStub,
     specieRepository: specieRepositoryStub,
-    petRepository: petRepositoryStub
+    petRepository: petRepositoryStub,
+    appointOtherSpecie: appointOtherSpecieStub
   })
   return {
     sut,
     guardianRepositoryStub,
     specieRepositoryStub,
-    petRepositoryStub
+    petRepositoryStub,
+    appointOtherSpecieStub
   }
 }
 
 describe('DbAddPet Use Case', () => {
   const params: AddPet.Params = {
     guardianId: 'any_guardian_id',
-    specieId: 'any_specie_id'
+    specieId: 'any_specie_id',
+    otherAlias: 'any_other_alias'
   }
 
   describe('GuardianRepository', () => {
@@ -107,7 +112,8 @@ describe('DbAddPet Use Case', () => {
 
       expect(addSpy).toHaveBeenCalledWith({
         guardianId: params.guardianId,
-        specieId: params.specieId
+        specieId: params.specieId,
+        otherAlias: params.otherAlias
       })
     })
 
@@ -118,6 +124,38 @@ describe('DbAddPet Use Case', () => {
       const promise = sut.add(params)
 
       await expect(promise).rejects.toThrow()
+    })
+  })
+
+  describe('AppointOtherSpecie', () => {
+    it('Should set otherAlias null if specieId is not other specie', async () => {
+      const { sut, appointOtherSpecieStub, specieRepositoryStub } = makeSut()
+      const wrongParam = {
+        ...params,
+        otherAlias: 'any_alias'
+      }
+      const specieDifferentOfOther = {
+        ...mockFakeSpecieAdded(),
+        name: 'different_of_other_specie'
+      }
+      jest.spyOn(specieRepositoryStub, 'loadById').mockResolvedValueOnce(specieDifferentOfOther)
+      jest.spyOn(appointOtherSpecieStub, 'appoint').mockResolvedValueOnce({
+        ...specieDifferentOfOther,
+        otherAlias: null
+      })
+
+      const result = await sut.add(wrongParam)
+
+      expect(result).toEqual({
+        isSuccess: true,
+        data: {
+          ...mockFakePetAdded(),
+          specie: {
+            ...specieDifferentOfOther,
+            otherAlias: null
+          }
+        }
+      })
     })
   })
 
