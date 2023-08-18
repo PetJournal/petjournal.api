@@ -1,4 +1,4 @@
-import { type LoadSpecieByIdRepository, type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
+import { type LoadSpecieByNameRepository, type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 import { type AppointOtherSpecie } from './appoint-other-specie'
 
 export interface AddPet {
@@ -8,8 +8,8 @@ export interface AddPet {
 export namespace AddPet {
   export interface Params {
     guardianId: string
-    specieId: string
-    otherAlias?: string
+    specieName: string
+    otherAlias?: string | null
   }
 
   export interface Result {
@@ -20,7 +20,7 @@ export namespace AddPet {
 
   export interface Dependencies {
     guardianRepository: LoadGuardianByIdRepository
-    specieRepository: LoadSpecieByIdRepository
+    specieRepository: LoadSpecieByNameRepository
     petRepository: AddPetRepository
     appointOtherSpecie: AppointOtherSpecie
   }

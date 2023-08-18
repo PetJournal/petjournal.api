@@ -45,8 +45,8 @@ interface PetRegistryRequest {
   userId?: string
   body: {
     guardianId: string
-    specieId: string
-    otherAlias: string | undefined
+    specieName: string
+    otherAlias?: string | null
   }
 }
 

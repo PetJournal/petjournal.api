@@ -30,20 +30,14 @@ const mockFakeGuardianAdded = (): Exclude<AddGuardianRepository.Result, undefine
 const mockFakePetAdded = (): AddPetRepository.Result => {
   return {
     id: 'any_id',
-    guardian: {
-      id: 'any_guardian_id',
-      firstName: 'any_first_name',
-      lastName: 'any_last_name',
-      email: 'any_email',
-      phone: 'any_phone'
-    },
+    guardian: mockFakeGuardianAdded(),
     specie: mockFakeSpecieAdded()
   }
 }
 
 const mockFakeSpecieAdded = (): Exclude<LoadSpecieByIdRepository.Result, undefined> => {
   return {
-    id: 'any_specie_id',
+    id: 'any_id',
     name: 'any_name',
     otherAlias: null
   }

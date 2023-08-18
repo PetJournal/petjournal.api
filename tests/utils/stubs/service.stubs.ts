@@ -18,7 +18,8 @@ import {
   type UpdateVerificationTokenRepository,
   type UpdateGuardianPasswordRepository,
   type AddPetRepository,
-  type LoadSpecieByIdRepository
+  type LoadSpecieByIdRepository,
+  type LoadSpecieByNameRepository
 } from '@/data/protocols'
 
 const makeFakeGuardianRepository = ():
@@ -72,9 +73,21 @@ const makeFakePetRepository = (): AddPetRepository => {
   return new PetRepositoryStub()
 }
 
-const makeFakeSpecieRepository = (): LoadSpecieByIdRepository => {
-  class SpecieRepositoryStub implements LoadSpecieByIdRepository {
+const makeFakeSpecieRepository = ():
+LoadSpecieByIdRepository &
+LoadSpecieByNameRepository => {
+  class SpecieRepositoryStub implements
+  LoadSpecieByIdRepository,
+  LoadSpecieByNameRepository {
     async loadById (specieData: LoadSpecieByIdRepository.Params): Promise<LoadSpecieByIdRepository.Result> {
+      return {
+        id: 'any_id',
+        name: 'any_name',
+        otherAlias: null
+      }
+    }
+
+    async loadByName (specieData: LoadSpecieByNameRepository.Params): Promise<LoadSpecieByNameRepository.Result> {
       return {
         id: 'any_id',
         name: 'any_name',

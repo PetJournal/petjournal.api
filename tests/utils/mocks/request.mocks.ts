@@ -72,8 +72,8 @@ const makeFakePayload = (): TokenDecoder.Result => {
 const makeFakePetRegistryRequest = (): PetRegistryRequest => {
   const body = {
     guardianId: 'valid_guardian_id',
-    specieId: 'valid_specie_id',
-    otherAlias: ''
+    specieName: 'valid_specie_id',
+    otherAlias: null
   }
 
   return { body }

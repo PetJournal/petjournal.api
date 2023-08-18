@@ -89,7 +89,7 @@ const makeFakeAppointOtherSpecieUseCase = (): AppointOtherSpecie => {
   class AppointOtherSpecieStub implements AppointOtherSpecie {
     async appoint (specie: AppointOtherSpecie.Params): Promise<AppointOtherSpecie.Result> {
       return {
-        id: 'any_specie_id',
+        id: 'any_id',
         name: 'any_name',
         otherAlias: null
       }

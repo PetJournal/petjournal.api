@@ -18,10 +18,11 @@ export class PetRegistryController implements Controller {
         return badRequest(error)
       }
       const guardianId = httpRequest.userId as string
-      const { specieId } = httpRequest.body
+      const { specieName, otherAlias = null } = httpRequest.body
       const result = await this.addPet.add({
         guardianId,
-        specieId
+        specieName,
+        otherAlias
       })
       if (!result.isSuccess) {
         return badRequest(result.error as Error)

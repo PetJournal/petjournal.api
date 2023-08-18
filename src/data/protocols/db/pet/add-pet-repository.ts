@@ -12,11 +12,11 @@ export namespace AddPetRepository {
     otherAlias?: string
   }
 
-  type GuardianResultDb = Pick<Guardian, 'firstName' | 'lastName' | 'email' | 'phone'> | {
+  type GuardianResultDb = Pick<Guardian, 'firstName' | 'lastName' | 'email' | 'phone'> & {
     id: string
   }
 
-  type SpecieResultDb = Specie | {
+  type SpecieResultDb = Specie & {
     id: string
   }
 
