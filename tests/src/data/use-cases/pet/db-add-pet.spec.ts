@@ -91,7 +91,7 @@ describe('DbAddPet Use Case', () => {
       expect(loadByName).toHaveBeenCalledWith(params.specieName)
     })
 
-    it('should return not found error if incorrect specieName is provided', async () => {
+    it('Should return not found error if incorrect specieName is provided', async () => {
       const { sut, specieRepositoryStub } = makeSut()
       jest.spyOn(specieRepositoryStub, 'loadByName').mockResolvedValueOnce(undefined)
 
@@ -138,6 +138,18 @@ describe('DbAddPet Use Case', () => {
   })
 
   describe('AppointOtherSpecie', () => {
+    it('Should call appoint method with correct values', async () => {
+      const { sut, appointOtherSpecieStub } = makeSut()
+      const appointSpy = jest.spyOn(appointOtherSpecieStub, 'appoint')
+
+      await sut.add(params)
+
+      expect(appointSpy).toHaveBeenCalledWith({
+        ...mockFakeSpecieAdded(),
+        otherAlias: params.otherAlias ?? null
+      })
+    })
+
     it('Should return correct specie if specieName is other and otherAlias is provided', async () => {
       const { sut, appointOtherSpecieStub, petRepositoryStub } = makeSut()
       const modifiedParams = {
