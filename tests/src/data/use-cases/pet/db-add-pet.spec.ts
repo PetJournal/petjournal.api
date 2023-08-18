@@ -150,6 +150,15 @@ describe('DbAddPet Use Case', () => {
       })
     })
 
+    it('Should throws if appoint method throws', async () => {
+      const { sut, appointOtherSpecieStub } = makeSut()
+      jest.spyOn(appointOtherSpecieStub, 'appoint').mockRejectedValue(new Error())
+
+      const promise = sut.add(params)
+
+      await expect(promise).rejects.toThrow()
+    })
+
     it('Should return correct specie if specieName is other and otherAlias is provided', async () => {
       const { sut, appointOtherSpecieStub, petRepositoryStub } = makeSut()
       const modifiedParams = {
