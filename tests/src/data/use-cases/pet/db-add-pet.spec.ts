@@ -46,7 +46,7 @@ describe('DbAddPet Use Case', () => {
   const params: AddPet.Params = {
     guardianId: 'any_guardian_id',
     specieName: 'any_specie_name',
-    otherAlias: null
+    specieAlias: 'any_specie_alias'
   }
 
   describe('GuardianRepository', () => {
@@ -118,10 +118,6 @@ describe('DbAddPet Use Case', () => {
       ...mockFakeSpecieAdded(),
       name: 'existent_specie'
     }
-    const appointedSpecie = {
-      ...existentSpecie,
-      otherAlias: null
-    }
 
     it('Should call appoint method with correct values', async () => {
       const { sut, appointOtherSpecieStub } = makeSut()
@@ -130,8 +126,8 @@ describe('DbAddPet Use Case', () => {
       await sut.add(params)
 
       expect(appointSpy).toHaveBeenCalledWith({
-        ...mockFakeSpecieAdded(),
-        otherAlias: params.otherAlias ?? null
+        specie: mockFakeSpecieAdded(),
+        specieAlias: params.specieAlias
       })
     })
 
@@ -144,15 +140,15 @@ describe('DbAddPet Use Case', () => {
       await expect(promise).rejects.toThrow()
     })
 
-    it('Should return correct specie if specieName is other and otherAlias is provided', async () => {
+    it('Should return correct specie if specieName is other and specieAlias is provided', async () => {
       const { sut, appointOtherSpecieStub, petRepositoryStub } = makeSut()
       const modifiedParams = {
         ...params,
-        specieName: 'others',
-        otherAlias: 'existent_specie'
+        specieName: 'other',
+        specieAlias: 'existent_specie'
       }
 
-      jest.spyOn(appointOtherSpecieStub, 'appoint').mockResolvedValueOnce(appointedSpecie)
+      jest.spyOn(appointOtherSpecieStub, 'appoint').mockResolvedValueOnce(existentSpecie)
       jest.spyOn(petRepositoryStub, 'add').mockResolvedValueOnce({
         id: 'any_id',
         guardian: mockFakeGuardianAdded(),
@@ -165,18 +161,18 @@ describe('DbAddPet Use Case', () => {
         isSuccess: true,
         data: {
           ...mockFakePetAdded(),
-          specie: appointedSpecie
+          specie: existentSpecie
         }
       })
     })
 
-    it('Should return  otherAlias null if specieName is not other specie', async () => {
+    it('Should return  specieAlias null if specieName is not other specie', async () => {
       const { sut, appointOtherSpecieStub, petRepositoryStub } = makeSut()
       const wrongParam = {
         ...params,
-        otherAlias: 'any_alias'
+        specieAlias: 'any_alias'
       }
-      jest.spyOn(appointOtherSpecieStub, 'appoint').mockResolvedValueOnce(appointedSpecie)
+      jest.spyOn(appointOtherSpecieStub, 'appoint').mockResolvedValueOnce(existentSpecie)
       jest.spyOn(petRepositoryStub, 'add').mockResolvedValueOnce({
         id: 'any_id',
         guardian: mockFakeGuardianAdded(),
@@ -189,7 +185,7 @@ describe('DbAddPet Use Case', () => {
         isSuccess: true,
         data: {
           ...mockFakePetAdded(),
-          specie: appointedSpecie
+          specie: existentSpecie
         }
       })
     })
@@ -205,7 +201,7 @@ describe('DbAddPet Use Case', () => {
       expect(addSpy).toHaveBeenCalledWith({
         guardianId: mockFakeGuardianAdded().id,
         specieId: mockFakeSpecieAdded().id,
-        otherAlias: params.otherAlias
+        specieAlias: mockFakeSpecieAdded().name
       })
     })
 

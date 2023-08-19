@@ -82,16 +82,14 @@ LoadSpecieByNameRepository => {
     async loadById (specieData: LoadSpecieByIdRepository.Params): Promise<LoadSpecieByIdRepository.Result> {
       return {
         id: 'any_id',
-        name: 'any_name',
-        otherAlias: null
+        name: 'any_name'
       }
     }
 
     async loadByName (specieData: LoadSpecieByNameRepository.Params): Promise<LoadSpecieByNameRepository.Result> {
       return {
         id: 'any_id',
-        name: 'any_name',
-        otherAlias: null
+        name: 'any_name'
       }
     }
   }

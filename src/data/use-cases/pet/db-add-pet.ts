@@ -38,13 +38,13 @@ export class DbAddPet implements AddPet {
       }
     }
     const specieAppointed = await this.appointOtherSpecie.appoint({
-      ...specie,
-      otherAlias: petData.otherAlias ?? null
+      specie,
+      specieAlias: petData.specieAlias
     })
     const pet = await this.petRepository.add({
       guardianId: guardian.id,
       specieId: specieAppointed.id,
-      otherAlias: specieAppointed.otherAlias as string
+      specieAlias: specieAppointed.name
     })
     return {
       isSuccess: true,

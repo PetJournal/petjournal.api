@@ -38,8 +38,7 @@ const mockFakePetAdded = (): AddPetRepository.Result => {
 const mockFakeSpecieAdded = (): Exclude<LoadSpecieByIdRepository.Result, undefined> => {
   return {
     id: 'any_id',
-    name: 'any_name',
-    otherAlias: null
+    name: 'any_name'
   }
 }
 

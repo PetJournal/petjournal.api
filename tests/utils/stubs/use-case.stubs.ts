@@ -8,7 +8,7 @@ import {
   type AppointOtherSpecie
 } from '@/domain/use-cases'
 import { type AddPet } from '@/domain/use-cases/pet/add-pet'
-import { mockFakePetAdded } from '../mocks'
+import { mockFakePetAdded, mockFakeSpecieAdded } from '../mocks'
 
 const makeFakeAddGuardianUseCase = (): AddGuardian => {
   class AddGuardianStub implements AddGuardian {
@@ -88,11 +88,7 @@ const makeFakeAddPetUseCase = (): AddPet => {
 const makeFakeAppointOtherSpecieUseCase = (): AppointOtherSpecie => {
   class AppointOtherSpecieStub implements AppointOtherSpecie {
     async appoint (specie: AppointOtherSpecie.Params): Promise<AppointOtherSpecie.Result> {
-      return {
-        id: 'any_id',
-        name: 'any_name',
-        otherAlias: null
-      }
+      return mockFakeSpecieAdded()
     }
   }
 

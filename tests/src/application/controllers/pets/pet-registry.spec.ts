@@ -56,7 +56,7 @@ describe('PetRegistry Controller', () => {
       expect(addPetSpy).toHaveBeenCalledWith({
         guardianId: httpRequest.userId,
         specieName: httpRequest.body.specieName,
-        otherAlias: httpRequest.body.otherAlias
+        specieAlias: httpRequest.body.specieAlias
       })
     })
   })

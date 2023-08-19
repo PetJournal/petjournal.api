@@ -7,6 +7,5 @@ export namespace LoadSpecieByNameRepository {
   export type Result = {
     id: string
     name: string
-    otherAlias: string | null
   } | undefined
 }

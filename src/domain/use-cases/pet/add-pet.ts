@@ -9,7 +9,7 @@ export namespace AddPet {
   export interface Params {
     guardianId: string
     specieName: string
-    otherAlias?: string | null
+    specieAlias?: string
   }
 
   export interface Result {

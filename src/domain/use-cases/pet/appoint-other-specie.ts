@@ -5,7 +5,10 @@ export interface AppointOtherSpecie {
 }
 
 export namespace AppointOtherSpecie {
-  export type Params = Specie & { id: string }
+  export interface Params {
+    specie: Specie & { id: string }
+    specieAlias: string | undefined
+  }
 
   export type Result = Specie & { id: string }
 
