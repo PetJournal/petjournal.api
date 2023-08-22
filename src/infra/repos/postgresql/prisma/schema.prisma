@@ -33,7 +33,7 @@ model Pet {
 
 model Specie {
   id   String @id @default(uuid())
-  name String
+  name String @unique
   Pet  Pet[]
 }
 
