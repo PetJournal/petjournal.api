@@ -10,6 +10,9 @@ export namespace AppointOtherSpecie {
     specieAlias: string | undefined
   }
 
-  export type Result = Specie & { id: string }
+  export interface Result {
+    specieAppointed: Specie & { id: string }
+    specieAlias: string | undefined
+  }
 
 }

@@ -2,7 +2,10 @@ import { type AppointOtherSpecie } from '@/domain/use-cases'
 
 class DbAppointOtherSpecie implements AppointOtherSpecie {
   async appoint (params: AppointOtherSpecie.Params): Promise<AppointOtherSpecie.Result> {
-    return params.specie
+    return {
+      specieAppointed: params.specie,
+      specieAlias: params.specieAlias
+    }
   }
 }
 
@@ -27,11 +30,18 @@ describe('DbAppointOtherSpecie Use Case', () => {
     specieAlias: 'any_alias'
   }
 
+  it('Should ', async () => {
+
+  })
+
   it('Should return a specie when success', async () => {
     const { sut } = makeSut()
 
     const result = await sut.appoint(params)
 
-    expect(result).toEqual(params.specie)
+    expect(result).toEqual({
+      specieAppointed: params.specie,
+      specieAlias: params.specieAlias
+    })
   })
 })

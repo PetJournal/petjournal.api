@@ -37,14 +37,14 @@ export class DbAddPet implements AddPet {
         error: new NotFoundError('specieName')
       }
     }
-    const specieAppointed = await this.appointOtherSpecie.appoint({
+    const { specieAppointed, specieAlias } = await this.appointOtherSpecie.appoint({
       specie,
       specieAlias: petData.specieAlias
     })
     const pet = await this.petRepository.add({
       guardianId: guardian.id,
       specieId: specieAppointed.id,
-      specieAlias: specieAppointed.name
+      specieAlias
     })
     return {
       isSuccess: true,
