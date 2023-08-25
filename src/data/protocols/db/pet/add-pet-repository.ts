@@ -2,7 +2,7 @@ import { type Guardian } from '@/domain/models/guardian'
 import { type Specie } from '@/domain/models/specie'
 
 export interface AddPetRepository {
-  add: (guardian: AddPetRepository.Params) => Promise<AddPetRepository.Result>
+  add: (params: AddPetRepository.Params) => Promise<AddPetRepository.Result>
 }
 
 export namespace AddPetRepository {
