@@ -37,6 +37,21 @@ describe('DbAppointOtherSpecie Use Case', () => {
         specieAlias: undefined
       })
     })
+
+    it('Should return undefined specieAlias when specieAlias is provided', async () => {
+      const { sut } = makeSut()
+      const modifiedParams = {
+        ...params,
+        specieAlias: 'any_alias'
+      }
+
+      const result = await sut.appoint(modifiedParams)
+
+      expect(result).toEqual({
+        specieAppointed: result.specieAppointed,
+        specieAlias: undefined
+      })
+    })
   })
 
   it('Should return a specie when success', async () => {
@@ -46,7 +61,7 @@ describe('DbAppointOtherSpecie Use Case', () => {
 
     expect(result).toEqual({
       specieAppointed: params.specie,
-      specieAlias: params.specieAlias
+      specieAlias: undefined
     })
   })
 })
