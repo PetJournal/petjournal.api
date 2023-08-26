@@ -4,7 +4,7 @@ export class DbAppointOtherSpecie implements AppointOtherSpecie {
   async appoint (params: AppointOtherSpecie.Params): Promise<AppointOtherSpecie.Result> {
     return {
       specieAppointed: params.specie,
-      specieAlias: params.specieAlias
+      specieAlias: undefined
     }
   }
 }
