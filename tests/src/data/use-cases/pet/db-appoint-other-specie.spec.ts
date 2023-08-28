@@ -106,6 +106,15 @@ describe('DbAppointOtherSpecie Use Case', () => {
         specieAlias: undefined
       })
     })
+
+    it('should calls loadByName with correct params', async () => {
+      const { sut, specieRepositoryStub } = makeSut()
+      const specieRepositorySpy = jest.spyOn(specieRepositoryStub, 'loadByName')
+
+      await sut.appoint(params)
+
+      expect(specieRepositorySpy).toHaveBeenCalledWith(params.specieAlias)
+    })
   })
 
   it('Should return a specie when success', async () => {
