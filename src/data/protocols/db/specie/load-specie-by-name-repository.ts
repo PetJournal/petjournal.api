@@ -1,5 +1,5 @@
 export interface LoadSpecieByNameRepository {
-  loadByName: (id: LoadSpecieByNameRepository.Params) => Promise<LoadSpecieByNameRepository.Result>
+  loadByName: (name: LoadSpecieByNameRepository.Params) => Promise<LoadSpecieByNameRepository.Result>
 }
 
 export namespace LoadSpecieByNameRepository {

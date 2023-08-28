@@ -1,3 +1,4 @@
+import { type LoadSpecieByNameRepository } from '@/data/protocols'
 import { type Specie } from '@/domain/models/specie'
 
 export interface AppointOtherSpecie {
@@ -15,4 +16,7 @@ export namespace AppointOtherSpecie {
     specieAlias: string | undefined
   }
 
+  export interface Dependencies {
+    specieRepository: LoadSpecieByNameRepository
+  }
 }
