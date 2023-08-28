@@ -115,6 +115,15 @@ describe('DbAppointOtherSpecie Use Case', () => {
 
       expect(specieRepositorySpy).toHaveBeenCalledWith(params.specieAlias)
     })
+
+    it('should throws if loadByName throws', async () => {
+      const { sut, specieRepositoryStub } = makeSut()
+      jest.spyOn(specieRepositoryStub, 'loadByName').mockRejectedValueOnce(new Error())
+
+      const promise = sut.appoint(params)
+
+      await expect(promise).rejects.toThrow()
+    })
   })
 
   it('Should return a specie when success', async () => {
