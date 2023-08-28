@@ -12,17 +12,18 @@ export class DbAppointOtherSpecie implements AppointOtherSpecie {
 
   async appoint (params: AppointOtherSpecie.Params): Promise<AppointOtherSpecie.Result> {
     if (!params.specieAlias) {
-      params.specieAlias = ''
+      params.specieAlias = params.specie.name
     }
-    const specie = await this.specieRepository.loadByName(params.specieAlias)
-    if (!specie) {
+    // TODO check cases of 'other' specie
+    const specieAppointed = await this.specieRepository.loadByName(params.specieAlias)
+    if (!specieAppointed) {
       return {
         specieAppointed: params.specie,
         specieAlias: params.specieAlias
       }
     }
     return {
-      specieAppointed: specie,
+      specieAppointed,
       specieAlias: undefined
     }
   }
