@@ -6,7 +6,7 @@ export const badRequest = {
         $ref: '#/schemas/error'
       },
       example: {
-        error: 'Invalid param: password'
+        error: 'Invalid param: example_param'
       }
     }
   }

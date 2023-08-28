@@ -3,7 +3,8 @@ import {
   signUpPath,
   forgetPasswordPath,
   changePasswordPath,
-  waitingCodePath
+  waitingCodePath,
+  petRegistryPath
 } from './paths/'
 
 export default {
@@ -11,5 +12,6 @@ export default {
   '/login': loginPath,
   '/forget-password': forgetPasswordPath,
   '/guardian/change-password': changePasswordPath,
-  '/waiting-code': waitingCodePath
+  '/waiting-code': waitingCodePath,
+  '/pet': petRegistryPath
 }
