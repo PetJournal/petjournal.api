@@ -70,7 +70,7 @@ describe('DbAppointOtherSpecie Use Case', () => {
           id: 'any_id',
           name: 'other'
         },
-        specieAlias: 'new_specie'
+        specieAlias: 'any_specie'
       }
       jest.spyOn(specieRepositoryStub, 'loadByName').mockResolvedValueOnce(undefined)
 
@@ -79,6 +79,31 @@ describe('DbAppointOtherSpecie Use Case', () => {
       expect(result).toEqual({
         specieAppointed: modifiedParams.specie,
         specieAlias: modifiedParams.specieAlias
+      })
+    })
+
+    it('should return specieAppointed equal any_specie when specieAlias is equal to any_specie name in db', async () => {
+      const { sut, specieRepositoryStub } = makeSut()
+      const modifiedParams = {
+        specie: {
+          id: 'any_id',
+          name: 'other'
+        },
+        specieAlias: 'any_specie'
+      }
+      jest.spyOn(specieRepositoryStub, 'loadByName').mockResolvedValueOnce({
+        id: 'any_id',
+        name: 'any_specie'
+      })
+
+      const result = await sut.appoint(modifiedParams)
+
+      expect(result).toEqual({
+        specieAppointed: {
+          id: 'any_id',
+          name: 'any_specie'
+        },
+        specieAlias: undefined
       })
     })
   })
