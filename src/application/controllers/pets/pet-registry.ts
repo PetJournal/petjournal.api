@@ -1,4 +1,4 @@
-import { type HttpRequest, type HttpResponse, badRequest, create, serverError } from '@/application/helpers'
+import { type HttpRequest, type HttpResponse, badRequest, create, serverError, notAcceptable } from '@/application/helpers'
 import { type Controller, type Validation } from '@/application/protocols'
 import { type AddPet } from '@/domain/use-cases'
 
@@ -25,7 +25,7 @@ export class PetRegistryController implements Controller {
         specieAlias
       })
       if (!result.isSuccess) {
-        return badRequest(result.error as Error)
+        return notAcceptable(result.error as Error)
       }
       return create({
         id: result.data?.id,
