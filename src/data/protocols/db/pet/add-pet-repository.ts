@@ -24,5 +24,6 @@ export namespace AddPetRepository {
     id: string
     guardian: GuardianResultDb
     specie: SpecieResultDb
+    specieAlias?: string | null
   } | undefined
 }

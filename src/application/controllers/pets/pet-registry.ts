@@ -30,7 +30,8 @@ export class PetRegistryController implements Controller {
       return create({
         id: result.data?.id,
         guardian: result.data?.guardian,
-        specie: result.data?.specie
+        specie: result.data?.specie,
+        specieAlias: result.data?.specieAlias
       })
     } catch (error) {
       return serverError(error as Error)

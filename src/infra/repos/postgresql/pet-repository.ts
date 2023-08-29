@@ -8,10 +8,12 @@ export class PetRepository implements AddPetRepository {
       const pet = await db.pet.create({
         data: {
           guardianId: params.guardianId,
-          specieId: params.specieId
+          specieId: params.specieId,
+          specieAlias: params.specieAlias
         },
         select: {
           id: true,
+          specieAlias: true,
           guardian: {
             select: {
               id: true,

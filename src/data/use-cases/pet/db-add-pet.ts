@@ -51,7 +51,8 @@ export class DbAddPet implements AddPet {
       data: {
         id: pet?.id as string,
         guardian: pet?.guardian as Guardian & { id: string },
-        specie: pet?.specie as Specie & { id: string }
+        specie: pet?.specie as Specie & { id: string },
+        specieAlias: pet?.specieAlias
       }
     }
   }

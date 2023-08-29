@@ -7,6 +7,7 @@ export const petSchema = {
     },
     specie: {
       $ref: '#/schemas/specie'
-    }
+    },
+    specieAlias: { type: 'String', nullable: true }
   }
 }
