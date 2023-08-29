@@ -1,5 +1,5 @@
 import { PetRegistryController } from '@/application/controllers'
-import { NotFoundError } from '@/application/errors'
+import { InvalidParamError, NotFoundError } from '@/application/errors'
 import { badRequest, create, notAcceptable } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type AddPet } from '@/domain/use-cases'
@@ -36,6 +36,18 @@ describe('PetRegistry Controller', () => {
       const httpResponse = await sut.handle(httpRequest)
 
       expect(httpResponse).toEqual(notAcceptable(new NotFoundError('specieName')))
+    })
+
+    it('Should return 406 (NotAcceptable) if invalid specieAlias is provided', async () => {
+      const { sut, addPetStub } = makeSut()
+      jest.spyOn(addPetStub, 'add').mockResolvedValue({
+        isSuccess: false,
+        error: new InvalidParamError('specieAlias')
+      })
+
+      const httpResponse = await sut.handle(httpRequest)
+
+      expect(httpResponse).toEqual(notAcceptable(new InvalidParamError('specieAlias')))
     })
 
     it('Should return 406 (notAcceptable) if invalid userId is provided', async () => {
