@@ -1,6 +1,6 @@
 import { PetRegistryController } from '@/application/controllers'
 import { NotFoundError } from '@/application/errors'
-import { badRequest, create } from '@/application/helpers'
+import { badRequest, create, notAcceptable } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type AddPet } from '@/domain/use-cases'
 import { makeFakeAddPetUseCase, makeFakePetRegistryRequest, makeFakeServerError, makeFakeValidation, mockFakePetAdded } from '@/tests/utils'
@@ -26,7 +26,19 @@ describe('PetRegistry Controller', () => {
   const httpRequest = makeFakePetRegistryRequest()
 
   describe('AddPet', () => {
-    it('Should return 400 (BadRequest) if invalid userId is provided', async () => {
+    it('Should return 406 (NotAcceptable) if invalid specieName is provided', async () => {
+      const { sut, addPetStub } = makeSut()
+      jest.spyOn(addPetStub, 'add').mockResolvedValue({
+        isSuccess: false,
+        error: new NotFoundError('specieName')
+      })
+
+      const httpResponse = await sut.handle(httpRequest)
+
+      expect(httpResponse).toEqual(notAcceptable(new NotFoundError('specieName')))
+    })
+
+    it('Should return 406 (notAcceptable) if invalid userId is provided', async () => {
       const { sut, addPetStub } = makeSut()
       jest.spyOn(addPetStub, 'add').mockResolvedValue({
         isSuccess: false,
@@ -35,7 +47,7 @@ describe('PetRegistry Controller', () => {
 
       const httpResponse = await sut.handle(httpRequest)
 
-      expect(httpResponse).toEqual(badRequest(new NotFoundError('userId')))
+      expect(httpResponse).toEqual(notAcceptable(new NotFoundError('userId')))
     })
 
     it('should return 500 (ServerError) if add throws', async () => {
