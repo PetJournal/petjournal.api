@@ -1,4 +1,4 @@
-import { NotFoundError } from '@/application/errors'
+import { InvalidParamError, NotFoundError } from '@/application/errors'
 import { type AddPetRepository, type LoadGuardianByIdRepository, type LoadSpecieByNameRepository } from '@/data/protocols'
 import { DbAddPet } from '@/data/use-cases'
 import { type AppointOtherSpecie, type AddPet } from '@/domain/use-cases'
@@ -138,6 +138,21 @@ describe('DbAddPet Use Case', () => {
       const promise = sut.add(params)
 
       await expect(promise).rejects.toThrow()
+    })
+
+    it('Should return invalid param error if invalid specieAlias is provided ', async () => {
+      const { sut, appointOtherSpecieStub } = makeSut()
+      jest.spyOn(appointOtherSpecieStub, 'appoint').mockResolvedValueOnce({
+        isSuccess: false,
+        error: new InvalidParamError('specieAlias')
+      })
+
+      const result = await sut.add(params)
+
+      expect(result).toEqual({
+        isSuccess: false,
+        error: new InvalidParamError('specieAlias')
+      })
     })
 
     it('Should return correct specie if specieName is other and specieAlias is provided', async () => {
