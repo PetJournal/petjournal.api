@@ -1,4 +1,4 @@
-import { NotFoundError } from '@/application/errors'
+import { InvalidParamError, NotFoundError } from '@/application/errors'
 import { type LoadSpecieByNameRepository, type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 import { type Guardian } from '@/domain/models/guardian'
 import { type Specie } from '@/domain/models/specie'
@@ -37,14 +37,20 @@ export class DbAddPet implements AddPet {
         error: new NotFoundError('specieName')
       }
     }
-    const { specieAppointed, specieAlias } = await this.appointOtherSpecie.appoint({
+    const result = await this.appointOtherSpecie.appoint({
       specie,
       specieAlias: petData.specieAlias
     })
+    if (!result.isSuccess) {
+      return {
+        isSuccess: false,
+        error: new InvalidParamError('specieAlias')
+      }
+    }
     const pet = await this.petRepository.add({
       guardianId: guardian.id,
-      specieId: specieAppointed.id,
-      specieAlias
+      specieId: result.data?.specieAppointed.id as string,
+      specieAlias: result.data?.specieAlias
     })
     return {
       isSuccess: true,

@@ -12,8 +12,12 @@ export namespace AppointOtherSpecie {
   }
 
   export interface Result {
-    specieAppointed: Specie & { id: string }
-    specieAlias: string | undefined
+    isSuccess: boolean
+    error?: Error
+    data?: {
+      specieAppointed: Specie & { id: string }
+      specieAlias: string | undefined
+    }
   }
 
   export interface Dependencies {

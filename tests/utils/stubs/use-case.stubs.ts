@@ -88,7 +88,10 @@ const makeFakeAddPetUseCase = (): AddPet => {
 const makeFakeAppointOtherSpecieUseCase = (): AppointOtherSpecie => {
   class AppointOtherSpecieStub implements AppointOtherSpecie {
     async appoint (params: AppointOtherSpecie.Params): Promise<AppointOtherSpecie.Result> {
-      return { specieAppointed: mockFakeSpecieAdded(), specieAlias: params.specieAlias }
+      return {
+        isSuccess: true,
+        data: { specieAppointed: mockFakeSpecieAdded(), specieAlias: params.specieAlias }
+      }
     }
   }
 

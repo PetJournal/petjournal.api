@@ -149,8 +149,11 @@ describe('DbAddPet Use Case', () => {
       }
 
       jest.spyOn(appointOtherSpecieStub, 'appoint').mockResolvedValueOnce({
-        specieAppointed: existentSpecie,
-        specieAlias: undefined
+        isSuccess: true,
+        data: {
+          specieAppointed: existentSpecie,
+          specieAlias: undefined
+        }
       })
       jest.spyOn(petRepositoryStub, 'add').mockResolvedValueOnce({
         id: 'any_id',
@@ -176,8 +179,11 @@ describe('DbAddPet Use Case', () => {
         specieAlias: 'any_alias'
       }
       jest.spyOn(appointOtherSpecieStub, 'appoint').mockResolvedValueOnce({
-        specieAppointed: existentSpecie,
-        specieAlias: undefined
+        isSuccess: true,
+        data: {
+          specieAppointed: existentSpecie,
+          specieAlias: undefined
+        }
       })
       jest.spyOn(petRepositoryStub, 'add').mockResolvedValueOnce({
         id: 'any_id',
