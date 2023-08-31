@@ -2,8 +2,6 @@ import request from 'supertest'
 import app from '@/main/config/app'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 
-jest.setTimeout(10000)
-
 describe('forget-password-routes', () => {
   beforeEach(async () => { await PrismaHelper.connect() })
   afterEach(async () => { await PrismaHelper.disconnect() })
