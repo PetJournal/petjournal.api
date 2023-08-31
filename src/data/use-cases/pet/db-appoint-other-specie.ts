@@ -1,3 +1,4 @@
+import { InvalidParamError } from '@/application/errors'
 import { type LoadSpecieByNameRepository } from '@/data/protocols'
 import { type AppointOtherSpecie } from '@/domain/use-cases'
 
@@ -11,10 +12,15 @@ export class DbAppointOtherSpecie implements AppointOtherSpecie {
   }
 
   async appoint (params: AppointOtherSpecie.Params): Promise<AppointOtherSpecie.Result> {
+    if (params.specie.name === 'Outros' && !params.specieAlias) {
+      return {
+        isSuccess: false,
+        error: new InvalidParamError('specieAlias')
+      }
+    }
     if (!params.specieAlias) {
       params.specieAlias = params.specie.name
     }
-    // TODO check cases of 'other' specie
     const specieAppointed = await this.specieRepository.loadByName(params.specieAlias)
     if (!specieAppointed) {
       return {
