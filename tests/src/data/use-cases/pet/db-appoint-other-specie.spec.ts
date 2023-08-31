@@ -1,3 +1,4 @@
+import { InvalidParamError } from '@/application/errors'
 import { type LoadSpecieByNameRepository } from '@/data/protocols'
 import { DbAppointOtherSpecie } from '@/data/use-cases'
 import { type AppointOtherSpecie } from '@/domain/use-cases'
@@ -29,6 +30,26 @@ describe('DbAppointOtherSpecie Use Case', () => {
     },
     specieAlias: 'any_alias'
   }
+
+  describe('specieAlias', () => {
+    it('should return InvalidParamsError if specie is Outros and specieAlias is undefined', async () => {
+      const { sut } = makeSut()
+      const otherEmpty = {
+        specie: {
+          id: 'any_id',
+          name: 'Outros'
+        },
+        specieAlias: undefined
+      }
+
+      const result = await sut.appoint(otherEmpty)
+
+      expect(result).toEqual({
+        isSuccess: false,
+        error: new InvalidParamError('specieAlias')
+      })
+    })
+  })
 
   describe('LoadSpecieByName', () => {
     it('should return specieAppointed equal other when specieAlias is not equal to specie name in db', async () => {
