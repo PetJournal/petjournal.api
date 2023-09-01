@@ -50,4 +50,11 @@ describe('NameValidation', () => {
 
     expect(result).toBeFalsy()
   })
+
+  it('should throw if validator throws', () => {
+    const { sut, nameValidatorStub } = makeSut()
+    jest.spyOn(nameValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
+
+    expect(() => { sut.validate({ fieldName: 'valid_name' }) }).toThrow()
+  })
 })
