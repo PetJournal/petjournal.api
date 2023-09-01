@@ -43,6 +43,9 @@ export const petRegistryPath = {
       400: {
         $ref: '#/components/badRequest'
       },
+      406: {
+        $ref: '#/components/notAcceptable'
+      },
       500: {
         $ref: '#/components/serverError'
       }
