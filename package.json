@@ -14,6 +14,8 @@
     "test:verbose": "jest --passWithNoTests --no-cache --runInBand",
     "test:staged": "yarn test --findRelatedTests",
     "test:coverage": "yarn test:verbose --coverage",
+    "test:unit": "yarn test -c jest-unit-config.js",
+    "test:integration": "yarn test -c jest-integration-config.js",
     "prepare": "husky install"
   },
   "keywords": [],

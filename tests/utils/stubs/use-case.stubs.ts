@@ -5,7 +5,8 @@ import {
   type CreateAccessToken,
   type ValidateVerificationToken,
   type ChangePassword,
-  type AppointOtherSpecie
+  type AppointOtherSpecie,
+  type LoadGuardianName
 } from '@/domain/use-cases'
 import { type AddPet } from '@/domain/use-cases/pet/add-pet'
 import { mockFakePetAdded, mockFakeSpecieAdded } from '../mocks'
@@ -98,6 +99,18 @@ const makeFakeAppointOtherSpecieUseCase = (): AppointOtherSpecie => {
   return new AppointOtherSpecieStub()
 }
 
+const makeLoadGuardianNameUseCase = (): LoadGuardianName => {
+  class LoadGuardianNameStub implements LoadGuardianName {
+    async load (userId: string): Promise<LoadGuardianName.Result> {
+      return {
+        firstName: 'any_first_name',
+        lastName: 'any_last_name'
+      }
+    }
+  }
+  return new LoadGuardianNameStub()
+}
+
 export {
   makeFakeAddGuardianUseCase,
   makeFakeAddPetUseCase,
@@ -106,5 +119,6 @@ export {
   makeFakeChangePasswordUseCase,
   makeFakeCreateAccessTokenUseCase,
   makeFakeValidateVerificationTokenUseCase,
-  makeFakeAppointOtherSpecieUseCase
+  makeFakeAppointOtherSpecieUseCase,
+  makeLoadGuardianNameUseCase
 }
