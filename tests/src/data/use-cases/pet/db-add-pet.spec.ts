@@ -1,4 +1,4 @@
-import { InvalidParamError, NotFoundError } from '@/application/errors'
+import { NotAcceptableError } from '@/application/errors'
 import { type AddPetRepository, type LoadGuardianByIdRepository, type LoadSpecieByNameRepository } from '@/data/protocols'
 import { DbAddPet } from '@/data/use-cases'
 import { type AppointOtherSpecie, type AddPet } from '@/domain/use-cases'
@@ -59,7 +59,7 @@ describe('DbAddPet Use Case', () => {
       expect(loadByIdSpy).toHaveBeenCalledWith(params.guardianId)
     })
 
-    it('Should return not found error if incorrect guardianId is provided', async () => {
+    it('Should return not acceptable error if incorrect guardianId is provided', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
       jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValueOnce(undefined)
 
@@ -67,7 +67,7 @@ describe('DbAddPet Use Case', () => {
 
       expect(result).toEqual({
         isSuccess: false,
-        error: new NotFoundError('userId')
+        error: new NotAcceptableError('userId')
       })
     })
 
@@ -91,7 +91,7 @@ describe('DbAddPet Use Case', () => {
       expect(loadByName).toHaveBeenCalledWith(params.specieName)
     })
 
-    it('Should return not found error if incorrect specieName is provided', async () => {
+    it('Should return not acceptable error if incorrect specieName is provided', async () => {
       const { sut, specieRepositoryStub } = makeSut()
       jest.spyOn(specieRepositoryStub, 'loadByName').mockResolvedValueOnce(undefined)
 
@@ -99,7 +99,7 @@ describe('DbAddPet Use Case', () => {
 
       expect(result).toEqual({
         isSuccess: false,
-        error: new NotFoundError('specieName')
+        error: new NotAcceptableError('specieName')
       })
     })
 
@@ -140,18 +140,18 @@ describe('DbAddPet Use Case', () => {
       await expect(promise).rejects.toThrow()
     })
 
-    it('Should return invalid param error if invalid specieAlias is provided ', async () => {
+    it('Should return not acceptable error if invalid specieAlias is provided ', async () => {
       const { sut, appointOtherSpecieStub } = makeSut()
       jest.spyOn(appointOtherSpecieStub, 'appoint').mockResolvedValueOnce({
         isSuccess: false,
-        error: new InvalidParamError('specieAlias')
+        error: new NotAcceptableError('specieAlias')
       })
 
       const result = await sut.add(params)
 
       expect(result).toEqual({
         isSuccess: false,
-        error: new InvalidParamError('specieAlias')
+        error: new NotAcceptableError('specieAlias')
       })
     })
 
