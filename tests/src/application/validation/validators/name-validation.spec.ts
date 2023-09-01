@@ -37,8 +37,17 @@ describe('NameValidation', () => {
   it('should return InvalidParamError if fieldName is not a valid name', () => {
     const { sut, nameValidatorStub } = makeSut()
     jest.spyOn(nameValidatorStub, 'isValid').mockReturnValueOnce(false)
+
     const result = sut.validate({ fieldName: 'invalid_name' })
 
     expect(result).toStrictEqual(new InvalidParamError('fieldName'))
+  })
+
+  it('should return void if fieldName is a valid name', () => {
+    const { sut } = makeSut()
+
+    const result = sut.validate({ fieldName: 'valid_name' })
+
+    expect(result).toBeFalsy()
   })
 })
