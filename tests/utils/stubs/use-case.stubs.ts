@@ -4,7 +4,8 @@ import {
   type Authentication,
   type CreateAccessToken,
   type ValidateVerificationToken,
-  type ChangePassword
+  type ChangePassword,
+  type LoadGuardianName
 } from '@/domain/use-cases'
 
 const makeFakeAddGuardianUseCase = (): AddGuardian => {
@@ -69,11 +70,24 @@ const makeFakeValidateVerificationTokenUseCase = (): ValidateVerificationToken =
   return new ValidateVerificationTokenStub()
 }
 
+const makeLoadGuardianNameUseCase = (): LoadGuardianName => {
+  class LoadGuardianNameStub implements LoadGuardianName {
+    async load (userId: string): Promise<LoadGuardianName.Result> {
+      return {
+        firstName: 'any_first_name',
+        lastName: 'any_last_name'
+      }
+    }
+  }
+  return new LoadGuardianNameStub()
+}
+
 export {
   makeFakeAddGuardianUseCase,
   makeFakeAuthenticationUseCase,
   makeFakeForgetPasswordUseCase,
   makeFakeChangePasswordUseCase,
   makeFakeCreateAccessTokenUseCase,
-  makeFakeValidateVerificationTokenUseCase
+  makeFakeValidateVerificationTokenUseCase,
+  makeLoadGuardianNameUseCase
 }
