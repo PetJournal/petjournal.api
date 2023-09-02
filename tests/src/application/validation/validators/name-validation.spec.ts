@@ -43,18 +43,18 @@ describe('NameValidation', () => {
     expect(result).toStrictEqual(new InvalidParamError('fieldName'))
   })
 
+  it('should throw if validator throws', () => {
+    const { sut, nameValidatorStub } = makeSut()
+    jest.spyOn(nameValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
+
+    expect(() => { sut.validate({ fieldName: 'valid_name' }) }).toThrow()
+  })
+
   it('should return void if fieldName is a valid name', () => {
     const { sut } = makeSut()
 
     const result = sut.validate({ fieldName: 'valid_name' })
 
     expect(result).toBeFalsy()
-  })
-
-  it('should throw if validator throws', () => {
-    const { sut, nameValidatorStub } = makeSut()
-    jest.spyOn(nameValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
-
-    expect(() => { sut.validate({ fieldName: 'valid_name' }) }).toThrow()
   })
 })
