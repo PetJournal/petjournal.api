@@ -50,6 +50,15 @@ describe('NameValidation', () => {
     expect(() => { sut.validate({ fieldName: 'valid_name' }) }).toThrow()
   })
 
+  it('should call validator with correct argument', () => {
+    const { sut, nameValidatorStub } = makeSut()
+    const isValidSpy = jest.spyOn(nameValidatorStub, 'isValid')
+
+    sut.validate({ fieldName: 'valid_name' })
+
+    expect(isValidSpy).toHaveBeenCalledWith('valid_name')
+  })
+
   it('should return void if fieldName is a valid name', () => {
     const { sut } = makeSut()
 
