@@ -49,7 +49,7 @@ docker compose -f docker-compose.dev.yml up -d
 Server running at http://localhost:<porta>
 ```
 
-8. Para visualizar a documentação com as rotas disponíveis, acesse `localhost:<porta>/api/docs`.
+8. Para visualizar a documentação com as rotas disponíveis, acesse `localhost:<porta>/api/docs`. Caso prefira um tema escuro, você pode acessar `localhost:<porta>/api/docs/dark`.
 
 <a href='#top'>🔼 Voltar ao topo</a>
 
@@ -95,7 +95,7 @@ docker compose -f docker-compose.dev.yml up -d
 Server running at http://localhost:<port>}
 ```
 
-8. To view the documentation with the available routes, access `localhost:<port>/api/docs`.
+8. To view the documentation with the available routes, access `localhost:<port>/api/docs`. If you prefer a dark theme, you can go to `localhost:<port>/api/docs/dark`.
 
 <a href='#top'>🔼 Back to top</a>
 
