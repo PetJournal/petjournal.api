@@ -42,4 +42,13 @@ describe('EmailValidation', () => {
 
     expect(result).toStrictEqual(new InvalidParamError('fieldName'))
   })
+
+  test('should returns undefined if fieldName is a valid email', () => {
+    const { sut, emailValidatorStub } = makeSut()
+    jest.spyOn(emailValidatorStub, 'isValid')
+
+    const result = sut.validate({ fieldName: 'valid_email@mail.com' })
+
+    expect(result).toBe(undefined)
+  })
 })
