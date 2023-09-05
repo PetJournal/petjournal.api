@@ -50,6 +50,15 @@ describe('EmailValidation', () => {
     expect(() => { sut.validate({ fieldName: 'valid_email@mail.com' }) }).toThrow()
   })
 
+  test('should call validator with correct argument', () => {
+    const { sut, emailValidatorStub } = makeSut()
+    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
+
+    sut.validate({ fieldName: 'valid_email@mail.com' })
+
+    expect(isValidSpy).toHaveBeenCalledWith('valid_email@mail.com')
+  })
+
   test('should returns undefined if fieldName is a valid email', () => {
     const { sut, emailValidatorStub } = makeSut()
     jest.spyOn(emailValidatorStub, 'isValid')
