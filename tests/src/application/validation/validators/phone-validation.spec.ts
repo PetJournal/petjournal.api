@@ -42,4 +42,12 @@ describe('PhoneValidation', () => {
 
     expect(result).toStrictEqual(new InvalidParamError('fieldName'))
   })
+
+  test('should return void if fieldName is a valid phone', () => {
+    const { sut } = makesut()
+
+    const result = sut.validate({ fieldName: 'valid_phone' })
+
+    expect(result).toBe(undefined)
+  })
 })
