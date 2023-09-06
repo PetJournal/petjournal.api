@@ -43,11 +43,18 @@ describe('PhoneValidation', () => {
     expect(result).toStrictEqual(new InvalidParamError('fieldName'))
   })
 
+  test('should throw if validator throws', () => {
+    const { sut, phoneValidatorStub } = makesut()
+    jest.spyOn(phoneValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
+
+    expect(() => { sut.validate({ fieldName: 'valid_phone' }) }).toThrow()
+  })
+
   test('should return void if fieldName is a valid phone', () => {
     const { sut } = makesut()
 
     const result = sut.validate({ fieldName: 'valid_phone' })
 
-    expect(result).toBe(undefined)
+    expect(result).toBeFalsy()
   })
 })
