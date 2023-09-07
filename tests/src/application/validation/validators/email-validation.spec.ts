@@ -26,7 +26,7 @@ const makeSut = (): SutTypes => {
 }
 
 describe('EmailValidation', () => {
-  test('should returns InvalidParamError if fieldName is not a string', () => {
+  it('should returns InvalidParamError if fieldName is not a string', () => {
     const { sut } = makeSut()
 
     const result = sut.validate({ fieldName: 11 })
@@ -34,7 +34,7 @@ describe('EmailValidation', () => {
     expect(result).toStrictEqual(new InvalidParamError('fieldName'))
   })
 
-  test('should returns InvalidParamError if fieldName is not a valid email', () => {
+  it('should returns InvalidParamError if fieldName is not a valid email', () => {
     const { sut, emailValidatorStub } = makeSut()
     jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
 
@@ -43,14 +43,14 @@ describe('EmailValidation', () => {
     expect(result).toStrictEqual(new InvalidParamError('fieldName'))
   })
 
-  test('should throw if validator throws', () => {
+  it('should throw if validator throws', () => {
     const { sut, emailValidatorStub } = makeSut()
     jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
 
     expect(() => { sut.validate({ fieldName: 'valid_email@mail.com' }) }).toThrow()
   })
 
-  test('should call validator with correct argument', () => {
+  it('should call validator with correct argument', () => {
     const { sut, emailValidatorStub } = makeSut()
     const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
 
@@ -59,7 +59,7 @@ describe('EmailValidation', () => {
     expect(isValidSpy).toHaveBeenCalledWith('valid_email@mail.com')
   })
 
-  test('should returns undefined if fieldName is a valid email', () => {
+  it('should returns undefined if fieldName is a valid email', () => {
     const { sut, emailValidatorStub } = makeSut()
     jest.spyOn(emailValidatorStub, 'isValid')
 
