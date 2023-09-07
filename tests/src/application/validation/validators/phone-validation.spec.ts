@@ -26,7 +26,7 @@ const makesut = (): SutTypes => {
 }
 
 describe('PhoneValidation', () => {
-  test('should returns InvalidParamError if fieldName is not a string', () => {
+  it('should returns InvalidParamError if fieldName is not a string', () => {
     const { sut } = makesut()
 
     const result = sut.validate({ fieldName: 11 })
@@ -34,7 +34,7 @@ describe('PhoneValidation', () => {
     expect(result).toStrictEqual(new InvalidParamError('fieldName'))
   })
 
-  test('should return InvalidParamError if fieldName is not a valid phone', () => {
+  it('should return InvalidParamError if fieldName is not a valid phone', () => {
     const { sut, phoneValidatorStub } = makesut()
     jest.spyOn(phoneValidatorStub, 'isValid').mockReturnValueOnce(false)
 
@@ -43,14 +43,14 @@ describe('PhoneValidation', () => {
     expect(result).toStrictEqual(new InvalidParamError('fieldName'))
   })
 
-  test('should throw if validator throws', () => {
+  it('should throw if validator throws', () => {
     const { sut, phoneValidatorStub } = makesut()
     jest.spyOn(phoneValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
 
     expect(() => { sut.validate({ fieldName: 'valid_phone' }) }).toThrow()
   })
 
-  test('should call validator with a correct argument', () => {
+  it('should call validator with a correct argument', () => {
     const { sut, phoneValidatorStub } = makesut()
     const isValidSpy = jest.spyOn(phoneValidatorStub, 'isValid')
 
@@ -59,7 +59,7 @@ describe('PhoneValidation', () => {
     expect(isValidSpy).toBeCalledWith('valid_phone')
   })
 
-  test('should return void if fieldName is a valid phone', () => {
+  it('should return void if fieldName is a valid phone', () => {
     const { sut } = makesut()
 
     const result = sut.validate({ fieldName: 'valid_phone' })
