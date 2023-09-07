@@ -50,6 +50,15 @@ describe('PhoneValidation', () => {
     expect(() => { sut.validate({ fieldName: 'valid_phone' }) }).toThrow()
   })
 
+  test('should call validator with a correct argument', () => {
+    const { sut, phoneValidatorStub } = makesut()
+    const isValidSpy = jest.spyOn(phoneValidatorStub, 'isValid')
+
+    sut.validate({ fieldName: 'valid_phone' })
+
+    expect(isValidSpy).toBeCalledWith('valid_phone')
+  })
+
   test('should return void if fieldName is a valid phone', () => {
     const { sut } = makesut()
 
