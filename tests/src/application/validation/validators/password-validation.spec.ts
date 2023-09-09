@@ -46,6 +46,13 @@ describe('PasswordValidation', () => {
     expect(result).toStrictEqual(new InvalidParamError('fieldName'))
   })
 
+  it('should throw if validator throws', () => {
+    const { sut, passwordValidatorStub } = makesut()
+    jest.spyOn(passwordValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
+
+    expect(() => { sut.validate({ fieldName: 'valid_password' }) }).toThrow()
+  })
+
   it('should returns void if fieldName is a valid password', () => {
     const { sut } = makesut()
 
