@@ -45,4 +45,12 @@ describe('PasswordValidation', () => {
 
     expect(result).toStrictEqual(new InvalidParamError('fieldName'))
   })
+
+  it('should returns void if fieldName is a valid password', () => {
+    const { sut } = makesut()
+
+    const result = sut.validate({ fieldName: 'valid_password' })
+
+    expect(result).toBeFalsy()
+  })
 })
