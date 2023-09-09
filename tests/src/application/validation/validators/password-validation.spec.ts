@@ -13,18 +13,17 @@ const makePasswordValidatorStub = (): PasswordValidator => {
 interface SutTypes {
   sut: PasswordValidation
   passwordValidatorStub: PasswordValidator
-  fakeCustomError: undefined
+  fakeFieldName: string
 }
 
 const makesut = (): SutTypes => {
   const fakeFieldName: string = 'fieldName'
-  const fakeCustomError = undefined
   const passwordValidatorStub = makePasswordValidatorStub()
-  const sut = new PasswordValidation(fakeFieldName, passwordValidatorStub, fakeCustomError)
+  const sut = new PasswordValidation(fakeFieldName, passwordValidatorStub)
   return {
     sut,
     passwordValidatorStub,
-    fakeCustomError
+    fakeFieldName
   }
 }
 
@@ -46,11 +45,31 @@ describe('PasswordValidation', () => {
     expect(result).toStrictEqual(new InvalidParamError('fieldName'))
   })
 
+  it('should call validator with a correct argument', () => {
+    const { sut, passwordValidatorStub } = makesut()
+    const spyIsValid = jest.spyOn(passwordValidatorStub, 'isValid')
+
+    sut.validate({ fieldName: 'valid_password' })
+
+    expect(spyIsValid).toBeCalledWith('valid_password')
+  })
+
   it('should throw if validator throws', () => {
     const { sut, passwordValidatorStub } = makesut()
     jest.spyOn(passwordValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
 
     expect(() => { sut.validate({ fieldName: 'valid_password' }) }).toThrow()
+  })
+
+  it('should returns Error if customError is provided', () => {
+    const { fakeFieldName, passwordValidatorStub } = makesut()
+    const fakeCustomError = jest.fn(() => Error)
+    const sut = new PasswordValidation(fakeFieldName, passwordValidatorStub, fakeCustomError())
+    jest.spyOn(passwordValidatorStub, 'isValid').mockReturnValueOnce(false)
+
+    const result = sut.validate({ fieldName: 'invalid_password' })
+
+    expect(result).toStrictEqual(new Error())
   })
 
   it('should returns void if fieldName is a valid password', () => {
