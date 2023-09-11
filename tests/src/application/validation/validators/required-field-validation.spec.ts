@@ -15,4 +15,12 @@ describe('RequiredFieldValidation', () => {
 
     expect(result).toStrictEqual(new MissingParamError('fieldName'))
   })
+
+  it('should return void if fieldName is provided', () => {
+    const sut = makeSut()
+
+    const result = sut.validate({ fieldName: 'fieldName' })
+
+    expect(result).toBeFalsy()
+  })
 })
