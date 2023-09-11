@@ -16,4 +16,12 @@ describe('CompareFieldsValidation', () => {
 
     expect(result).toStrictEqual(new InvalidParamError('fieldToCompareName'))
   })
+
+  it('should return void if fieldName is equal FieldToCompareName', () => {
+    const sut = makeSut()
+
+    const result = sut.validate({ fieldName: 'fieldName', fieldToCompareName: 'fieldName' })
+
+    expect(result).toBeFalsy()
+  })
 })
