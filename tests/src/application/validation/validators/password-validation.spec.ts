@@ -28,10 +28,16 @@ const makesut = (): SutTypes => {
 }
 
 describe('PasswordValidation', () => {
+  const params = {
+    valid: { fieldName: 'valid_password' },
+    invalid: { fieldName: 'invalid_password' },
+    notStringValue: { fieldName: 11 }
+  }
+
   it('should returns InvalidParamError if fieldName is not a string', () => {
     const { sut } = makesut()
 
-    const result = sut.validate({ fieldName: 11 })
+    const result = sut.validate(params.notStringValue)
 
     expect(result).toStrictEqual(new InvalidParamError('fieldName'))
   })
@@ -40,7 +46,7 @@ describe('PasswordValidation', () => {
     const { sut, passwordValidatorStub } = makesut()
     jest.spyOn(passwordValidatorStub, 'isValid').mockReturnValueOnce(false)
 
-    const result = sut.validate({ fieldName: 'invalid_password' })
+    const result = sut.validate(params.invalid)
 
     expect(result).toStrictEqual(new InvalidParamError('fieldName'))
   })
@@ -49,7 +55,7 @@ describe('PasswordValidation', () => {
     const { sut, passwordValidatorStub } = makesut()
     const spyIsValid = jest.spyOn(passwordValidatorStub, 'isValid')
 
-    sut.validate({ fieldName: 'valid_password' })
+    sut.validate(params.valid)
 
     expect(spyIsValid).toBeCalledWith('valid_password')
   })
@@ -58,7 +64,7 @@ describe('PasswordValidation', () => {
     const { sut, passwordValidatorStub } = makesut()
     jest.spyOn(passwordValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
 
-    expect(() => { sut.validate({ fieldName: 'valid_password' }) }).toThrow()
+    expect(() => { sut.validate(params.valid) }).toThrow()
   })
 
   it('should returns Error if customError is provided', () => {
@@ -67,7 +73,7 @@ describe('PasswordValidation', () => {
     const sut = new PasswordValidation(fakeFieldName, passwordValidatorStub, fakeCustomError())
     jest.spyOn(passwordValidatorStub, 'isValid').mockReturnValueOnce(false)
 
-    const result = sut.validate({ fieldName: 'invalid_password' })
+    const result = sut.validate(params.invalid)
 
     expect(result).toStrictEqual(new Error())
   })
@@ -75,7 +81,7 @@ describe('PasswordValidation', () => {
   it('should returns void if fieldName is a valid password', () => {
     const { sut } = makesut()
 
-    const result = sut.validate({ fieldName: 'valid_password' })
+    const result = sut.validate(params.valid)
 
     expect(result).toBeFalsy()
   })
