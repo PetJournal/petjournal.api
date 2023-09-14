@@ -26,10 +26,16 @@ const makeSut = (): SutTypes => {
 }
 
 describe('NameValidation', () => {
+  const params = {
+    valid: { fieldName: 'valid_name' },
+    invalid: { fieldName: 'invalid_name' },
+    notStringValue: { fieldName: 11 }
+  }
+
   it('should returns invalidParamError if fieldName is not a string', () => {
     const { sut } = makeSut()
 
-    const result = sut.validate({ fieldName: 11 })
+    const result = sut.validate(params.notStringValue)
 
     expect(result).toStrictEqual(new InvalidParamError('fieldName'))
   })
@@ -38,7 +44,7 @@ describe('NameValidation', () => {
     const { sut, nameValidatorStub } = makeSut()
     jest.spyOn(nameValidatorStub, 'isValid').mockReturnValueOnce(false)
 
-    const result = sut.validate({ fieldName: 'invalid_name' })
+    const result = sut.validate(params.invalid)
 
     expect(result).toStrictEqual(new InvalidParamError('fieldName'))
   })
@@ -47,14 +53,14 @@ describe('NameValidation', () => {
     const { sut, nameValidatorStub } = makeSut()
     jest.spyOn(nameValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
 
-    expect(() => { sut.validate({ fieldName: 'valid_name' }) }).toThrow()
+    expect(() => { sut.validate(params.valid) }).toThrow()
   })
 
   it('should call validator with correct argument', () => {
     const { sut, nameValidatorStub } = makeSut()
     const isValidSpy = jest.spyOn(nameValidatorStub, 'isValid')
 
-    sut.validate({ fieldName: 'valid_name' })
+    sut.validate(params.valid)
 
     expect(isValidSpy).toHaveBeenCalledWith('valid_name')
   })
@@ -62,7 +68,7 @@ describe('NameValidation', () => {
   it('should return void if fieldName is a valid name', () => {
     const { sut } = makeSut()
 
-    const result = sut.validate({ fieldName: 'valid_name' })
+    const result = sut.validate(params.valid)
 
     expect(result).toBeFalsy()
   })
