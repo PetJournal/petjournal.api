@@ -1,14 +1,6 @@
 import { InvalidParamError } from '@/application/errors'
 import { PhoneValidation, type PhoneValidator } from '@/application/validation'
-
-const makePhoneValidatorStub = (): PhoneValidator => {
-  class PhoneValidatorStub implements PhoneValidator {
-    isValid (phone: string): boolean {
-      return true
-    }
-  }
-  return new PhoneValidatorStub()
-}
+import { makeFakePhoneValidator } from '@/tests/utils'
 
 interface SutTypes {
   sut: PhoneValidation
@@ -17,7 +9,7 @@ interface SutTypes {
 
 const makesut = (): SutTypes => {
   const fakeFieldName: string = 'fieldName'
-  const phoneValidatorStub = makePhoneValidatorStub()
+  const phoneValidatorStub = makeFakePhoneValidator()
   const sut = new PhoneValidation(fakeFieldName, phoneValidatorStub)
   return {
     sut,

@@ -1,5 +1,5 @@
 import { type Validation } from '@/application/protocols'
-import { type NameValidator, type EmailValidator, type PasswordValidator } from '@/application/validation'
+import { type NameValidator, type EmailValidator, type PasswordValidator, type PhoneValidator } from '@/application/validation'
 
 interface Options {
   error?: Error
@@ -46,9 +46,19 @@ const makeFakePasswordValidator = (): PasswordValidator => {
   return new PasswordValidatorStub()
 }
 
+const makeFakePhoneValidator = (): PhoneValidator => {
+  class PhoneValidatorStub implements PhoneValidator {
+    isValid (phone: string): boolean {
+      return true
+    }
+  }
+  return new PhoneValidatorStub()
+}
+
 export {
   makeFakeValidation,
   makeFakeEmailValidator,
   makeFakeNameValidator,
-  makeFakePasswordValidator
+  makeFakePasswordValidator,
+  makeFakePhoneValidator
 }
