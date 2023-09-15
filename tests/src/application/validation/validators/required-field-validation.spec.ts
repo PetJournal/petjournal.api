@@ -8,10 +8,15 @@ const makeSut = (): RequiredFieldValidation => {
 }
 
 describe('RequiredFieldValidation', () => {
+  const params = {
+    validFieldName: { fieldName: 'fieldName' },
+    emptyFieldName: { fieldName: '' }
+  }
+
   it('should return MissingParamError if fieldName is not provided', () => {
     const sut = makeSut()
 
-    const result = sut.validate({ fieldName: '' })
+    const result = sut.validate(params.emptyFieldName)
 
     expect(result).toStrictEqual(new MissingParamError('fieldName'))
   })
@@ -19,7 +24,7 @@ describe('RequiredFieldValidation', () => {
   it('should return void if fieldName is provided', () => {
     const sut = makeSut()
 
-    const result = sut.validate({ fieldName: 'fieldName' })
+    const result = sut.validate(params.validFieldName)
 
     expect(result).toBeFalsy()
   })
