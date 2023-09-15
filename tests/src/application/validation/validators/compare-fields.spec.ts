@@ -19,10 +19,15 @@ const makeSut = (): SutTypes => {
 }
 
 describe('CompareFieldsValidation', () => {
+  const params = {
+    validCompareFieldName: { fieldName: 'fieldName', fieldToCompareName: 'fieldName' },
+    invalidCompareFieldName: { fieldName: 'fieldName', fieldToCompareName: 'invalid_fieldName' }
+  }
+
   it('should return InvalidParamError if fieldName is not equal than FieldToCompareName', () => {
     const { sut } = makeSut()
 
-    const result = sut.validate({ fieldName: 'fieldName', fieldToCompareName: 'invalid_fieldName' })
+    const result = sut.validate(params.invalidCompareFieldName)
 
     expect(result).toStrictEqual(new InvalidParamError('fieldToCompareName'))
   })
@@ -32,7 +37,7 @@ describe('CompareFieldsValidation', () => {
     const fakeCustomError = jest.fn(() => Error())
     const sut = new CompareFieldsValidation(fakeFieldName, fakeFieldToCompareName, fakeCustomError)
 
-    const result = sut.validate({ fieldName: 'fieldName', fieldToCompareName: 'invalid_fieldName' })
+    const result = sut.validate(params.invalidCompareFieldName)
 
     expect(result).toStrictEqual(new Error())
   })
@@ -40,7 +45,7 @@ describe('CompareFieldsValidation', () => {
   it('should return void if fieldName is equal FieldToCompareName', () => {
     const { sut } = makeSut()
 
-    const result = sut.validate({ fieldName: 'fieldName', fieldToCompareName: 'fieldName' })
+    const result = sut.validate(params.validCompareFieldName)
 
     expect(result).toBeFalsy()
   })
