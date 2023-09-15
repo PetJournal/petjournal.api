@@ -1,5 +1,5 @@
 import { type Validation } from '@/application/protocols'
-import { type EmailValidator } from '@/application/validation'
+import { type NameValidator, type EmailValidator } from '@/application/validation'
 
 interface Options {
   error?: Error
@@ -28,7 +28,17 @@ const makeFakeEmailValidator = (): EmailValidator => {
   return new EmailValidatorStub()
 }
 
+const makeFakeNameValidator = (): NameValidator => {
+  class NameValidatorStub implements NameValidator {
+    isValid (name: string): boolean {
+      return true
+    }
+  }
+  return new NameValidatorStub()
+}
+
 export {
   makeFakeValidation,
-  makeFakeEmailValidator
+  makeFakeEmailValidator,
+  makeFakeNameValidator
 }

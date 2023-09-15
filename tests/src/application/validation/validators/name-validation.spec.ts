@@ -1,23 +1,15 @@
 import { InvalidParamError } from '@/application/errors'
 import { NameValidation, type NameValidator } from '@/application/validation'
+import { makeFakeNameValidator } from '@/tests/utils'
 
 interface SutTypes {
   sut: NameValidation
   nameValidatorStub: NameValidator
 }
 
-const makeNameValidatorStub = (): NameValidator => {
-  class NameValidatorStub implements NameValidator {
-    isValid (name: string): boolean {
-      return true
-    }
-  }
-  return new NameValidatorStub()
-}
-
 const makeSut = (): SutTypes => {
   const fakeFieldName: string = 'fieldName'
-  const nameValidatorStub = makeNameValidatorStub()
+  const nameValidatorStub = makeFakeNameValidator()
   const sut = new NameValidation(fakeFieldName, nameValidatorStub)
   return {
     sut,
