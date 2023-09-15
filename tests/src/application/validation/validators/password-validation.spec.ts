@@ -1,14 +1,6 @@
 import { InvalidParamError } from '@/application/errors'
 import { PasswordValidation, type PasswordValidator } from '@/application/validation'
-
-const makePasswordValidatorStub = (): PasswordValidator => {
-  class PasswordValidatorStub implements PasswordValidator {
-    isValid (password: string): boolean {
-      return true
-    }
-  }
-  return new PasswordValidatorStub()
-}
+import { makeFakePasswordValidator } from '@/tests/utils'
 
 interface SutTypes {
   sut: PasswordValidation
@@ -18,7 +10,7 @@ interface SutTypes {
 
 const makesut = (): SutTypes => {
   const fakeFieldName: string = 'fieldName'
-  const passwordValidatorStub = makePasswordValidatorStub()
+  const passwordValidatorStub = makeFakePasswordValidator()
   const sut = new PasswordValidation(fakeFieldName, passwordValidatorStub)
   return {
     sut,
