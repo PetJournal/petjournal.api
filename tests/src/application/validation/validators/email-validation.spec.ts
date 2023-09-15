@@ -1,14 +1,6 @@
 import { InvalidParamError } from '@/application/errors'
 import { EmailValidation, type EmailValidator } from '@/application/validation'
-
-const makeEmailValidatorStub = (): EmailValidator => {
-  class EmailValidatorStub implements EmailValidator {
-    isValid (email: string): boolean {
-      return true
-    }
-  }
-  return new EmailValidatorStub()
-}
+import { makeFakeEmailValidator } from '@/tests/utils'
 
 interface SutTypes {
   sut: EmailValidation
@@ -17,7 +9,7 @@ interface SutTypes {
 
 const makeSut = (): SutTypes => {
   const fakeFieldName: string = 'fieldName'
-  const emailValidatorStub = makeEmailValidatorStub()
+  const emailValidatorStub = makeFakeEmailValidator()
   const sut = new EmailValidation(fakeFieldName, emailValidatorStub)
   return {
     sut,

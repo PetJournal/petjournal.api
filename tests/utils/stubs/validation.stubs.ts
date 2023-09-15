@@ -1,4 +1,5 @@
 import { type Validation } from '@/application/protocols'
+import { type EmailValidator } from '@/application/validation'
 
 interface Options {
   error?: Error
@@ -18,6 +19,16 @@ const makeFakeValidation = (): Validation & Options => {
   return new ValidationStub()
 }
 
+const makeFakeEmailValidator = (): EmailValidator => {
+  class EmailValidatorStub implements EmailValidator {
+    isValid (email: string): boolean {
+      return true
+    }
+  }
+  return new EmailValidatorStub()
+}
+
 export {
-  makeFakeValidation
+  makeFakeValidation,
+  makeFakeEmailValidator
 }
