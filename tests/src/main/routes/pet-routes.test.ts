@@ -37,7 +37,7 @@ const makeSetup = async (): Promise<{ accessToken: string }> => {
 }
 
 describe('POST - /api/pet Route', () => {
-  it.skip.each([
+  it.each([
     ['Cachorro', undefined, { status: 201, specie: { name: 'Cachorro' }, specieAlias: null }],
     ['Outros', 'Inseto', { status: 201, specie: { name: 'Outros' }, specieAlias: 'Inseto' }],
     ['Cachorro', 'Gato', { status: 201, specie: { name: 'Cachorro' }, specieAlias: null }]

@@ -32,7 +32,7 @@ describe('DbAppointOtherSpecie Use Case', () => {
   }
 
   describe('specieAlias', () => {
-    it('should return InvalidParamsError if specie is Outros and specieAlias is undefined', async () => {
+    it('Should return InvalidParamsError if specie is Outros and specieAlias is undefined', async () => {
       const { sut } = makeSut()
       const otherEmpty = {
         specie: {
@@ -52,7 +52,7 @@ describe('DbAppointOtherSpecie Use Case', () => {
   })
 
   describe('LoadSpecieByName', () => {
-    it('should return specieAppointed equal other when specieAlias is not equal to specie name in db', async () => {
+    it('Should return specieAppointed equal other when specieAlias is not equal to specie name in db', async () => {
       const { sut, specieRepositoryStub } = makeSut()
       const modifiedParams = {
         specie: {
@@ -74,7 +74,7 @@ describe('DbAppointOtherSpecie Use Case', () => {
       })
     })
 
-    it('should return specieAppointed equal any_specie when specieAlias is equal to any_specie name in db', async () => {
+    it('Should return specieAppointed equal any_specie when specieAlias is equal to any_specie name in db', async () => {
       const { sut, specieRepositoryStub } = makeSut()
       const modifiedParams = {
         specie: {
@@ -102,7 +102,33 @@ describe('DbAppointOtherSpecie Use Case', () => {
       })
     })
 
-    it('should calls loadByName with correct params', async () => {
+    it('Should return specieAlias equal undefined if valid specie is provided and specieAlias is undefined', async () => {
+      const { sut, specieRepositoryStub } = makeSut()
+      const modifiedParams = {
+        specie: {
+          id: 'any_id',
+          name: 'Cachorro'
+        },
+        specieAlias: undefined
+      }
+
+      jest.spyOn(specieRepositoryStub, 'loadByName').mockResolvedValueOnce({
+        id: 'any_id',
+        name: 'Cachorro'
+      })
+
+      const result = await sut.appoint(modifiedParams)
+
+      expect(result).toEqual({
+        isSuccess: true,
+        data: {
+          specieAppointed: modifiedParams.specie,
+          specieAlias: undefined
+        }
+      })
+    })
+
+    it('Should calls loadByName with correct params', async () => {
       const { sut, specieRepositoryStub } = makeSut()
       const specieRepositorySpy = jest.spyOn(specieRepositoryStub, 'loadByName')
 
@@ -111,7 +137,7 @@ describe('DbAppointOtherSpecie Use Case', () => {
       expect(specieRepositorySpy).toHaveBeenCalledWith(params.specieAlias)
     })
 
-    it('should throws if loadByName throws', async () => {
+    it('Should throws if loadByName throws', async () => {
       const { sut, specieRepositoryStub } = makeSut()
       jest.spyOn(specieRepositoryStub, 'loadByName').mockRejectedValueOnce(new Error())
 
