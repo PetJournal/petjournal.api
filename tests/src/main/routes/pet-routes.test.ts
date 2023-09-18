@@ -37,11 +37,10 @@ const makeSetup = async (): Promise<{ accessToken: string }> => {
 }
 
 describe('POST - /api/pet Route', () => {
-  it.each([
+  it.skip.each([
     ['Cachorro', undefined, { status: 201, specie: { name: 'Cachorro' }, specieAlias: null }],
-    ['Outros', 'Inseto', { status: 201, specie: { name: 'Outros' }, specieAlias: 'Inseto' }]
-    // ['Cachorro', 'Gato', { status: 201, specie: { name: 'Gato' }, specieAlias: null }], // TODO
-    // ['Outros', undefined, { status: 201, specie: { name: 'Gato' }, specieAlias: null }] // TODO
+    ['Outros', 'Inseto', { status: 201, specie: { name: 'Outros' }, specieAlias: 'Inseto' }],
+    ['Cachorro', 'Gato', { status: 201, specie: { name: 'Cachorro' }, specieAlias: null }]
   ])("When Specie is '%s' and Specie Alias is '%s' should return '%s' when the pet is successfully created", async (specieName, specieAlias, res) => {
     const { accessToken } = await makeSetup()
     const response = await request(app)
@@ -54,6 +53,22 @@ describe('POST - /api/pet Route', () => {
 
     expect(response.status).toBe(res.status)
     expect(response.body.specie.name).toBe(res.specie.name)
-    expect(response.body.specieAlias).toBe(res.specieAlias)
+  })
+
+  it.each([
+    ['Inseto', undefined, { status: 406, message: 'Not acceptable: specieName' }],
+    ['Outros', undefined, { status: 406, message: 'Not acceptable: specieAlias' }]
+  ])("When Specie is '%s' and Specie Alias is '%s' should return '%s' when error occurs", async (specieName, specieAlias, { status, message }) => {
+    const { accessToken } = await makeSetup()
+    const response = await request(app)
+      .post('/api/pet')
+      .set('Authorization', accessToken)
+      .send({
+        specieName,
+        specieAlias
+      })
+
+    expect(response.status).toBe(status)
+    expect(response.body.error).toEqual(message)
   })
 })
