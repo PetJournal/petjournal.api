@@ -56,7 +56,7 @@ yarn migrate
 Server running at http://localhost:<port>
 ```
 
-10.  Para visualizar a documentação com as rotas disponíveis, acesse `localhost:<port>/api/docs`.
+10.  Para visualizar a documentação com as rotas disponíveis, acesse `localhost:<port>/api/docs`. Caso prefira um tema escuro, você pode acessar `localhost:<porta>/api/docs/dark`.
 
 ## Variáveis de ambiente
 
@@ -98,7 +98,7 @@ Variáveis relacionadas as configurações de serviços externos.
 
 ---
 
-\* Exemplo de como obter o `MAIL_PASS` no provedor de email Gmail: 
+\* Exemplo de como obter o `MAIL_PASS` no provedor de email Gmail:
 
 1. Entre nas configurações de segurança da sua conta do Gmail.
 2. Procure pela opção de "Verificação em duas etapas" e ative ela.
@@ -159,7 +159,7 @@ yarn migrate
 Server running at http://localhost:<port>}
 ```
 
-10. To view the documentation with the available routes, access `localhost:<port>/api/docs`.
+10. To view the documentation with the available routes, access `localhost:<port>/api/docs`. If you prefer a dark theme, you can go to `localhost:<port>/api/docs/dark`.
 
 ## Environment variables
 
