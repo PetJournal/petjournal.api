@@ -56,7 +56,7 @@ yarn migrate
 Server running at http://localhost:<port>
 ```
 
-10.  Para visualizar a documentação com as rotas disponíveis, acesse `localhost:<port>/api/docs`.
+10.  Para visualizar a documentação com as rotas disponíveis, acesse `localhost:<port>/api/docs`. Caso prefira um tema escuro, você pode acessar `localhost:<porta>/api/docs/dark`.
 
 ## Variáveis de ambiente
 
@@ -159,7 +159,7 @@ yarn migrate
 Server running at http://localhost:<port>}
 ```
 
-10. To view the documentation with the available routes, access `localhost:<port>/api/docs`.
+10. To view the documentation with the available routes, access `localhost:<port>/api/docs`. If you prefer a dark theme, you can go to `localhost:<port>/api/docs/dark`.
 
 ## Environment variables
 
