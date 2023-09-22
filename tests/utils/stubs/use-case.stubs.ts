@@ -5,8 +5,11 @@ import {
   type CreateAccessToken,
   type ValidateVerificationToken,
   type ChangePassword,
+  type AppointOtherSpecie,
   type LoadGuardianName
 } from '@/domain/use-cases'
+import { type AddPet } from '@/domain/use-cases/pet/add-pet'
+import { mockFakePetAdded, mockFakeSpecieAdded } from '../mocks'
 
 const makeFakeAddGuardianUseCase = (): AddGuardian => {
   class AddGuardianStub implements AddGuardian {
@@ -70,6 +73,32 @@ const makeFakeValidateVerificationTokenUseCase = (): ValidateVerificationToken =
   return new ValidateVerificationTokenStub()
 }
 
+const makeFakeAddPetUseCase = (): AddPet => {
+  class AddGuardianStub implements AddPet {
+    async add (petData: AddPet.Params): Promise<AddPet.Result> {
+      const result = {
+        isSuccess: true,
+        data: mockFakePetAdded()
+      }
+      return result
+    }
+  }
+  return new AddGuardianStub()
+}
+
+const makeFakeAppointOtherSpecieUseCase = (): AppointOtherSpecie => {
+  class AppointOtherSpecieStub implements AppointOtherSpecie {
+    async appoint (params: AppointOtherSpecie.Params): Promise<AppointOtherSpecie.Result> {
+      return {
+        isSuccess: true,
+        data: { specieAppointed: mockFakeSpecieAdded(), specieAlias: params.specieAlias }
+      }
+    }
+  }
+
+  return new AppointOtherSpecieStub()
+}
+
 const makeLoadGuardianNameUseCase = (): LoadGuardianName => {
   class LoadGuardianNameStub implements LoadGuardianName {
     async load (userId: string): Promise<LoadGuardianName.Result> {
@@ -84,10 +113,12 @@ const makeLoadGuardianNameUseCase = (): LoadGuardianName => {
 
 export {
   makeFakeAddGuardianUseCase,
+  makeFakeAddPetUseCase,
   makeFakeAuthenticationUseCase,
   makeFakeForgetPasswordUseCase,
   makeFakeChangePasswordUseCase,
   makeFakeCreateAccessTokenUseCase,
   makeFakeValidateVerificationTokenUseCase,
+  makeFakeAppointOtherSpecieUseCase,
   makeLoadGuardianNameUseCase
 }

@@ -2,7 +2,8 @@
 import {
   makeFakePayload,
   mockFakeGuardianAdded,
-  mockFakeGuardianLoaded
+  mockFakeGuardianLoaded,
+  mockFakePetAdded
 } from '@/tests/utils'
 import {
   type EmailService,
@@ -15,7 +16,10 @@ import {
   type TokenGenerator,
   type UpdateAccessTokenRepository,
   type UpdateVerificationTokenRepository,
-  type UpdateGuardianPasswordRepository
+  type UpdateGuardianPasswordRepository,
+  type AddPetRepository,
+  type LoadSpecieByIdRepository,
+  type LoadSpecieByNameRepository
 } from '@/data/protocols'
 
 const makeFakeGuardianRepository = ():
@@ -59,6 +63,40 @@ UpdateVerificationTokenRepository => {
   return new GuardianRepositoryStub()
 }
 
+const makeFakePetRepository = (): AddPetRepository => {
+  class PetRepositoryStub implements AddPetRepository {
+    async add (petData: AddPetRepository.Params): Promise<AddPetRepository.Result> {
+      return mockFakePetAdded()
+    }
+  }
+
+  return new PetRepositoryStub()
+}
+
+const makeFakeSpecieRepository = ():
+LoadSpecieByIdRepository &
+LoadSpecieByNameRepository => {
+  class SpecieRepositoryStub implements
+  LoadSpecieByIdRepository,
+  LoadSpecieByNameRepository {
+    async loadById (specieData: LoadSpecieByIdRepository.Params): Promise<LoadSpecieByIdRepository.Result> {
+      return {
+        id: 'any_id',
+        name: 'any_name'
+      }
+    }
+
+    async loadByName (specieData: LoadSpecieByNameRepository.Params): Promise<LoadSpecieByNameRepository.Result> {
+      return {
+        id: 'any_id',
+        name: 'any_name'
+      }
+    }
+  }
+
+  return new SpecieRepositoryStub()
+}
+
 const makeFakeHashService = (): HashGenerator & HashComparer => {
   class HashServiceStub implements HashGenerator, HashComparer {
     async compare (input: HashComparer.Params): Promise<boolean> {
@@ -96,6 +134,8 @@ const makeFakeEmailService = (): EmailService => {
 
 export {
   makeFakeGuardianRepository,
+  makeFakePetRepository,
+  makeFakeSpecieRepository,
   makeFakeHashService,
   makeFakeEmailService,
   makeFakeTokenService
