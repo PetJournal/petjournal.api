@@ -1,5 +1,5 @@
 import { type Validation } from '@/application/protocols'
-import { NameValidation, RequiredFieldValidation, ValidationComposite } from '@/application/validation'
+import { NameValidation, OptionalFieldValidation, RequiredFieldValidation, ValidationComposite } from '@/application/validation'
 import { NameValidatorAdapter, OptionalNameValidatorAdapter } from '@/infra/validators'
 
 export const makePetRegistryValidation = (): ValidationComposite => {
@@ -11,6 +11,6 @@ export const makePetRegistryValidation = (): ValidationComposite => {
   }
 
   validations.push(new NameValidation('specieName', new NameValidatorAdapter()))
-  validations.push(new NameValidation('specieAlias', new OptionalNameValidatorAdapter()))
+  validations.push(new OptionalFieldValidation('specieAlias', new NameValidation('specieAlias', new OptionalNameValidatorAdapter())))
   return new ValidationComposite(validations)
 }
