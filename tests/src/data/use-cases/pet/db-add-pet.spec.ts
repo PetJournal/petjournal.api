@@ -1,12 +1,11 @@
 import { NotAcceptableError } from '@/application/errors'
-import { type AddPetRepository, type LoadGuardianByIdRepository, type LoadSpecieByNameRepository } from '@/data/protocols'
+import { type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 import { DbAddPet } from '@/data/use-cases'
-import { type AppointOtherSpecie, type AddPet } from '@/domain/use-cases'
+import { type AppointSpecie, type AddPet } from '@/domain/use-cases'
 import {
-  makeFakeAppointOtherSpecieUseCase,
+  makeFakeAppointSpecieUseCase,
   makeFakeGuardianRepository,
   makeFakePetRepository,
-  makeFakeSpecieRepository,
   mockFakeGuardianAdded,
   mockFakePetAdded,
   mockFakeSpecieAdded
@@ -15,38 +14,33 @@ import {
 interface SutTypes {
   sut: DbAddPet
   guardianRepositoryStub: LoadGuardianByIdRepository
-  specieRepositoryStub: LoadSpecieByNameRepository
   petRepositoryStub: AddPetRepository
-  appointOtherSpecieStub: AppointOtherSpecie
+  appointSpecieStub: AppointSpecie
 }
 
 const makeSut = (): SutTypes => {
   const guardianRepositoryStub = makeFakeGuardianRepository()
-  const specieRepositoryStub = makeFakeSpecieRepository()
   const petRepositoryStub = makeFakePetRepository()
-  const appointOtherSpecieStub = makeFakeAppointOtherSpecieUseCase()
+  const appointSpecieStub = makeFakeAppointSpecieUseCase()
 
   const sut = new DbAddPet({
     guardianRepository: guardianRepositoryStub,
-    specieRepository: specieRepositoryStub,
     petRepository: petRepositoryStub,
-    appointOtherSpecie: appointOtherSpecieStub
+    appointSpecie: appointSpecieStub
   })
 
   return {
     sut,
     guardianRepositoryStub,
-    specieRepositoryStub,
     petRepositoryStub,
-    appointOtherSpecieStub
+    appointSpecieStub
   }
 }
 
 describe('DbAddPet Use Case', () => {
   const params: AddPet.Params = {
     guardianId: 'any_guardian_id',
-    specieName: 'any_specie_name',
-    specieAlias: 'any_specie_alias'
+    specieName: 'any_specie_name'
   }
 
   describe('GuardianRepository', () => {
@@ -81,140 +75,23 @@ describe('DbAddPet Use Case', () => {
     })
   })
 
-  describe('SpecieRepository', () => {
-    it('Should call loadByName method with correct values', async () => {
-      const { sut, specieRepositoryStub } = makeSut()
-      const loadByName = jest.spyOn(specieRepositoryStub, 'loadByName')
-
-      await sut.add(params)
-
-      expect(loadByName).toHaveBeenCalledWith(params.specieName)
-    })
-
-    it('Should return not acceptable error if incorrect specieName is provided', async () => {
-      const { sut, specieRepositoryStub } = makeSut()
-      jest.spyOn(specieRepositoryStub, 'loadByName').mockResolvedValueOnce(undefined)
-
-      const result = await sut.add(params)
-
-      expect(result).toEqual({
-        isSuccess: false,
-        error: new NotAcceptableError('specieName')
-      })
-    })
-
-    it('Should throw if loadByName method throws', async () => {
-      const { sut, specieRepositoryStub } = makeSut()
-      jest.spyOn(specieRepositoryStub, 'loadByName').mockRejectedValue(new Error())
-
-      const promise = sut.add(params)
-
-      await expect(promise).rejects.toThrow()
-    })
-  })
-
-  describe('AppointOtherSpecie', () => {
-    const existentSpecie = {
-      ...mockFakeSpecieAdded(),
-      name: 'existent_specie'
-    }
-
+  describe('AppointSpecie', () => {
     it('Should call appoint method with correct values', async () => {
-      const { sut, appointOtherSpecieStub } = makeSut()
-      const appointSpy = jest.spyOn(appointOtherSpecieStub, 'appoint')
+      const { sut, appointSpecieStub } = makeSut()
+      const appointSpy = jest.spyOn(appointSpecieStub, 'appoint')
 
       await sut.add(params)
 
-      expect(appointSpy).toHaveBeenCalledWith({
-        specie: mockFakeSpecieAdded(),
-        specieAlias: params.specieAlias
-      })
+      expect(appointSpy).toHaveBeenCalledWith(params.specieName)
     })
 
     it('Should throws if appoint method throws', async () => {
-      const { sut, appointOtherSpecieStub } = makeSut()
-      jest.spyOn(appointOtherSpecieStub, 'appoint').mockRejectedValue(new Error())
+      const { sut, appointSpecieStub } = makeSut()
+      jest.spyOn(appointSpecieStub, 'appoint').mockRejectedValue(new Error())
 
       const promise = sut.add(params)
 
       await expect(promise).rejects.toThrow()
-    })
-
-    it('Should return not acceptable error if invalid specieAlias is provided ', async () => {
-      const { sut, appointOtherSpecieStub } = makeSut()
-      jest.spyOn(appointOtherSpecieStub, 'appoint').mockResolvedValueOnce({
-        isSuccess: false,
-        error: new NotAcceptableError('specieAlias')
-      })
-
-      const result = await sut.add(params)
-
-      expect(result).toEqual({
-        isSuccess: false,
-        error: new NotAcceptableError('specieAlias')
-      })
-    })
-
-    it('Should return correct specie if specieName is other and specieAlias is provided', async () => {
-      const { sut, appointOtherSpecieStub, petRepositoryStub } = makeSut()
-      const modifiedParams = {
-        ...params,
-        specieName: 'other',
-        specieAlias: 'existent_specie'
-      }
-
-      jest.spyOn(appointOtherSpecieStub, 'appoint').mockResolvedValueOnce({
-        isSuccess: true,
-        data: {
-          specieAppointed: existentSpecie,
-          specieAlias: undefined
-        }
-      })
-      jest.spyOn(petRepositoryStub, 'add').mockResolvedValueOnce({
-        id: 'any_id',
-        guardian: mockFakeGuardianAdded(),
-        specie: existentSpecie
-      })
-
-      const result = await sut.add(modifiedParams)
-
-      expect(result).toEqual({
-        isSuccess: true,
-        data: {
-          ...mockFakePetAdded(),
-          specie: existentSpecie
-        }
-      })
-    })
-
-    it('Should return  specieAlias undefined if specieName is not other specie', async () => {
-      const { sut, appointOtherSpecieStub, petRepositoryStub } = makeSut()
-      const wrongParam = {
-        ...params,
-        specieAlias: 'any_alias'
-      }
-      jest.spyOn(appointOtherSpecieStub, 'appoint').mockResolvedValueOnce({
-        isSuccess: true,
-        data: {
-          specieAppointed: existentSpecie,
-          specieAlias: undefined
-        }
-      })
-      jest.spyOn(petRepositoryStub, 'add').mockResolvedValueOnce({
-        id: 'any_id',
-        guardian: mockFakeGuardianAdded(),
-        specie: existentSpecie
-      })
-
-      const result = await sut.add(wrongParam)
-
-      expect(result).toEqual({
-        isSuccess: true,
-        data: {
-          ...mockFakePetAdded(),
-          specie: existentSpecie
-        }
-      })
     })
   })
 
@@ -228,7 +105,7 @@ describe('DbAddPet Use Case', () => {
       expect(addSpy).toHaveBeenCalledWith({
         guardianId: mockFakeGuardianAdded().id,
         specieId: mockFakeSpecieAdded().id,
-        specieAlias: params.specieAlias
+        specieAlias: params.specieName
       })
     })
 

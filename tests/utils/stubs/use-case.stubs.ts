@@ -5,7 +5,7 @@ import {
   type CreateAccessToken,
   type ValidateVerificationToken,
   type ChangePassword,
-  type AppointOtherSpecie,
+  type AppointSpecie,
   type LoadGuardianName
 } from '@/domain/use-cases'
 import { type AddPet } from '@/domain/use-cases/pet/add-pet'
@@ -86,12 +86,12 @@ const makeFakeAddPetUseCase = (): AddPet => {
   return new AddGuardianStub()
 }
 
-const makeFakeAppointOtherSpecieUseCase = (): AppointOtherSpecie => {
-  class AppointOtherSpecieStub implements AppointOtherSpecie {
-    async appoint (params: AppointOtherSpecie.Params): Promise<AppointOtherSpecie.Result> {
+const makeFakeAppointSpecieUseCase = (): AppointSpecie => {
+  class AppointOtherSpecieStub implements AppointSpecie {
+    async appoint (specieName: AppointSpecie.Params): Promise<AppointSpecie.Result> {
       return {
-        isSuccess: true,
-        data: { specieAppointed: mockFakeSpecieAdded(), specieAlias: params.specieAlias }
+        specie: mockFakeSpecieAdded(),
+        specieAlias: specieName
       }
     }
   }
@@ -119,6 +119,6 @@ export {
   makeFakeChangePasswordUseCase,
   makeFakeCreateAccessTokenUseCase,
   makeFakeValidateVerificationTokenUseCase,
-  makeFakeAppointOtherSpecieUseCase,
+  makeFakeAppointSpecieUseCase,
   makeLoadGuardianNameUseCase
 }
