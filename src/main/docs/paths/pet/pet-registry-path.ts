@@ -13,18 +13,8 @@ export const petRegistryPath = {
           schema: {
             $ref: '#/schemas/petRegistryParams'
           },
-          examples: {
-            'Without alias': {
-              value: {
-                specieName: 'Gato'
-              }
-            },
-            'With other alias': {
-              value: {
-                specieName: 'Outros',
-                specieAlias: 'Inseto'
-              }
-            }
+          example: {
+            specieName: 'Gato'
           }
         }
       }
@@ -42,9 +32,6 @@ export const petRegistryPath = {
       },
       400: {
         $ref: '#/components/badRequest'
-      },
-      406: {
-        $ref: '#/components/notAcceptable'
       },
       500: {
         $ref: '#/components/serverError'

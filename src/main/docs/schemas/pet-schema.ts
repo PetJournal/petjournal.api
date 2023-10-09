@@ -1,7 +1,7 @@
 export const petSchema = {
   type: 'object',
   properties: {
-    id: { type: 'number' },
+    id: { type: 'string' },
     guardian: {
       $ref: '#/schemas/guardian'
     },
