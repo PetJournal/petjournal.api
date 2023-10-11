@@ -21,10 +21,10 @@ const makeSut = (): SutTypes => {
   }
 }
 
-describe('DbAppointOtherSpecie Use Case', () => {
+describe('DbAppointSpecie Use Case', () => {
   const specieName: AppointSpecie.Params = 'any_name'
 
-  describe('LoadSpecieByName', () => {
+  describe('SpecieRepository', () => {
     it('Should return specie equal other and specieAlias equal specieName when specieName is not equal to specie in db', async () => {
       const { sut, specieRepositoryStub } = makeSut()
       const otherSpecie = {
