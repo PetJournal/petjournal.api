@@ -3,9 +3,6 @@ export const petRegistryParamsSchema = {
   properties: {
     specieName: {
       type: 'string'
-    },
-    specieAlias: {
-      type: 'string'
     }
   },
   required: ['specieName']

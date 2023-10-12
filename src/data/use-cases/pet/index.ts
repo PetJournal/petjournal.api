@@ -1,2 +1,2 @@
 export * from './db-add-pet'
-export * from './db-appoint-other-specie'
+export * from './db-appoint-specie'

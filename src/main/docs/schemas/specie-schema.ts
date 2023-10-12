@@ -1,7 +1,7 @@
 export const specieSchema = {
   type: 'object',
   properties: {
-    id: { type: 'number' },
+    id: { type: 'string' },
     name: {
       type: 'string'
     }
