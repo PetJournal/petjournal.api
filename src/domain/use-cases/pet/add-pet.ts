@@ -9,6 +9,8 @@ export namespace AddPet {
   export interface Params {
     guardianId: string
     specieName: string
+    petName: string
+    gender: string
   }
 
   export interface Result {
