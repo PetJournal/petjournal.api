@@ -46,6 +46,8 @@ interface PetRegistryRequest {
   body: {
     guardianId: string
     specieName: string
+    petName: string
+    gender: string
     specieAlias?: string
   }
 }

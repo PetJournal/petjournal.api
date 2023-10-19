@@ -40,7 +40,9 @@ const makeSut = (): SutTypes => {
 describe('DbAddPet Use Case', () => {
   const params: AddPet.Params = {
     guardianId: 'any_guardian_id',
-    specieName: 'any_specie_name'
+    specieName: 'any_specie_name',
+    gender: 'M',
+    petName: 'any_pet_name'
   }
 
   describe('GuardianRepository', () => {

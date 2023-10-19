@@ -73,7 +73,9 @@ const makeFakePetRegistryRequest = (): PetRegistryRequest => {
   const body = {
     guardianId: 'valid_guardian_id',
     specieName: 'valid_specie_id',
-    specieAlias: 'any_alias'
+    specieAlias: 'any_alias',
+    petName: 'any_name',
+    gender: 'M'
   }
 
   return { body }
