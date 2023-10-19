@@ -12,7 +12,7 @@
     "migrate": "prisma migrate dev",
     "test": "jest --passWithNoTests --no-cache --runInBand --silent --noStackTrace",
     "prepare": "husky install",
-    "seed" : "prisma db seed",
+    "seed": "prisma db seed",
     "start": "node dist/main/server.js",
     "test:watch": "yarn test --watch",
     "test:verbose": "jest --passWithNoTests --no-cache --runInBand",
