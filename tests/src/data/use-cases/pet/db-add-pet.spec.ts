@@ -107,7 +107,9 @@ describe('DbAddPet Use Case', () => {
       expect(addSpy).toHaveBeenCalledWith({
         guardianId: mockFakeGuardianAdded().id,
         specieId: mockFakeSpecieAdded().id,
-        specieAlias: params.specieName
+        specieAlias: params.specieName,
+        petName: params.petName,
+        gender: params.gender
       })
     })
 
