@@ -19,7 +19,7 @@ model Guardian {
   verificationTokenCreatedAt DateTime @default(now()) @map("verification_token_created_at")
   pets                       Pet[]
 
-  @@map("guardian")
+  @@map("guardians")
 }
 
 model Pet {
@@ -30,7 +30,7 @@ model Pet {
   specieId    String   @map("specie_id")
   specieAlias String?  @map("specie_alias")
 
-  @@map("pet")
+  @@map("pets")
 }
 
 model Specie {
@@ -38,7 +38,7 @@ model Specie {
   name String @unique
   Pet  Pet[]
 
-  @@map("specie")
+  @@map("species")
 }
 
 model LogError {
