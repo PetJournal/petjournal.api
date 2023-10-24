@@ -9,14 +9,14 @@ datasource db {
 
 model Guardian {
   id                         String   @id @default(uuid())
-  firstName                  String
-  lastName                   String
+  firstName                  String   @map("first_name")
+  lastName                   String   @map("last_name")
   email                      String   @unique
   password                   String
   phone                      String   @unique
-  accessToken                String?
-  verificationToken          String
-  verificationTokenCreatedAt DateTime @default(now())
+  accessToken                String?  @map("access_token")
+  verificationToken          String   @map("verification_token")
+  verificationTokenCreatedAt DateTime @default(now()) @map("verification_token_created_at")
   pets                       Pet[]
 
   @@map("guardian")
@@ -25,10 +25,10 @@ model Guardian {
 model Pet {
   id          String   @id @default(uuid())
   guardian    Guardian @relation(fields: [guardianId], references: [id])
-  guardianId  String
+  guardianId  String   @map("guardian_id")
   specie      Specie   @relation(fields: [specieId], references: [id])
-  specieId    String
-  specieAlias String?
+  specieId    String   @map("specie_id")
+  specieAlias String?  @map("specie_alias")
 
   @@map("pet")
 }
