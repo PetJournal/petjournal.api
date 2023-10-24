@@ -29,12 +29,16 @@ model Pet {
   specie      Specie   @relation(fields: [specieId], references: [id])
   specieId    String
   specieAlias String?
+
+  @@map("pet")
 }
 
 model Specie {
   id   String @id @default(uuid())
   name String @unique
   Pet  Pet[]
+
+  @@map("specie")
 }
 
 model LogError {
