@@ -14,7 +14,9 @@ export const petRegistryPath = {
             $ref: '#/schemas/petRegistryParams'
           },
           example: {
-            specieName: 'Gato'
+            specieName: 'Gato',
+            petName: 'Garfield',
+            gender: 'M'
           }
         }
       }

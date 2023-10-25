@@ -3,7 +3,13 @@ export const petRegistryParamsSchema = {
   properties: {
     specieName: {
       type: 'string'
+    },
+    petName: {
+      type: 'string'
+    },
+    gender: {
+      type: 'string'
     }
   },
-  required: ['specieName']
+  required: ['specieName', 'petName', 'gender']
 }
