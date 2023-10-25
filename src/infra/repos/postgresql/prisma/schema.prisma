@@ -29,6 +29,8 @@ model Pet {
   specie      Specie   @relation(fields: [specieId], references: [id])
   specieId    String   @map("specie_id")
   specieAlias String?  @map("specie_alias")
+  petName     String   @map("pet_name")
+  gender      String
 
   @@map("pets")
 }
