@@ -63,7 +63,10 @@ describe('PetRepository', () => {
       },
       specie: {
         ...specieFK
-      }
+      },
+      petName: data.petName,
+      gender: data.gender,
+      specieAlias: data.specieAlias
     })
   })
 })
