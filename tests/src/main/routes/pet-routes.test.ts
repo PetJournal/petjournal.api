@@ -38,9 +38,9 @@ const makeSetup = async (): Promise<{ accessToken: string }> => {
 
 describe('POST - /api/pet Route', () => {
   it.each([
-    [{ specieName: 'Cachorro', petName: 'any_pet_name', gender: 'M' }, { status: 201, specie: { name: 'Cachorro' }, specieAlias: null, petName: 'any_pet_name', gender: 'M' }],
-    [{ specieName: 'Inseto', petName: 'any_pet_name', gender: 'M' }, { status: 201, specie: { name: 'Outros' }, specieAlias: 'Inseto', petName: 'any_pet_name', gender: 'M' }],
-    [{ specieName: 'Cachorro', petName: 'any_pet_name', gender: 'F' }, { status: 201, specie: { name: 'Cachorro' }, specieAlias: null, petName: 'any_pet_name', gender: 'F' }]
+    [{ specieName: 'Cachorro', petName: 'any pet name', gender: 'M' }, { status: 201, specie: { name: 'Cachorro' }, specieAlias: null, petName: 'any_pet_name', gender: 'M' }],
+    [{ specieName: 'Inseto', petName: 'any pet name', gender: 'M' }, { status: 201, specie: { name: 'Outros' }, specieAlias: 'Inseto', petName: 'any_pet_name', gender: 'M' }],
+    [{ specieName: 'Cachorro', petName: 'any pet name', gender: 'F' }, { status: 201, specie: { name: 'Cachorro' }, specieAlias: null, petName: 'any_pet_name', gender: 'F' }]
   ])("When data is '%s' should return '%s' when the pet is successfully created", async (data, res) => {
     const { accessToken } = await makeSetup()
     const response = await request(app)

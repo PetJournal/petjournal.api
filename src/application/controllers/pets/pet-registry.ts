@@ -18,7 +18,8 @@ export class PetRegistryController implements Controller {
         return badRequest(error)
       }
       const guardianId = httpRequest.userId as string
-      const { specieName, petName, gender } = httpRequest.body
+      const { specieName, petName } = httpRequest.body
+      const gender = httpRequest.body.gender.toUpperCase()
       const result = await this.addPet.add({
         guardianId,
         specieName,
