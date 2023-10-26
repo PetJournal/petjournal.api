@@ -6,13 +6,13 @@ export class PetGenderValidation {
   ) {}
 
   validate (input: any): Error | void {
-    const gender = input[this.fieldName].toUpperCase()
+    const gender = input[this.fieldName]
 
     if (typeof gender !== 'string') {
       return new InvalidParamError(this.fieldName)
     }
 
-    if (!['M', 'F'].includes(gender)) {
+    if (!['M', 'F'].includes(gender.toUpperCase())) {
       return new InvalidParamError(this.fieldName)
     }
   }
