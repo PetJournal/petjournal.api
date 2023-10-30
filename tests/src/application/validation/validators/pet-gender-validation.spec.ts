@@ -12,7 +12,11 @@ const makeSut = (): SutTypes => {
   return { sut }
 }
 
-const makeFakeInput = (data: any): any => ({
+interface FakeInput {
+  gender: any
+}
+
+const makeFakeInput = (data: any): FakeInput => ({
   gender: data
 })
 
