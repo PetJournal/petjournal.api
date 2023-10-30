@@ -13,17 +13,26 @@ const makeSut = (): SutTypes => {
 }
 
 describe('PetGenderValidation', () => {
+  const params = {
+    gender: 'M'
+  }
+
   it('Should return InvalidParamError if input is not a string', () => {
     const { sut } = makeSut()
-    const input = 1
-    const result = sut.validate(input)
+    const result = sut.validate(1)
     expect(result).toEqual(new InvalidParamError('gender'))
   })
 
   it("Should return InvalidParamError if input is not 'M' or 'F'", () => {
     const { sut } = makeSut()
-    const input = 'any_input'
-    const result = sut.validate(input)
+    const result = sut.validate('any_input')
     expect(result).toEqual(new InvalidParamError('gender'))
+  })
+
+  it("Should return void if input is 'M'", () => {
+    const { sut } = makeSut()
+    const result = sut.validate(params)
+    console.log(result)
+    expect(result).toBeFalsy()
   })
 })
