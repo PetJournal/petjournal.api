@@ -19,4 +19,11 @@ describe('PetGenderValidation', () => {
     const result = sut.validate(input)
     expect(result).toEqual(new InvalidParamError('gender'))
   })
+
+  it("Should return InvalidParamError if input is not 'M' or 'F'", () => {
+    const { sut } = makeSut()
+    const input = 'any_input'
+    const result = sut.validate(input)
+    expect(result).toEqual(new InvalidParamError('gender'))
+  })
 })
