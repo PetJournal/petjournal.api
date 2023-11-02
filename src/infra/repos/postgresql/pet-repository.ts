@@ -9,7 +9,9 @@ export class PetRepository implements AddPetRepository {
         data: {
           guardianId: params.guardianId,
           specieId: params.specieId,
-          specieAlias: params.specieAlias
+          specieAlias: params.specieAlias,
+          petName: params.petName,
+          gender: params.gender
         },
         select: {
           id: true,
@@ -23,7 +25,9 @@ export class PetRepository implements AddPetRepository {
               phone: true
             }
           },
-          specie: true
+          specie: true,
+          petName: true,
+          gender: true
         }
       })
       return pet

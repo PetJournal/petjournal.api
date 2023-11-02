@@ -10,6 +10,8 @@ export namespace AddPetRepository {
     guardianId: string
     specieId: string
     specieAlias?: string
+    petName: string
+    gender: string
   }
 
   type GuardianResultDb = Pick<Guardian, 'firstName' | 'lastName' | 'email' | 'phone'> & {
@@ -25,5 +27,7 @@ export namespace AddPetRepository {
     guardian: GuardianResultDb
     specie: SpecieResultDb
     specieAlias?: string | null
+    petName: string
+    gender: string
   } | undefined
 }

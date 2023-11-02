@@ -40,7 +40,9 @@ const makeSut = (): SutTypes => {
 describe('DbAddPet Use Case', () => {
   const params: AddPet.Params = {
     guardianId: 'any_guardian_id',
-    specieName: 'any_specie_name'
+    specieName: 'any_specie_name',
+    gender: 'M',
+    petName: 'any_pet_name'
   }
 
   describe('GuardianRepository', () => {
@@ -105,7 +107,9 @@ describe('DbAddPet Use Case', () => {
       expect(addSpy).toHaveBeenCalledWith({
         guardianId: mockFakeGuardianAdded().id,
         specieId: mockFakeSpecieAdded().id,
-        specieAlias: params.specieName
+        specieAlias: params.specieName,
+        petName: params.petName,
+        gender: params.gender
       })
     })
 

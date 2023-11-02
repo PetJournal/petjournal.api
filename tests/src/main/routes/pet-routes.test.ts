@@ -38,19 +38,23 @@ const makeSetup = async (): Promise<{ accessToken: string }> => {
 
 describe('POST - /api/pet Route', () => {
   it.each([
-    ['Cachorro', { status: 201, specie: { name: 'Cachorro' }, specieAlias: null }],
-    ['Inseto', { status: 201, specie: { name: 'Outros' }, specieAlias: 'Inseto' }],
-    ['Cachorro', { status: 201, specie: { name: 'Cachorro' }, specieAlias: null }]
-  ])("When Specie is '%s' and Specie Alias is '%s' should return '%s' when the pet is successfully created", async (specieName, res) => {
+    [{ specieName: 'Cachorro', petName: 'any pet name', gender: 'M' }, { status: 201, specie: { name: 'Cachorro' }, specieAlias: null, petName: 'any pet name', gender: 'M' }],
+    [{ specieName: 'Inseto', petName: 'any pet name', gender: 'M' }, { status: 201, specie: { name: 'Outros' }, specieAlias: 'Inseto', petName: 'any pet name', gender: 'M' }],
+    [{ specieName: 'Cachorro', petName: 'any pet name', gender: 'F' }, { status: 201, specie: { name: 'Cachorro' }, specieAlias: null, petName: 'any pet name', gender: 'F' }]
+  ])("When data is '%s' should return '%s' when the pet is successfully created", async (data, res) => {
     const { accessToken } = await makeSetup()
     const response = await request(app)
       .post('/api/pet')
       .set('Authorization', accessToken)
       .send({
-        specieName
+        specieName: data.specieName,
+        petName: data.petName,
+        gender: data.gender
       })
 
     expect(response.status).toBe(res.status)
     expect(response.body.specie.name).toBe(res.specie.name)
+    expect(response.body.specieAlias).toBe(res.specieAlias)
+    expect(response.body.petName).toBe(res.petName)
   })
 })

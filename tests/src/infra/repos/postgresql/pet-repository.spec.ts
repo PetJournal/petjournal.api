@@ -16,7 +16,9 @@ describe('PetRepository', () => {
     const data = {
       guardianId: 'invalid_guardian_id',
       specieId: 'invalid_specie_id',
-      specieAlias: 'invalid_specie_alias'
+      specieAlias: 'invalid_specie_alias',
+      petName: 'invalid_pet_name',
+      gender: 'invalid_gender'
     }
 
     const specie = await sut.add(data)
@@ -44,7 +46,9 @@ describe('PetRepository', () => {
     const data = {
       guardianId: guardian.id,
       specieId: specieFK.id,
-      specieAlias: 'any_specie_alias'
+      specieAlias: 'any_specie_alias',
+      petName: 'any_pet_name',
+      gender: 'M'
     }
 
     const specie = await sut.add(data)
@@ -59,7 +63,10 @@ describe('PetRepository', () => {
       },
       specie: {
         ...specieFK
-      }
+      },
+      petName: data.petName,
+      gender: data.gender,
+      specieAlias: data.specieAlias
     })
   })
 })

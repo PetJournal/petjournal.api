@@ -8,6 +8,8 @@ export const petSchema = {
     specie: {
       $ref: '#/schemas/specie'
     },
-    specieAlias: { type: 'string', nullable: true }
+    specieAlias: { type: 'string', nullable: true },
+    petName: { type: 'string' },
+    gender: { type: 'string' }
   }
 }

@@ -31,7 +31,9 @@ const mockFakePetAdded = (): AddPetRepository.Result => {
   return {
     id: 'any_id',
     guardian: mockFakeGuardianAdded(),
-    specie: mockFakeSpecieAdded()
+    specie: mockFakeSpecieAdded(),
+    petName: 'any_pet_name',
+    gender: 'M'
   }
 }
 
