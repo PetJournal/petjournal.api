@@ -10,6 +10,9 @@ export class PasswordValidation implements Validation {
   ) {}
 
   validate (input: any): Error | void {
+    if (typeof input[this.fieldName] !== 'string') {
+      return new InvalidParamError(this.fieldName)
+    }
     const isValid = this.validator.isValid(input[this.fieldName])
     if (!isValid) {
       if (this.customError) {

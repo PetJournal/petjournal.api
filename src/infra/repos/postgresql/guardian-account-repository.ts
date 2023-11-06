@@ -28,7 +28,7 @@ export class GuardianAccountRepository implements
     })
 
     if (guardianHasEmailOrPhoneRegistered) {
-      return null
+      return undefined
     }
 
     return await db.guardian.create({
@@ -38,7 +38,8 @@ export class GuardianAccountRepository implements
         firstName: true,
         lastName: true,
         email: true,
-        phone: true
+        phone: true,
+        verificationToken: false
       }
     })
   }

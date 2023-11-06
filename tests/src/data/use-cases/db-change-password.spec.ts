@@ -2,7 +2,7 @@ import { type ChangePassword } from '@/domain/use-cases'
 import { type HashGenerator, type LoadGuardianByIdRepository, type UpdateGuardianPasswordRepository } from '@/data/protocols'
 import { DbChangePassword } from '@/data/use-cases'
 import {
-  mockGuardianEntity,
+  makeFakeGuardianData,
   makeFakeGuardianRepository,
   makeFakeHashService,
   mockHashService
@@ -83,7 +83,7 @@ describe('DbChangePassword use case', () => {
       const updateGuardianPasswordSpy = jest.spyOn(guardianRepositoryStub, 'updatePassword')
       await sut.change(params)
       expect(updateGuardianPasswordSpy).toHaveBeenCalledWith({
-        userId: mockGuardianEntity.id,
+        userId: makeFakeGuardianData().id,
         password: mockHashService.hashedValue
       })
     })

@@ -18,5 +18,5 @@ export namespace AddGuardianRepository {
     lastName: string
     email: string
     phone: string
-  } | null
+  } | undefined
 }

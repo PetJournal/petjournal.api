@@ -4,17 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/main/server.js",
-    "dev": "sucrase-node src/main/server.ts",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
+    "dev": "sucrase-node src/main/server.ts",
+    "docker:up": "docker compose -f docker-compose.dev.yml up -d",
     "lint": "eslint .",
     "lint:fix": "yarn run lint --fix",
+    "migrate": "prisma migrate dev",
     "test": "jest --passWithNoTests --no-cache --runInBand --silent --noStackTrace",
+    "prepare": "husky install",
+    "seed": "prisma db seed",
+    "start": "node dist/main/server.js",
     "test:watch": "yarn test --watch",
     "test:verbose": "jest --passWithNoTests --no-cache --runInBand",
     "test:staged": "yarn test --findRelatedTests",
     "test:coverage": "yarn test:verbose --coverage",
-    "prepare": "husky install"
+    "test:unit": "yarn test -c jest-unit-config.js",
+    "test:integration": "yarn test -c jest-integration-config.js"
   },
   "keywords": [],
   "author": "",
@@ -63,6 +68,7 @@
   },
   "packageManager": "yarn@3.5.0",
   "prisma": {
-    "schema": "./src/infra/repos/postgresql/prisma/schema.prisma"
+    "schema": "./src/infra/repos/postgresql/prisma/schema.prisma",
+    "seed": "sucrase-node ./src/infra/repos/postgresql/prisma/seed.ts"
   }
 }

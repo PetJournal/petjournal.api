@@ -16,6 +16,11 @@ export const badRequest = (error: Error): HttpResponse => ({
   body: error
 })
 
+export const notAcceptable = (error: Error): HttpResponse => ({
+  statusCode: 406,
+  body: error
+})
+
 export const conflict = (error: Error): HttpResponse => ({
   statusCode: 409,
   body: error

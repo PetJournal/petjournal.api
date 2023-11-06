@@ -8,7 +8,7 @@ import {
   makeFakeGuardianRepository,
   makeFakeHashService,
   makeFakeTokenService,
-  mockGuardianEntity,
+  makeFakeGuardianData,
   mockHashService,
   mockTokenService
 } from '@/tests/utils'
@@ -71,7 +71,7 @@ describe('DbCreateAccessToken UseCase', () => {
       const { sut, tokenServiceStub } = makeSut()
       const spyTokenService = jest.spyOn(tokenServiceStub, 'generate')
       await sut.create(fakeEmail)
-      expect(spyTokenService).toHaveBeenCalledWith({ sub: mockGuardianEntity.id })
+      expect(spyTokenService).toHaveBeenCalledWith({ sub: makeFakeGuardianData().id })
     })
   })
 
@@ -91,7 +91,7 @@ describe('DbCreateAccessToken UseCase', () => {
       const updateSpy = jest.spyOn(guardianRepositoryStub, 'updateAccessToken')
       await sut.create(fakeEmail)
       expect(updateSpy).toHaveBeenCalledWith({
-        userId: mockGuardianEntity.id,
+        userId: makeFakeGuardianData().id,
         token: mockHashService.hashedValue
       })
     })

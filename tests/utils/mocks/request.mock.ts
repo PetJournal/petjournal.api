@@ -5,7 +5,8 @@ import {
   type SignUpRequest,
   type ForgetPasswordRequest,
   type ChangePasswordRequest,
-  type WaitingCodeRequest
+  type WaitingCodeRequest,
+  type PetRegistryRequest
 } from '@/tests/utils'
 
 const mockGuardianRequest = {
@@ -79,6 +80,18 @@ const makeFakePayload = (): TokenDecoder.Result => {
   return { sub }
 }
 
+const makeFakePetRegistryRequest = (): PetRegistryRequest => {
+  const body = {
+    guardianId: 'valid_guardian_id',
+    specieName: 'valid_specie_id',
+    specieAlias: 'any_alias',
+    petName: 'any_name',
+    gender: 'M'
+  }
+
+  return { body }
+}
+
 export {
   makeFakeSignUpRequest,
   makeFakeLoginRequest,
@@ -86,5 +99,6 @@ export {
   makeFakeChangePasswordRequest,
   makeFakeWaitingCodeRequest,
   makeFakeAuthorizationRequest,
-  makeFakePayload
+  makeFakePayload,
+  makeFakePetRegistryRequest
 }

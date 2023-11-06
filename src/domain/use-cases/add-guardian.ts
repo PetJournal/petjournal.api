@@ -20,7 +20,7 @@ export namespace AddGuardian {
     lastName: string
     email: string
     phone: string
-  } | null
+  } | undefined
 
   export type Dependencies = {
     guardianRepository: AddGuardianRepository

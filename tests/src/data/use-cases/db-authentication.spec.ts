@@ -11,9 +11,10 @@ import {
   makeFakeTokenService,
   makeFakeHashService,
   makeFakeGuardianRepository,
-  mockGuardianEntity,
+  makeFakeGuardianData,
   mockTokenService,
-  mockHashService
+  mockHashService,
+  mockFakeGuardianLoaded
 } from '@/tests/utils'
 import { NotFoundError, UnauthorizedError } from '@/application/errors'
 
@@ -69,7 +70,7 @@ describe('DbAuthentication UseCase', () => {
       await sut.auth(params)
       expect(hashComparerSpy).toHaveBeenCalledWith({
         value: params.sensitiveData.value,
-        hash: mockGuardianEntity.password
+        hash: mockFakeGuardianLoaded()?.password
       })
     })
 
@@ -93,7 +94,7 @@ describe('DbAuthentication UseCase', () => {
       const { sut, tokenServiceStub } = makeSut()
       const tokenGeneratorSpy = jest.spyOn(tokenServiceStub, 'generate')
       await sut.auth(params)
-      expect(tokenGeneratorSpy).toHaveBeenCalledWith({ sub: mockGuardianEntity.id })
+      expect(tokenGeneratorSpy).toHaveBeenCalledWith({ sub: makeFakeGuardianData().id })
     })
 
     it('Should throw if generate method throws', async () => {
@@ -131,7 +132,7 @@ describe('DbAuthentication UseCase', () => {
       const updateAccessTokenSpy = jest.spyOn(guardianRepositoryStub, 'updateAccessToken')
       await sut.auth(params)
       expect(updateAccessTokenSpy).toHaveBeenCalledWith({
-        userId: mockGuardianEntity.id,
+        userId: makeFakeGuardianData().id,
         token: mockHashService.hashedValue
       })
     })

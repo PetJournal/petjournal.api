@@ -74,9 +74,9 @@ describe('DbAddGuardian use case', () => {
 
     it('Should return null if email is already registered', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'add').mockResolvedValue(null)
+      jest.spyOn(guardianRepositoryStub, 'add').mockResolvedValue(undefined)
       const result = await sut.add(params)
-      expect(result).toBeNull()
+      expect(result).toBeFalsy()
     })
   })
 
