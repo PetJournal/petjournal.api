@@ -2,6 +2,7 @@
 export * from './add-guardian-repository'
 export * from './load-guardian-by-email-repository'
 export * from './load-guardian-by-id-repository'
+export * from './load-guardian-by-phone-repository'
 export * from './update-access-token-repository'
 export * from './update-verification-token-repository'
 export * from './update-guardian-password-repository'

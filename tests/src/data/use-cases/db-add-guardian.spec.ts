@@ -11,6 +11,8 @@ interface SutTypes {
 
 const makeSut = (): SutTypes => {
   const guardianRepositoryStub = makeFakeGuardianRepository()
+  jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValue(undefined)
+  jest.spyOn(guardianRepositoryStub, 'loadByPhone').mockResolvedValue(undefined)
   const hashServiceStub = makeFakeHashService()
   const dependencies: AddGuardian.Dependencies = {
     hashService: hashServiceStub,

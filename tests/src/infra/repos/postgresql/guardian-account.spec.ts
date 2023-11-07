@@ -22,12 +22,12 @@ describe('GuardianAccountRepository', () => {
       expect(guardian).toMatchObject(guardianDataDb)
     })
 
-    it('Should not return a guardian account if duplicated email or phone is provided', async () => {
+    it('Should throws if a guardian account with duplicated email or phone is provided', async () => {
       const sut = makeSut()
       const firstAttempt = await sut.add(makeFakeGuardianData())
-      const secondAttempt = await sut.add(makeFakeGuardianData())
+      const secondAttempt = sut.add(makeFakeGuardianData())
       expect(firstAttempt).toBeTruthy()
-      expect(secondAttempt).toBeFalsy()
+      await expect(secondAttempt).rejects.toThrow()
     })
   })
   describe('LoadAccountByEmailRepository', () => {

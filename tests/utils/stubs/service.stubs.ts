@@ -12,6 +12,7 @@ import {
   type HashGenerator,
   type LoadGuardianByEmailRepository,
   type LoadGuardianByIdRepository,
+  type LoadGuardianByPhoneRepository,
   type TokenDecoder,
   type TokenGenerator,
   type UpdateAccessTokenRepository,
@@ -26,6 +27,7 @@ const makeFakeGuardianRepository = ():
 AddGuardianRepository &
 LoadGuardianByEmailRepository &
 LoadGuardianByIdRepository &
+LoadGuardianByPhoneRepository &
 UpdateAccessTokenRepository &
 UpdateGuardianPasswordRepository &
 UpdateVerificationTokenRepository => {
@@ -33,6 +35,7 @@ UpdateVerificationTokenRepository => {
   AddGuardianRepository,
   LoadGuardianByEmailRepository,
   LoadGuardianByIdRepository,
+  LoadGuardianByPhoneRepository,
   UpdateAccessTokenRepository,
   UpdateGuardianPasswordRepository,
   UpdateVerificationTokenRepository {
@@ -45,6 +48,10 @@ UpdateVerificationTokenRepository => {
     }
 
     async loadById (id: string): Promise<LoadGuardianByIdRepository.Result> {
+      return mockFakeGuardianLoaded()
+    }
+
+    async loadByPhone (phone: string): Promise<LoadGuardianByPhoneRepository.Result> {
       return mockFakeGuardianLoaded()
     }
 

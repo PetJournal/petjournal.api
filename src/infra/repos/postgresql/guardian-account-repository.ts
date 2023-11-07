@@ -5,22 +5,17 @@ import {
   type LoadGuardianByEmailRepository,
   type UpdateAccessTokenRepository,
   type UpdateGuardianPasswordRepository,
-  type UpdateVerificationTokenRepository
+  type UpdateVerificationTokenRepository,
+  type LoadGuardianByPhoneRepository
 } from '@/data/protocols'
 
-export class GuardianAccountRepository implements AddGuardianRepository, LoadGuardianByEmailRepository, LoadGuardianByIdRepository, UpdateAccessTokenRepository, UpdateGuardianPasswordRepository, UpdateVerificationTokenRepository {
+export class GuardianAccountRepository implements AddGuardianRepository,
+LoadGuardianByEmailRepository,
+LoadGuardianByIdRepository,
+UpdateAccessTokenRepository,
+UpdateGuardianPasswordRepository,
+UpdateVerificationTokenRepository {
   async add (guardianData: AddGuardianRepository.Params): Promise<AddGuardianRepository.Result> {
-    const guardianHasEmailRegistered = await db.guardian.findUnique({
-      where: { email: guardianData.email }
-    })
-
-    const guardianHasPhoneRegistered = await db.guardian.findUnique({
-      where: { phone: guardianData.phone }
-    })
-
-    if (guardianHasEmailRegistered ?? guardianHasPhoneRegistered) {
-      return undefined
-    }
     return await db.guardian.create({
       data: guardianData,
       select: {
@@ -43,6 +38,13 @@ export class GuardianAccountRepository implements AddGuardianRepository, LoadGua
 
   async loadById (id: LoadGuardianByIdRepository.Params): Promise<LoadGuardianByIdRepository.Result> {
     const guardian = await db.guardian.findUnique({ where: { id } })
+    if (guardian) {
+      return guardian
+    }
+  }
+
+  async loadByPhone (phone: LoadGuardianByPhoneRepository.Params): Promise<LoadGuardianByPhoneRepository.Result> {
+    const guardian = await db.guardian.findUnique({ where: { phone } })
     if (guardian) {
       return guardian
     }
