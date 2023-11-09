@@ -65,10 +65,9 @@ describe('GuardianAccountRepository', () => {
     it('Should return a guardian account when valid phone is provided', async () => {
       const sut = makeSut()
       const guardianData = makeFakeGuardianData()
-      console.log(await sut.add(guardianData))
+      await sut.add(guardianData)
 
       const guardian = await sut.loadByPhone(guardianData.phone)
-      console.log(guardian)
 
       expect(guardian).toMatchObject(guardianData)
     })

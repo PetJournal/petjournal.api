@@ -1,12 +1,17 @@
 import { type AddGuardian } from '@/domain/use-cases'
-import { type AddGuardianRepository, type HashGenerator } from '@/data/protocols'
+import {
+  type LoadGuardianByEmailRepository,
+  type AddGuardianRepository,
+  type HashGenerator,
+  type LoadGuardianByPhoneRepository
+} from '@/data/protocols'
 import { DbAddGuardian } from '@/data/use-cases'
 import { makeFakeGuardianRepository, makeFakeHashService } from '@/tests/utils'
 
 interface SutTypes {
   sut: DbAddGuardian
   hashServiceStub: HashGenerator
-  guardianRepositoryStub: AddGuardianRepository
+  guardianRepositoryStub: AddGuardianRepository & LoadGuardianByEmailRepository & LoadGuardianByPhoneRepository
 }
 
 const makeSut = (): SutTypes => {
@@ -70,7 +75,27 @@ describe('DbAddGuardian use case', () => {
     it('Should throw if add method throws', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
       jest.spyOn(guardianRepositoryStub, 'add').mockRejectedValue(new Error())
+
       const promise = sut.add(params)
+
+      await expect(promise).rejects.toThrow()
+    })
+
+    it('Should throw if loadByEmail method throws', async () => {
+      const { sut, guardianRepositoryStub } = makeSut()
+      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockRejectedValue(new Error())
+
+      const promise = sut.add(params)
+
+      await expect(promise).rejects.toThrow()
+    })
+
+    it('Should throw if loadByPhone method throws', async () => {
+      const { sut, guardianRepositoryStub } = makeSut()
+      jest.spyOn(guardianRepositoryStub, 'loadByPhone').mockRejectedValue(new Error())
+
+      const promise = sut.add(params)
+
       await expect(promise).rejects.toThrow()
     })
 
