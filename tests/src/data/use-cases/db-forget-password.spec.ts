@@ -115,7 +115,7 @@ describe('DbForgetPassword UseCase', () => {
       const { sut, guardianRepositoryStub } = makeSut()
       jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValue(null)
       const result = await sut.forgetPassword(params)
-      expect(result).toBeFalsy()
+      expect(result).toBe(false)
     })
 
     it('Should call updateVerificationToken method with correct value', async () => {
