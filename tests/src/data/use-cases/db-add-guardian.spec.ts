@@ -6,7 +6,7 @@ import {
   type LoadGuardianByPhoneRepository
 } from '@/data/protocols'
 import { DbAddGuardian } from '@/data/use-cases'
-import { makeFakeGuardianRepository, makeFakeHashService } from '@/tests/utils'
+import { makeFakeGuardianRepository, makeFakeHashService, mockFakeGuardianLoaded } from '@/tests/utils'
 
 interface SutTypes {
   sut: DbAddGuardian
@@ -101,8 +101,19 @@ describe('DbAddGuardian use case', () => {
 
     it('Should return undefined if email is already registered', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'add').mockResolvedValue(undefined)
+      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValue(mockFakeGuardianLoaded())
+
       const result = await sut.add(params)
+
+      expect(result).toBeUndefined()
+    })
+
+    it('Should return undefined if phone is already registered', async () => {
+      const { sut, guardianRepositoryStub } = makeSut()
+      jest.spyOn(guardianRepositoryStub, 'loadByPhone').mockResolvedValue(mockFakeGuardianLoaded())
+
+      const result = await sut.add(params)
+
       expect(result).toBeUndefined()
     })
   })
