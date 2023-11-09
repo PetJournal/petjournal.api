@@ -85,7 +85,8 @@ describe('DbAddGuardian use case', () => {
     const result = await sut.add(params) as any
     expect(result).toHaveProperty('id')
     expect(result.id).toBeDefined()
-    expect(result).toMatchObject({
+    expect(result).toEqual({
+      id: expect.any(String),
       firstName: params.firstName,
       lastName: params.lastName,
       email: params.email,
