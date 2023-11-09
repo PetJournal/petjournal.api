@@ -137,10 +137,9 @@ describe('DbForgetPassword UseCase', () => {
 
     it('Should return false if userId does not exist', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'updateVerificationToken').mockResolvedValue(false)
       jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValue(null)
       const result = await sut.forgetPassword(params)
-      expect(result).toBeFalsy()
+      expect(result).toBe(false)
     })
   })
 
