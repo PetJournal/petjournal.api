@@ -30,7 +30,8 @@ describe('GuardianAccountRepository', () => {
       await expect(secondAttempt).rejects.toThrow()
     })
   })
-  describe('LoadAccountByEmailRepository', () => {
+
+  describe('LoadGuardianByEmailRepository', () => {
     it('Should return a guardian account on success', async () => {
       const sut = makeSut()
       const guardianData = makeFakeGuardianData()
@@ -51,7 +52,18 @@ describe('GuardianAccountRepository', () => {
     })
   })
 
-  describe('LoadAccountByIdRepository', () => {
+  describe('LoadGuardianByPhoneRepository', () => {
+    it('Should not return a guardian account if invalid phone is provided', async () => {
+      const sut = makeSut()
+      const phone = 'invalid_phone'
+
+      const guardian = await sut.loadByPhone(phone)
+
+      expect(guardian).toBeFalsy()
+    })
+  })
+
+  describe('LoadGuardianByIdRepository', () => {
     it('Should return a guardian account on success', async () => {
       const sut = makeSut()
       const guardianData = makeFakeGuardianData()
