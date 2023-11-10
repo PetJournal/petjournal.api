@@ -83,8 +83,6 @@ describe('DbAddGuardian use case', () => {
   test('Should return a guardian when saving the user successfully', async () => {
     const { sut } = makeSut()
     const result = await sut.add(params) as any
-    expect(result).toHaveProperty('id')
-    expect(result.id).toBeDefined()
     expect(result).toEqual({
       id: expect.any(String),
       firstName: params.firstName,
