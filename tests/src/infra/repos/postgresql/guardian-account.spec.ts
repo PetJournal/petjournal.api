@@ -22,26 +22,26 @@ describe('GuardianAccountRepository', () => {
   }
 
   describe('AddGuardianRepository', () => {
-    it('Should return null if the email is already registered', async () => {
+    it('Should return undefined if the email is already registered', async () => {
       const sut = makeSut()
       const addSpy = jest.spyOn(sut, 'add')
       const editedInput = { ...input, email: 'johndoe123@gmail.com' }
       const firstAttempt = await sut.add(editedInput)
       const secondAttempt = await sut.add(editedInput)
-      expect(firstAttempt).not.toBeFalsy()
+      expect(firstAttempt).toBeTruthy()
       expect(secondAttempt).toBeFalsy()
       expect(addSpy).toBeCalledTimes(2)
       expect(addSpy).toHaveBeenNthCalledWith(1, editedInput)
       expect(addSpy).toHaveBeenNthCalledWith(2, editedInput)
     })
 
-    it('Should return null if the phone is already registered', async () => {
+    it('Should return undefined if the phone is already registered', async () => {
       const sut = makeSut()
       const addSpy = jest.spyOn(sut, 'add')
       const editedInput = { ...input, phone: '123456789' }
       const firstAttempt = await sut.add(editedInput)
       const secondAttempt = await sut.add(editedInput)
-      expect(firstAttempt).not.toBeFalsy()
+      expect(firstAttempt).toBeTruthy()
       expect(secondAttempt).toBeFalsy()
       expect(addSpy).toBeCalledTimes(2)
       expect(addSpy).toHaveBeenNthCalledWith(1, editedInput)
@@ -51,9 +51,8 @@ describe('GuardianAccountRepository', () => {
     it('Should return a guardian account on success ', async () => {
       const sut = makeSut()
       const guardian = await sut.add(input) as any
-      expect(guardian).not.toBeFalsy()
-      expect(guardian.id).toBeDefined()
       expect(guardian).toMatchObject({
+        id: expect.any(String),
         firstName: input.firstName,
         lastName: input.lastName,
         email: input.email,
@@ -67,14 +66,14 @@ describe('GuardianAccountRepository', () => {
       const sut = makeSut()
       const invalidId = 'invalid_id'
       const response = await sut.checkUserId(invalidId)
-      expect(response).toBeFalsy()
+      expect(response).toBe(false)
     })
 
     it('Should return true when user is found', async () => {
       const sut = makeSut()
       const { id } = await sut.add(input) as any
       const response = await sut.checkUserId(id)
-      expect(response).toBeTruthy()
+      expect(response).toBe(true)
     })
   })
 
@@ -83,16 +82,15 @@ describe('GuardianAccountRepository', () => {
       const sut = makeSut()
       const invalidEmail = 'invalid_email:mail.com'
       const guardian = await sut.loadByEmail(invalidEmail)
-      expect(guardian).toBeFalsy()
+      expect(guardian).toBeNull()
     })
 
     it('Should return a guardian account if valid email is provided', async () => {
       const sut = makeSut()
       await sut.add(input)
       const guardian = await sut.loadByEmail(input.email) as any
-      expect(guardian).not.toBeFalsy()
-      expect(guardian.id).toBeDefined()
       expect(guardian).toMatchObject({
+        id: expect.any(String),
         firstName: input.firstName,
         lastName: input.lastName,
         email: input.email,
@@ -106,16 +104,15 @@ describe('GuardianAccountRepository', () => {
       const sut = makeSut()
       const invalidId = 'invalid_id'
       const guardian = await sut.loadById(invalidId)
-      expect(guardian).toBeFalsy()
+      expect(guardian).toBeNull()
     })
 
     it('Should return a guardian account if valid email is provided', async () => {
       const sut = makeSut()
       const { id } = await sut.add(input) as any
       const guardian = await sut.loadById(id) as any
-      expect(guardian).not.toBeFalsy()
-      expect(guardian.id).toBeDefined()
       expect(guardian).toMatchObject({
+        id: expect.any(String),
         firstName: input.firstName,
         lastName: input.lastName,
         email: input.email,
@@ -161,7 +158,6 @@ describe('GuardianAccountRepository', () => {
 
       guardian = await sut.loadByEmail(input.email)
 
-      expect(guardian.verificationToken).toBeTruthy()
       expect(guardian.verificationToken).toBe('valid_token')
       expect(guardian.verificationTokenCreatedAt.getMilliseconds()).toBeGreaterThan(verificationTokenCreatedAt.getMilliseconds())
     })
@@ -178,7 +174,7 @@ describe('GuardianAccountRepository', () => {
   })
 
   describe('UpdatePasswordRepository', () => {
-    it('Should return false when invalid userId is provide', async () => {
+    it('Should return false when invalid userId is provided', async () => {
       const sut = makeSut()
       const response = await sut.updatePassword({
         userId: makeFakeGuardianData().id,
