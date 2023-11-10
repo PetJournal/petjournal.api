@@ -50,8 +50,15 @@ describe('GuardianAccountRepository', () => {
 
     it('Should return a guardian account on success ', async () => {
       const sut = makeSut()
-      const guardian = await sut.add(input) as any
-      expect(guardian).toMatchObject({
+      const { id, firstName, lastName, email, phone } = await sut.add(input) as any
+      const guardian = {
+        id,
+        firstName,
+        lastName,
+        email,
+        phone
+      }
+      expect(guardian).toEqual({
         id: expect.any(String),
         firstName: input.firstName,
         lastName: input.lastName,
@@ -72,8 +79,15 @@ describe('GuardianAccountRepository', () => {
     it('Should return a guardian account if valid email is provided', async () => {
       const sut = makeSut()
       await sut.add(input)
-      const guardian = await sut.loadByEmail(input.email) as any
-      expect(guardian).toMatchObject({
+      const { id, firstName, lastName, email, phone } = await sut.loadByEmail(input.email) as any
+      const guardian = {
+        id,
+        firstName,
+        lastName,
+        email,
+        phone
+      }
+      expect(guardian).toEqual({
         id: expect.any(String),
         firstName: input.firstName,
         lastName: input.lastName,
@@ -94,8 +108,15 @@ describe('GuardianAccountRepository', () => {
     it('Should return a guardian account if valid email is provided', async () => {
       const sut = makeSut()
       const { id } = await sut.add(input) as any
-      const guardian = await sut.loadById(id) as any
-      expect(guardian).toMatchObject({
+      const { firstName, lastName, email, phone } = await sut.loadById(id) as any
+      const guardian = {
+        id,
+        firstName,
+        lastName,
+        email,
+        phone
+      }
+      expect(guardian).toEqual({
         id: expect.any(String),
         firstName: input.firstName,
         lastName: input.lastName,
