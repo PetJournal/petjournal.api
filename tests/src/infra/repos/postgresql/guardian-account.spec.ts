@@ -61,22 +61,6 @@ describe('GuardianAccountRepository', () => {
     })
   })
 
-  describe('CheckUserIdRepository', () => {
-    it('Should return false when the userId does not exist', async () => {
-      const sut = makeSut()
-      const invalidId = 'invalid_id'
-      const response = await sut.checkUserId(invalidId)
-      expect(response).toBe(false)
-    })
-
-    it('Should return true when user is found', async () => {
-      const sut = makeSut()
-      const { id } = await sut.add(input) as any
-      const response = await sut.checkUserId(id)
-      expect(response).toBe(true)
-    })
-  })
-
   describe('LoadAccountByEmailRepository', () => {
     it('Should return null if invalid email is provided', async () => {
       const sut = makeSut()

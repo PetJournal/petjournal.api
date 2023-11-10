@@ -1,7 +1,6 @@
 import { prisma as db } from './prisma'
 import {
   type AddGuardianRepository,
-  type CheckUserId,
   type LoadGuardianByIdRepository,
   type LoadGuardianByEmailRepository,
   type UpdateAccessTokenRepository,
@@ -11,7 +10,6 @@ import {
 
 export class GuardianAccountRepository implements
   AddGuardianRepository,
-  CheckUserId,
   LoadGuardianByEmailRepository,
   LoadGuardianByIdRepository,
   UpdateAccessTokenRepository,
@@ -44,7 +42,7 @@ export class GuardianAccountRepository implements
     })
   }
 
-  async checkUserId (userId: CheckUserId.Params): Promise<CheckUserId.Result> {
+  private async checkUserId (userId: string): Promise<boolean> {
     const result = await db.guardian.findUnique({ where: { id: userId } })
     return Boolean(result)
   }
