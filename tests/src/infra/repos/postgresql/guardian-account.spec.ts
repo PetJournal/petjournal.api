@@ -112,17 +112,17 @@ describe('GuardianAccountRepository', () => {
         userId: makeFakeGuardianData().id,
         token: 'any_token'
       })
-      expect(response).toBeFalsy()
+      expect(response).toBe(false)
     })
 
     it('Should return true when accessToken is updated', async () => {
       const sut = makeSut()
       const { id } = await sut.add(input) as any
-      const response = sut.updateAccessToken({
+      const response = await sut.updateAccessToken({
         userId: id,
         token: 'any_token'
       })
-      expect(response).toBeTruthy()
+      expect(response).toBe(true)
     })
   })
 
@@ -146,14 +146,14 @@ describe('GuardianAccountRepository', () => {
       expect(guardian.verificationTokenCreatedAt.getMilliseconds()).toBeGreaterThan(verificationTokenCreatedAt.getMilliseconds())
     })
 
-    it('Should fail when there is no id', async () => {
+    it('Should false when there is no id', async () => {
       const sut = makeSut()
       const authenticationData = {
         userId: 'invalid_id',
         password: 'updated_password'
       }
       const response = await sut.updatePassword(authenticationData)
-      expect(response).toBeFalsy()
+      expect(response).toBe(false)
     })
   })
 
@@ -164,17 +164,17 @@ describe('GuardianAccountRepository', () => {
         userId: makeFakeGuardianData().id,
         password: makeFakeGuardianData().password
       })
-      expect(response).toBeFalsy()
+      expect(response).toBe(false)
     })
 
     it('Should return true when password is updated', async () => {
       const sut = makeSut()
       const { id } = await sut.add(input) as any
-      const response = sut.updatePassword({
+      const response = await sut.updatePassword({
         userId: id,
         password: makeFakeGuardianData().password
       })
-      expect(response).toBeTruthy()
+      expect(response).toBe(true)
     })
   })
 })
