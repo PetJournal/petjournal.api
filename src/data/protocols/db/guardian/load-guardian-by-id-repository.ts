@@ -4,6 +4,7 @@ export interface LoadGuardianByIdRepository {
 
 export namespace LoadGuardianByIdRepository {
   export type Params = string
+
   export type Result = {
     id: string
     firstName: string
@@ -14,5 +15,5 @@ export namespace LoadGuardianByIdRepository {
     accessToken: string | null
     verificationToken: string
     verificationTokenCreatedAt: Date
-  } | undefined
+  } | null
 }

@@ -1,3 +1,3 @@
-export * from './use-case.stubs'
-export * from './service.stubs'
-export * from './validation.stubs'
+export * from './use-case.stub'
+export * from './service.stub'
+export * from './validation.stub'

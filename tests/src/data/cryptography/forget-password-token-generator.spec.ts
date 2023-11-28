@@ -1,5 +1,5 @@
-import { ForgetPasswordTokenGenerator } from '@/data/cryptography/forget-password-token-generation'
 import { type SaveTokenRepository, type HashGenerator } from '@/data/protocols'
+import { ForgetPasswordTokenGenerator } from '@/data/cryptography'
 import { makeFakeHashService } from '@/tests/utils'
 
 interface SutTypes {
@@ -10,8 +10,8 @@ interface SutTypes {
 
 const makeSaveTokenRepository = (): SaveTokenRepository => {
   class SaveTokenRepositoryStub implements SaveTokenRepository {
-    async saveToken (userId: string, token: string): Promise<SaveTokenRepository.Result> {
-      return await new Promise(resolve => { resolve(true) })
+    async saveToken (params: SaveTokenRepository.Params): Promise<SaveTokenRepository.Result> {
+      return await Promise.resolve(true)
     }
   }
   return new SaveTokenRepositoryStub()
@@ -36,16 +36,16 @@ describe('ForgetPasswordTokenGenerator', () => {
     expect(token).toHaveLength(6)
   })
 
-  it('Should call Encrypter with correct value', async () => {
+  it('Should call HashService with correct value', async () => {
     const { sut, hashServiceStub } = makeSut()
     const encryptSpy = jest.spyOn(hashServiceStub, 'encrypt')
     await sut.generate('1')
     expect(encryptSpy).toBeCalled()
   })
 
-  it('Should throw if Encrypter throws', async () => {
+  it('Should throw if HashService throws', async () => {
     const { sut, hashServiceStub } = makeSut()
-    jest.spyOn(hashServiceStub, 'encrypt').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    jest.spyOn(hashServiceStub, 'encrypt').mockReturnValueOnce(Promise.reject(new Error()))
     const promise = sut.generate('1')
     await expect(promise).rejects.toThrow()
   })
@@ -54,12 +54,12 @@ describe('ForgetPasswordTokenGenerator', () => {
     const { sut, saveTokenRepositoryStub } = makeSut()
     const saveTokenSpy = jest.spyOn(saveTokenRepositoryStub, 'saveToken')
     await sut.generate('1')
-    expect(saveTokenSpy).toHaveBeenCalledWith('1', 'hashed_value')
+    expect(saveTokenSpy).toHaveBeenCalledWith({ userId: '1', token: 'hashed_value' })
   })
 
   it('Should throw if SaveTokenRepository throws', async () => {
     const { sut, saveTokenRepositoryStub } = makeSut()
-    jest.spyOn(saveTokenRepositoryStub, 'saveToken').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    jest.spyOn(saveTokenRepositoryStub, 'saveToken').mockRejectedValueOnce(new Error())
     const promise = sut.generate('1')
     await expect(promise).rejects.toThrow()
   })

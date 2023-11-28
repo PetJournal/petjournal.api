@@ -11,93 +11,147 @@ const makeSut = (): GuardianAccountRepository => {
 }
 
 describe('GuardianAccountRepository', () => {
+  const input = {
+    firstName: 'any_first_name',
+    lastName: 'any_last_name',
+    email: 'any_email@gmail.com',
+    password: 'any_password',
+    phone: 'any_phone',
+    accessToken: 'any_token',
+    verificationToken: 'any_verification_token'
+  }
+
   describe('AddGuardianRepository', () => {
-    it('Should return a guardian account on success ', async () => {
+    it('Should return undefined if the email is already registered', async () => {
       const sut = makeSut()
-      const { accessToken, ...guardianData } = makeFakeGuardianData()
-      const { password, verificationTokenCreatedAt, verificationToken, ...guardianDataDb } = guardianData
-
-      const guardian = await sut.add(guardianData)
-
-      expect(guardian).toMatchObject(guardianDataDb)
-    })
-
-    it('Should not return a guardian account if duplicated email or phone is provided', async () => {
-      const sut = makeSut()
-      const firstAttempt = await sut.add(makeFakeGuardianData())
-      const secondAttempt = await sut.add(makeFakeGuardianData())
+      const addSpy = jest.spyOn(sut, 'add')
+      const editedInput = { ...input, email: 'johndoe123@gmail.com' }
+      const firstAttempt = await sut.add(editedInput)
+      const secondAttempt = await sut.add(editedInput)
       expect(firstAttempt).toBeTruthy()
       expect(secondAttempt).toBeFalsy()
+      expect(addSpy).toBeCalledTimes(2)
+      expect(addSpy).toHaveBeenNthCalledWith(1, editedInput)
+      expect(addSpy).toHaveBeenNthCalledWith(2, editedInput)
+    })
+
+    it('Should return undefined if the phone is already registered', async () => {
+      const sut = makeSut()
+      const addSpy = jest.spyOn(sut, 'add')
+      const editedInput = { ...input, phone: '123456789' }
+      const firstAttempt = await sut.add(editedInput)
+      const secondAttempt = await sut.add(editedInput)
+      expect(firstAttempt).toBeTruthy()
+      expect(secondAttempt).toBeFalsy()
+      expect(addSpy).toBeCalledTimes(2)
+      expect(addSpy).toHaveBeenNthCalledWith(1, editedInput)
+      expect(addSpy).toHaveBeenNthCalledWith(2, editedInput)
+    })
+
+    it('Should return a guardian account on success ', async () => {
+      const sut = makeSut()
+      const { id, firstName, lastName, email, phone } = await sut.add(input) as any
+      const guardian = {
+        id,
+        firstName,
+        lastName,
+        email,
+        phone
+      }
+      expect(guardian).toEqual({
+        id: expect.any(String),
+        firstName: input.firstName,
+        lastName: input.lastName,
+        email: input.email,
+        phone: input.phone
+      })
     })
   })
+
   describe('LoadAccountByEmailRepository', () => {
-    it('Should return a guardian account on success', async () => {
+    it('Should return null if invalid email is provided', async () => {
       const sut = makeSut()
-      const guardianData = makeFakeGuardianData()
-      await sut.add(guardianData)
-
-      const guardian = await sut.loadByEmail(guardianData.email)
-
-      expect(guardian).toMatchObject(guardianData)
+      const invalidEmail = 'invalid_email:mail.com'
+      const guardian = await sut.loadByEmail(invalidEmail)
+      expect(guardian).toBeNull()
     })
 
-    it('Should not return a guardian account if invalid email is provided', async () => {
+    it('Should return a guardian account if valid email is provided', async () => {
       const sut = makeSut()
-      const email = 'invalid_email:mail.com'
-
-      const guardian = await sut.loadByEmail(email)
-
-      expect(guardian).toBeFalsy()
+      await sut.add(input)
+      const { id, firstName, lastName, email, phone } = await sut.loadByEmail(input.email) as any
+      const guardian = {
+        id,
+        firstName,
+        lastName,
+        email,
+        phone
+      }
+      expect(guardian).toEqual({
+        id: expect.any(String),
+        firstName: input.firstName,
+        lastName: input.lastName,
+        email: input.email,
+        phone: input.phone
+      })
     })
   })
 
   describe('LoadAccountByIdRepository', () => {
-    it('Should return a guardian account on success', async () => {
+    it('Should return null if invalid email is provided', async () => {
       const sut = makeSut()
-      const guardianData = makeFakeGuardianData()
-      await sut.add(guardianData)
-
-      const guardianByEmail = await sut.loadByEmail(guardianData.email) as any
-      const guardianById = await sut.loadById(guardianByEmail.id) as any
-
-      expect(guardianById).toMatchObject(guardianData)
+      const invalidId = 'invalid_id'
+      const guardian = await sut.loadById(invalidId)
+      expect(guardian).toBeNull()
     })
 
-    it('Should not return a guardian account if invalid id is provided', async () => {
+    it('Should return a guardian account if valid email is provided', async () => {
       const sut = makeSut()
-      const id = 'invalid_id'
-
-      const guardian = await sut.loadById(id)
-
-      expect(guardian).toBeFalsy()
+      const { id } = await sut.add(input) as any
+      const { firstName, lastName, email, phone } = await sut.loadById(id) as any
+      const guardian = {
+        id,
+        firstName,
+        lastName,
+        email,
+        phone
+      }
+      expect(guardian).toEqual({
+        id: expect.any(String),
+        firstName: input.firstName,
+        lastName: input.lastName,
+        email: input.email,
+        phone: input.phone
+      })
     })
   })
 
   describe('UpdateAccessTokenRepository', () => {
-    it('Should update the account successfully', async () => {
+    it('Should return false when invalid userId is provide', async () => {
       const sut = makeSut()
-      const guardianData = makeFakeGuardianData()
+      const response = await sut.updateAccessToken({
+        userId: makeFakeGuardianData().id,
+        token: 'any_token'
+      })
+      expect(response).toBe(false)
+    })
 
-      await sut.add(guardianData)
-      let guardian = await sut.loadByEmail(guardianData.email) as any
-
-      const authenticationData = { id: guardian.id, token: 'valid_token' }
-      await sut.updateAccessToken(authenticationData)
-
-      guardian = await sut.loadByEmail(guardianData.email)
-
-      expect(guardian.accessToken).toBeTruthy()
-      expect(guardian.accessToken).toBe(authenticationData.token)
+    it('Should return true when accessToken is updated', async () => {
+      const sut = makeSut()
+      const { id } = await sut.add(input) as any
+      const response = await sut.updateAccessToken({
+        userId: id,
+        token: 'any_token'
+      })
+      expect(response).toBe(true)
     })
   })
 
   describe('UpdateVerificationTokenRepository', () => {
     it('Should update the verificationToken successfully', async () => {
       const sut = makeSut()
-      const guardianData = makeFakeGuardianData()
-
-      await sut.add(guardianData)
-      let guardian = await sut.loadByEmail(guardianData.email) as any
+      await sut.add(input)
+      let guardian = await sut.loadByEmail(input.email) as any
       const verificationTokenCreatedAt = guardian.verificationTokenCreatedAt
 
       jest.advanceTimersByTime(1000)
@@ -107,20 +161,41 @@ describe('GuardianAccountRepository', () => {
         token: 'valid_token'
       })
 
-      guardian = await sut.loadByEmail(guardianData.email)
+      guardian = await sut.loadByEmail(input.email)
 
-      expect(guardian.verificationToken).toBeTruthy()
       expect(guardian.verificationToken).toBe('valid_token')
       expect(guardian.verificationTokenCreatedAt.getMilliseconds()).toBeGreaterThan(verificationTokenCreatedAt.getMilliseconds())
     })
 
-    it('Should fail when there is no id', async () => {
+    it('Should false when there is no id', async () => {
       const sut = makeSut()
-
-      const authenticationData = { id: 'invalid_id', password: 'updated_password' }
+      const authenticationData = {
+        userId: 'invalid_id',
+        password: 'updated_password'
+      }
       const response = await sut.updatePassword(authenticationData)
+      expect(response).toBe(false)
+    })
+  })
 
-      expect(response).toBeFalsy()
+  describe('UpdatePasswordRepository', () => {
+    it('Should return false when invalid userId is provided', async () => {
+      const sut = makeSut()
+      const response = await sut.updatePassword({
+        userId: makeFakeGuardianData().id,
+        password: makeFakeGuardianData().password
+      })
+      expect(response).toBe(false)
+    })
+
+    it('Should return true when password is updated', async () => {
+      const sut = makeSut()
+      const { id } = await sut.add(input) as any
+      const response = await sut.updatePassword({
+        userId: id,
+        password: makeFakeGuardianData().password
+      })
+      expect(response).toBe(true)
     })
   })
 })

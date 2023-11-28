@@ -4,6 +4,7 @@ export interface LoadGuardianByEmailRepository {
 
 export namespace LoadGuardianByEmailRepository {
   export type Params = string
+
   export type Result = {
     [key: string]: any
     id: string
@@ -15,5 +16,5 @@ export namespace LoadGuardianByEmailRepository {
     accessToken: string | null
     verificationToken: string
     verificationTokenCreatedAt: Date
-  } | undefined
+  } | null
 }

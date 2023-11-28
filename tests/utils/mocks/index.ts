@@ -1,4 +1,4 @@
 export * from './entities.mocks'
-export * from './field-validations.mocks'
-export * from './request.mocks'
-export * from './response.mocks'
+export * from './field-validations.mock'
+export * from './request.mock'
+export * from './response.mock'

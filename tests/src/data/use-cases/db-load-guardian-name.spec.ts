@@ -26,9 +26,9 @@ describe('DbLoadGuardianName', () => {
     })
   })
 
-  it('Should return null if guardianRepository returns undefined', async () => {
+  it('Should return null if guardianRepository returns null', async () => {
     const { sut, guardianRepositoryStub } = makeSut()
-    jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValueOnce(undefined)
+    jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValueOnce(null)
     const guardian = await sut.load('any_id')
     expect(guardian).toBe(null)
   })

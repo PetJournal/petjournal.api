@@ -10,7 +10,11 @@ import {
 import {
   makeFakeTokenService,
   makeFakeHashService,
-  makeFakeGuardianRepository
+  makeFakeGuardianRepository,
+  makeFakeGuardianData,
+  mockTokenService,
+  mockHashService,
+  mockFakeGuardianLoaded
 } from '@/tests/utils'
 import { NotFoundError, UnauthorizedError } from '@/application/errors'
 
@@ -50,7 +54,7 @@ describe('DbAuthentication UseCase', () => {
       const { sut, hashServiceStub } = makeSut()
       const hashGeneratorSpy = jest.spyOn(hashServiceStub, 'encrypt')
       await sut.auth(params)
-      expect(hashGeneratorSpy).toHaveBeenCalledWith({ value: 'any_token' })
+      expect(hashGeneratorSpy).toHaveBeenCalledWith({ value: mockTokenService.anyToken })
     })
 
     it('Should throw if encrypt method throws', async () => {
@@ -64,7 +68,10 @@ describe('DbAuthentication UseCase', () => {
       const { sut, hashServiceStub } = makeSut()
       const hashComparerSpy = jest.spyOn(hashServiceStub, 'compare')
       await sut.auth(params)
-      expect(hashComparerSpy).toHaveBeenCalledWith({ value: 'any_data', hash: 'any_hashed_password' })
+      expect(hashComparerSpy).toHaveBeenCalledWith({
+        value: params.sensitiveData.value,
+        hash: mockFakeGuardianLoaded()?.password
+      })
     })
 
     it('Should throw if compare method throws', async () => {
@@ -87,7 +94,7 @@ describe('DbAuthentication UseCase', () => {
       const { sut, tokenServiceStub } = makeSut()
       const tokenGeneratorSpy = jest.spyOn(tokenServiceStub, 'generate')
       await sut.auth(params)
-      expect(tokenGeneratorSpy).toHaveBeenCalledWith({ sub: 'any_id' })
+      expect(tokenGeneratorSpy).toHaveBeenCalledWith({ sub: makeFakeGuardianData().id })
     })
 
     it('Should throw if generate method throws', async () => {
@@ -115,7 +122,7 @@ describe('DbAuthentication UseCase', () => {
 
     it('Should return not found error if email does not exist', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValue(undefined)
+      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValue(null)
       const result = await sut.auth(params)
       expect(result).toEqual(new NotFoundError('email'))
     })
@@ -124,7 +131,10 @@ describe('DbAuthentication UseCase', () => {
       const { sut, guardianRepositoryStub } = makeSut()
       const updateAccessTokenSpy = jest.spyOn(guardianRepositoryStub, 'updateAccessToken')
       await sut.auth(params)
-      expect(updateAccessTokenSpy).toHaveBeenCalledWith({ id: 'any_id', token: 'hashed_value' })
+      expect(updateAccessTokenSpy).toHaveBeenCalledWith({
+        userId: makeFakeGuardianData().id,
+        token: mockHashService.hashedValue
+      })
     })
 
     it('Should throw if updateAccessToken throws', async () => {
@@ -138,6 +148,6 @@ describe('DbAuthentication UseCase', () => {
   test('Should return an accessToken when received data is valid', async () => {
     const { sut } = makeSut()
     const result = await sut.auth(params)
-    expect(result).toEqual('any_token')
+    expect(result).toEqual(mockTokenService.anyToken)
   })
 })

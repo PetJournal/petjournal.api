@@ -6,21 +6,32 @@ import {
   type ValidateVerificationToken,
   type ChangePassword,
   type AppointSpecie,
-  type LoadGuardianName
+  type LoadGuardianName,
+  type AddPet
 } from '@/domain/use-cases'
-import { type AddPet } from '@/domain/use-cases/pet/add-pet'
+import { mockTokenService } from '@/tests/utils/stubs/service.stub'
 import { mockFakePetAdded, mockFakeSpecieAdded } from '../mocks'
+
+const mockGuardianUseCase = {
+  id: 'any_id',
+  firstName: 'any_first_name',
+  lastName: 'any_last_name',
+  email: 'any_email@mail.com',
+  password: 'any_password',
+  phone: 'any_phone',
+  accessToken: 'any_token'
+}
 
 const makeFakeAddGuardianUseCase = (): AddGuardian => {
   class AddGuardianStub implements AddGuardian {
     async add (guardian: AddGuardian.Params): Promise<AddGuardian.Result> {
       const result = {
-        id: 'any_id',
-        firstName: 'any_first_name',
-        lastName: 'any_last_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        phone: 'any_phone'
+        id: mockGuardianUseCase.id,
+        firstName: mockGuardianUseCase.firstName,
+        lastName: mockGuardianUseCase.lastName,
+        email: mockGuardianUseCase.email,
+        password: mockGuardianUseCase.password,
+        phone: mockGuardianUseCase.phone
       }
       return result
     }
@@ -31,7 +42,7 @@ const makeFakeAddGuardianUseCase = (): AddGuardian => {
 const makeFakeAuthenticationUseCase = (): Authentication => {
   class AuthenticationStub implements Authentication {
     async auth (authentication: Authentication.Params): Promise<Authentication.Result> {
-      return 'any_token'
+      return mockGuardianUseCase.accessToken
     }
   }
   return new AuthenticationStub()
@@ -58,7 +69,7 @@ const makeFakeChangePasswordUseCase = (): ChangePassword => {
 const makeFakeCreateAccessTokenUseCase = (): CreateAccessToken => {
   class CreateAccessTokenStub implements CreateAccessToken {
     async create (email: string): Promise<CreateAccessToken.Result> {
-      return 'valid_token'
+      return mockTokenService.anyToken
     }
   }
   return new CreateAccessTokenStub()

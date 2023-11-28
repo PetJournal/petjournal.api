@@ -3,7 +3,7 @@ export interface AddGuardianRepository {
 }
 
 export namespace AddGuardianRepository {
-  export interface Params {
+  export type Params = {
     firstName: string
     lastName: string
     email: string

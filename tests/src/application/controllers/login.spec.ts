@@ -7,7 +7,8 @@ import {
   makeFakeAuthenticationUseCase,
   makeFakeValidation,
   makeFakeLoginRequest,
-  makeFakeServerError
+  makeFakeServerError,
+  mockTokenService
 } from '@/tests/utils'
 
 interface SutTypes {
@@ -84,6 +85,6 @@ describe('Login Controller', () => {
   test('Should return 200 (Success) if valid credentials are provide', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(success({ accessToken: 'any_token' }))
+    expect(httpResponse).toEqual(success({ accessToken: mockTokenService.anyToken }))
   })
 })

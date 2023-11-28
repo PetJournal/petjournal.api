@@ -57,7 +57,7 @@ describe('DbAddPet Use Case', () => {
 
     it('Should return not acceptable error if incorrect guardianId is provided', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValueOnce(undefined)
+      jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValueOnce(null)
 
       const result = await sut.add(params)
 

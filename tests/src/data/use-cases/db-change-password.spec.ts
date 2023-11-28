@@ -2,8 +2,10 @@ import { type ChangePassword } from '@/domain/use-cases'
 import { type HashGenerator, type LoadGuardianByIdRepository, type UpdateGuardianPasswordRepository } from '@/data/protocols'
 import { DbChangePassword } from '@/data/use-cases'
 import {
+  makeFakeGuardianData,
   makeFakeGuardianRepository,
-  makeFakeHashService
+  makeFakeHashService,
+  mockHashService
 } from '@/tests/utils'
 import { NotFoundError } from '@/application/errors'
 
@@ -38,7 +40,9 @@ describe('DbChangePassword use case', () => {
       const { sut, hashServiceStub } = makeSut()
       const hashGeneratorSpy = jest.spyOn(hashServiceStub, 'encrypt')
       await sut.change(params)
-      expect(hashGeneratorSpy).toHaveBeenCalledWith({ value: 'any_password' })
+      expect(hashGeneratorSpy).toHaveBeenCalledWith({
+        value: params.password
+      })
     })
 
     it('Should throw if encrypt method throws', async () => {
@@ -66,7 +70,7 @@ describe('DbChangePassword use case', () => {
 
     it('Should return not found error if id does not exist', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValue(undefined)
+      jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValue(null)
       const result = await sut.change(params)
       expect(result).toEqual({
         isSuccess: false,
@@ -78,7 +82,10 @@ describe('DbChangePassword use case', () => {
       const { sut, guardianRepositoryStub } = makeSut()
       const updateGuardianPasswordSpy = jest.spyOn(guardianRepositoryStub, 'updatePassword')
       await sut.change(params)
-      expect(updateGuardianPasswordSpy).toHaveBeenCalledWith({ id: 'any_id', password: 'hashed_value' })
+      expect(updateGuardianPasswordSpy).toHaveBeenCalledWith({
+        userId: makeFakeGuardianData().id,
+        password: mockHashService.hashedValue
+      })
     })
 
     it('Should throw if updatePassword method throws', async () => {
