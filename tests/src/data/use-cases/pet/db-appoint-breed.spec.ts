@@ -67,4 +67,17 @@ describe('DbAppointBreed Use Case', () => {
     const promise = sut.appoint(breedName)
     await expect(promise).rejects.toThrow()
   })
+
+  test('should return a breed when success', async () => {
+    const { sut } = makeSut()
+    const fakeBreed = {
+      id: 'any_id',
+      name: 'any_name'
+    }
+    const result = await sut.appoint(breedName)
+    expect(result).toEqual({
+      breed: fakeBreed,
+      breedAlias: undefined
+    })
+  })
 })
