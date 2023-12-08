@@ -18,6 +18,12 @@ export class DbAppointBreed implements AppointBreed {
         breedAlias: breedName
       }
     }
+    if (breed.name === 'Outros') {
+      return {
+        breed,
+        breedAlias: 'Outros'
+      }
+    }
     return {
       breed,
       breedAlias: undefined
