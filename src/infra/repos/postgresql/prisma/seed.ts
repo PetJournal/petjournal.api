@@ -1,9 +1,10 @@
 import { prisma } from '.'
-import { specieSeed, sizeSeed } from './seeds'
+import { specieSeed, sizeSeed, breedSeed } from './seeds'
 
 async function main (): Promise<void> {
   await specieSeed()
   await sizeSeed()
+  await breedSeed()
 }
 
 main()
