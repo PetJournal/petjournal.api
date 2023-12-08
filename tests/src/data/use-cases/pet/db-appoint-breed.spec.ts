@@ -53,4 +53,11 @@ describe('DbAppointBreed Use Case', () => {
       breedAlias: 'Outros'
     })
   })
+
+  test('should call loadByName with correct params', async () => {
+    const { sut, breedRepositoryStub } = makeSut()
+    const breedRepositorySpy = jest.spyOn(breedRepositoryStub, 'loadByName')
+    await sut.appoint(breedName)
+    expect(breedRepositorySpy).toHaveBeenCalledWith(breedName)
+  })
 })
