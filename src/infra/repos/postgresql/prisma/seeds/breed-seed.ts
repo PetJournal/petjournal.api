@@ -3,10 +3,10 @@ import { prisma } from '..'
 export async function breedSeed (): Promise<void> {
   console.log('Creating breeds...')
 
-  const catId = await prisma.specie.findFirst({ where: { name: 'Gato' } })
-  const dogId = await prisma.specie.findFirst({ where: { name: 'Cachorro' } })
+  const cat = await prisma.specie.findFirst({ where: { name: 'Gato' } })
+  const dog = await prisma.specie.findFirst({ where: { name: 'Cachorro' } })
 
-  if (!catId || !dogId) {
+  if (!cat || !dog) {
     throw new Error('Error on get species')
   }
 
@@ -16,7 +16,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Abissínio',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -24,7 +24,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'American Bobtail de Pelo Curto',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -32,7 +32,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'American Bobtail de Pelo Longo',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -40,7 +40,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'American Shorthair',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -48,7 +48,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'American Wirehair',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -56,7 +56,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Angorá Turco',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -64,7 +64,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Arabian Mau',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -72,7 +72,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Ashera',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -80,7 +80,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Australian Mist',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -88,7 +88,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Balinês',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -96,7 +96,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Bengal',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -104,7 +104,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Bobtail americano',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -112,7 +112,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Bobtail japonês',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -120,7 +120,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Bombay',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -128,7 +128,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Brazilian Shorthair',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -136,7 +136,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'British de Pelo Longo',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -144,7 +144,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Burmês',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -152,7 +152,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Burmês vermelho',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -160,7 +160,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'California Spangled',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -168,7 +168,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Chartreux',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -176,7 +176,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Chausie',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -184,7 +184,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Cornish Rex',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -192,7 +192,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Curl Americano de Pelo Curto',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -200,7 +200,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Curl Americano de Pelo Longo',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -208,7 +208,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Cymric',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -216,7 +216,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Devon Rex',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -224,7 +224,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Doméstico de Pelo Curto',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -232,7 +232,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Doméstico de Pelo Longo',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -240,7 +240,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Don Sphynx',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -248,7 +248,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Egyptian Mau',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -256,7 +256,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Europeu',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -264,7 +264,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Exótico de Pelo Curto',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -272,7 +272,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Gato Asiático de Pelo Semi-Longo',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -280,7 +280,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'German Rex',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -288,7 +288,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Havana',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -296,7 +296,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Himalaio',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -304,7 +304,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Khao Manee',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -312,7 +312,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Korat',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -320,7 +320,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Kurilian Bobtail de Pelo Curto',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -328,7 +328,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Kurilian Bobtail de Pelo Longo',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -336,7 +336,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'LaPerm de Pelo Curto',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -344,7 +344,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'LaPerm de Pelo Longo',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -352,7 +352,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Maine Coon',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -360,7 +360,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Manx',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -368,7 +368,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Mekong Bobtail',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -376,7 +376,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Mistura de serval, gato-leopardo e gato doméstico (Ashera)',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -384,7 +384,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Munchkin de Pelo Curto',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -392,7 +392,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Munchkin de Pelo Longo',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -400,7 +400,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Nebelung',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -408,7 +408,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Ocicat',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -416,7 +416,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Ojos Azules de Pelo Curto',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -424,7 +424,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Oriental de Pelo Curto',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -432,7 +432,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Oriental de Pelo Longo',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -440,7 +440,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Persa',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -448,7 +448,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Peterbald',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -456,7 +456,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Pixiebob de Pelo Curto',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -464,7 +464,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Pixiebob de Pelo Longo',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -472,7 +472,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Ragamuffin',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -480,7 +480,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Ragdoll',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -488,7 +488,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Russo Azul',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -496,7 +496,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Sagrado da Birmânia',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -504,7 +504,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Savannah',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -512,7 +512,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Scottish Fold',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -520,7 +520,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Selkirk Rex de Pelo Curto',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -528,7 +528,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Selkirk Rex de Pelo Longo',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -536,7 +536,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Serengeti',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -544,7 +544,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Sem Raça Definida (SRD)',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -552,7 +552,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Siamês',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -560,7 +560,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Siberiano',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -568,7 +568,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Singapura',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -576,7 +576,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Snowshoe',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -584,7 +584,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Sokoke',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -592,7 +592,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Somali',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -600,7 +600,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Sphynx',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -608,7 +608,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Thai',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -616,7 +616,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Tonquinês de Pelo Curto',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -624,7 +624,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Toyger',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -632,7 +632,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Van Turco',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -640,7 +640,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'York Chocolate',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.breed.upsert({
@@ -648,7 +648,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Outra raça',
-        specieId: catId.id
+        specieId: cat.id
       }
     })
   ]
@@ -659,7 +659,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Abissínio',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -667,7 +667,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'American Bobtail de Pelo Curto',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -675,7 +675,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'American Bobtail de Pelo Longo',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -683,7 +683,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'American Shorthair',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -691,7 +691,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'American Wirehair',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -699,7 +699,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Angorá Turco',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -707,7 +707,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Arabian Mau',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -715,7 +715,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Ashera',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -723,7 +723,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Australian Mist',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -731,7 +731,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Balinês',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -739,7 +739,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Bengal',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -747,7 +747,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Bobtail americano',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -755,7 +755,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Bobtail japonês',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -763,7 +763,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Bombay',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -771,7 +771,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Brazilian Shorthair',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -779,7 +779,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'British de Pelo Longo',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -787,7 +787,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Burmês',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -795,7 +795,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Burmês vermelho',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -803,7 +803,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'California Spangled',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -811,7 +811,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Chartreux',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -819,7 +819,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Chausie',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -827,7 +827,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Cornish Rex',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -835,7 +835,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Curl Americano de Pelo Curto',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -843,7 +843,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Curl Americano de Pelo Longo',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -851,7 +851,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Cymric',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -859,7 +859,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Devon Rex',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -867,7 +867,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Doméstico de Pelo Curto',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -875,7 +875,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Doméstico de Pelo Longo',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -883,7 +883,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Don Sphynx',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -891,7 +891,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Egyptian Mau',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -899,7 +899,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Europeu',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -907,7 +907,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Exótico de Pelo Curto',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -915,7 +915,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Gato Asiático de Pelo Semi-Longo',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -923,7 +923,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'German Rex',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -931,7 +931,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Havana',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -939,7 +939,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Himalaio',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -947,7 +947,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Khao Manee',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -955,7 +955,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Korat',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -963,7 +963,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Kurilian Bobtail de Pelo Curto',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -971,7 +971,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Kurilian Bobtail de Pelo Longo',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -979,7 +979,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'LaPerm de Pelo Curto',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -987,7 +987,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'LaPerm de Pelo Longo',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -995,7 +995,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Maine Coon',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1003,7 +1003,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Manx',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1011,7 +1011,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Mekong Bobtail',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1019,7 +1019,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Mistura de serval, gato-leopardo e gato doméstico (Ashera)',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1027,7 +1027,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Munchkin de Pelo Curto',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1035,7 +1035,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Munchkin de Pelo Longo',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1043,7 +1043,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Nebelung',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1051,7 +1051,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Ocicat',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1059,7 +1059,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Ojos Azules de Pelo Curto',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1067,7 +1067,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Oriental de Pelo Curto',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1075,7 +1075,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Oriental de Pelo Longo',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1083,7 +1083,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Persa',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1091,7 +1091,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Peterbald',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1099,7 +1099,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Pixiebob de Pelo Curto',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1107,7 +1107,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Pixiebob de Pelo Longo',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1115,7 +1115,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Ragamuffin',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1123,7 +1123,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Ragdoll',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1131,7 +1131,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Russo Azul',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1139,7 +1139,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Sagrado da Birmânia',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1147,7 +1147,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Savannah',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1155,7 +1155,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Scottish Fold',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1163,7 +1163,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Selkirk Rex de Pelo Curto',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1171,7 +1171,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Selkirk Rex de Pelo Longo',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1179,7 +1179,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Serengeti',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1187,7 +1187,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Sem Raça Definida (SRD)',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1195,7 +1195,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Siamês',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1203,7 +1203,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Siberiano',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1211,7 +1211,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Singapura',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1219,7 +1219,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Snowshoe',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1227,7 +1227,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Sokoke',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1235,7 +1235,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Somali',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1243,7 +1243,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Sphynx',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1251,7 +1251,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Thai',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1259,7 +1259,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Tonquinês de Pelo Curto',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1267,7 +1267,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Toyger',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1275,7 +1275,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Van Turco',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1283,7 +1283,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'York Chocolate',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
@@ -1291,7 +1291,7 @@ export async function breedSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Outra raça',
-        specieId: dogId.id
+        specieId: dog.id
       }
     })
   ]

@@ -3,10 +3,10 @@ import { prisma } from '..'
 export async function sizeSeed (): Promise<void> {
   console.log('Creating sizes...')
 
-  const catId = await prisma.specie.findFirst({ where: { name: 'Gato' } })
-  const dogId = await prisma.specie.findFirst({ where: { name: 'Cachorro' } })
+  const cat = await prisma.specie.findFirst({ where: { name: 'Gato' } })
+  const dog = await prisma.specie.findFirst({ where: { name: 'Cachorro' } })
 
-  if (!catId || !dogId) {
+  if (!cat || !dog) {
     throw new Error('Error on get species')
   }
 
@@ -16,7 +16,7 @@ export async function sizeSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Pequeno (Até 10Kg)',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.size.upsert({
@@ -24,7 +24,7 @@ export async function sizeSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Médio (11 à 24Kg)',
-        specieId: catId.id
+        specieId: cat.id
       }
     }),
     await prisma.size.upsert({
@@ -32,7 +32,7 @@ export async function sizeSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Grande (25 à 45Kg)',
-        specieId: catId.id
+        specieId: cat.id
       }
     })
   ]
@@ -43,7 +43,7 @@ export async function sizeSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Mini (Até 6Kg)',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.size.upsert({
@@ -51,7 +51,7 @@ export async function sizeSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Pequeno (6 à 14Kg)',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.size.upsert({
@@ -59,7 +59,7 @@ export async function sizeSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Médio (15 à 24Kg)',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.size.upsert({
@@ -67,7 +67,7 @@ export async function sizeSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Grande (25 à 45Kg)',
-        specieId: dogId.id
+        specieId: dog.id
       }
     }),
     await prisma.size.upsert({
@@ -75,7 +75,7 @@ export async function sizeSeed (): Promise<void> {
       update: {},
       create: {
         name: 'Gigante (Acima de 45Kg)',
-        specieId: dogId.id
+        specieId: dog.id
       }
     })
   ]
