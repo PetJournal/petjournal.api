@@ -1,5 +1,6 @@
 import { type LoadBreedByNameRepository } from '@/data/protocols'
 import { DbAppointBreed } from '@/data/use-cases/pet/db-appoint-breed'
+import { type Breed } from '@/domain/models/breed'
 import { type AppointBreed } from '@/domain/use-cases'
 import { makeFakeBreedRepository } from '@/tests/utils/stubs/service.stub'
 
@@ -36,6 +37,20 @@ describe('DbAppointBreed Use Case', () => {
     expect(result).toEqual({
       breed: otherBreed,
       breedAlias: breedName
+    })
+  })
+
+  test('should return a breed and breedAlias equal Outros when breedName is equal Outros', async () => {
+    const { sut, breedRepositoryStub } = makeSut()
+    const otherBreed = {
+      id: 'any_id',
+      name: 'Outros'
+    }
+    jest.spyOn(breedRepositoryStub, 'loadByName').mockResolvedValueOnce(otherBreed)
+    const result = await sut.appoint(breedName)
+    expect(result).toEqual({
+      breed: otherBreed as Breed & { id: string },
+      breedAlias: 'Outros'
     })
   })
 })
