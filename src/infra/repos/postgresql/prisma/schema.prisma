@@ -36,11 +36,31 @@ model Pet {
 }
 
 model Specie {
-  id   String @id @default(uuid())
-  name String @unique
-  Pet  Pet[]
+  id    String  @id @default(uuid())
+  name  String  @unique
+  Pet   Pet[]
+  Size  Size[]
+  Breed Breed[]
 
   @@map("species")
+}
+
+model Size {
+  id       String @id @default(uuid())
+  specie   Specie @relation(fields: [specieId], references: [id])
+  specieId String @map("specie_id")
+  name     String @unique
+
+  @@map("sizes")
+}
+
+model Breed {
+  id       String @id @default(uuid())
+  specie   Specie @relation(fields: [specieId], references: [id])
+  specieId String @map("specie_id")
+  name     String @unique
+
+  @@map("breeds")
 }
 
 model LogError {
