@@ -60,4 +60,11 @@ describe('DbAppointBreed Use Case', () => {
     await sut.appoint(breedName)
     expect(breedRepositorySpy).toHaveBeenCalledWith(breedName)
   })
+
+  test('should throw if loadByName throws', async () => {
+    const { sut, breedRepositoryStub } = makeSut()
+    jest.spyOn(breedRepositoryStub, 'loadByName').mockRejectedValueOnce(new Error())
+    const promise = sut.appoint(breedName)
+    await expect(promise).rejects.toThrow()
+  })
 })
