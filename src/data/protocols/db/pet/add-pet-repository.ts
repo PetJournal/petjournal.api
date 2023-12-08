@@ -1,3 +1,4 @@
+import { type PetGender } from '@/domain/models/Pet'
 import { type Guardian } from '@/domain/models/guardian'
 import { type Specie } from '@/domain/models/specie'
 
@@ -11,7 +12,7 @@ export namespace AddPetRepository {
     specieId: string
     specieAlias?: string
     petName: string
-    gender: string
+    gender: PetGender
   }
 
   type GuardianResultDb = Pick<Guardian, 'firstName' | 'lastName' | 'email' | 'phone'> & {
