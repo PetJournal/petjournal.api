@@ -1,4 +1,4 @@
-import { type LoadCatBreedsRepository } from '@/data/protocols/db/breed/load-cat-breeds-repository'
+import { type LoadCatBreedsRepository } from '@/data/protocols/db/breed'
 import { type Breed } from '@/domain/models/breed'
 
 export interface LoadCatBreeds {
