@@ -2,7 +2,8 @@ import {
   mockFakeGuardianAdded,
   mockFakeGuardianLoaded,
   mockFakePetAdded,
-  mockFakeCatBreedsLoaded
+  mockFakeCatBreedsLoaded,
+  mockFakeDogBreedsLoaded
 } from '@/tests/utils'
 import {
   type EmailService,
@@ -19,7 +20,8 @@ import {
   type AddPetRepository,
   type LoadSpecieByIdRepository,
   type LoadSpecieByNameRepository,
-  type LoadCatBreedsRepository
+  type LoadCatBreedsRepository,
+  type LoadDogBreedsRepository
 } from '@/data/protocols'
 
 const mockHashService = {
@@ -115,6 +117,15 @@ const makeFakeLoadCatBreedRepository = (): LoadCatBreedsRepository => {
   return new LoadCatBreedRepositoryStub()
 }
 
+const makeFakeLoadDogBreedRepository = (): LoadDogBreedsRepository => {
+  class LoadDogBreedsRepositoryStub implements LoadDogBreedsRepository {
+    async loadDogBreeds (): Promise<LoadDogBreedsRepository.Result> {
+      return mockFakeDogBreedsLoaded()
+    }
+  }
+  return new LoadDogBreedsRepositoryStub()
+}
+
 const makeFakeHashService = (): HashGenerator & HashComparer => {
   class HashServiceStub implements HashGenerator, HashComparer {
     async compare (input: HashComparer.Params): Promise<boolean> {
@@ -157,6 +168,7 @@ export {
   makeFakePetRepository,
   makeFakeSpecieRepository,
   makeFakeLoadCatBreedRepository,
+  makeFakeLoadDogBreedRepository,
   makeFakeHashService,
   makeFakeEmailService,
   makeFakeTokenService
