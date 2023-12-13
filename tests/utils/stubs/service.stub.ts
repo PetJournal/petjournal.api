@@ -19,6 +19,7 @@ import {
   type LoadSpecieByIdRepository,
   type LoadSpecieByNameRepository
 } from '@/data/protocols'
+import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
 
 const mockHashService = {
   hashedValue: 'hashed_value'
@@ -139,6 +140,19 @@ const makeFakeEmailService = (): EmailService => {
   return new EmailServiceStub()
 }
 
+const makeFakeLoadCatSizesRepository = (): LoadCatSizesRepository => {
+  class LoadCatSizesRepositoryStub implements LoadCatSizesRepository {
+    async loadCatSizes (): Promise<LoadCatSizesRepository.Result> {
+      return [
+        {
+          name: 'any_name'
+        }
+      ]
+    }
+  }
+  return new LoadCatSizesRepositoryStub()
+}
+
 export {
   mockHashService,
   mockTokenService,
@@ -147,5 +161,6 @@ export {
   makeFakeSpecieRepository,
   makeFakeHashService,
   makeFakeEmailService,
-  makeFakeTokenService
+  makeFakeTokenService,
+  makeFakeLoadCatSizesRepository
 }
