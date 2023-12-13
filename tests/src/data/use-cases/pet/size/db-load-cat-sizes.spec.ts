@@ -28,5 +28,11 @@ describe('DbLoadCatSizesRepository', () => {
       const promise = sut.load()
       await expect(promise).rejects.toThrow()
     })
+
+    test('Should return a list of sizes on success', async () => {
+      const { sut } = makeSut()
+      const result = await sut.load()
+      expect(result).toEqual([{ name: 'any_name' }])
+    })
   })
 })
