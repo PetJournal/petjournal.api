@@ -1,4 +1,4 @@
-import { LoadCatBreedsController } from '@/application/controllers/pets/breeds/load-cat'
+import { LoadCatBreedsController } from '@/application/controllers/pets/breeds'
 import { success } from '@/application/helpers'
 import { type LoadCatBreeds } from '@/domain/use-cases'
 import { makeFakeServerError, makeLoadCatBreedsUseCase } from '@/tests/utils'
