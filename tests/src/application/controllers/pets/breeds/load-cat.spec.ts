@@ -1,4 +1,5 @@
 import { LoadCatBreedsController } from '@/application/controllers/pets/breeds/load-cat'
+import { success } from '@/application/helpers'
 import { type LoadCatBreeds } from '@/domain/use-cases'
 import { makeFakeServerError, makeLoadCatBreedsUseCase } from '@/tests/utils'
 
@@ -25,5 +26,11 @@ describe('LoadCatBreeds Controller', () => {
     jest.spyOn(loadCatBreedsStub, 'load').mockRejectedValueOnce(new Error())
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(makeFakeServerError())
+  })
+
+  test('should return a list of breeds on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle({})
+    expect(httpResponse).toEqual(success([{ name: 'any_name' }]))
   })
 })
