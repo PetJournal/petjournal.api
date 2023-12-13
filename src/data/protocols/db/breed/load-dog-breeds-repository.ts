@@ -1,7 +1,7 @@
 import { type Breed } from '@/domain/models/breed'
 
 export interface LoadDogBreedsRepository {
-  loadDogBreed: () => Promise<LoadDogBreedsRepository.Result>
+  loadDogBreeds: () => Promise<LoadDogBreedsRepository.Result>
 }
 
 export namespace LoadDogBreedsRepository {
