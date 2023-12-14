@@ -11,6 +11,7 @@ import {
 } from '@/domain/use-cases'
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
 import { mockFakePetAdded, mockFakeSpecieAdded } from '../mocks'
+import { type LoadCatSizes } from '@/domain/use-cases/pet/size/load-cat-sizes'
 
 const mockGuardianUseCase = {
   id: 'any_id',
@@ -122,6 +123,17 @@ const makeLoadGuardianNameUseCase = (): LoadGuardianName => {
   return new LoadGuardianNameStub()
 }
 
+const makeFakeLoadCatSizesUseCase = (): LoadCatSizes => {
+  class LoadCatSizesStub implements LoadCatSizes {
+    async load (): Promise<LoadCatSizes.Result> {
+      return [{
+        name: 'any_name'
+      }]
+    }
+  }
+  return new LoadCatSizesStub()
+}
+
 export {
   makeFakeAddGuardianUseCase,
   makeFakeAddPetUseCase,
@@ -131,5 +143,6 @@ export {
   makeFakeCreateAccessTokenUseCase,
   makeFakeValidateVerificationTokenUseCase,
   makeFakeAppointSpecieUseCase,
-  makeLoadGuardianNameUseCase
+  makeLoadGuardianNameUseCase,
+  makeFakeLoadCatSizesUseCase
 }
