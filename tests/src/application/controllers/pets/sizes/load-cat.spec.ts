@@ -1,4 +1,5 @@
 import { LoadCatSizesController } from '@/application/controllers/pets/sizes/load-cat'
+import { success } from '@/application/helpers'
 import { type LoadCatSizes } from '@/domain/use-cases/pet/size/load-cat-sizes'
 import { makeFakeLoadCatSizesUseCase, makeFakeServerError } from '@/tests/utils'
 
@@ -25,5 +26,11 @@ describe('LoadCatSizes Controller', () => {
     jest.spyOn(loadCatSizesStub, 'load').mockRejectedValueOnce(new Error())
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(makeFakeServerError())
+  })
+
+  test('should return a list of sizes on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle({})
+    expect(httpResponse).toEqual(success([{ name: 'any_name' }]))
   })
 })
