@@ -540,10 +540,10 @@ export async function breedSeed (): Promise<void> {
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Sem Raça Definida (SRD)' },
+      where: { name: 'Sem Raça Definida (SRD) gato' },
       update: {},
       create: {
-        name: 'Sem Raça Definida (SRD)',
+        name: 'Sem Raça Definida (SRD) gato',
         specieId: cat.id
       }
     }),
@@ -644,10 +644,10 @@ export async function breedSeed (): Promise<void> {
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Outra raça' },
+      where: { name: 'Outra raça gato' },
       update: {},
       create: {
-        name: 'Outra raça',
+        name: 'Outra raça gato',
         specieId: cat.id
       }
     })
@@ -655,642 +655,642 @@ export async function breedSeed (): Promise<void> {
 
   const dogBreeds = [
     await prisma.breed.upsert({
-      where: { name: 'Abissínio' },
+      where: { name: 'Afghan Hound' },
       update: {},
       create: {
-        name: 'Abissínio',
+        name: 'Afghan Hound',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'American Bobtail de Pelo Curto' },
+      where: { name: 'Affenpinscher' },
       update: {},
       create: {
-        name: 'American Bobtail de Pelo Curto',
+        name: 'Affenpinscher',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'American Bobtail de Pelo Longo' },
+      where: { name: 'Airedale Terrier' },
       update: {},
       create: {
-        name: 'American Bobtail de Pelo Longo',
+        name: 'Airedale Terrier',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'American Shorthair' },
+      where: { name: 'Akita' },
       update: {},
       create: {
-        name: 'American Shorthair',
+        name: 'Akita',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'American Wirehair' },
+      where: { name: 'American Staffordshire Terrier' },
       update: {},
       create: {
-        name: 'American Wirehair',
+        name: 'American Staffordshire Terrier',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Angorá Turco' },
+      where: { name: 'Basenji' },
       update: {},
       create: {
-        name: 'Angorá Turco',
+        name: 'Basenji',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Arabian Mau' },
+      where: { name: 'Basset Hound' },
       update: {},
       create: {
-        name: 'Arabian Mau',
+        name: 'Basset Hound',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Ashera' },
+      where: { name: 'Beagle' },
       update: {},
       create: {
-        name: 'Ashera',
+        name: 'Beagle',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Australian Mist' },
+      where: { name: 'Beagle Harrier' },
       update: {},
       create: {
-        name: 'Australian Mist',
+        name: 'Beagle Harrier',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Balinês' },
+      where: { name: 'Bearded Collie' },
       update: {},
       create: {
-        name: 'Balinês',
+        name: 'Bearded Collie',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Bengal' },
+      where: { name: 'Bedlington Terrier' },
       update: {},
       create: {
-        name: 'Bengal',
+        name: 'Bedlington Terrier',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Bobtail americano' },
+      where: { name: 'Bichon Frisé' },
       update: {},
       create: {
-        name: 'Bobtail americano',
+        name: 'Bichon Frisé',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Bobtail japonês' },
+      where: { name: 'Bloodhound' },
       update: {},
       create: {
-        name: 'Bobtail japonês',
+        name: 'Bloodhound',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Bombay' },
+      where: { name: 'Bobtail' },
       update: {},
       create: {
-        name: 'Bombay',
+        name: 'Bobtail',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Brazilian Shorthair' },
+      where: { name: 'Boiadeiro Australiano' },
       update: {},
       create: {
-        name: 'Brazilian Shorthair',
+        name: 'Boiadeiro Australiano',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'British de Pelo Longo' },
+      where: { name: 'Boiadeiro Bernês' },
       update: {},
       create: {
-        name: 'British de Pelo Longo',
+        name: 'Boiadeiro Bernês',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Burmês' },
+      where: { name: 'Border Collie' },
       update: {},
       create: {
-        name: 'Burmês',
+        name: 'Border Collie',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Burmês vermelho' },
+      where: { name: 'Border Terrier' },
       update: {},
       create: {
-        name: 'Burmês vermelho',
+        name: 'Border Terrier',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'California Spangled' },
+      where: { name: 'Borzoi' },
       update: {},
       create: {
-        name: 'California Spangled',
+        name: 'Borzoi',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Chartreux' },
+      where: { name: 'Boston Terrier' },
       update: {},
       create: {
-        name: 'Chartreux',
+        name: 'Boston Terrier',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Chausie' },
+      where: { name: 'Boxer' },
       update: {},
       create: {
-        name: 'Chausie',
+        name: 'Boxer',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Cornish Rex' },
+      where: { name: 'Buldogue Francês' },
       update: {},
       create: {
-        name: 'Cornish Rex',
+        name: 'Buldogue Francês',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Curl Americano de Pelo Curto' },
+      where: { name: 'Buldogue Inglês' },
       update: {},
       create: {
-        name: 'Curl Americano de Pelo Curto',
+        name: 'Buldogue Inglês',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Curl Americano de Pelo Longo' },
+      where: { name: 'Bull Terrier' },
       update: {},
       create: {
-        name: 'Curl Americano de Pelo Longo',
+        name: 'Bull Terrier',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Cymric' },
+      where: { name: 'Bulmastife' },
       update: {},
       create: {
-        name: 'Cymric',
+        name: 'Bulmastife',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Devon Rex' },
+      where: { name: 'Cairn Terrier' },
       update: {},
       create: {
-        name: 'Devon Rex',
+        name: 'Cairn Terrier',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Doméstico de Pelo Curto' },
+      where: { name: 'Cane Corso' },
       update: {},
       create: {
-        name: 'Doméstico de Pelo Curto',
+        name: 'Cane Corso',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Doméstico de Pelo Longo' },
+      where: { name: 'Cão de Água Português' },
       update: {},
       create: {
-        name: 'Doméstico de Pelo Longo',
+        name: 'Cão de Água Português',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Don Sphynx' },
+      where: { name: 'Cão de Crista Chinês' },
       update: {},
       create: {
-        name: 'Don Sphynx',
+        name: 'Cão de Crista Chinês',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Egyptian Mau' },
+      where: { name: 'Cavalier King Charles Spaniel' },
       update: {},
       create: {
-        name: 'Egyptian Mau',
+        name: 'Cavalier King Charles Spaniel',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Europeu' },
+      where: { name: 'Chesapeake Bay Retriever' },
       update: {},
       create: {
-        name: 'Europeu',
+        name: 'Chesapeake Bay Retriever',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Exótico de Pelo Curto' },
+      where: { name: 'Chihuahua' },
       update: {},
       create: {
-        name: 'Exótico de Pelo Curto',
+        name: 'Chihuahua',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Gato Asiático de Pelo Semi-Longo' },
+      where: { name: 'Chow Chow' },
       update: {},
       create: {
-        name: 'Gato Asiático de Pelo Semi-Longo',
+        name: 'Chow Chow',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'German Rex' },
+      where: { name: 'Cocker Spaniel Americano' },
       update: {},
       create: {
-        name: 'German Rex',
+        name: 'Cocker Spaniel Americano',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Havana' },
+      where: { name: 'Cocker Spaniel Inglês' },
       update: {},
       create: {
-        name: 'Havana',
+        name: 'Cocker Spaniel Inglês',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Himalaio' },
+      where: { name: 'Collie' },
       update: {},
       create: {
-        name: 'Himalaio',
+        name: 'Collie',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Khao Manee' },
+      where: { name: 'Coton de Tuléar' },
       update: {},
       create: {
-        name: 'Khao Manee',
+        name: 'Coton de Tuléar',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Korat' },
+      where: { name: 'Dachshund' },
       update: {},
       create: {
-        name: 'Korat',
+        name: 'Dachshund',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Kurilian Bobtail de Pelo Curto' },
+      where: { name: 'Dálmata' },
       update: {},
       create: {
-        name: 'Kurilian Bobtail de Pelo Curto',
+        name: 'Dálmata',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Kurilian Bobtail de Pelo Longo' },
+      where: { name: 'Dandie Dinmont Terrier' },
       update: {},
       create: {
-        name: 'Kurilian Bobtail de Pelo Longo',
+        name: 'Dandie Dinmont Terrier',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'LaPerm de Pelo Curto' },
+      where: { name: 'Dobermann' },
       update: {},
       create: {
-        name: 'LaPerm de Pelo Curto',
+        name: 'Dobermann',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'LaPerm de Pelo Longo' },
+      where: { name: 'Dogo Argentino' },
       update: {},
       create: {
-        name: 'LaPerm de Pelo Longo',
+        name: 'Dogo Argentino',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Maine Coon' },
+      where: { name: 'Dogue Alemão' },
       update: {},
       create: {
-        name: 'Maine Coon',
+        name: 'Dogue Alemão',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Manx' },
+      where: { name: 'Fila Brasileiro' },
       update: {},
       create: {
-        name: 'Manx',
+        name: 'Fila Brasileiro',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Mekong Bobtail' },
+      where: { name: 'Fox Terrier (Pelo Duro e Pelo Liso)' },
       update: {},
       create: {
-        name: 'Mekong Bobtail',
+        name: 'Fox Terrier (Pelo Duro e Pelo Liso)',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Mistura de serval, gato-leopardo e gato doméstico (Ashera)' },
+      where: { name: 'Foxhound Inglês' },
       update: {},
       create: {
-        name: 'Mistura de serval, gato-leopardo e gato doméstico (Ashera)',
+        name: 'Foxhound Inglês',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Munchkin de Pelo Curto' },
+      where: { name: 'Galgo Escocês' },
       update: {},
       create: {
-        name: 'Munchkin de Pelo Curto',
+        name: 'Galgo Escocês',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Munchkin de Pelo Longo' },
+      where: { name: 'Galgo Irlandês' },
       update: {},
       create: {
-        name: 'Munchkin de Pelo Longo',
+        name: 'Galgo Irlandês',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Nebelung' },
+      where: { name: 'Golden Retriever' },
       update: {},
       create: {
-        name: 'Nebelung',
+        name: 'Golden Retriever',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Ocicat' },
+      where: { name: 'Grande Boiadeiro Suiço' },
       update: {},
       create: {
-        name: 'Ocicat',
+        name: 'Grande Boiadeiro Suiço',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Ojos Azules de Pelo Curto' },
+      where: { name: 'Greyhound' },
       update: {},
       create: {
-        name: 'Ojos Azules de Pelo Curto',
+        name: 'Greyhound',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Oriental de Pelo Curto' },
+      where: { name: 'Grifo da Bélgica' },
       update: {},
       create: {
-        name: 'Oriental de Pelo Curto',
+        name: 'Grifo da Bélgica',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Oriental de Pelo Longo' },
+      where: { name: 'Husky Siberiano' },
       update: {},
       create: {
-        name: 'Oriental de Pelo Longo',
+        name: 'Husky Siberiano',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Persa' },
+      where: { name: 'Jack Russell Terrier' },
       update: {},
       create: {
-        name: 'Persa',
+        name: 'Jack Russell Terrier',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Peterbald' },
+      where: { name: 'King Charles' },
       update: {},
       create: {
-        name: 'Peterbald',
+        name: 'King Charles',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Pixiebob de Pelo Curto' },
+      where: { name: 'Komondor' },
       update: {},
       create: {
-        name: 'Pixiebob de Pelo Curto',
+        name: 'Komondor',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Pixiebob de Pelo Longo' },
+      where: { name: 'Labradoodle' },
       update: {},
       create: {
-        name: 'Pixiebob de Pelo Longo',
+        name: 'Labradoodle',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Ragamuffin' },
+      where: { name: 'Labrador Retriever' },
       update: {},
       create: {
-        name: 'Ragamuffin',
+        name: 'Labrador Retriever',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Ragdoll' },
+      where: { name: 'Leonberger' },
       update: {},
       create: {
-        name: 'Ragdoll',
+        name: 'Leonberger',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Russo Azul' },
+      where: { name: 'Lhasa Apso' },
       update: {},
       create: {
-        name: 'Russo Azul',
+        name: 'Lhasa Apso',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Sagrado da Birmânia' },
+      where: { name: 'Malamute do Alasca' },
       update: {},
       create: {
-        name: 'Sagrado da Birmânia',
+        name: 'Malamute do Alasca',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Savannah' },
+      where: { name: 'Maltês' },
       update: {},
       create: {
-        name: 'Savannah',
+        name: 'Maltês',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Scottish Fold' },
+      where: { name: 'Mastife' },
       update: {},
       create: {
-        name: 'Scottish Fold',
+        name: 'Mastife',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Selkirk Rex de Pelo Curto' },
+      where: { name: 'Mastim Napolitano' },
       update: {},
       create: {
-        name: 'Selkirk Rex de Pelo Curto',
+        name: 'Mastim Napolitano',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Selkirk Rex de Pelo Longo' },
+      where: { name: 'Norfolk Terrier' },
       update: {},
       create: {
-        name: 'Selkirk Rex de Pelo Longo',
+        name: 'Norfolk Terrier',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Serengeti' },
+      where: { name: 'Norwich Terrier' },
       update: {},
       create: {
-        name: 'Serengeti',
+        name: 'Norwich Terrier',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Sem Raça Definida (SRD)' },
+      where: { name: 'Papillon' },
       update: {},
       create: {
-        name: 'Sem Raça Definida (SRD)',
+        name: 'Papillon',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Siamês' },
+      where: { name: 'Pastor Alemão' },
       update: {},
       create: {
-        name: 'Siamês',
+        name: 'Pastor Alemão',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Siberiano' },
+      where: { name: 'Pinscher Miniatura' },
       update: {},
       create: {
-        name: 'Siberiano',
+        name: 'Pinscher Miniatura',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Singapura' },
+      where: { name: 'Poodle' },
       update: {},
       create: {
-        name: 'Singapura',
+        name: 'Poodle',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Snowshoe' },
+      where: { name: 'Pug' },
       update: {},
       create: {
-        name: 'Snowshoe',
+        name: 'Pug',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Sokoke' },
+      where: { name: 'Rottweiler' },
       update: {},
       create: {
-        name: 'Sokoke',
+        name: 'Rottweiler',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Somali' },
+      where: { name: 'Sem Raça Definida (SRD) cachorro' },
       update: {},
       create: {
-        name: 'Somali',
+        name: 'Sem Raça Definida (SRD) cachorro',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Sphynx' },
+      where: { name: 'ShihTzu' },
       update: {},
       create: {
-        name: 'Sphynx',
+        name: 'ShihTzu',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Thai' },
+      where: { name: 'Silky Terrier' },
       update: {},
       create: {
-        name: 'Thai',
+        name: 'Silky Terrier',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Tonquinês de Pelo Curto' },
+      where: { name: 'Skye Terrier' },
       update: {},
       create: {
-        name: 'Tonquinês de Pelo Curto',
+        name: 'Skye Terrier',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Toyger' },
+      where: { name: 'Staffordshire Bull Terrier' },
       update: {},
       create: {
-        name: 'Toyger',
+        name: 'Staffordshire Bull Terrier',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Van Turco' },
+      where: { name: 'Terrier Escocês' },
       update: {},
       create: {
-        name: 'Van Turco',
+        name: 'Terrier Escocês',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'York Chocolate' },
+      where: { name: 'Yorkshire Terrier' },
       update: {},
       create: {
-        name: 'York Chocolate',
+        name: 'Yorkshire Terrier',
         specieId: dog.id
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Outra raça' },
+      where: { name: 'Outra raça cachorro' },
       update: {},
       create: {
-        name: 'Outra raça',
+        name: 'Outra raça cachorro',
         specieId: dog.id
       }
     })
