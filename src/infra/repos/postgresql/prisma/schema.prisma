@@ -32,6 +32,10 @@ model Pet {
   petName     String   @map("pet_name")
   gender      String
   breedAlias  String   @map("breed_alias")
+  breed       Breed    @relation(fields: [breedId], references: [id])
+  breedId     String   @map("breed_id")
+  size        Size     @relation(fields: [sizeId], references: [id])
+  sizeId      String   @map("size_id")
 
   @@map("pets")
 }
@@ -51,6 +55,7 @@ model Size {
   specie   Specie @relation(fields: [specieId], references: [id])
   specieId String @map("specie_id")
   name     String @unique
+  Pet      Pet[]
 
   @@map("sizes")
 }
@@ -60,6 +65,7 @@ model Breed {
   specie   Specie @relation(fields: [specieId], references: [id])
   specieId String @map("specie_id")
   name     String @unique
+  Pet      Pet[]
 
   @@map("breeds")
 }
