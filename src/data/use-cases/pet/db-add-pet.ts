@@ -1,5 +1,6 @@
 import { NotAcceptableError } from '@/application/errors'
 import { type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
+import { type PetGender } from '@/domain/models/Pet'
 import { type Guardian } from '@/domain/models/guardian'
 import { type Specie } from '@/domain/models/specie'
 import { type AppointSpecie, type AddPet } from '@/domain/use-cases'
@@ -44,7 +45,7 @@ export class DbAddPet implements AddPet {
         specie: pet?.specie as Specie & { id: string },
         specieAlias: pet?.specieAlias,
         petName: pet?.petName as string,
-        gender: pet?.gender as string
+        gender: pet?.gender as PetGender
       }
     }
   }

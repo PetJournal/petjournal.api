@@ -1,4 +1,5 @@
 import './config/module-alias'
+import 'tsconfig-paths/register'
 import app from '@/main/config/app'
 import env from '@/main/config/env'
 

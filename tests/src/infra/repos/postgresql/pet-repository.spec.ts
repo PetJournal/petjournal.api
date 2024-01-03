@@ -1,3 +1,4 @@
+import { PetGender } from '@/domain/models/Pet'
 import { PetRepository } from '@/infra/repos/postgresql'
 import { prisma as db } from '@/infra/repos/postgresql/prisma'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
@@ -18,7 +19,7 @@ describe('PetRepository', () => {
       specieId: 'invalid_specie_id',
       specieAlias: 'invalid_specie_alias',
       petName: 'invalid_pet_name',
-      gender: 'invalid_gender'
+      gender: 'invalid_gender' as PetGender
     }
 
     const specie = await sut.add(data)
@@ -48,7 +49,7 @@ describe('PetRepository', () => {
       specieId: specieFK.id,
       specieAlias: 'any_specie_alias',
       petName: 'any_pet_name',
-      gender: 'M'
+      gender: PetGender.MALE
     }
 
     const specie = await sut.add(data)

@@ -1,4 +1,5 @@
 import { type TokenDecoder } from '@/data/protocols'
+import { PetGender } from '@/domain/models/Pet'
 import {
   type AuthMiddlewareRequest,
   type LoginRequest,
@@ -86,7 +87,7 @@ const makeFakePetRegistryRequest = (): PetRegistryRequest => {
     specieName: 'valid_specie_id',
     specieAlias: 'any_alias',
     petName: 'any_name',
-    gender: 'M'
+    gender: PetGender.MALE
   }
 
   return { body }
