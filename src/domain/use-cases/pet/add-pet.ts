@@ -1,6 +1,7 @@
 import { type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 import { type AppointSpecie } from './appoint-specie'
-import { type PetGender } from '@/domain/models/Pet'
+import { type PetGender } from '@/domain/models/pet'
+import { type AppointBreed } from './appoint-breed'
 
 export interface AddPet {
   add: (petData: AddPet.Params) => Promise<AddPet.Result>
@@ -12,6 +13,8 @@ export namespace AddPet {
     specieName: string
     petName: string
     gender: PetGender
+    breedName: string
+    size: string
   }
 
   export interface Result {
@@ -24,5 +27,6 @@ export namespace AddPet {
     guardianRepository: LoadGuardianByIdRepository
     petRepository: AddPetRepository
     appointSpecie: AppointSpecie
+    appointBreed: AppointBreed
   }
 }

@@ -8,12 +8,12 @@ export interface AppointBreed {
 export namespace AppointBreed {
   export type Params = string
 
-  export type Result = {
+  export interface Result {
     breed: Breed & { id: string }
-    breedAlias: string | undefined
+    breedAlias: string
   }
 
-  export type Dependencies = {
+  export interface Dependencies {
     breedRepository: LoadBreedByNameRepository
   }
 }

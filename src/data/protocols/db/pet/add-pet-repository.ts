@@ -44,6 +44,7 @@ export namespace AddPetRepository {
     petName: string
     gender: string
     breed: BreedResultDb
+    breedAlias: string
     size: SizeResultDb
   } | undefined
 }

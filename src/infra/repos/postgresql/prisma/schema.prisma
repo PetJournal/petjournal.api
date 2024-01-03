@@ -31,7 +31,7 @@ model Pet {
   specieAlias String?  @map("specie_alias")
   petName     String   @map("pet_name")
   gender      String
-  breedAlias  String?   @map("breed_alias")
+  breedAlias  String   @map("breed_alias")
   breed       Breed    @relation(fields: [breedId], references: [id])
   breedId     String   @map("breed_id")
   size        Size     @relation(fields: [sizeId], references: [id])
