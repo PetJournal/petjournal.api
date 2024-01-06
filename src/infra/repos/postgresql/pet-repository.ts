@@ -32,6 +32,7 @@ export class PetRepository implements AddPetRepository {
           petName: true,
           gender: true,
           breed: true,
+          breedAlias: true,
           size: true
         }
       })
