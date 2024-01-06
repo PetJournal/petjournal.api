@@ -5,8 +5,9 @@ export async function sizeSeed (): Promise<void> {
 
   const cat = await prisma.specie.findFirst({ where: { name: 'Gato' } })
   const dog = await prisma.specie.findFirst({ where: { name: 'Cachorro' } })
+  const otherSpecie = await prisma.specie.findFirst({ where: { name: 'Outros' } })
 
-  if (!cat || !dog) {
+  if (!cat || !dog || !otherSpecie) {
     throw new Error('Error on get species')
   }
 
@@ -80,9 +81,19 @@ export async function sizeSeed (): Promise<void> {
     })
   ]
 
+  const otherSpecieSize = await prisma.size.upsert({
+    where: { name: 'Sem porte' },
+    update: {},
+    create: {
+      name: 'Sem porte',
+      specieId: otherSpecie.id
+    }
+  })
+
   const sizes = [
     ...catSizes,
-    ...dogSizes
+    ...dogSizes,
+    otherSpecieSize
   ]
 
   console.log('Sizes created:\n', sizes)

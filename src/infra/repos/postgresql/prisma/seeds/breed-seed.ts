@@ -5,8 +5,9 @@ export async function breedSeed (): Promise<void> {
 
   const cat = await prisma.specie.findFirst({ where: { name: 'Gato' } })
   const dog = await prisma.specie.findFirst({ where: { name: 'Cachorro' } })
+  const otherSpecie = await prisma.specie.findFirst({ where: { name: 'Outros' } })
 
-  if (!cat || !dog) {
+  if (!cat || !dog || !otherSpecie) {
     throw new Error('Error on get species')
   }
 
@@ -644,10 +645,10 @@ export async function breedSeed (): Promise<void> {
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Outra raça gato' },
+      where: { name: 'Outra raça Gato' },
       update: {},
       create: {
-        name: 'Outra raça gato',
+        name: 'Outra raça Gato',
         specieId: cat.id
       }
     })
@@ -1287,18 +1288,28 @@ export async function breedSeed (): Promise<void> {
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Outra raça cachorro' },
+      where: { name: 'Outra raça Cachorro' },
       update: {},
       create: {
-        name: 'Outra raça cachorro',
+        name: 'Outra raça Cachorro',
         specieId: dog.id
       }
     })
   ]
 
+  const otherSpecieBreed = await prisma.breed.upsert({
+    where: { name: 'Sem raça' },
+    update: {},
+    create: {
+      name: 'Sem raça',
+      specieId: otherSpecie.id
+    }
+  })
+
   const breeds = [
     ...catBreeds,
-    ...dogBreeds
+    ...dogBreeds,
+    otherSpecieBreed
   ]
 
   console.log('breeds created:\n', breeds)
