@@ -6,27 +6,23 @@ import { type Specie } from '@/domain/models/specie'
 import { type Breed } from '@/domain/models/breed'
 import { type Size } from '@/domain/models/size'
 import {
-  type AppointSpecie,
   type AddPet,
-  type AppointBreed
+  type AppointPet
 } from '@/domain/use-cases'
 
 export class DbAddPet implements AddPet {
   private readonly guardianRepository: LoadGuardianByIdRepository
   private readonly petRepository: AddPetRepository
-  private readonly appointSpecie: AppointSpecie
-  private readonly appointBreed: AppointBreed
+  private readonly appointPet: AppointPet
 
   constructor ({
     guardianRepository,
     petRepository,
-    appointSpecie,
-    appointBreed
+    appointPet
   }: AddPet.Dependencies) {
     this.guardianRepository = guardianRepository
     this.petRepository = petRepository
-    this.appointSpecie = appointSpecie
-    this.appointBreed = appointBreed
+    this.appointPet = appointPet
   }
 
   async add (petData: AddPet.Params): Promise<AddPet.Result> {
@@ -37,9 +33,18 @@ export class DbAddPet implements AddPet {
         error: new NotAcceptableError('userId')
       }
     }
-    const { specie, specieAlias } = await this.appointSpecie.appoint(petData.specieName)
-    const { breed, breedAlias } = await this.appointBreed.appoint(petData.breedName)
-    const { petName, gender, size } = petData
+    const {
+      specie,
+      specieAlias,
+      breed,
+      breedAlias,
+      size
+    } = await this.appointPet.appoint({
+      specieName: petData.specieName,
+      breedName: petData.breedName,
+      size: petData.size
+    })
+    const { petName, gender } = petData
     const pet = await this.petRepository.add({
       guardianId: guardian.id,
       specieId: specie.id,
@@ -48,7 +53,7 @@ export class DbAddPet implements AddPet {
       gender,
       breedId: breed.id,
       breedAlias,
-      sizeId: size
+      sizeId: size.id
     })
     return {
       isSuccess: true,
