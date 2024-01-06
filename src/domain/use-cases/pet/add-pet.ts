@@ -1,7 +1,6 @@
 import { type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
-import { type AppointSpecie } from './appoint-specie'
 import { type PetGender } from '@/domain/models/pet'
-import { type AppointBreed } from './appoint-breed'
+import { type AppointPet } from './appoint-pet'
 
 export interface AddPet {
   add: (petData: AddPet.Params) => Promise<AddPet.Result>
@@ -26,7 +25,6 @@ export namespace AddPet {
   export interface Dependencies {
     guardianRepository: LoadGuardianByIdRepository
     petRepository: AddPetRepository
-    appointSpecie: AppointSpecie
-    appointBreed: AppointBreed
+    appointPet: AppointPet
   }
 }
