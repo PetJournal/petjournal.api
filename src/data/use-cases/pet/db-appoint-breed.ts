@@ -26,7 +26,7 @@ export class DbAppointBreed implements AppointBreed {
     }
     return {
       breed,
-      breedAlias: undefined
+      breedAlias: ''
     }
   }
 }

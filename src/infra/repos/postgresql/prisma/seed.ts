@@ -1,60 +1,10 @@
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import { prisma } from '.'
+import { specieSeed, sizeSeed, breedSeed } from './seeds'
 
 async function main (): Promise<void> {
-  console.log('Creating species...')
-  const species = [
-    await prisma.specie.upsert({
-      where: { name: 'Cachorro' },
-      update: {},
-      create: {
-        name: 'Cachorro'
-      }
-    }),
-    await prisma.specie.upsert({
-      where: { name: 'Pássaro' },
-      update: {},
-      create: {
-        name: 'Pássaro'
-      }
-    }),
-    await prisma.specie.upsert({
-      where: { name: 'Gato' },
-      update: {},
-      create: {
-        name: 'Gato'
-      }
-    }),
-    await prisma.specie.upsert({
-      where: { name: 'Peixe' },
-      update: {},
-      create: {
-        name: 'Peixe'
-      }
-    }),
-    await prisma.specie.upsert({
-      where: { name: 'Réptil' },
-      update: {},
-      create: {
-        name: 'Réptil'
-      }
-    }),
-    await prisma.specie.upsert({
-      where: { name: 'Roedor' },
-      update: {},
-      create: {
-        name: 'Roedor'
-      }
-    }),
-    await prisma.specie.upsert({
-      where: { name: 'Outros' },
-      update: {},
-      create: {
-        name: 'Outros'
-      }
-    })
-  ]
-  console.log('species created:\n', species)
+  await specieSeed()
+  await sizeSeed()
+  await breedSeed()
 }
 
 main()
