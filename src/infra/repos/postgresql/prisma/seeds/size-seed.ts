@@ -40,7 +40,7 @@ export async function sizeSeed (): Promise<void> {
 
   const dogSizes = [
     await prisma.size.upsert({
-      where: { name: 'Mini (Até 6Kg' },
+      where: { name: 'Mini (Até 6Kg)' },
       update: {},
       create: {
         name: 'Mini (Até 6Kg)',
