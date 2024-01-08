@@ -1,14 +1,17 @@
 import { NotAcceptableError } from '@/application/errors'
 import { type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 import { DbAddPet } from '@/data/use-cases'
-import { PetGender } from '@/domain/models/Pet'
+import { PetGender } from '@/domain/models/pet'
 import { type AppointSpecie, type AddPet } from '@/domain/use-cases'
 import {
+  makeFakeAppointPetUseCase,
   makeFakeAppointSpecieUseCase,
   makeFakeGuardianRepository,
   makeFakePetRepository,
+  mockFakeBreedAdded,
   mockFakeGuardianAdded,
   mockFakePetAdded,
+  mockFakeSizeAdded,
   mockFakeSpecieAdded
 } from '@/tests/utils'
 
@@ -23,11 +26,12 @@ const makeSut = (): SutTypes => {
   const guardianRepositoryStub = makeFakeGuardianRepository()
   const petRepositoryStub = makeFakePetRepository()
   const appointSpecieStub = makeFakeAppointSpecieUseCase()
+  const appointPetStub = makeFakeAppointPetUseCase()
 
   const sut = new DbAddPet({
     guardianRepository: guardianRepositoryStub,
     petRepository: petRepositoryStub,
-    appointSpecie: appointSpecieStub
+    appointPet: appointPetStub
   })
 
   return {
@@ -43,7 +47,9 @@ describe('DbAddPet Use Case', () => {
     guardianId: 'any_guardian_id',
     specieName: 'any_specie_name',
     gender: PetGender.MALE,
-    petName: 'any_pet_name'
+    petName: 'any_pet_name',
+    breedName: 'any_breed_name',
+    size: 'any_size'
   }
 
   describe('GuardianRepository', () => {
@@ -78,25 +84,25 @@ describe('DbAddPet Use Case', () => {
     })
   })
 
-  describe('AppointSpecie', () => {
-    it('Should call appoint method with correct values', async () => {
-      const { sut, appointSpecieStub } = makeSut()
-      const appointSpy = jest.spyOn(appointSpecieStub, 'appoint')
+  // describe('AppointSpecie', () => {
+  //   it('Should call appoint method with correct values', async () => {
+  //     const { sut, appointSpecieStub } = makeSut()
+  //     const appointSpy = jest.spyOn(appointSpecieStub, 'appoint')
 
-      await sut.add(params)
+  //     await sut.add(params)
 
-      expect(appointSpy).toHaveBeenCalledWith(params.specieName)
-    })
+  //     expect(appointSpy).toHaveBeenCalledWith(params.specieName)
+  //   })
 
-    it('Should throws if appoint method throws', async () => {
-      const { sut, appointSpecieStub } = makeSut()
-      jest.spyOn(appointSpecieStub, 'appoint').mockRejectedValue(new Error())
+  //   it('Should throws if appoint method throws', async () => {
+  //     const { sut, appointSpecieStub } = makeSut()
+  //     jest.spyOn(appointSpecieStub, 'appoint').mockRejectedValue(new Error())
 
-      const promise = sut.add(params)
+  //     const promise = sut.add(params)
 
-      await expect(promise).rejects.toThrow()
-    })
-  })
+  //     await expect(promise).rejects.toThrow()
+  //   })
+  // })
 
   describe('PetRepository', () => {
     it('Should call add method with correct values', async () => {
@@ -108,9 +114,12 @@ describe('DbAddPet Use Case', () => {
       expect(addSpy).toHaveBeenCalledWith({
         guardianId: mockFakeGuardianAdded().id,
         specieId: mockFakeSpecieAdded().id,
-        specieAlias: params.specieName,
+        specieAlias: 'any_specie_alias',
         petName: params.petName,
-        gender: params.gender
+        gender: params.gender,
+        breedId: mockFakeBreedAdded().id,
+        breedAlias: 'any_breed_alias',
+        sizeId: mockFakeSizeAdded().id
       })
     })
 
