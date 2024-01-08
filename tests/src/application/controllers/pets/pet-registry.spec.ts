@@ -57,7 +57,9 @@ describe('PetRegistry Controller', () => {
         guardianId: httpRequest.userId,
         specieName: httpRequest.body.specieName,
         petName: httpRequest.body.petName,
-        gender: httpRequest.body.gender
+        gender: httpRequest.body.gender,
+        breedName: httpRequest.body.breedName,
+        size: httpRequest.body.size
       })
     })
   })
