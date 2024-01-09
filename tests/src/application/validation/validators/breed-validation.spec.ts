@@ -51,4 +51,10 @@ describe('BreedValidation', () => {
     const result = sut.validate(params.valid)
     expect(result).toStrictEqual(new InvalidParamError(fakeBreedName))
   })
+
+  it('should return void if breedName is a valid breed', () => {
+    const { sut } = makeSut()
+    const result = sut.validate(params.valid)
+    expect(result).toBeFalsy()
+  })
 })
