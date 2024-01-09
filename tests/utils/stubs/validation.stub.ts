@@ -1,5 +1,6 @@
 import { type Validation } from '@/application/protocols'
 import { type NameValidator, type EmailValidator, type PasswordValidator, type PhoneValidator } from '@/application/validation'
+import { type BreedValidator } from '@/application/validation/protocols/breed-validator'
 
 interface Options {
   error?: Error
@@ -37,6 +38,15 @@ const makeFakeNameValidator = (): NameValidator => {
   return new NameValidatorStub()
 }
 
+const makeFakeBreedValidator = (): BreedValidator => {
+  class BreedValidatorStub implements BreedValidator {
+    isValid (breedName: string): boolean {
+      return true
+    }
+  }
+  return new BreedValidatorStub()
+}
+
 const makeFakePasswordValidator = (): PasswordValidator => {
   class PasswordValidatorStub implements PasswordValidator {
     isValid (password: string): boolean {
@@ -60,5 +70,6 @@ export {
   makeFakeEmailValidator,
   makeFakeNameValidator,
   makeFakePasswordValidator,
-  makeFakePhoneValidator
+  makeFakePhoneValidator,
+  makeFakeBreedValidator
 }
