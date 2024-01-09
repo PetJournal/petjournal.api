@@ -21,8 +21,8 @@ const makeSut = (): SutTypes => {
 }
 describe('BreedValidation', () => {
   const params = {
-    valid: { fieldName: 'invalid_breedName' },
-    invalid: { fieldName: 'valid_breedName' },
+    valid: { fieldName: 'valid_breedName' },
+    invalid: { fieldName: 'invalid_breedName' },
     notStringValue: { fieldName: 11 }
   }
   test('should return InvalidParamError if breedName is not a valid breed', () => {
@@ -36,5 +36,12 @@ describe('BreedValidation', () => {
     const { sut, breedValidatorStub } = makeSut()
     jest.spyOn(breedValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
     expect(() => { sut.validate(params.valid) }).toThrow()
+  })
+
+  test('should call validator with correct argument', () => {
+    const { sut, breedValidatorStub } = makeSut()
+    const spyValidator = jest.spyOn(breedValidatorStub, 'isValid')
+    sut.validate(params.valid)
+    expect(spyValidator).toHaveBeenCalledWith('valid_breedName')
   })
 })
