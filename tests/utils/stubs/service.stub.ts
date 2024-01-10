@@ -18,7 +18,8 @@ import {
   type AddPetRepository,
   type LoadSpecieByIdRepository,
   type LoadSpecieByNameRepository,
-  type LoadBreedByNameRepository
+  type LoadBreedByNameRepository,
+  type LoadSizeByNameRepository
 } from '@/data/protocols'
 
 const mockHashService = {
@@ -117,6 +118,18 @@ const makeFakeBreedRepository = (): LoadBreedByNameRepository => {
   return new LoadBreedByNameRepositoryStub()
 }
 
+const makeFakeSizeRepository = (): LoadSizeByNameRepository => {
+  class LoadSizeByNameRepositoryStub implements LoadSizeByNameRepository {
+    async loadByName (size: LoadSizeByNameRepository.Params): Promise<LoadSizeByNameRepository.Result> {
+      return {
+        id: 'any_id',
+        name: 'any_name'
+      }
+    }
+  }
+  return new LoadSizeByNameRepositoryStub()
+}
+
 const makeFakeHashService = (): HashGenerator & HashComparer => {
   class HashServiceStub implements HashGenerator, HashComparer {
     async compare (input: HashComparer.Params): Promise<boolean> {
@@ -161,5 +174,6 @@ export {
   makeFakeBreedRepository,
   makeFakeHashService,
   makeFakeEmailService,
-  makeFakeTokenService
+  makeFakeTokenService,
+  makeFakeSizeRepository
 }
