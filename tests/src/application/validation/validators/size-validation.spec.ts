@@ -51,4 +51,10 @@ describe('SizeValidation', () => {
     const result = sut.validate(params.notStringValue)
     expect(result).toStrictEqual(new InvalidParamError(fakeSize))
   })
+
+  test('should return void if size is a valid size', () => {
+    const { sut } = makeSut()
+    const result = sut.validate(params.valid)
+    expect(result).toBeFalsy()
+  })
 })
