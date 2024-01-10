@@ -22,7 +22,8 @@ const makeSut = (): SutTypes => {
 describe('SizeValidation', () => {
   const params = {
     invalid: { size: 'invalid_size' },
-    valid: { size: 'valid_size' }
+    valid: { size: 'valid_size' },
+    notStringValue: 11
   }
   test('should resturn InvalidParamError if size is not a valid size', () => {
     const { sut, sizeValidatorStub, fakeSize } = makeSut()
@@ -42,5 +43,12 @@ describe('SizeValidation', () => {
     const spyValidator = jest.spyOn(sizeValidatorStub, 'isValid')
     sut.validate(params.valid)
     expect(spyValidator).toHaveBeenCalledWith('valid_size')
+  })
+
+  test('should return InvalidParamError if size is not a string', () => {
+    const { sut, sizeValidatorStub, fakeSize } = makeSut()
+    jest.spyOn(sizeValidatorStub, 'isValid').mockReturnValueOnce(false)
+    const result = sut.validate(params.notStringValue)
+    expect(result).toStrictEqual(new InvalidParamError(fakeSize))
   })
 })
