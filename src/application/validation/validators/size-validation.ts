@@ -12,6 +12,9 @@ export class SizeValidation implements Validation {
   }
 
   validate (input: any): void | Error {
+    if (typeof input[this.size] !== 'string') {
+      return new InvalidParamError(this.size)
+    }
     const isValid = this.validator.isValid(input[this.size])
     if (!isValid) {
       return new InvalidParamError(this.size)
