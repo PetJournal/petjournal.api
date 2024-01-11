@@ -22,7 +22,7 @@ export class DbAppointPet implements AppointPet {
   async appoint (params: AppointPet.Params): Promise<AppointPet.Result> {
     const specieResult = await this.getSpecie(params.specieName)
     const breedResult = await this.getBreed(params.breedName, specieResult.specie.name)
-    const sizeResult = await this.getSize(params.size)
+    const sizeResult = await this.getSize(params.size, specieResult.specie.name)
     return {
       specie: specieResult.specie,
       specieAlias: specieResult.specieAlias,
@@ -96,16 +96,22 @@ export class DbAppointPet implements AppointPet {
     return false
   }
 
-  private async getSize (sizeName: string): Promise<SizeResult> {
-    const size = await this.sizeRepository.loadByName(sizeName)
-    if (!size) {
+  private async getSize (sizeName: string, specieName: string): Promise<SizeResult> {
+    if (this.isCatOrDog(specieName)) {
+      const size = await this.sizeRepository.loadByName(sizeName)
+      return {
+        size: size as Size & { id: string }
+      }
+    }
+    if (specieName === 'Outros') {
       const otherSize = await this.sizeRepository.loadByName('Sem porte')
       return {
         size: otherSize as Size & { id: string }
       }
     }
+    const withoutSize = await this.sizeRepository.loadByName(`Sem porte ${specieName}`)
     return {
-      size
+      size: withoutSize as Size & { id: string }
     }
   }
 }
