@@ -128,5 +128,33 @@ describe('DbAppointPet Use Case', () => {
         size: anySize
       })
     })
+
+    test('should return breed Sem raça when specieName is not Outros, Gato or Cachorro', async () => {
+      const { sut, specieRepositoryStub, breedRepositoryStub } = makeSut()
+      const specieWithoutBreed = {
+        id: 'any_id',
+        name: 'Pássaro'
+      }
+      const withoutBreed = {
+        id: 'any_id',
+        name: 'Sem raça Pássaro'
+      }
+      const anySize = {
+        id: 'any_id',
+        name: 'any_name'
+      }
+      jest.spyOn(specieRepositoryStub, 'loadByName')
+        .mockResolvedValueOnce(specieWithoutBreed)
+      jest.spyOn(breedRepositoryStub, 'loadByName')
+        .mockResolvedValueOnce(withoutBreed)
+      const result = await sut.appoint(params)
+      expect(result).toEqual({
+        specie: specieWithoutBreed,
+        specieAlias: undefined,
+        breed: withoutBreed,
+        breedAlias: '',
+        size: anySize
+      })
+    })
   })
 })
