@@ -58,5 +58,31 @@ describe('DbAppointPet Use Case', () => {
         size: anySize
       })
     })
+
+    test('should return specie and specieAlias equal Outros when specieName is equal Outros', async () => {
+      const { sut, specieRepositoryStub } = makeSut()
+      const otherSpecie = {
+        id: 'any_id',
+        name: 'Outros'
+      }
+      const anyBreed = {
+        id: 'any_id',
+        name: 'any_name'
+      }
+      const anySize = {
+        id: 'any_id',
+        name: 'any_name'
+      }
+      jest.spyOn(specieRepositoryStub, 'loadByName')
+        .mockResolvedValueOnce(otherSpecie)
+      const result = await sut.appoint({ ...params, specieName: 'Outros' })
+      expect(result).toEqual({
+        specie: otherSpecie,
+        specieAlias: 'Outros',
+        breed: anyBreed,
+        breedAlias: '',
+        size: anySize
+      })
+    })
   })
 })
