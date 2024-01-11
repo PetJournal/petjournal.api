@@ -90,5 +90,12 @@ describe('DbAppointPet Use Case', () => {
       await sut.appoint(params)
       expect(spySpecieRepository).toHaveBeenCalledWith(params.specieName)
     })
+
+    test('should throw when loadByName throws', async () => {
+      const { sut, specieRepositoryStub } = makeSut()
+      jest.spyOn(specieRepositoryStub, 'loadByName').mockRejectedValueOnce(new Error())
+      const promise = sut.appoint(params)
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
