@@ -84,5 +84,11 @@ describe('DbAppointPet Use Case', () => {
         size: anySize
       })
     })
+    test('should call loadByName with correct param', async () => {
+      const { sut, specieRepositoryStub } = makeSut()
+      const spySpecieRepository = jest.spyOn(specieRepositoryStub, 'loadByName')
+      await sut.appoint(params)
+      expect(spySpecieRepository).toHaveBeenCalledWith(params.specieName)
+    })
   })
 })
