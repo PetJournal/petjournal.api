@@ -329,4 +329,28 @@ describe('DbAppointPet Use Case', () => {
       })
     })
   })
+
+  test('should return an AppointPet when success', async () => {
+    const { sut } = makeSut()
+    const specieResult = {
+      id: 'any_id',
+      name: 'any_name'
+    }
+    const sizeResult = {
+      id: 'any_id',
+      name: 'any_name'
+    }
+    const breedResult = {
+      id: 'any_id',
+      name: 'any_name'
+    }
+    const result = await sut.appoint(params)
+    expect(result).toEqual({
+      specie: specieResult,
+      specieAlias: undefined,
+      breed: breedResult,
+      breedAlias: '',
+      size: sizeResult
+    })
+  })
 })
