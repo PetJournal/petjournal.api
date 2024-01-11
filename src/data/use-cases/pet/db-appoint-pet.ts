@@ -75,9 +75,16 @@ export class DbAppointPet implements AppointPet {
         breedAlias: ''
       }
     }
-    const otherBreed = await this.breedRepository.loadByName('Sem raça')
+    if (specieName === 'Outros') {
+      const otherBreed = await this.breedRepository.loadByName('Sem raça')
+      return {
+        breed: otherBreed as Breed & { id: string },
+        breedAlias: ''
+      }
+    }
+    const withoutBreed = await this.breedRepository.loadByName(`Sem raça ${specieName}`)
     return {
-      breed: otherBreed as Breed & { id: string },
+      breed: withoutBreed as Breed & { id: string },
       breedAlias: ''
     }
   }
