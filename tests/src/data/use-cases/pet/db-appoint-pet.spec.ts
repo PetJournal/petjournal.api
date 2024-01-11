@@ -271,5 +271,34 @@ describe('DbAppointPet Use Case', () => {
         size
       })
     })
+
+    test('should return size Sem porte when specie is not cat or dog and specieName is Outros', async () => {
+      const { sut, specieRepositoryStub, sizeRepositoryStub } = makeSut()
+      const otherSpecie = {
+        id: 'any_id',
+        name: 'Outros'
+      }
+      const size = {
+        id: 'any_id',
+        name: 'Sem porte'
+      }
+      const breed = {
+        id: 'any_id',
+        name: 'any_name'
+      }
+      jest.spyOn(specieRepositoryStub, 'loadByName')
+        .mockResolvedValueOnce(undefined)
+        .mockResolvedValueOnce(otherSpecie)
+      jest.spyOn(sizeRepositoryStub, 'loadByName')
+        .mockResolvedValueOnce(size)
+      const result = await sut.appoint(params)
+      expect(result).toEqual({
+        specie: otherSpecie,
+        specieAlias: params.specieName,
+        breed,
+        breedAlias: '',
+        size
+      })
+    })
   })
 })
