@@ -156,5 +156,34 @@ describe('DbAppointPet Use Case', () => {
         size: anySize
       })
     })
+
+    test('should return breed Outra raça when specie is cat or dog and breedName is any breed', async () => {
+      const { sut, specieRepositoryStub, breedRepositoryStub } = makeSut()
+      const specieWithBreed = {
+        id: 'any_id',
+        name: 'Gato'
+      }
+      const otherBreed = {
+        id: 'any_id',
+        name: 'péduro'
+      }
+      const anySize = {
+        id: 'any_id',
+        name: 'any_name'
+      }
+      jest.spyOn(specieRepositoryStub, 'loadByName')
+        .mockResolvedValueOnce(specieWithBreed)
+      jest.spyOn(breedRepositoryStub, 'loadByName')
+        .mockResolvedValueOnce(undefined)
+        .mockResolvedValueOnce(otherBreed)
+      const result = await sut.appoint(params)
+      expect(result).toEqual({
+        specie: specieWithBreed,
+        specieAlias: undefined,
+        breed: otherBreed,
+        breedAlias: params.breedName,
+        size: anySize
+      })
+    })
   })
 })
