@@ -84,26 +84,6 @@ describe('DbAddPet Use Case', () => {
     })
   })
 
-  // describe('AppointSpecie', () => {
-  //   it('Should call appoint method with correct values', async () => {
-  //     const { sut, appointSpecieStub } = makeSut()
-  //     const appointSpy = jest.spyOn(appointSpecieStub, 'appoint')
-
-  //     await sut.add(params)
-
-  //     expect(appointSpy).toHaveBeenCalledWith(params.specieName)
-  //   })
-
-  //   it('Should throws if appoint method throws', async () => {
-  //     const { sut, appointSpecieStub } = makeSut()
-  //     jest.spyOn(appointSpecieStub, 'appoint').mockRejectedValue(new Error())
-
-  //     const promise = sut.add(params)
-
-  //     await expect(promise).rejects.toThrow()
-  //   })
-  // })
-
   describe('PetRepository', () => {
     it('Should call add method with correct values', async () => {
       const { sut, petRepositoryStub } = makeSut()
