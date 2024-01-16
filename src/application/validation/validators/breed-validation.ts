@@ -1,6 +1,6 @@
 import { type Validation } from '@/application/protocols'
 import { InvalidParamError } from '@/application/errors'
-import { type BreedValidator } from '../protocols/breed-validator'
+import { type BreedValidator } from '@/application/validation'
 
 export class BreedValidation implements Validation {
   private readonly breedName: string
