@@ -5,5 +5,5 @@ export interface LoadCatBreedsRepository {
 }
 
 export namespace LoadCatBreedsRepository {
-  export type Result = Breed[]
+  export type Result = Breed[] | undefined
 }
