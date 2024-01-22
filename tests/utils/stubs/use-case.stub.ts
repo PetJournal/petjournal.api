@@ -7,10 +7,11 @@ import {
   type ChangePassword,
   type AppointSpecie,
   type LoadGuardianName,
-  type AddPet
+  type AddPet,
+  type AppointPet
 } from '@/domain/use-cases'
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
-import { mockFakePetAdded, mockFakeSpecieAdded } from '../mocks'
+import { mockFakeAppointPet, mockFakePetAdded, mockFakeSpecieAdded } from '../mocks'
 
 const mockGuardianUseCase = {
   id: 'any_id',
@@ -110,6 +111,16 @@ const makeFakeAppointSpecieUseCase = (): AppointSpecie => {
   return new AppointOtherSpecieStub()
 }
 
+const makeFakeAppointPetUseCase = (): AppointPet => {
+  class AppointPetStub implements AppointPet {
+    async appoint (params: AppointPet.Params): Promise<AppointPet.Result> {
+      return mockFakeAppointPet()
+    }
+  }
+
+  return new AppointPetStub()
+}
+
 const makeLoadGuardianNameUseCase = (): LoadGuardianName => {
   class LoadGuardianNameStub implements LoadGuardianName {
     async load (userId: string): Promise<LoadGuardianName.Result> {
@@ -131,5 +142,6 @@ export {
   makeFakeCreateAccessTokenUseCase,
   makeFakeValidateVerificationTokenUseCase,
   makeFakeAppointSpecieUseCase,
-  makeLoadGuardianNameUseCase
+  makeLoadGuardianNameUseCase,
+  makeFakeAppointPetUseCase
 }

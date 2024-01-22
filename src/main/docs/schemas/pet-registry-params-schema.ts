@@ -9,7 +9,13 @@ export const petRegistryParamsSchema = {
     },
     gender: {
       type: 'string'
+    },
+    breedName: {
+      type: 'string'
+    },
+    size: {
+      type: 'string'
     }
   },
-  required: ['specieName', 'petName', 'gender']
+  required: ['specieName', 'petName', 'gender', 'breedName', 'size']
 }

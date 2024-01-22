@@ -48,6 +48,8 @@ interface PetRegistryRequest {
     specieName: string
     petName: string
     gender: string
+    breedName: string
+    size: string
   }
 }
 

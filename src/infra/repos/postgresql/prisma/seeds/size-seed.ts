@@ -5,8 +5,13 @@ export async function sizeSeed (): Promise<void> {
 
   const cat = await prisma.specie.findFirst({ where: { name: 'Gato' } })
   const dog = await prisma.specie.findFirst({ where: { name: 'Cachorro' } })
+  const bird = await prisma.specie.findFirst({ where: { name: 'Pássaro' } })
+  const fish = await prisma.specie.findFirst({ where: { name: 'Peixe' } })
+  const reptile = await prisma.specie.findFirst({ where: { name: 'Réptil' } })
+  const rodent = await prisma.specie.findFirst({ where: { name: 'Roedor' } })
+  const otherSpecie = await prisma.specie.findFirst({ where: { name: 'Outros' } })
 
-  if (!cat || !dog) {
+  if (!cat || !dog || !otherSpecie || !bird || !fish || !reptile || !rodent) {
     throw new Error('Error on get species')
   }
 
@@ -39,7 +44,7 @@ export async function sizeSeed (): Promise<void> {
 
   const dogSizes = [
     await prisma.size.upsert({
-      where: { name: 'Mini (Até 6Kg' },
+      where: { name: 'Mini (Até 6Kg)' },
       update: {},
       create: {
         name: 'Mini (Até 6Kg)',
@@ -80,9 +85,59 @@ export async function sizeSeed (): Promise<void> {
     })
   ]
 
+  const birdSize = await prisma.size.upsert({
+    where: { name: 'Sem porte Pássaro' },
+    update: {},
+    create: {
+      name: 'Sem porte Pássaro',
+      specieId: bird.id
+    }
+  })
+
+  const fishSize = await prisma.size.upsert({
+    where: { name: 'Sem porte Peixe' },
+    update: {},
+    create: {
+      name: 'Sem porte Peixe',
+      specieId: fish.id
+    }
+  })
+
+  const reptileSize = await prisma.size.upsert({
+    where: { name: 'Sem porte Réptil' },
+    update: {},
+    create: {
+      name: 'Sem porte Réptil',
+      specieId: reptile.id
+    }
+  })
+
+  const rodentSize = await prisma.size.upsert({
+    where: { name: 'Sem porte Roedor' },
+    update: {},
+    create: {
+      name: 'Sem porte Roedor',
+      specieId: rodent.id
+    }
+  })
+
+  const otherSpecieSize = await prisma.size.upsert({
+    where: { name: 'Sem porte' },
+    update: {},
+    create: {
+      name: 'Sem porte',
+      specieId: otherSpecie.id
+    }
+  })
+
   const sizes = [
     ...catSizes,
-    ...dogSizes
+    ...dogSizes,
+    birdSize,
+    fishSize,
+    reptileSize,
+    rodentSize,
+    otherSpecieSize
   ]
 
   console.log('Sizes created:\n', sizes)

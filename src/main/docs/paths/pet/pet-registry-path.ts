@@ -16,7 +16,9 @@ export const petRegistryPath = {
           example: {
             specieName: 'Gato',
             petName: 'Garfield',
-            gender: 'M'
+            gender: 'M',
+            breedName: 'Doméstico de Pelo Curto',
+            size: 'Pequeno (Até 10Kg)'
           }
         }
       }
