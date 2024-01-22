@@ -1,5 +1,5 @@
 import { type Validation } from '@/application/protocols'
-import { type SizeValidator } from '../protocols'
+import { type SizeValidator } from '@/application/validation'
 import { InvalidParamError } from '@/application/errors'
 
 export class SizeValidation implements Validation {
