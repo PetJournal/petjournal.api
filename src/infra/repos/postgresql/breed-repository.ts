@@ -1,7 +1,7 @@
 import { prisma as db } from './prisma'
-import { type LoadCatBreedsRepository, type LoadBreedByNameRepository } from '@/data/protocols'
+import { type LoadCatBreedsRepository, type LoadBreedByNameRepository, type LoadDogBreedsRepository } from '@/data/protocols'
 
-export class BreedRepository implements LoadBreedByNameRepository, LoadCatBreedsRepository {
+export class BreedRepository implements LoadBreedByNameRepository, LoadCatBreedsRepository, LoadDogBreedsRepository {
   async loadByName (name: LoadBreedByNameRepository.Params): Promise<LoadBreedByNameRepository.Result> {
     const breed = await db.breed.findUnique({ where: { name } })
     if (breed) {
@@ -13,6 +13,13 @@ export class BreedRepository implements LoadBreedByNameRepository, LoadCatBreeds
     const catBreeds = await db.breed.findMany({ where: { specie: { name: 'Gato' } } })
     if (catBreeds) {
       return catBreeds
+    }
+  }
+
+  async loadDogBreeds (): Promise<LoadDogBreedsRepository.Result> {
+    const dogBreeds = await db.breed.findMany({ where: { specie: { name: 'Cachorro' } } })
+    if (dogBreeds) {
+      return dogBreeds
     }
   }
 }

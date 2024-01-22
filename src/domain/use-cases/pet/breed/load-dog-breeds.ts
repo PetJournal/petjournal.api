@@ -6,7 +6,7 @@ export interface LoadDogBreeds {
 }
 
 export namespace LoadDogBreeds {
-  export type Result = Breed[]
+  export type Result = Breed[] | undefined
   export type Dependencies = {
     breedRepository: LoadDogBreedsRepository
   }
