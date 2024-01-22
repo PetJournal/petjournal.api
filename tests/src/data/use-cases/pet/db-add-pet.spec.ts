@@ -1,6 +1,7 @@
 import { NotAcceptableError } from '@/application/errors'
 import { type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 import { DbAddPet } from '@/data/use-cases'
+import { PetGender } from '@/domain/models/Pet'
 import { type AppointSpecie, type AddPet } from '@/domain/use-cases'
 import {
   makeFakeAppointSpecieUseCase,
@@ -41,7 +42,7 @@ describe('DbAddPet Use Case', () => {
   const params: AddPet.Params = {
     guardianId: 'any_guardian_id',
     specieName: 'any_specie_name',
-    gender: 'M',
+    gender: PetGender.MALE,
     petName: 'any_pet_name'
   }
 
