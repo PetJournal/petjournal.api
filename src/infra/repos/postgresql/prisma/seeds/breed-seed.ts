@@ -5,8 +5,13 @@ export async function breedSeed (): Promise<void> {
 
   const cat = await prisma.specie.findFirst({ where: { name: 'Gato' } })
   const dog = await prisma.specie.findFirst({ where: { name: 'Cachorro' } })
+  const bird = await prisma.specie.findFirst({ where: { name: 'Pássaro' } })
+  const fish = await prisma.specie.findFirst({ where: { name: 'Peixe' } })
+  const reptile = await prisma.specie.findFirst({ where: { name: 'Réptil' } })
+  const rodent = await prisma.specie.findFirst({ where: { name: 'Roedor' } })
+  const otherSpecie = await prisma.specie.findFirst({ where: { name: 'Outros' } })
 
-  if (!cat || !dog) {
+  if (!cat || !dog || !otherSpecie || !bird || !fish || !reptile || !rodent) {
     throw new Error('Error on get species')
   }
 
@@ -644,10 +649,10 @@ export async function breedSeed (): Promise<void> {
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Outra raça gato' },
+      where: { name: 'Outra raça Gato' },
       update: {},
       create: {
-        name: 'Outra raça gato',
+        name: 'Outra raça Gato',
         specieId: cat.id
       }
     })
@@ -1287,18 +1292,68 @@ export async function breedSeed (): Promise<void> {
       }
     }),
     await prisma.breed.upsert({
-      where: { name: 'Outra raça cachorro' },
+      where: { name: 'Outra raça Cachorro' },
       update: {},
       create: {
-        name: 'Outra raça cachorro',
+        name: 'Outra raça Cachorro',
         specieId: dog.id
       }
     })
   ]
 
+  const birdBreed = await prisma.breed.upsert({
+    where: { name: 'Sem raça Pássaro' },
+    update: {},
+    create: {
+      name: 'Sem raça Pássaro',
+      specieId: bird.id
+    }
+  })
+
+  const fishBreed = await prisma.breed.upsert({
+    where: { name: 'Sem raça Peixe' },
+    update: {},
+    create: {
+      name: 'Sem raça Peixe',
+      specieId: fish.id
+    }
+  })
+
+  const reptileBreed = await prisma.breed.upsert({
+    where: { name: 'Sem raça Réptil' },
+    update: {},
+    create: {
+      name: 'Sem raça Réptil',
+      specieId: reptile.id
+    }
+  })
+
+  const rodentBreed = await prisma.breed.upsert({
+    where: { name: 'Sem raça Roedor' },
+    update: {},
+    create: {
+      name: 'Sem raça Roedor',
+      specieId: rodent.id
+    }
+  })
+
+  const otherSpecieBreed = await prisma.breed.upsert({
+    where: { name: 'Sem raça' },
+    update: {},
+    create: {
+      name: 'Sem raça',
+      specieId: otherSpecie.id
+    }
+  })
+
   const breeds = [
     ...catBreeds,
-    ...dogBreeds
+    ...dogBreeds,
+    birdBreed,
+    fishBreed,
+    reptileBreed,
+    rodentBreed,
+    otherSpecieBreed
   ]
 
   console.log('breeds created:\n', breeds)

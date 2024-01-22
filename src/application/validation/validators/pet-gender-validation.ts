@@ -1,5 +1,5 @@
 import { InvalidParamError } from '@/application/errors'
-import { PetGender } from '@/domain/models/Pet'
+import { PetGender } from '@/domain/models/pet'
 
 export class PetGenderValidation {
   constructor (

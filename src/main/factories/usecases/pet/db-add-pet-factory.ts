@@ -1,16 +1,16 @@
 import { DbAddPet } from '@/data/use-cases'
 import { type AddPet } from '@/domain/use-cases'
 import { GuardianAccountRepository, PetRepository } from '@/infra/repos/postgresql'
-import { makeDbAppointSpecie } from './db-appoint-specie-factory'
+import { makeDbAppointPet } from './db-appoint-pet-factory'
 
 export const makeDbAddPet = (): AddPet => {
   const guardianRepository = new GuardianAccountRepository()
   const petRepository = new PetRepository()
-  const appointSpecie = makeDbAppointSpecie()
+  const appointPet = makeDbAppointPet()
   const addPet = new DbAddPet({
     guardianRepository,
     petRepository,
-    appointSpecie
+    appointPet
   })
   return addPet
 }

@@ -20,6 +20,8 @@ import {
   type AddPetRepository,
   type LoadSpecieByIdRepository,
   type LoadSpecieByNameRepository,
+  type LoadBreedByNameRepository,
+  type LoadSizeByNameRepository,
   type LoadCatBreedsRepository,
   type LoadDogBreedsRepository
 } from '@/data/protocols'
@@ -108,6 +110,30 @@ LoadSpecieByNameRepository => {
   return new SpecieRepositoryStub()
 }
 
+const makeFakeBreedRepository = (): LoadBreedByNameRepository => {
+  class LoadBreedByNameRepositoryStub implements LoadBreedByNameRepository {
+    async loadByName (breedName: LoadBreedByNameRepository.Params): Promise<LoadBreedByNameRepository.Result> {
+      return {
+        id: 'any_id',
+        name: 'any_name'
+      }
+    }
+  }
+  return new LoadBreedByNameRepositoryStub()
+}
+
+const makeFakeSizeRepository = (): LoadSizeByNameRepository => {
+  class LoadSizeByNameRepositoryStub implements LoadSizeByNameRepository {
+    async loadByName (size: LoadSizeByNameRepository.Params): Promise<LoadSizeByNameRepository.Result> {
+      return {
+        id: 'any_id',
+        name: 'any_name'
+      }
+    }
+  }
+  return new LoadSizeByNameRepositoryStub()
+}
+
 const makeFakeLoadCatBreedRepository = (): LoadCatBreedsRepository => {
   class LoadCatBreedRepositoryStub implements LoadCatBreedsRepository {
     async loadCatBreeds (): Promise<LoadCatBreedsRepository.Result> {
@@ -167,9 +193,11 @@ export {
   makeFakeGuardianRepository,
   makeFakePetRepository,
   makeFakeSpecieRepository,
+  makeFakeBreedRepository,
   makeFakeLoadCatBreedRepository,
   makeFakeLoadDogBreedRepository,
   makeFakeHashService,
   makeFakeEmailService,
-  makeFakeTokenService
+  makeFakeTokenService,
+  makeFakeSizeRepository
 }

@@ -18,6 +18,7 @@ export class AuthMiddleware implements Middleware {
   private readonly tokenService: TokenDecoder
   private readonly hashService: HashComparer
   private readonly guardianRepository: LoadGuardianByIdRepository
+  private static readonly BEARER_PREFIX = 'Bearer '
 
   constructor ({ tokenService, hashService, guardianRepository }: AuthMiddleware.Dependencies) {
     this.tokenService = tokenService
@@ -60,7 +61,6 @@ export class AuthMiddleware implements Middleware {
 }
 
 export namespace AuthMiddleware {
-  export const BEARER_PREFIX = 'Bearer '
   export interface Dependencies {
     tokenService: TokenDecoder
     hashService: HashComparer

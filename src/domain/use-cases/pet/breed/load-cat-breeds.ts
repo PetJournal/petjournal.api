@@ -6,7 +6,7 @@ export interface LoadCatBreeds {
 }
 
 export namespace LoadCatBreeds {
-  export type Result = Breed[]
+  export type Result = Breed[] | undefined
   export type Dependencies = {
     breedRepository: LoadCatBreedsRepository
   }

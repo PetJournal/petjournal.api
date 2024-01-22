@@ -11,7 +11,10 @@ export class PetRepository implements AddPetRepository {
           specieId: params.specieId,
           specieAlias: params.specieAlias,
           petName: params.petName,
-          gender: params.gender
+          gender: params.gender,
+          breedId: params.breedId,
+          breedAlias: params.breedAlias,
+          sizeId: params.sizeId
         },
         select: {
           id: true,
@@ -27,7 +30,10 @@ export class PetRepository implements AddPetRepository {
           },
           specie: true,
           petName: true,
-          gender: true
+          gender: true,
+          breed: true,
+          breedAlias: true,
+          size: true
         }
       })
       return pet

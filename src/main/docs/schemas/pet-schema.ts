@@ -10,6 +10,13 @@ export const petSchema = {
     },
     specieAlias: { type: 'string', nullable: true },
     petName: { type: 'string' },
-    gender: { type: 'string' }
+    gender: { type: 'string' },
+    breed: {
+      $ref: '#/schemas/breed'
+    },
+    breedAlias: { type: 'string' },
+    size: {
+      $ref: '#/schemas/size'
+    }
   }
 }
