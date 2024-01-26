@@ -30,4 +30,29 @@ describe('LoadCatBreeds route', () => {
       .set('Authorization', `Bearer ${body.accessToken as string}`)
       .expect(200)
   })
+
+  it('Should return 400 if no access token is provided', async () => {
+    await request(app)
+      .post('/api/signup')
+      .send({
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'johndoe@email.com',
+        password: 'Teste@123',
+        passwordConfirmation: 'Teste@123',
+        phone: '11987654321',
+        isPrivacyPolicyAccepted: true
+      })
+    await request(app)
+      .post('/api/login')
+      .send({
+        email: 'johndoe@email.com',
+        password: 'Teste@123'
+      })
+
+    await request(app)
+      .get('/api/breeds/cat')
+      .set('Authorization', '')
+      .expect(400)
+  })
 })
