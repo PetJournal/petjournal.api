@@ -58,7 +58,7 @@ describe('BreedRepository', () => {
       expect(result).toEqual([
         {
           id: expect.any(String),
-          name: 'any_name_1',
+          name: 'any_name_3',
           specieId: specie.id
         },
         {
@@ -68,7 +68,48 @@ describe('BreedRepository', () => {
         },
         {
           id: expect.any(String),
+          name: 'any_name_1',
+          specieId: specie.id
+        }
+      ])
+    })
+  })
+  describe('LoadDogBreeds', () => {
+    it('Should return a list of dog breeds', async () => {
+      const sut = makeSut()
+      const specieName = 'Cachorro'
+      const specie = await db.specie.create({ data: { name: specieName } })
+      const breeds = [
+        {
+          name: 'any_name_1',
+          specieId: specie.id
+        },
+        {
+          name: 'any_name_2',
+          specieId: specie.id
+        },
+        {
           name: 'any_name_3',
+          specieId: specie.id
+        }
+      ]
+      await db.breed.createMany({ data: breeds })
+      const result = await sut.loadDogBreeds()
+      expect(result).toBeTruthy()
+      expect(result).toEqual([
+        {
+          id: expect.any(String),
+          name: 'any_name_3',
+          specieId: specie.id
+        },
+        {
+          id: expect.any(String),
+          name: 'any_name_2',
+          specieId: specie.id
+        },
+        {
+          id: expect.any(String),
+          name: 'any_name_1',
           specieId: specie.id
         }
       ])
