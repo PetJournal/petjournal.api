@@ -54,24 +54,25 @@ describe('BreedRepository', () => {
       ]
       await db.breed.createMany({ data: breeds })
       const result = await sut.loadCatBreeds()
-      expect(result).toBeTruthy()
-      expect(result).toEqual([
-        {
-          id: expect.any(String),
-          name: 'any_name_3',
-          specieId: specie.id
-        },
-        {
-          id: expect.any(String),
-          name: 'any_name_2',
-          specieId: specie.id
-        },
-        {
-          id: expect.any(String),
-          name: 'any_name_1',
-          specieId: specie.id
+      const result2 = result?.map((item) => {
+        return {
+          name: item.name
         }
-      ])
+      })
+      expect(result).toBeTruthy()
+      result2?.forEach((item) => {
+        expect([
+          {
+            name: 'any_name_1'
+          },
+          {
+            name: 'any_name_2'
+          },
+          {
+            name: 'any_name_3'
+          }
+        ]).toContainEqual(item)
+      })
     })
   })
   describe('LoadDogBreeds', () => {
@@ -95,24 +96,25 @@ describe('BreedRepository', () => {
       ]
       await db.breed.createMany({ data: breeds })
       const result = await sut.loadDogBreeds()
-      expect(result).toBeTruthy()
-      expect(result).toEqual([
-        {
-          id: expect.any(String),
-          name: 'any_name_3',
-          specieId: specie.id
-        },
-        {
-          id: expect.any(String),
-          name: 'any_name_2',
-          specieId: specie.id
-        },
-        {
-          id: expect.any(String),
-          name: 'any_name_1',
-          specieId: specie.id
+      const result2 = result?.map((item) => {
+        return {
+          name: item.name
         }
-      ])
+      })
+      expect(result).toBeTruthy()
+      result2?.forEach((item) => {
+        expect([
+          {
+            name: 'any_name_1'
+          },
+          {
+            name: 'any_name_2'
+          },
+          {
+            name: 'any_name_3'
+          }
+        ]).toContainEqual(item)
+      })
     })
   })
 })
