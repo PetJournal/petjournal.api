@@ -6,7 +6,8 @@ import {
   waitingCodePath,
   petRegistryPath,
   loadGuardianNamePath,
-  loadCatBreedsPath
+  loadCatBreedsPath,
+  loadDogBreedsPath
 } from './paths/'
 
 export default {
@@ -17,5 +18,6 @@ export default {
   '/waiting-code': waitingCodePath,
   '/pet': petRegistryPath,
   '/guardian/name': loadGuardianNamePath,
-  '/breeds/cat': loadCatBreedsPath
+  '/breeds/cat': loadCatBreedsPath,
+  '/breeds/dog': loadDogBreedsPath
 }
