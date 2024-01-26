@@ -55,4 +55,29 @@ describe('LoadCatBreeds route', () => {
       .set('Authorization', '')
       .expect(400)
   })
+
+  it('Should return 401 if invalid access token is provided', async () => {
+    await request(app)
+      .post('/api/signup')
+      .send({
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'johndoe@email.com',
+        password: 'Teste@123',
+        passwordConfirmation: 'Teste@123',
+        phone: '11987654321',
+        isPrivacyPolicyAccepted: true
+      })
+    await request(app)
+      .post('/api/login')
+      .send({
+        email: 'johndoe@email.com',
+        password: 'Teste@123'
+      })
+
+    await request(app)
+      .get('/api/breeds/cat')
+      .set('Authorization', 'Bearer invalid_token')
+      .expect(401)
+  })
 })
