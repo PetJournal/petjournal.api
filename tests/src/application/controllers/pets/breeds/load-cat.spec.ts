@@ -21,14 +21,14 @@ const makeSut = (): SutTypes => {
 }
 
 describe('LoadCatBreeds Controller', () => {
-  test('should returns 500 (ServerError) if loadCatBreeds throws', async () => {
+  it('Should returns 500 (ServerError) if loadCatBreeds throws', async () => {
     const { sut, loadCatBreedsStub } = makeSut()
     jest.spyOn(loadCatBreedsStub, 'load').mockRejectedValueOnce(new Error())
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(makeFakeServerError())
   })
 
-  test('should return a list of breeds on success', async () => {
+  it('Should return a list of breeds on success', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(success([{ name: 'any_name' }]))

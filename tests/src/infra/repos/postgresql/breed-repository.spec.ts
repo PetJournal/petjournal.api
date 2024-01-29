@@ -18,7 +18,7 @@ describe('BreedRepository', () => {
       expect(result).toBeFalsy()
     })
 
-    it('Should return an breed if valid name is provided', async () => {
+    it('Should return a breed if valid name is provided', async () => {
       const sut = makeSut()
       const specieName = 'any_name'
       const specie = await db.specie.create({ data: { name: specieName } })

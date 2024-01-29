@@ -22,14 +22,14 @@ const makeSut = (): SutTypes => {
 
 describe('DbLoadDogBreeds', () => {
   describe('BreedRepository', () => {
-    test('should throw if breedResitory throws', async () => {
+    it('Should throw if breedResitory throws', async () => {
       const { sut, breedRepositoryStub } = makeSut()
       jest.spyOn(breedRepositoryStub, 'loadDogBreeds').mockRejectedValueOnce(new Error())
       const promise = sut.load()
       await expect(promise).rejects.toThrow()
     })
 
-    test('should return a list of breeds on success', async () => {
+    it('Should return a list of breeds on success', async () => {
       const { sut } = makeSut()
       const result = await sut.load()
       expect(result).toEqual([{ name: 'any_name' }])
