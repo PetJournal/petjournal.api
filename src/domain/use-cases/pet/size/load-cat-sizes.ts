@@ -6,7 +6,7 @@ export interface LoadCatSizes {
 }
 
 export namespace LoadCatSizes {
-  export type Result = Size[]
+  export type Result = Size[] | undefined
   export type Dependencies = {
     sizeRepository: LoadCatSizesRepository
   }

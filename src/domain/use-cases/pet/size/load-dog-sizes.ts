@@ -6,7 +6,7 @@ export interface LoadDogSizes {
 }
 
 export namespace LoadDogSizes {
-  export type Result = Size[]
+  export type Result = Size[] | undefined
   export type Dependencies = {
     sizeRepository: LoadDogSizesRepository
   }
