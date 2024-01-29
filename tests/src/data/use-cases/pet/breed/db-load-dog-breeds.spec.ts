@@ -34,5 +34,12 @@ describe('DbLoadDogBreeds', () => {
       const result = await sut.load()
       expect(result).toEqual([{ name: 'any_name' }])
     })
+
+    it('Should return undefined if breedRepository returns undefined', async () => {
+      const { sut, breedRepositoryStub } = makeSut()
+      jest.spyOn(breedRepositoryStub, 'loadDogBreeds').mockResolvedValueOnce(undefined)
+      const result = await sut.load()
+      expect(result).toBe(undefined)
+    })
   })
 })
