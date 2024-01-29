@@ -22,17 +22,24 @@ const makeSut = (): SutTypes => {
 
 describe('DbLoadCatSizesRepository', () => {
   describe('SizeRepository', () => {
-    test('Should throw if sizeRepository throws', async () => {
+    it('Should throw if sizeRepository throws', async () => {
       const { sut, sizeRepositoryStub } = makeSut()
       jest.spyOn(sizeRepositoryStub, 'loadCatSizes').mockRejectedValueOnce(new Error())
       const promise = sut.load()
       await expect(promise).rejects.toThrow()
     })
 
-    test('Should return a list of sizes on success', async () => {
+    it('Should return a list of sizes on success', async () => {
       const { sut } = makeSut()
       const result = await sut.load()
       expect(result).toEqual([{ name: 'any_name' }])
+    })
+
+    it('Should return undefined if sizeRepository returns undefined', async () => {
+      const { sut, sizeRepositoryStub } = makeSut()
+      jest.spyOn(sizeRepositoryStub, 'loadCatSizes').mockResolvedValueOnce(undefined)
+      const result = await sut.load()
+      expect(result).toBe(undefined)
     })
   })
 })
