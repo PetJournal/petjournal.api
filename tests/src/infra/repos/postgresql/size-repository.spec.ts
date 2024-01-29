@@ -32,4 +32,47 @@ describe('SizeRepository', () => {
       expect(result).toMatchObject({ name: 'any_name' })
     })
   })
+
+  describe('LoadCatSizes', () => {
+    it('Should return a list of cat sizes', async () => {
+      const sut = makeSut()
+      const specieName = 'Gato'
+      const specie = await db.specie.create({ data: { name: specieName } })
+      const sizes = [
+        {
+          name: 'any_name_1',
+          specieId: specie.id
+        },
+        {
+          name: 'any_name_2',
+          specieId: specie.id
+        },
+        {
+          name: 'any_name_3',
+          specieId: specie.id
+        }
+      ]
+      await db.size.createMany({ data: sizes })
+      const result = await sut.loadCatSizes()
+      const result2 = result?.map((item) => {
+        return {
+          name: item.name
+        }
+      })
+      expect(result).toBeTruthy()
+      result2?.forEach((item) => {
+        expect([
+          {
+            name: 'any_name_1'
+          },
+          {
+            name: 'any_name_2'
+          },
+          {
+            name: 'any_name_3'
+          }
+        ]).toContainEqual(item)
+      })
+    })
+  })
 })
