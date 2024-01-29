@@ -1,5 +1,6 @@
 import {
   accessTokenSchema,
+  breedSchema,
   changePasswordParamsSchema,
   errorSchema,
   forgetPasswordSchema,
@@ -8,6 +9,7 @@ import {
   petRegistryParamsSchema,
   petSchema,
   signUpParamsSchema,
+  sizeSchema,
   specieSchema,
   waitingCodeParamsSchema
 } from './schemas/'
@@ -18,6 +20,8 @@ export default {
   guardian: guardianSchema,
   pet: petSchema,
   specie: specieSchema,
+  breed: breedSchema,
+  size: sizeSchema,
   loginParams: loginParamsSchema,
   signUpParams: signUpParamsSchema,
   forgetPasswordParams: forgetPasswordSchema,

@@ -7,12 +7,15 @@ import {
   type ChangePassword,
   type AppointSpecie,
   type LoadGuardianName,
-  type AddPet
+  type AddPet,
+  type AppointPet,
+  type LoadCatBreeds,
+  type LoadDogBreeds,
+  type LoadCatSizes,
+  type LoadDogSizes
 } from '@/domain/use-cases'
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
-import { mockFakePetAdded, mockFakeSpecieAdded } from '../mocks'
-import { type LoadCatSizes } from '@/domain/use-cases/pet/size/load-cat-sizes'
-import { type LoadDogSizes } from '@/domain/use-cases/pet/size/load-dog-sizes'
+import { mockFakeAppointPet, mockFakePetAdded, mockFakeSpecieAdded } from '../mocks'
 
 const mockGuardianUseCase = {
   id: 'any_id',
@@ -112,6 +115,16 @@ const makeFakeAppointSpecieUseCase = (): AppointSpecie => {
   return new AppointOtherSpecieStub()
 }
 
+const makeFakeAppointPetUseCase = (): AppointPet => {
+  class AppointPetStub implements AppointPet {
+    async appoint (params: AppointPet.Params): Promise<AppointPet.Result> {
+      return mockFakeAppointPet()
+    }
+  }
+
+  return new AppointPetStub()
+}
+
 const makeLoadGuardianNameUseCase = (): LoadGuardianName => {
   class LoadGuardianNameStub implements LoadGuardianName {
     async load (userId: string): Promise<LoadGuardianName.Result> {
@@ -146,6 +159,28 @@ const makeFakeLoadDogSizesUSeCase = (): LoadDogSizes => {
   return new LoadDogSizesStub()
 }
 
+const makeLoadCatBreedsUseCase = (): LoadCatBreeds => {
+  class LoadCatBreedsStub implements LoadCatBreeds {
+    async load (): Promise<LoadCatBreeds.Result> {
+      return [{
+        name: 'any_name'
+      }]
+    }
+  }
+  return new LoadCatBreedsStub()
+}
+
+const makeLoadDogBreedsUseCase = (): LoadDogBreeds => {
+  class LoadDogBreedsStub implements LoadDogBreeds {
+    async load (): Promise<LoadDogBreeds.Result> {
+      return [{
+        name: 'any_name'
+      }]
+    }
+  }
+  return new LoadDogBreedsStub()
+}
+
 export {
   makeFakeAddGuardianUseCase,
   makeFakeAddPetUseCase,
@@ -156,6 +191,9 @@ export {
   makeFakeValidateVerificationTokenUseCase,
   makeFakeAppointSpecieUseCase,
   makeLoadGuardianNameUseCase,
+  makeFakeAppointPetUseCase,
+  makeLoadCatBreedsUseCase,
+  makeLoadDogBreedsUseCase,
   makeFakeLoadCatSizesUseCase,
   makeFakeLoadDogSizesUSeCase
 }

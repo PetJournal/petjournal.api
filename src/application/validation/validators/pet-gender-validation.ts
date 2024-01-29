@@ -1,4 +1,5 @@
 import { InvalidParamError } from '@/application/errors'
+import { PetGender } from '@/domain/models/pet'
 
 export class PetGenderValidation {
   constructor (
@@ -12,7 +13,7 @@ export class PetGenderValidation {
       return new InvalidParamError(this.fieldName)
     }
 
-    if (!['M', 'F'].includes(gender.toUpperCase())) {
+    if (!Object.values(PetGender).includes(input[this.fieldName])) {
       return new InvalidParamError(this.fieldName)
     }
   }

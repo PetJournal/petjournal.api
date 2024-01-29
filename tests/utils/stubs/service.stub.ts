@@ -1,7 +1,9 @@
 import {
   mockFakeGuardianAdded,
   mockFakeGuardianLoaded,
-  mockFakePetAdded
+  mockFakePetAdded,
+  mockFakeCatBreedsLoaded,
+  mockFakeDogBreedsLoaded
 } from '@/tests/utils'
 import {
   type EmailService,
@@ -17,7 +19,11 @@ import {
   type UpdateGuardianPasswordRepository,
   type AddPetRepository,
   type LoadSpecieByIdRepository,
-  type LoadSpecieByNameRepository
+  type LoadSpecieByNameRepository,
+  type LoadBreedByNameRepository,
+  type LoadSizeByNameRepository,
+  type LoadCatBreedsRepository,
+  type LoadDogBreedsRepository
 } from '@/data/protocols'
 import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
 import { type LoadDogSizesRepository } from '@/data/protocols/db/size/load-dog-sizes-repository'
@@ -106,6 +112,48 @@ LoadSpecieByNameRepository => {
   return new SpecieRepositoryStub()
 }
 
+const makeFakeBreedRepository = (): LoadBreedByNameRepository => {
+  class LoadBreedByNameRepositoryStub implements LoadBreedByNameRepository {
+    async loadByName (breedName: LoadBreedByNameRepository.Params): Promise<LoadBreedByNameRepository.Result> {
+      return {
+        id: 'any_id',
+        name: 'any_name'
+      }
+    }
+  }
+  return new LoadBreedByNameRepositoryStub()
+}
+
+const makeFakeSizeRepository = (): LoadSizeByNameRepository => {
+  class LoadSizeByNameRepositoryStub implements LoadSizeByNameRepository {
+    async loadByName (size: LoadSizeByNameRepository.Params): Promise<LoadSizeByNameRepository.Result> {
+      return {
+        id: 'any_id',
+        name: 'any_name'
+      }
+    }
+  }
+  return new LoadSizeByNameRepositoryStub()
+}
+
+const makeFakeLoadCatBreedRepository = (): LoadCatBreedsRepository => {
+  class LoadCatBreedRepositoryStub implements LoadCatBreedsRepository {
+    async loadCatBreeds (): Promise<LoadCatBreedsRepository.Result> {
+      return mockFakeCatBreedsLoaded()
+    }
+  }
+  return new LoadCatBreedRepositoryStub()
+}
+
+const makeFakeLoadDogBreedRepository = (): LoadDogBreedsRepository => {
+  class LoadDogBreedsRepositoryStub implements LoadDogBreedsRepository {
+    async loadDogBreeds (): Promise<LoadDogBreedsRepository.Result> {
+      return mockFakeDogBreedsLoaded()
+    }
+  }
+  return new LoadDogBreedsRepositoryStub()
+}
+
 const makeFakeHashService = (): HashGenerator & HashComparer => {
   class HashServiceStub implements HashGenerator, HashComparer {
     async compare (input: HashComparer.Params): Promise<boolean> {
@@ -173,9 +221,13 @@ export {
   makeFakeGuardianRepository,
   makeFakePetRepository,
   makeFakeSpecieRepository,
+  makeFakeBreedRepository,
+  makeFakeLoadCatBreedRepository,
+  makeFakeLoadDogBreedRepository,
   makeFakeHashService,
   makeFakeEmailService,
   makeFakeTokenService,
   makeFakeLoadCatSizesRepository,
-  makeFakeLoadDogSizesRepository
+  makeFakeLoadDogSizesRepository,
+  makeFakeSizeRepository
 }

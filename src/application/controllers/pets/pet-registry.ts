@@ -18,13 +18,15 @@ export class PetRegistryController implements Controller {
         return badRequest(error)
       }
       const guardianId = httpRequest.userId as string
-      const { specieName, petName } = httpRequest.body
+      const { specieName, petName, breedName, size } = httpRequest.body
       const gender = httpRequest.body.gender.toUpperCase()
       const result = await this.addPet.add({
         guardianId,
         specieName,
         petName,
-        gender
+        gender,
+        breedName,
+        size
       })
       if (!result.isSuccess) {
         return notAcceptable(result.error as Error)
@@ -35,7 +37,10 @@ export class PetRegistryController implements Controller {
         specie: result.data?.specie,
         specieAlias: result.data?.specieAlias,
         petName: result.data?.petName,
-        gender: result.data?.gender
+        gender: result.data?.gender,
+        breed: result.data?.breed,
+        breedAlias: result.data?.breedAlias,
+        size: result.data?.size
       })
     } catch (error) {
       return serverError(error as Error)

@@ -1,22 +1,28 @@
 import { NotAcceptableError } from '@/application/errors'
 import { type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
+import { type PetGender } from '@/domain/models/pet'
 import { type Guardian } from '@/domain/models/guardian'
 import { type Specie } from '@/domain/models/specie'
-import { type AppointSpecie, type AddPet } from '@/domain/use-cases'
+import { type Breed } from '@/domain/models/breed'
+import { type Size } from '@/domain/models/size'
+import {
+  type AddPet,
+  type AppointPet
+} from '@/domain/use-cases'
 
 export class DbAddPet implements AddPet {
   private readonly guardianRepository: LoadGuardianByIdRepository
   private readonly petRepository: AddPetRepository
-  private readonly appointSpecie: AppointSpecie
+  private readonly appointPet: AppointPet
 
   constructor ({
     guardianRepository,
     petRepository,
-    appointSpecie
+    appointPet
   }: AddPet.Dependencies) {
     this.guardianRepository = guardianRepository
     this.petRepository = petRepository
-    this.appointSpecie = appointSpecie
+    this.appointPet = appointPet
   }
 
   async add (petData: AddPet.Params): Promise<AddPet.Result> {
@@ -27,14 +33,27 @@ export class DbAddPet implements AddPet {
         error: new NotAcceptableError('userId')
       }
     }
-    const { specie, specieAlias } = await this.appointSpecie.appoint(petData.specieName)
+    const {
+      specie,
+      specieAlias,
+      breed,
+      breedAlias,
+      size
+    } = await this.appointPet.appoint({
+      specieName: petData.specieName,
+      breedName: petData.breedName,
+      size: petData.size
+    })
     const { petName, gender } = petData
     const pet = await this.petRepository.add({
       guardianId: guardian.id,
       specieId: specie.id,
       specieAlias,
       petName,
-      gender
+      gender,
+      breedId: breed.id,
+      breedAlias,
+      sizeId: size.id
     })
     return {
       isSuccess: true,
@@ -44,7 +63,10 @@ export class DbAddPet implements AddPet {
         specie: pet?.specie as Specie & { id: string },
         specieAlias: pet?.specieAlias,
         petName: pet?.petName as string,
-        gender: pet?.gender as string
+        gender: pet?.gender as PetGender,
+        breed: pet?.breed as Breed & { id: string },
+        breedAlias: pet?.breedAlias as string,
+        size: pet?.size as Size & { id: string }
       }
     }
   }

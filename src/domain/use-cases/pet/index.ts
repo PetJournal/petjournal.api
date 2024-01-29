@@ -1,2 +1,6 @@
 export * from './add-pet'
 export * from './appoint-specie'
+export * from './appoint-breed'
+export * from './appoint-pet'
+export * from './breed'
+export * from './size'
