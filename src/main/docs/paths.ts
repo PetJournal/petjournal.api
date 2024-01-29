@@ -5,7 +5,9 @@ import {
   changePasswordPath,
   waitingCodePath,
   petRegistryPath,
-  loadGuardianNamePath
+  loadGuardianNamePath,
+  loadCatBreedsPath,
+  loadDogBreedsPath
 } from './paths/'
 
 export default {
@@ -15,5 +17,7 @@ export default {
   '/guardian/change-password': changePasswordPath,
   '/waiting-code': waitingCodePath,
   '/pet': petRegistryPath,
-  '/guardian/name': loadGuardianNamePath
+  '/guardian/name': loadGuardianNamePath,
+  '/breeds/cat': loadCatBreedsPath,
+  '/breeds/dog': loadDogBreedsPath
 }

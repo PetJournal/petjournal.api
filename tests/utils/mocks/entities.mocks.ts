@@ -4,7 +4,9 @@ import {
   type LoadGuardianByIdRepository,
   type LoadSpecieByIdRepository,
   type LoadBreedByNameRepository,
-  type LoadSizeByNameRepository
+  type LoadSizeByNameRepository,
+  type LoadCatBreedsRepository,
+  type LoadDogBreedsRepository
 } from '@/data/protocols'
 import { type AppointPet } from '@/domain/use-cases'
 import { type Guardian } from '@/tests/utils/types'
@@ -65,6 +67,18 @@ const mockFakeSpecieAdded = (): Exclude<LoadSpecieByIdRepository.Result, undefin
   }
 }
 
+const mockFakeCatBreedsLoaded = (): LoadCatBreedsRepository.Result => {
+  return [{
+    name: 'any_name'
+  }]
+}
+
+const mockFakeDogBreedsLoaded = (): LoadDogBreedsRepository.Result => {
+  return [{
+    name: 'any_name'
+  }]
+}
+
 const mockFakeBreedAdded = (): Exclude<LoadBreedByNameRepository.Result, undefined> => {
   return {
     id: 'any_id',
@@ -99,6 +113,8 @@ export {
   mockFakeGuardianLoaded,
   mockFakePetAdded,
   mockFakeSpecieAdded,
+  mockFakeCatBreedsLoaded,
+  mockFakeDogBreedsLoaded,
   mockFakeBreedAdded,
   mockFakeSizeAdded,
   mockFakeAppointPet
