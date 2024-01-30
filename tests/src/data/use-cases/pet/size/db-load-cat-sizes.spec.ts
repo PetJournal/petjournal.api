@@ -1,10 +1,10 @@
 import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
-import { DbLoadCatSizesRepository } from '@/data/use-cases/pet/size/db-load-cat-sizes-repository'
+import { DbLoadCatSizes } from '@/data/use-cases/pet/size'
 import { type LoadCatSizes } from '@/domain/use-cases/pet/size/load-cat-sizes'
 import { makeFakeLoadCatSizesRepository } from '@/tests/utils'
 
 interface SutTypes {
-  sut: DbLoadCatSizesRepository
+  sut: DbLoadCatSizes
   sizeRepositoryStub: LoadCatSizesRepository
 }
 
@@ -13,7 +13,7 @@ const makeSut = (): SutTypes => {
   const dependencies: LoadCatSizes.Dependencies = {
     sizeRepository: sizeRepositoryStub
   }
-  const sut = new DbLoadCatSizesRepository(dependencies)
+  const sut = new DbLoadCatSizes(dependencies)
   return {
     sut,
     sizeRepositoryStub
