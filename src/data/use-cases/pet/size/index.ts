@@ -1,2 +1,2 @@
-export * from './db-load-cat-sizes-repository'
-export * from './db-load-dog-sizes-repository'
+export * from './db-load-cat-sizes'
+export * from './db-load-dog-sizes'

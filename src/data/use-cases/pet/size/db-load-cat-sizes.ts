@@ -1,7 +1,7 @@
 import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
 import { type LoadCatSizes } from '@/domain/use-cases/pet/size/load-cat-sizes'
 
-export class DbLoadCatSizesRepository implements LoadCatSizes {
+export class DbLoadCatSizes implements LoadCatSizes {
   private readonly sizeRepository: LoadCatSizesRepository
 
   constructor ({ sizeRepository }: LoadCatSizes.Dependencies) {
