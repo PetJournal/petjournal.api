@@ -7,7 +7,9 @@ import {
   petRegistryPath,
   loadGuardianNamePath,
   loadCatBreedsPath,
-  loadDogBreedsPath
+  loadDogBreedsPath,
+  loadCatSizesPath,
+  loadDogSizesPath
 } from './paths/'
 
 export default {
@@ -19,5 +21,7 @@ export default {
   '/pet': petRegistryPath,
   '/guardian/name': loadGuardianNamePath,
   '/breeds/cat': loadCatBreedsPath,
-  '/breeds/dog': loadDogBreedsPath
+  '/breeds/dog': loadDogBreedsPath,
+  '/sizes/cat': loadCatSizesPath,
+  '/sizes/dog': loadDogSizesPath
 }
