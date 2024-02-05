@@ -5,5 +5,5 @@ export interface LoadDogBreedsRepository {
 }
 
 export namespace LoadDogBreedsRepository {
-  export type Result = Breed[] | undefined
+  export type Result = Breed[]
 }

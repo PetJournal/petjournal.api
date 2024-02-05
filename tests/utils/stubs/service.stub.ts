@@ -25,6 +25,8 @@ import {
   type LoadCatBreedsRepository,
   type LoadDogBreedsRepository
 } from '@/data/protocols'
+import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
+import { type LoadDogSizesRepository } from '@/data/protocols/db/size/load-dog-sizes-repository'
 
 const mockHashService = {
   hashedValue: 'hashed_value'
@@ -187,6 +189,32 @@ const makeFakeEmailService = (): EmailService => {
   return new EmailServiceStub()
 }
 
+const makeFakeLoadCatSizesRepository = (): LoadCatSizesRepository => {
+  class LoadCatSizesRepositoryStub implements LoadCatSizesRepository {
+    async loadCatSizes (): Promise<LoadCatSizesRepository.Result> {
+      return [
+        {
+          name: 'any_name'
+        }
+      ]
+    }
+  }
+  return new LoadCatSizesRepositoryStub()
+}
+
+const makeFakeLoadDogSizesRepository = (): LoadDogSizesRepository => {
+  class LoadDogSizesRepositoryStub implements LoadDogSizesRepository {
+    async loadDogSizes (): Promise<LoadDogSizesRepository.Result> {
+      return [
+        {
+          name: 'any_name'
+        }
+      ]
+    }
+  }
+  return new LoadDogSizesRepositoryStub()
+}
+
 export {
   mockHashService,
   mockTokenService,
@@ -199,5 +227,7 @@ export {
   makeFakeHashService,
   makeFakeEmailService,
   makeFakeTokenService,
+  makeFakeLoadCatSizesRepository,
+  makeFakeLoadDogSizesRepository,
   makeFakeSizeRepository
 }

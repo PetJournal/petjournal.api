@@ -10,7 +10,9 @@ import {
   type AddPet,
   type AppointPet,
   type LoadCatBreeds,
-  type LoadDogBreeds
+  type LoadDogBreeds,
+  type LoadCatSizes,
+  type LoadDogSizes
 } from '@/domain/use-cases'
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
 import { mockFakeAppointPet, mockFakePetAdded, mockFakeSpecieAdded } from '../mocks'
@@ -135,6 +137,28 @@ const makeLoadGuardianNameUseCase = (): LoadGuardianName => {
   return new LoadGuardianNameStub()
 }
 
+const makeFakeLoadCatSizesUseCase = (): LoadCatSizes => {
+  class LoadCatSizesStub implements LoadCatSizes {
+    async load (): Promise<LoadCatSizes.Result> {
+      return [{
+        name: 'any_name'
+      }]
+    }
+  }
+  return new LoadCatSizesStub()
+}
+
+const makeFakeLoadDogSizesUSeCase = (): LoadDogSizes => {
+  class LoadDogSizesStub implements LoadDogSizes {
+    async load (): Promise<LoadDogSizes.Result> {
+      return [{
+        name: 'any_name'
+      }]
+    }
+  }
+  return new LoadDogSizesStub()
+}
+
 const makeLoadCatBreedsUseCase = (): LoadCatBreeds => {
   class LoadCatBreedsStub implements LoadCatBreeds {
     async load (): Promise<LoadCatBreeds.Result> {
@@ -169,5 +193,7 @@ export {
   makeLoadGuardianNameUseCase,
   makeFakeAppointPetUseCase,
   makeLoadCatBreedsUseCase,
-  makeLoadDogBreedsUseCase
+  makeLoadDogBreedsUseCase,
+  makeFakeLoadCatSizesUseCase,
+  makeFakeLoadDogSizesUSeCase
 }
