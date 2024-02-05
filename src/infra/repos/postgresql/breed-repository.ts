@@ -11,17 +11,11 @@ export class BreedRepository implements LoadBreedByNameRepository, LoadCatBreeds
 
   async loadCatBreeds (): Promise<LoadCatBreedsRepository.Result> {
     const catBreeds = await db.breed.findMany({ where: { specie: { name: 'Gato' } } })
-    if (catBreeds.length > 0) {
-      return catBreeds
-    }
-    return []
+    return catBreeds
   }
 
   async loadDogBreeds (): Promise<LoadDogBreedsRepository.Result> {
     const dogBreeds = await db.breed.findMany({ where: { specie: { name: 'Cachorro' } } })
-    if (dogBreeds.length > 0) {
-      return dogBreeds
-    }
-    return []
+    return dogBreeds
   }
 }

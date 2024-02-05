@@ -11,17 +11,11 @@ export class SizeRepository implements LoadSizeByNameRepository, LoadCatSizesRep
 
   async loadCatSizes (): Promise<LoadCatSizesRepository.Result> {
     const sizes = await db.size.findMany({ where: { specie: { name: 'Gato' } } })
-    if (sizes.length > 0) {
-      return sizes
-    }
-    return []
+    return sizes
   }
 
   async loadDogSizes (): Promise<LoadDogSizesRepository.Result> {
     const sizes = await db.size.findMany({ where: { specie: { name: 'Cachorro' } } })
-    if (sizes.length > 0) {
-      return sizes
-    }
-    return []
+    return sizes
   }
 }
