@@ -5,5 +5,5 @@ export interface LoadCatSizesRepository {
 }
 
 export namespace LoadCatSizesRepository {
-  export type Result = Size[] | undefined
+  export type Result = Size[]
 }
