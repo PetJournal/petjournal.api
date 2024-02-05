@@ -1,5 +1,5 @@
 import { type Controller } from '@/application/protocols'
-import { makeDbLoadCatSizes } from '../../usecases'
+import { makeDbLoadCatSizes } from '@/main/factories/usecases'
 import { LoadCatSizesController } from '@/application/controllers/pets/sizes/load-cat'
 import { LoggerPgRepository } from '@/infra/repos/postgresql'
 import { LoggerControllerDecorator } from '@/main/decorators'

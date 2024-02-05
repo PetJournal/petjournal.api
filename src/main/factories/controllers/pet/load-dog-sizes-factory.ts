@@ -1,5 +1,5 @@
 import { type Controller } from '@/application/protocols'
-import { makeDbLoadDogSizes } from '../../usecases'
+import { makeDbLoadDogSizes } from '@/main/factories/usecases'
 import { LoadDogSizesController } from '@/application/controllers/pets/sizes/load-dog'
 import { LoggerPgRepository } from '@/infra/repos/postgresql'
 import { LoggerControllerDecorator } from '@/main/decorators'
