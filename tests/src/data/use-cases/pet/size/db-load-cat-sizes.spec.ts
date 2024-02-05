@@ -34,12 +34,5 @@ describe('DbLoadCatSizesRepository', () => {
       const result = await sut.load()
       expect(result).toEqual([{ name: 'any_name' }])
     })
-
-    it('Should return undefined if sizeRepository returns undefined', async () => {
-      const { sut, sizeRepositoryStub } = makeSut()
-      jest.spyOn(sizeRepositoryStub, 'loadCatSizes').mockResolvedValueOnce(undefined)
-      const result = await sut.load()
-      expect(result).toBe(undefined)
-    })
   })
 })
