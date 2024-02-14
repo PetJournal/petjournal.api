@@ -6,10 +6,7 @@ import { LoggerControllerDecorator } from '@/main/decorators'
 
 export const makeLoadCatBreedsController = (): Controller => {
   const loadCatBreeds = makeDbLoadCatBreeds()
-  const dependencies: LoadCatBreedsController.Dependencies = {
-    loadCatBreeds
-  }
-  const loadCatBreedsController = new LoadCatBreedsController(dependencies)
+  const loadCatBreedsController = new LoadCatBreedsController(loadCatBreeds)
   const loggerPgRepository = new LoggerPgRepository()
   return new LoggerControllerDecorator(loadCatBreedsController, loggerPgRepository)
 }

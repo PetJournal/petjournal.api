@@ -6,10 +6,7 @@ import { LoggerControllerDecorator } from '@/main/decorators'
 
 export const makeLoadCatSizesController = (): Controller => {
   const loadCatSizes = makeDbLoadCatSizes()
-  const dependencies: LoadCatSizesController.Dependencies = {
-    loadCatSizes
-  }
-  const loadCatSizesController = new LoadCatSizesController(dependencies)
+  const loadCatSizesController = new LoadCatSizesController(loadCatSizes)
   const loggerPgRepository = new LoggerPgRepository()
   return new LoggerControllerDecorator(loadCatSizesController, loggerPgRepository)
 }

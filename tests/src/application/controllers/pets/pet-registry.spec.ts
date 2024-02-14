@@ -14,11 +14,7 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const validationStub = makeFakeValidation()
   const addPetStub = makeFakeAddPetUseCase()
-  const dependencies: PetRegistryController.Dependencies = {
-    validation: validationStub,
-    addPet: addPetStub
-  }
-  const sut = new PetRegistryController(dependencies)
+  const sut = new PetRegistryController(validationStub, addPetStub)
   return { sut, validationStub, addPetStub }
 }
 

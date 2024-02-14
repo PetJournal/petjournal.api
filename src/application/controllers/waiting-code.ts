@@ -10,15 +10,11 @@ import { type Controller, type Validation } from '@/application/protocols'
 import { type CreateAccessToken, type ValidateVerificationToken } from '@/domain/use-cases/'
 
 export class WaitingCodeController implements Controller {
-  private readonly validation: Validation
-  private readonly validateVerificationToken: ValidateVerificationToken
-  private readonly createAccessToken: CreateAccessToken
-
-  constructor ({ validation, validateVerificationToken, createAccessToken }: WaitingCodeController.Dependencies) {
-    this.validation = validation
-    this.validateVerificationToken = validateVerificationToken
-    this.createAccessToken = createAccessToken
-  }
+  constructor (
+    private readonly validation: Validation,
+    private readonly validateVerificationToken: ValidateVerificationToken,
+    private readonly createAccessToken: CreateAccessToken
+  ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -39,13 +35,5 @@ export class WaitingCodeController implements Controller {
     } catch (error) {
       return serverError(error as Error)
     }
-  }
-}
-
-export namespace WaitingCodeController {
-  export interface Dependencies {
-    validation: Validation
-    validateVerificationToken: ValidateVerificationToken
-    createAccessToken: CreateAccessToken
   }
 }

@@ -6,7 +6,7 @@ import { type Controller } from '@/application/protocols'
 
 export const makeLoadGuardianNameController = (): Controller => {
   const loadGuardianName = makeDbLoadGuardianName()
-  const loadGuardianNameController = new LoadGuardianNameController({ loadGuardianName })
+  const loadGuardianNameController = new LoadGuardianNameController(loadGuardianName)
   const loggerPgRepository = new LoggerPgRepository()
   const loggerControllerDecorator = new LoggerControllerDecorator(loadGuardianNameController, loggerPgRepository)
   return new DevLoggerControllerDecorator(loggerControllerDecorator)

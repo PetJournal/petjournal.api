@@ -13,11 +13,11 @@ export const makeWaitingCodeController = (): Controller => {
   const validateVerificationToken = makeDbValidateVerificationToken()
   const createAccessToken = makeDbCreateAccessToken()
   const loggerPgRepository = new LoggerPgRepository()
-  const waitingCodeController = new WaitingCodeController({
+  const waitingCodeController = new WaitingCodeController(
     validation,
     validateVerificationToken,
     createAccessToken
-  })
+  )
   const loggerControllerDecorator = new LoggerControllerDecorator(waitingCodeController, loggerPgRepository)
   return new DevLoggerControllerDecorator(loggerControllerDecorator)
 }

@@ -7,11 +7,7 @@ import { makeSignUpValidation, makeDbAddGuardian } from '@/main/factories'
 export const makeSignUpController = (): Controller => {
   const addGuardian = makeDbAddGuardian()
   const validation = makeSignUpValidation()
-  const dependencies: SignUpController.Dependencies = {
-    addGuardian,
-    validation
-  }
-  const signUpController = new SignUpController(dependencies)
+  const signUpController = new SignUpController(addGuardian, validation)
   const loggerPgRepository = new LoggerPgRepository()
   const loggerControllerDecorator = new LoggerControllerDecorator(signUpController, loggerPgRepository)
   return new DevLoggerControllerDecorator(loggerControllerDecorator)

@@ -9,13 +9,10 @@ import {
 } from '@/application/helpers'
 
 export class ChangePasswordController implements Controller {
-  private readonly changePassword: ChangePassword
-  private readonly validation: Validation
-
-  constructor ({ changePassword, validation }: ChangePasswordController.Dependencies) {
-    this.changePassword = changePassword
-    this.validation = validation
-  }
+  constructor (
+    private readonly validation: Validation,
+    private readonly changePassword: ChangePassword
+  ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -42,12 +39,5 @@ export class ChangePasswordController implements Controller {
     } catch (error) {
       return serverError(error as Error)
     }
-  }
-}
-
-export namespace ChangePasswordController {
-  export interface Dependencies {
-    changePassword: ChangePassword
-    validation: Validation
   }
 }

@@ -8,11 +8,7 @@ import { makePetRegistryValidation } from '../../validations/pet/pet-registry-va
 export const makePetRegistryController = (): Controller => {
   const addPet = makeDbAddPet()
   const validation = makePetRegistryValidation()
-  const dependencies: PetRegistryController.Dependencies = {
-    addPet,
-    validation
-  }
-  const petRegistryController = new PetRegistryController(dependencies)
+  const petRegistryController = new PetRegistryController(validation, addPet)
   const loggerPgRepository = new LoggerPgRepository()
   const loggerControllerDecorator = new LoggerControllerDecorator(petRegistryController, loggerPgRepository)
   return new DevLoggerControllerDecorator(loggerControllerDecorator)

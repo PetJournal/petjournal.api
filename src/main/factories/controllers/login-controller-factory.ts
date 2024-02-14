@@ -7,11 +7,7 @@ import { makeLoginValidation, makeDbAuthentication } from '@/main/factories'
 export const makeLoginController = (): Controller => {
   const authentication = makeDbAuthentication()
   const validation = makeLoginValidation()
-  const dependencies: LoginController.Dependencies = {
-    authentication,
-    validation
-  }
-  const loginController = new LoginController(dependencies)
+  const loginController = new LoginController(validation, authentication)
   const loggerPgRepository = new LoggerPgRepository()
   const loggerControllerDecorator = new LoggerControllerDecorator(loginController, loggerPgRepository)
   return new DevLoggerControllerDecorator(loggerControllerDecorator)

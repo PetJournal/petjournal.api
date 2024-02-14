@@ -3,13 +3,10 @@ import { type Controller, type Validation } from '@/application/protocols'
 import { type AddPet } from '@/domain/use-cases'
 
 export class PetRegistryController implements Controller {
-  private readonly validation: Validation
-  private readonly addPet: AddPet
-
-  constructor ({ validation, addPet }: PetRegistryController.Dependencies) {
-    this.validation = validation
-    this.addPet = addPet
-  }
+  constructor (
+    private readonly validation: Validation,
+    private readonly addPet: AddPet
+  ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -45,12 +42,5 @@ export class PetRegistryController implements Controller {
     } catch (error) {
       return serverError(error as Error)
     }
-  }
-}
-
-export namespace PetRegistryController {
-  export interface Dependencies {
-    validation: Validation
-    addPet: AddPet
   }
 }

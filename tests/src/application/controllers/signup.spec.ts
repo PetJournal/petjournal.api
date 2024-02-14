@@ -19,11 +19,7 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const addGuardianStub = makeFakeAddGuardianUseCase()
   const validationStub = makeFakeValidation()
-  const dependencies: SignUpController.Dependencies = {
-    addGuardian: addGuardianStub,
-    validation: validationStub
-  }
-  const sut = new SignUpController(dependencies)
+  const sut = new SignUpController(addGuardianStub, validationStub)
   return { sut, addGuardianStub, validationStub }
 }
 

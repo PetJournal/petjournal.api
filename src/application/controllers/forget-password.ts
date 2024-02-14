@@ -4,13 +4,10 @@ import { type HttpRequest, type HttpResponse, badRequest, success, serverError }
 import { NotFoundError } from '@/application/errors'
 
 export class ForgetPasswordController implements Controller {
-  private readonly validation: Validation
-  private readonly forgetPassword: ForgetPassword
-
-  constructor ({ validation, forgetPassword }: ForgetPasswordController.Dependencies) {
-    this.validation = validation
-    this.forgetPassword = forgetPassword
-  }
+  constructor (
+    private readonly validation: Validation,
+    private readonly forgetPassword: ForgetPassword
+  ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -30,12 +27,5 @@ export class ForgetPasswordController implements Controller {
     } catch (error) {
       return serverError(error as Error)
     }
-  }
-}
-
-export namespace ForgetPasswordController {
-  export interface Dependencies {
-    validation: Validation
-    forgetPassword: ForgetPassword
   }
 }

@@ -23,12 +23,7 @@ const makeSut = (): SutTypes => {
   const validationStub = makeFakeValidation()
   const createAccessTokenStub = makeFakeCreateAccessTokenUseCase()
   const validateVerificationTokenStub = makeFakeValidateVerificationTokenUseCase()
-  const dependencies: WaitingCodeController.Dependencies = {
-    validation: validationStub,
-    createAccessToken: createAccessTokenStub,
-    validateVerificationToken: validateVerificationTokenStub
-  }
-  const sut = new WaitingCodeController(dependencies)
+  const sut = new WaitingCodeController(validationStub, validateVerificationTokenStub, createAccessTokenStub)
   return {
     sut,
     validationStub,

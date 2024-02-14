@@ -3,11 +3,7 @@ import { success, type HttpRequest, type HttpResponse, serverError } from '@/app
 import { type Controller } from '@/application/protocols'
 
 export class LoadGuardianNameController implements Controller {
-  private readonly loadGuardianName: LoadGuardianName
-
-  constructor ({ loadGuardianName }: LoadGuardianNameController.Dependencies) {
-    this.loadGuardianName = loadGuardianName
-  }
+  constructor (private readonly loadGuardianName: LoadGuardianName) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -16,11 +12,5 @@ export class LoadGuardianNameController implements Controller {
     } catch (error) {
       return serverError(error as Error)
     }
-  }
-}
-
-export namespace LoadGuardianNameController {
-  export interface Dependencies {
-    loadGuardianName: LoadGuardianName
   }
 }

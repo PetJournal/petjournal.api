@@ -3,11 +3,7 @@ import { type Controller } from '@/application/protocols'
 import { type LoadDogSizes } from '@/domain/use-cases/pet/size/load-dog-sizes'
 
 export class LoadDogSizesController implements Controller {
-  private readonly loadDogSizes: LoadDogSizes
-
-  constructor ({ loadDogSizes }: LoadDogSizesController.Dependencies) {
-    this.loadDogSizes = loadDogSizes
-  }
+  constructor (private readonly loadDogSizes: LoadDogSizes) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -16,11 +12,5 @@ export class LoadDogSizesController implements Controller {
     } catch (error) {
       return serverError(error as Error)
     }
-  }
-}
-
-export namespace LoadDogSizesController {
-  export type Dependencies = {
-    loadDogSizes: LoadDogSizes
   }
 }

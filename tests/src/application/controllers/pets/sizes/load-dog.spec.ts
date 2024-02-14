@@ -10,10 +10,7 @@ interface SutTypes {
 
 const makeSut = (): SutTypes => {
   const loadDogSizesStub = makeFakeLoadDogSizesUSeCase()
-  const dependencies: LoadDogSizesController.Dependencies = {
-    loadDogSizes: loadDogSizesStub
-  }
-  const sut = new LoadDogSizesController(dependencies)
+  const sut = new LoadDogSizesController(loadDogSizesStub)
   return {
     sut,
     loadDogSizesStub

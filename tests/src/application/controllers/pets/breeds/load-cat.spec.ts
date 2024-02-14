@@ -10,10 +10,7 @@ interface SutTypes {
 
 const makeSut = (): SutTypes => {
   const loadCatBreedsStub = makeLoadCatBreedsUseCase()
-  const dependencies: LoadCatBreedsController.Dependencies = {
-    loadCatBreeds: loadCatBreedsStub
-  }
-  const sut = new LoadCatBreedsController(dependencies)
+  const sut = new LoadCatBreedsController(loadCatBreedsStub)
   return {
     sut,
     loadCatBreedsStub

@@ -10,13 +10,10 @@ import {
 } from '@/application/helpers'
 
 export class LoginController implements Controller {
-  private readonly validation: Validation
-  private readonly authentication: Authentication
-
-  constructor ({ validation, authentication }: LoginController.Dependencies) {
-    this.validation = validation
-    this.authentication = authentication
-  }
+  constructor (
+    private readonly validation: Validation,
+    private readonly authentication: Authentication
+  ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -39,12 +36,5 @@ export class LoginController implements Controller {
     } catch (error) {
       return serverError(error as Error)
     }
-  }
-}
-
-export namespace LoginController {
-  export interface Dependencies {
-    authentication: Authentication
-    validation: Validation
   }
 }

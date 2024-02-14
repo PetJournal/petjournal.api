@@ -11,13 +11,10 @@ import {
 } from '@/application/helpers'
 
 export class SignUpController implements Controller {
-  private readonly addGuardian: AddGuardian
-  private readonly validation: Validation
-
-  constructor ({ addGuardian, validation }: SignUpController.Dependencies) {
-    this.addGuardian = addGuardian
-    this.validation = validation
-  }
+  constructor (
+    private readonly addGuardian: AddGuardian,
+    private readonly validation: Validation
+  ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -44,12 +41,5 @@ export class SignUpController implements Controller {
     } catch (error) {
       return serverError(error as Error)
     }
-  }
-}
-
-export namespace SignUpController {
-  export interface Dependencies {
-    addGuardian: AddGuardian
-    validation: Validation
   }
 }

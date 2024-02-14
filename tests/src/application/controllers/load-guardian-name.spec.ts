@@ -10,7 +10,7 @@ interface SutTypes {
 
 const makeSut = (): SutTypes => {
   const loadGuardianNameStub = makeLoadGuardianNameUseCase()
-  const sut = new LoadGuardianNameController({ loadGuardianName: loadGuardianNameStub })
+  const sut = new LoadGuardianNameController(loadGuardianNameStub)
   return {
     sut,
     loadGuardianNameStub

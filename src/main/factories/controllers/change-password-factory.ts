@@ -7,11 +7,7 @@ import { makeChangePasswordValidation, makeDbChangePassword } from '@/main/facto
 export const makeChangePasswordController = (): Controller => {
   const changePassword = makeDbChangePassword()
   const validation = makeChangePasswordValidation()
-  const dependencies: ChangePasswordController.Dependencies = {
-    changePassword,
-    validation
-  }
-  const changePasswordController = new ChangePasswordController(dependencies)
+  const changePasswordController = new ChangePasswordController(validation, changePassword)
   const loggerPgRepository = new LoggerPgRepository()
   const loggerControllerDecorator = new LoggerControllerDecorator(changePasswordController, loggerPgRepository)
   return new DevLoggerControllerDecorator(loggerControllerDecorator)

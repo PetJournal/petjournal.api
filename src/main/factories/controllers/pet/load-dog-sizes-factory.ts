@@ -6,10 +6,7 @@ import { LoggerControllerDecorator } from '@/main/decorators'
 
 export const makeLoadDogSizesController = (): Controller => {
   const loadDogSizes = makeDbLoadDogSizes()
-  const dependencies: LoadDogSizesController.Dependencies = {
-    loadDogSizes
-  }
-  const loadDogSizesController = new LoadDogSizesController(dependencies)
+  const loadDogSizesController = new LoadDogSizesController(loadDogSizes)
   const loggerPgRepository = new LoggerPgRepository()
   return new LoggerControllerDecorator(loadDogSizesController, loggerPgRepository)
 }

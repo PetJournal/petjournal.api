@@ -19,11 +19,7 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const changePasswordStub = makeFakeChangePasswordUseCase()
   const validationStub = makeFakeValidation()
-  const dependencies: ChangePasswordController.Dependencies = {
-    changePassword: changePasswordStub,
-    validation: validationStub
-  }
-  const sut = new ChangePasswordController(dependencies)
+  const sut = new ChangePasswordController(validationStub, changePasswordStub)
   return {
     sut,
     changePasswordStub,
