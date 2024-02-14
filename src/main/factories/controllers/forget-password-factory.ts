@@ -1,6 +1,6 @@
 import { type Controller } from '@/application/protocols'
 import { ForgetPasswordController } from '@/application/controllers'
-import { LoggerControllerDecorator } from '@/main/decorators'
+import { DevLoggerControllerDecorator, LoggerControllerDecorator } from '@/main/decorators'
 import { LoggerPgRepository } from '@/infra/repos/postgresql'
 import { makeForgetPasswordValidation, makeDbForgetPassword } from '@/main/factories'
 
@@ -13,5 +13,6 @@ export const makeForgetPasswordController = (): Controller => {
   }
   const forgetPasswordController = new ForgetPasswordController(dependencies)
   const loggerPgRepository = new LoggerPgRepository()
-  return new LoggerControllerDecorator(forgetPasswordController, loggerPgRepository)
+  const loggerControllerDecorator = new LoggerControllerDecorator(forgetPasswordController, loggerPgRepository)
+  return new DevLoggerControllerDecorator(loggerControllerDecorator)
 }
