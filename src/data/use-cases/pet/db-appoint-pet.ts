@@ -23,12 +23,14 @@ export class DbAppointPet implements AppointPet {
     const specieResult = await this.getSpecie(params.specieName)
     const breedResult = await this.getBreed(params.breedName, specieResult.specie.name)
     const sizeResult = await this.getSize(params.size, specieResult.specie.name)
+    const castrated = this.setCastrated(specieResult.specie.name, params.castrated)
     return {
       specie: specieResult.specie,
       specieAlias: specieResult.specieAlias,
       breed: breedResult.breed,
       breedAlias: breedResult.breedAlias as string,
-      size: sizeResult.size
+      size: sizeResult.size,
+      castrated
     }
   }
 
@@ -113,6 +115,13 @@ export class DbAppointPet implements AppointPet {
     return {
       size: withoutSize as Size & { id: string }
     }
+  }
+
+  private setCastrated (specieName: string, castrated: boolean): boolean {
+    if (this.isCatOrDog(specieName) && castrated) {
+      return true
+    }
+    return false
   }
 }
 

@@ -49,7 +49,8 @@ describe('DbAddPet Use Case', () => {
     gender: PetGender.MALE,
     petName: 'any_pet_name',
     breedName: 'any_breed_name',
-    size: 'any_size'
+    size: 'any_size',
+    castrated: false
   }
 
   describe('GuardianRepository', () => {
@@ -99,7 +100,8 @@ describe('DbAddPet Use Case', () => {
         gender: params.gender,
         breedId: mockFakeBreedAdded().id,
         breedAlias: 'any_breed_alias',
-        sizeId: mockFakeSizeAdded().id
+        sizeId: mockFakeSizeAdded().id,
+        castrated: false
       })
     })
 

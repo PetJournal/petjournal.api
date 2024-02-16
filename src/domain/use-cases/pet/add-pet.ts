@@ -14,6 +14,7 @@ export namespace AddPet {
     gender: PetGender
     breedName: string
     size: string
+    castrated: boolean
   }
 
   export interface Result {

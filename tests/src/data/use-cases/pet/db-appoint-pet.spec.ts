@@ -29,7 +29,8 @@ describe('DbAppointPet Use Case', () => {
   const params: AppointPet.Params = {
     specieName: 'any_name',
     breedName: 'any_name',
-    size: 'any_name'
+    size: 'any_name',
+    castrated: false
   }
 
   const petResult = {
@@ -48,7 +49,8 @@ describe('DbAppointPet Use Case', () => {
     anySize: {
       id: 'any_id',
       name: 'any_name'
-    }
+    },
+    castrated: false
   }
 
   describe('SpecieRepository', () => {
@@ -63,7 +65,8 @@ describe('DbAppointPet Use Case', () => {
         specieAlias: params.specieName,
         breed: petResult.anyBreed,
         breedAlias: '',
-        size: petResult.anySize
+        size: petResult.anySize,
+        castrated: petResult.castrated
       })
     })
 
@@ -77,7 +80,8 @@ describe('DbAppointPet Use Case', () => {
         specieAlias: 'Outros',
         breed: petResult.anyBreed,
         breedAlias: '',
-        size: petResult.anySize
+        size: petResult.anySize,
+        castrated: petResult.castrated
       })
     })
     test('should call loadByName with correct param', async () => {
@@ -113,7 +117,8 @@ describe('DbAppointPet Use Case', () => {
         specieAlias: params.specieName,
         breed: otherBreed,
         breedAlias: '',
-        size: petResult.anySize
+        size: petResult.anySize,
+        castrated: petResult.castrated
       })
     })
 
@@ -137,7 +142,8 @@ describe('DbAppointPet Use Case', () => {
         specieAlias: undefined,
         breed: withoutBreed,
         breedAlias: '',
-        size: petResult.anySize
+        size: petResult.anySize,
+        castrated: petResult.castrated
       })
     })
 
@@ -163,7 +169,8 @@ describe('DbAppointPet Use Case', () => {
         specieAlias: undefined,
         breed: otherBreed,
         breedAlias: params.breedName,
-        size: petResult.anySize
+        size: petResult.anySize,
+        castrated: petResult.castrated
       })
     })
 
@@ -187,7 +194,8 @@ describe('DbAppointPet Use Case', () => {
         specieAlias: undefined,
         breed: otherBreed,
         breedAlias: otherBreed.name,
-        size: petResult.anySize
+        size: petResult.anySize,
+        castrated: petResult.castrated
       })
     })
 
@@ -211,7 +219,8 @@ describe('DbAppointPet Use Case', () => {
         specieAlias: undefined,
         breed,
         breedAlias: '',
-        size: petResult.anySize
+        size: petResult.anySize,
+        castrated: petResult.castrated
       })
     })
   })
@@ -237,7 +246,8 @@ describe('DbAppointPet Use Case', () => {
         specieAlias: undefined,
         breed: petResult.anyBreed,
         breedAlias: '',
-        size
+        size,
+        castrated: petResult.castrated
       })
     })
 
@@ -258,7 +268,8 @@ describe('DbAppointPet Use Case', () => {
         specieAlias: params.specieName,
         breed: petResult.anyBreed,
         breedAlias: '',
-        size
+        size,
+        castrated: petResult.castrated
       })
     })
 
@@ -282,7 +293,8 @@ describe('DbAppointPet Use Case', () => {
         specieAlias: undefined,
         breed: petResult.anyBreed,
         breedAlias: '',
-        size
+        size,
+        castrated: petResult.castrated
       })
     })
   })
@@ -295,7 +307,8 @@ describe('DbAppointPet Use Case', () => {
       specieAlias: undefined,
       breed: petResult.anyBreed,
       breedAlias: '',
-      size: petResult.anySize
+      size: petResult.anySize,
+      castrated: petResult.castrated
     })
   })
 })

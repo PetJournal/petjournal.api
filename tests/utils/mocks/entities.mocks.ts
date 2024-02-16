@@ -46,7 +46,8 @@ const mockFakePetAdded = (): AddPetRepository.Result => {
     gender: 'M',
     breed: mockFakeBreedAdded(),
     breedAlias: 'any_breed_alias',
-    size: mockFakeSizeAdded()
+    size: mockFakeSizeAdded(),
+    castrated: false
   }
 }
 
@@ -56,7 +57,8 @@ const mockFakeAppointPet = (): AppointPet.Result => {
     specieAlias: 'any_specie_alias',
     breed: mockFakeBreedAdded(),
     breedAlias: 'any_breed_alias',
-    size: mockFakeSizeAdded()
+    size: mockFakeSizeAdded(),
+    castrated: false
   }
 }
 

@@ -36,6 +36,7 @@ model Pet {
   breedId     String   @map("breed_id")
   size        Size     @relation(fields: [sizeId], references: [id])
   sizeId      String   @map("size_id")
+  castrated   Boolean  @default(false)
 
   @@map("pets")
 }

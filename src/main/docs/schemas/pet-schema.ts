@@ -17,6 +17,7 @@ export const petSchema = {
     breedAlias: { type: 'string' },
     size: {
       $ref: '#/schemas/size'
-    }
+    },
+    castrated: { type: 'boolean' }
   }
 }
