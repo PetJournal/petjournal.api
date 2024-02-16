@@ -22,7 +22,8 @@ describe('PetRepository', () => {
       gender: 'invalid_gender' as PetGender,
       breedId: 'invalid_breed_id',
       breedAlias: 'invalid_breed_alias',
-      sizeId: 'invalid_size_id'
+      sizeId: 'invalid_size_id',
+      castrated: false
     }
 
     const specie = await sut.add(data)
@@ -67,7 +68,8 @@ describe('PetRepository', () => {
       gender: PetGender.MALE,
       breedId: breed.id,
       breedAlias: 'any_breed_alias',
-      sizeId: size.id
+      sizeId: size.id,
+      castrated: false
     }
 
     const specie = await sut.add(data)
