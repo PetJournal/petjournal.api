@@ -1,6 +1,6 @@
 import { type HttpRequest, type HttpResponse } from '@/application/helpers'
 import { type Controller } from '@/application/protocols'
-import env from '../config/env'
+import env from '@/main/config/env'
 
 export class DevLoggerControllerDecorator implements Controller {
   constructor (private readonly controller: Controller) {}
