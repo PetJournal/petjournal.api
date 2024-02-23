@@ -7,5 +7,6 @@ export namespace LoadBreedByNameRepository {
   export type Result = {
     id: string
     name: string
+    specieId: string
   } | undefined
 }
