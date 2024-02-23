@@ -1,10 +1,12 @@
 import { NotAcceptableError } from '@/application/errors'
 import { type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
-import { type PetGender } from '@/domain/models/pet'
-import { type Guardian } from '@/domain/models/guardian'
-import { type Specie } from '@/domain/models/specie'
-import { type Breed } from '@/domain/models/breed'
-import { type Size } from '@/domain/models/size'
+import {
+  type PetGender,
+  type Guardian,
+  type Specie,
+  type Breed,
+  type Size
+} from '@/domain/models'
 import {
   type AddPet,
   type AppointPet
@@ -33,30 +35,29 @@ export class DbAddPet implements AddPet {
         error: new NotAcceptableError('userId')
       }
     }
-    const {
-      specie,
-      specieAlias,
-      breed,
-      breedAlias,
-      size,
-      castrated
-    } = await this.appointPet.appoint({
+    const appointResult = await this.appointPet.appoint({
       specieName: petData.specieName,
       breedName: petData.breedName,
       size: petData.size,
       castrated: petData.castrated
     })
+    if (appointResult.error) {
+      return {
+        isSuccess: false,
+        error: appointResult.error
+      }
+    }
     const { petName, gender } = petData
     const pet = await this.petRepository.add({
       guardianId: guardian.id,
-      specieId: specie.id,
-      specieAlias,
+      specieId: appointResult.data?.specie.id as string,
+      specieAlias: appointResult.data?.specieAlias,
       petName,
       gender,
-      breedId: breed.id,
-      breedAlias,
-      sizeId: size.id,
-      castrated
+      breedId: appointResult.data?.breed.id as string,
+      breedAlias: appointResult.data?.breedAlias as string,
+      sizeId: appointResult.data?.size.id as string,
+      castrated: appointResult.data?.castrated as boolean
     })
     return {
       isSuccess: true,
