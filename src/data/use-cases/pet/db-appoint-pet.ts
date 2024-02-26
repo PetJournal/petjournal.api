@@ -1,3 +1,4 @@
+import { NotAcceptableError } from '@/application/errors'
 import { type LoadSizeByNameRepository, type LoadBreedByNameRepository, type LoadSpecieByNameRepository } from '@/data/protocols'
 import { type Breed } from '@/domain/models/breed'
 import { type Size } from '@/domain/models/size'
@@ -22,15 +23,30 @@ export class DbAppointPet implements AppointPet {
   async appoint (params: AppointPet.Params): Promise<AppointPet.Result> {
     const specieResult = await this.getSpecie(params.specieName)
     const breedResult = await this.getBreed(params.breedName, specieResult.specie.name)
+    if (breedResult.error) {
+      return {
+        isSuccess: false,
+        error: breedResult.error
+      }
+    }
     const sizeResult = await this.getSize(params.size, specieResult.specie.name)
+    if (sizeResult.error) {
+      return {
+        isSuccess: false,
+        error: sizeResult.error
+      }
+    }
     const castrated = this.setCastrated(specieResult.specie.name, params.castrated)
     return {
-      specie: specieResult.specie,
-      specieAlias: specieResult.specieAlias,
-      breed: breedResult.breed,
-      breedAlias: breedResult.breedAlias as string,
-      size: sizeResult.size,
-      castrated
+      isSuccess: true,
+      data: {
+        specie: specieResult.specie,
+        specieAlias: specieResult.specieAlias,
+        breed: breedResult.data?.breed as Breed & { id: string },
+        breedAlias: breedResult.data?.breedAlias as string,
+        size: sizeResult.data?.size as Size & { id: string },
+        castrated
+      }
     }
   }
 
@@ -62,32 +78,53 @@ export class DbAppointPet implements AppointPet {
       if (!breed) {
         const otherBreed = await this.breedRepository.loadByName(`Outra raça ${specieName}`)
         return {
-          breed: otherBreed as Breed & { id: string },
-          breedAlias: breedName
+          data: {
+            breed: otherBreed as Breed & { id: string },
+            breedAlias: breedName,
+            specieId: otherBreed?.specieId as string
+          }
         }
       }
       if (breed.name === `Outra raça ${specieName}`) {
         return {
-          breed,
-          breedAlias: `Outra raça ${specieName}`
+          data: {
+            breed,
+            breedAlias: `Outra raça ${specieName}`,
+            specieId: breed.specieId
+          }
+        }
+      }
+      const specieResult = await this.getSpecie(specieName)
+      if (specieResult.specie.id !== breed.specieId) {
+        return {
+          error: new NotAcceptableError('breed')
         }
       }
       return {
-        breed,
-        breedAlias: ''
+        data: {
+          breed,
+          breedAlias: '',
+          specieId: breed.specieId
+        }
       }
     }
     if (specieName === 'Outros') {
       const otherBreed = await this.breedRepository.loadByName('Sem raça')
       return {
-        breed: otherBreed as Breed & { id: string },
-        breedAlias: ''
+        data: {
+          breed: otherBreed as Breed & { id: string },
+          breedAlias: '',
+          specieId: otherBreed?.specieId as string
+        }
       }
     }
     const withoutBreed = await this.breedRepository.loadByName(`Sem raça ${specieName}`)
     return {
-      breed: withoutBreed as Breed & { id: string },
-      breedAlias: ''
+      data: {
+        breed: withoutBreed as Breed & { id: string },
+        breedAlias: '',
+        specieId: withoutBreed?.specieId as string
+      }
     }
   }
 
@@ -101,19 +138,34 @@ export class DbAppointPet implements AppointPet {
   private async getSize (sizeName: string, specieName: string): Promise<SizeResult> {
     if (this.isCatOrDog(specieName)) {
       const size = await this.sizeRepository.loadByName(sizeName)
+      const specieResult = await this.getSpecie(specieName)
+      if (specieResult.specie.id !== size?.specieId) {
+        return {
+          error: new NotAcceptableError('size')
+        }
+      }
       return {
-        size: size as Size & { id: string }
+        data: {
+          size: size as Size & { id: string },
+          specieId: size?.specieId
+        }
       }
     }
     if (specieName === 'Outros') {
       const otherSize = await this.sizeRepository.loadByName('Sem porte')
       return {
-        size: otherSize as Size & { id: string }
+        data: {
+          size: otherSize as Size & { id: string },
+          specieId: otherSize?.specieId as string
+        }
       }
     }
     const withoutSize = await this.sizeRepository.loadByName(`Sem porte ${specieName}`)
     return {
-      size: withoutSize as Size & { id: string }
+      data: {
+        size: withoutSize as Size & { id: string },
+        specieId: withoutSize?.specieId as string
+      }
     }
   }
 
@@ -131,10 +183,18 @@ type SpecieResult = {
 }
 
 type BreedResult = {
-  breed: Breed & { id: string }
-  breedAlias: string | undefined
+  error?: Error
+  data?: {
+    breed: Breed & { id: string }
+    breedAlias: string | undefined
+    specieId: string
+  }
 }
 
 type SizeResult = {
-  size: Size & { id: string }
+  error?: Error
+  data?: {
+    size: Size & { id: string }
+    specieId: string
+  }
 }

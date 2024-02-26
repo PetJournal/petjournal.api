@@ -17,12 +17,16 @@ export namespace AppointPet {
   }
 
   export interface Result {
-    specie: Specie & { id: string }
-    specieAlias: string | undefined
-    breed: Breed & { id: string }
-    breedAlias: string
-    size: Size & { id: string }
-    castrated: boolean
+    isSuccess: boolean
+    error?: Error
+    data?: {
+      specie: Specie & { id: string }
+      specieAlias: string | undefined
+      breed: Breed & { id: string }
+      breedAlias: string
+      size: Size & { id: string }
+      castrated: boolean
+    }
   }
 
   export interface Dependencies {

@@ -117,7 +117,8 @@ const makeFakeBreedRepository = (): LoadBreedByNameRepository => {
     async loadByName (breedName: LoadBreedByNameRepository.Params): Promise<LoadBreedByNameRepository.Result> {
       return {
         id: 'any_id',
-        name: 'any_name'
+        name: 'any_name',
+        specieId: 'any_id'
       }
     }
   }
@@ -129,7 +130,8 @@ const makeFakeSizeRepository = (): LoadSizeByNameRepository => {
     async loadByName (size: LoadSizeByNameRepository.Params): Promise<LoadSizeByNameRepository.Result> {
       return {
         id: 'any_id',
-        name: 'any_name'
+        name: 'any_name',
+        specieId: 'any_id'
       }
     }
   }
