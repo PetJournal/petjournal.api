@@ -2,11 +2,15 @@ import request from 'supertest'
 import app from '@/main/config/app'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 
-beforeEach(async () => { await PrismaHelper.connect() })
-
-afterEach(async () => { await PrismaHelper.disconnect() })
-
 describe('SignUp Routes', () => {
+  beforeAll(async () => { await PrismaHelper.connect() })
+
+  beforeEach(async () => {
+    await PrismaHelper.clearGuardian()
+  })
+
+  afterAll(async () => { await PrismaHelper.disconnect() })
+
   it('Should return 409 if guardian already exists on database', async () => {
     await request(app)
       .post('/api/signup')

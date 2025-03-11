@@ -2,11 +2,11 @@ import request from 'supertest'
 import app from '@/main/config/app'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 
-beforeEach(async () => { await PrismaHelper.connect() })
-
-afterEach(async () => { await PrismaHelper.disconnect() })
-
 describe('Login Routes', () => {
+  beforeAll(async () => { await PrismaHelper.connect() })
+
+  afterAll(async () => { await PrismaHelper.disconnect() })
+
   it('Should return an access token on success', async () => {
     const responseSignup = await request(app)
       .post('/api/signup')
@@ -30,6 +30,6 @@ describe('Login Routes', () => {
       })
 
     expect(response.status).toBe(200)
-    expect(response.body.accessToken).toBeTruthy()
+    expect(response.body.accessToken).toStrictEqual(expect.any(String))
   })
 })

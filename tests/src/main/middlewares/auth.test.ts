@@ -5,15 +5,18 @@ import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 import env from '@/main/config/env'
 import { JwtAdapter } from '@/infra/cryptography'
 
-beforeEach(async () => { await PrismaHelper.connect() })
-
-afterEach(async () => { await PrismaHelper.disconnect() })
-
 describe('Authentication Middleware', () => {
-  it('Should return 400 if no authorization is provided', async () => {
+  beforeAll(async () => {
+    await PrismaHelper.connect()
+
     app.get('/test_auth', auth, (req, res) => {
       res.send({ userId: req.userId })
     })
+  })
+
+  afterAll(async () => { await PrismaHelper.disconnect() })
+
+  it('Should return 400 if no authorization is provided', async () => {
     await request(app)
       .get('/test_auth')
       .expect(400)
@@ -21,9 +24,6 @@ describe('Authentication Middleware', () => {
 
   it('Should return 401 if token is invalid', async () => {
     const invalidToken = 'invalid_token'
-    app.get('/test_auth', auth, (req, res) => {
-      res.send({ userId: req.userId })
-    })
     await request(app)
       .get('/test_auth')
       .set('Authorization', invalidToken)
@@ -33,9 +33,6 @@ describe('Authentication Middleware', () => {
   it('Should return 401 if token payload is empty', async () => {
     const jwtAdapter = new JwtAdapter(env.secret)
     const tokenWithPayloadEmpty = await jwtAdapter.generate({ payload: {} })
-    app.get('/test_auth', auth, (req, res) => {
-      res.send({ userId: req.userId })
-    })
     await request(app)
       .get('/test_auth')
       .set('Authorization', tokenWithPayloadEmpty)
@@ -64,12 +61,10 @@ describe('Authentication Middleware', () => {
         email: 'johndoe@email.com',
         password: 'Teste@123'
       })
-    app.get('/test_auth', auth, (req, res) => {
-      res.send({ userId: req.userId })
-    })
     const response = await request(app)
       .get('/test_auth')
       .set('Authorization', accessToken)
+
     expect(response.status).toBe(200)
     expect(response.body.userId).toBeTruthy()
   })
