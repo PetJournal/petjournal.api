@@ -5,24 +5,12 @@ import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 describe('SignUp Routes', () => {
   beforeAll(async () => { await PrismaHelper.connect() })
 
-  beforeEach(async () => {
-    await PrismaHelper.clearGuardian()
-  })
+  beforeEach(async () => { await PrismaHelper.clearGuardian() })
 
   afterAll(async () => { await PrismaHelper.disconnect() })
 
   it('Should return 409 if guardian already exists on database', async () => {
-    await request(app)
-      .post('/api/signup')
-      .send({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'johndoe@email.com',
-        password: 'Teste@123',
-        passwordConfirmation: 'Teste@123',
-        phone: '11987654321',
-        isPrivacyPolicyAccepted: true
-      })
+    await PrismaHelper.createGuardian()
 
     await request(app)
       .post('/api/signup')
@@ -30,8 +18,8 @@ describe('SignUp Routes', () => {
         firstName: 'John',
         lastName: 'Doe',
         email: 'johndoe@email.com',
-        password: 'Teste@123',
-        passwordConfirmation: 'Teste@123',
+        password: 'Test@1234',
+        passwordConfirmation: 'Test@1234',
         phone: '11987654321',
         isPrivacyPolicyAccepted: true
       })
@@ -45,8 +33,8 @@ describe('SignUp Routes', () => {
         firstName: 'John',
         lastName: 'Doe',
         email: 'johndoe@email.com',
-        password: 'Teste@123',
-        passwordConfirmation: 'Teste@123',
+        password: 'Test@1234',
+        passwordConfirmation: 'Test@1234',
         phone: '11987654321',
         isPrivacyPolicyAccepted: true
       })

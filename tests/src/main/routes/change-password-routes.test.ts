@@ -7,21 +7,7 @@ describe('PATCH - /api/guardian/change-password Route', () => {
 
   beforeAll(async () => {
     await PrismaHelper.connect()
-
-    const guardian = await request(app)
-      .post('/api/signup')
-      .send({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'johndoe@email.com',
-        password: 'Test@1234',
-        passwordConfirmation: 'Test@1234',
-        phone: '11987654321',
-        isPrivacyPolicyAccepted: true
-      })
-
-    await request(app)
-      .get(`/api/guardian/email-confirmation/${guardian.body.id as string}`)
+    await PrismaHelper.createGuardian()
 
     const { body } = await request(app)
       .post('/api/login')

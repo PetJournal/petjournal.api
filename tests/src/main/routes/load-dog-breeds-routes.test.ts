@@ -8,29 +8,16 @@ describe('LoadDogBreeds route', () => {
   beforeAll(async () => {
     await PrismaHelper.connect()
 
+    await PrismaHelper.createGuardian()
+
     const { body } = await request(app)
-      .post('/api/signup')
-      .send({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'johndoe@email.com',
-        password: 'Teste@123',
-        passwordConfirmation: 'Teste@123',
-        phone: '11987654321',
-        isPrivacyPolicyAccepted: true
-      })
-
-    await request(app)
-      .get(`/api/guardian/email-confirmation/${body.id as string}`)
-
-    const { body: { accessToken: token } } = await request(app)
       .post('/api/login')
       .send({
         email: 'johndoe@email.com',
-        password: 'Teste@123'
+        password: 'Test@1234'
       })
 
-    accessToken = token
+    accessToken = body.accessToken
   })
 
   afterAll(async () => { await PrismaHelper.disconnect() })

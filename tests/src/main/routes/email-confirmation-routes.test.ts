@@ -8,19 +8,9 @@ describe('EmailConfirmation route', () => {
   beforeAll(async () => {
     await PrismaHelper.connect()
 
-    const { body } = await request(app)
-      .post('/api/signup')
-      .send({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'johndoe@email.com',
-        password: 'Teste@123',
-        passwordConfirmation: 'Teste@123',
-        phone: '11987654321',
-        isPrivacyPolicyAccepted: true
-      })
+    const { id } = await PrismaHelper.createGuardian()
 
-    userId = body.id
+    userId = id
   })
 
   afterAll(async () => { await PrismaHelper.disconnect() })

@@ -1,4 +1,3 @@
-import { prisma } from '@/infra/repos/postgresql/prisma'
 import app from '@/main/config/app'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 import request from 'supertest'
@@ -9,31 +8,14 @@ describe('LoadDogSizes route', () => {
   beforeAll(async () => {
     await PrismaHelper.connect()
 
-    await request(app)
-      .post('/api/signup')
-      .send({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'johndoe@email.com',
-        password: 'Teste@123',
-        passwordConfirmation: 'Teste@123',
-        phone: '11987654321',
-        isPrivacyPolicyAccepted: true
-      })
-
-    await prisma.guardian.update({
-      where: { email: 'johndoe@email.com' },
-      data: { emailConfirmation: true }
-    })
+    await PrismaHelper.createGuardian()
 
     const { body } = await request(app)
       .post('/api/login')
       .send({
         email: 'johndoe@email.com',
-        password: 'Teste@123'
+        password: 'Test@1234'
       })
-
-    console.log('body: ', body)
 
     accessToken = body.accessToken
   })

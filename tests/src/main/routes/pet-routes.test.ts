@@ -1,4 +1,3 @@
-import { BcryptAdapter } from '@/infra/cryptography'
 import app from '@/main/config/app'
 import { PrismaHelper, prisma } from '@/tests/helpers/prisma-helper'
 import request from 'supertest'
@@ -144,39 +143,24 @@ describe('Pet Routes', () => {
 
   beforeAll(async () => {
     await PrismaHelper.connect()
-    const bcryptAdapter = new BcryptAdapter(3)
 
-    const guardian = await prisma.guardian.create({
-      data: {
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'johndoe@email.com',
-        password: await bcryptAdapter.encrypt({ value: 'Test@123' }),
-        phone: '11987654321',
-        emailConfirmation: true,
-        verificationToken: ''
-      },
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        emailConfirmation: true,
-        phone: true
-      }
-    })
+    const guardian = await PrismaHelper.createGuardian()
 
     const { body } = await request(app)
       .post('/api/login')
       .send({
         email: 'johndoe@email.com',
-        password: 'Test@123'
+        password: 'Test@1234'
       })
 
     await seedDb()
 
     accessToken = body.accessToken
     fakeUser = { ...guardian }
+    Reflect.deleteProperty(fakeUser, 'password')
+    Reflect.deleteProperty(fakeUser, 'accessToken')
+    Reflect.deleteProperty(fakeUser, 'verificationToken')
+    Reflect.deleteProperty(fakeUser, 'verificationTokenCreatedAt')
   })
 
   beforeEach(async () => { await prisma.pet.deleteMany() })

@@ -8,6 +8,7 @@ import { JwtAdapter } from '@/infra/cryptography'
 describe('Authentication Middleware', () => {
   beforeAll(async () => {
     await PrismaHelper.connect()
+    await PrismaHelper.createGuardian()
 
     app.get('/test_auth', auth, (req, res) => {
       res.send({ userId: req.userId })
@@ -40,26 +41,11 @@ describe('Authentication Middleware', () => {
   })
 
   it('Should return 200 and user ID if token is valid', async () => {
-    const guardian = await request(app)
-      .post('/api/signup')
-      .send({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'johndoe@email.com',
-        password: 'Teste@123',
-        passwordConfirmation: 'Teste@123',
-        phone: '11987654321',
-        isPrivacyPolicyAccepted: true
-      })
-
-    await request(app)
-      .get(`/api/guardian/email-confirmation/${guardian.body.id as string}`)
-
     const { body: { accessToken } } = await request(app)
       .post('/api/login')
       .send({
         email: 'johndoe@email.com',
-        password: 'Teste@123'
+        password: 'Test@1234'
       })
     const response = await request(app)
       .get('/test_auth')

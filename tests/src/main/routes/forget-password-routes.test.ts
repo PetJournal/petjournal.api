@@ -5,18 +5,7 @@ import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 describe('forget-password-routes', () => {
   beforeAll(async () => {
     await PrismaHelper.connect()
-
-    await request(app)
-      .post('/api/signup')
-      .send({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'johndoe@email.com',
-        password: 'Teste@123',
-        passwordConfirmation: 'Teste@123',
-        phone: '11987654321',
-        isPrivacyPolicyAccepted: true
-      })
+    await PrismaHelper.createGuardian()
   })
 
   afterAll(async () => { await PrismaHelper.disconnect() })
