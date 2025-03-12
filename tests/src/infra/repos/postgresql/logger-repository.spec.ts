@@ -3,9 +3,9 @@ import { LoggerPgRepository } from '@/infra/repos/postgresql/logger-repository'
 import { prisma as db } from '@/infra/repos/postgresql/prisma'
 
 describe('LoggerPgRepository', () => {
-  beforeEach(async () => { await PrismaHelper.connect() })
+  beforeAll(async () => { await PrismaHelper.connect() })
 
-  afterEach(async () => { await PrismaHelper.disconnect() })
+  afterAll(async () => { await PrismaHelper.disconnect() })
 
   const makeCountErrors = async (): Promise<number> => {
     return await db.logError.count()

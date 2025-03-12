@@ -2,10 +2,6 @@ import { GuardianAccountRepository } from '@/infra/repos/postgresql'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 import { makeFakeGuardianData } from '@/tests/utils'
 
-beforeEach(async () => { await PrismaHelper.connect() })
-
-afterEach(async () => { await PrismaHelper.disconnect() })
-
 const makeSut = (): GuardianAccountRepository => {
   return new GuardianAccountRepository()
 }
@@ -21,15 +17,23 @@ describe('GuardianAccountRepository', () => {
     verificationToken: 'any_verification_token'
   }
 
+  beforeAll(async () => { await PrismaHelper.connect() })
+
+  beforeEach(async () => { await PrismaHelper.clearGuardian() })
+
+  afterAll(async () => { await PrismaHelper.disconnect() })
+
   describe('AddGuardianRepository', () => {
     it('Should return undefined if the email is already registered', async () => {
       const sut = makeSut()
       const addSpy = jest.spyOn(sut, 'add')
       const editedInput = { ...input, email: 'johndoe123@gmail.com' }
+
       const firstAttempt = await sut.add(editedInput)
       const secondAttempt = await sut.add(editedInput)
+
       expect(firstAttempt).toBeTruthy()
-      expect(secondAttempt).toBeFalsy()
+      expect(secondAttempt).toBeUndefined()
       expect(addSpy).toBeCalledTimes(2)
       expect(addSpy).toHaveBeenNthCalledWith(1, editedInput)
       expect(addSpy).toHaveBeenNthCalledWith(2, editedInput)
@@ -39,10 +43,12 @@ describe('GuardianAccountRepository', () => {
       const sut = makeSut()
       const addSpy = jest.spyOn(sut, 'add')
       const editedInput = { ...input, phone: '123456789' }
+
       const firstAttempt = await sut.add(editedInput)
       const secondAttempt = await sut.add(editedInput)
+
       expect(firstAttempt).toBeTruthy()
-      expect(secondAttempt).toBeFalsy()
+      expect(secondAttempt).toBeUndefined()
       expect(addSpy).toBeCalledTimes(2)
       expect(addSpy).toHaveBeenNthCalledWith(1, editedInput)
       expect(addSpy).toHaveBeenNthCalledWith(2, editedInput)
@@ -58,6 +64,7 @@ describe('GuardianAccountRepository', () => {
         email,
         phone
       }
+
       expect(guardian).toEqual({
         id: expect.any(String),
         firstName: input.firstName,

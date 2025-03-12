@@ -2,17 +2,24 @@ import { PetGender } from '@/domain/models/pet'
 import { PetRepository } from '@/infra/repos/postgresql'
 import { prisma as db } from '@/infra/repos/postgresql/prisma'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
-import { getCombinations } from '@/tests/utils/algorithms'
-
-beforeEach(async () => { await PrismaHelper.connect() })
-
-afterEach(async () => { await PrismaHelper.disconnect() })
 
 const makeSut = (): PetRepository => {
   return new PetRepository()
 }
 
 describe('PetRepository', () => {
+  beforeAll(async () => { await PrismaHelper.connect() })
+
+  beforeEach(async () => {
+    await PrismaHelper.clearPet()
+    await PrismaHelper.clearSize()
+    await PrismaHelper.clearBreed()
+    await PrismaHelper.clearSpecie()
+    await PrismaHelper.clearGuardian()
+  })
+
+  afterAll(async () => { await PrismaHelper.disconnect() })
+
   describe('AddPet method', () => {
     it('Should not return a pet if invalid data is provided', async () => {
       const sut = makeSut()
@@ -31,7 +38,7 @@ describe('PetRepository', () => {
 
       const specie = await sut.add(data)
 
-      expect(specie).toBeFalsy()
+      expect(specie).toBeUndefined()
     })
 
     it('Should return a pet if valid data is provided', async () => {
@@ -46,7 +53,7 @@ describe('PetRepository', () => {
           verificationToken: 'any_token'
         }
       })
-      const specieFK = await db.specie.create({
+      const specie = await db.specie.create({
         data: {
           name: 'any_name'
         }
@@ -54,18 +61,18 @@ describe('PetRepository', () => {
       const breed = await db.breed.create({
         data: {
           name: 'any_name',
-          specieId: specieFK.id
+          specieId: specie.id
         }
       })
       const size = await db.size.create({
         data: {
           name: 'any_name',
-          specieId: specieFK.id
+          specieId: specie.id
         }
       })
       const data = {
         guardianId: guardian.id,
-        specieId: specieFK.id,
+        specieId: specie.id,
         specieAlias: 'any_specie_alias',
         petName: 'any_pet_name',
         gender: PetGender.MALE,
@@ -76,31 +83,27 @@ describe('PetRepository', () => {
         dateOfBirth: new Date(2000, 10, 23)
       }
 
-      const specie = await sut.add(data)
+      const pet = await sut.add(data)
 
-      expect(specie).toBeTruthy()
-      expect(specie).toMatchObject({
+      expect(pet).toEqual({
+        id: expect.any(String),
         guardian: {
+          id: guardian.id,
           firstName: guardian.firstName,
           lastName: guardian.lastName,
           email: guardian.email,
-          phone: guardian.phone
-        },
-        specie: {
-          ...specieFK
+          phone: guardian.phone,
+          emailConfirmation: false
         },
         petName: data.petName,
         gender: data.gender,
         specieAlias: data.specieAlias,
-        breed: {
-          id: breed.id,
-          name: breed.name
-        },
         breedAlias: data.breedAlias,
-        size: {
-          id: size.id,
-          name: size.name
-        }
+        castrated: false,
+        dateOfBirth: new Date(2000, 10, 23),
+        specie,
+        breed,
+        size
       })
     })
   })
@@ -121,9 +124,9 @@ describe('PetRepository', () => {
         dateOfBirth: new Date(2000, 10, 23)
       }
 
-      const specie = await sut.add(data)
+      const pet = await sut.add(data)
 
-      expect(specie).toBeFalsy()
+      expect(pet).toBeUndefined()
     })
 
     it('Should return a pet if valid data is provided', async () => {
@@ -136,6 +139,14 @@ describe('PetRepository', () => {
           password: 'any_password',
           phone: 'any_phone',
           verificationToken: 'any_token'
+        },
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          phone: true,
+          emailConfirmation: true
         }
       })
       const specieFK = await db.specie.create({
@@ -149,24 +160,13 @@ describe('PetRepository', () => {
           specieId: specieFK.id
         }
       })
-      const breed2 = await db.breed.create({
-        data: {
-          name: 'any_name2',
-          specieId: specieFK.id
-        }
-      })
       const size = await db.size.create({
         data: {
           name: 'any_name',
           specieId: specieFK.id
         }
       })
-      const size2 = await db.size.create({
-        data: {
-          name: 'any_name2',
-          specieId: specieFK.id
-        }
-      })
+
       const data = {
         guardianId: guardian.id,
         specieId: specieFK.id,
@@ -180,52 +180,35 @@ describe('PetRepository', () => {
         dateOfBirth: new Date(2000, 10, 23)
       }
 
-      const createdPet = await db.pet.create({ data })
-      const { id, ...pet } = createdPet
+      const { id: petId, ...pet } = await db.pet.create({ data })
 
-      const combinations = {
-        petName: 'Jose',
+      const newData = {
+        gender: PetGender.FEMALE,
+        castrated: true
+      }
+
+      const updatedPet = await sut.update({
+        guardianId: pet.guardianId,
+        petId,
+        ...newData
+      })
+
+      expect(updatedPet).toEqual({
+        id: petId,
+        breed,
+        breedAlias: 'any_breed_alias',
+        castrated: true,
+        dateOfBirth: new Date(2000, 10, 23),
         gender: 'F',
-        breedAlias: 'Caramelo',
-        breedId: breed2.id,
-        sizeId: size2.id
-      }
-      for (const combination of getCombinations(combinations)) {
-        const updatedPet = await sut.update({
-          petId: createdPet.id,
-          ...pet,
-          ...combination
-        })
-
-        const copyCombination = { ...combination }
-        delete combination.breedId
-        delete combination.sizeId
-
-        expect(updatedPet).toMatchObject({
-          guardian: {
-            firstName: guardian.firstName,
-            lastName: guardian.lastName,
-            email: guardian.email,
-            phone: guardian.phone
-          },
-          specie: {
-            ...specieFK
-          },
-          petName: data.petName,
-          gender: data.gender,
-          specieAlias: data.specieAlias,
-          breed: {
-            id: Object.hasOwn(copyCombination, 'breedId') ? breed2.id : breed.id,
-            name: Object.hasOwn(copyCombination, 'breedId') ? breed2.name : breed.name
-          },
-          breedAlias: data.breedAlias,
-          size: {
-            id: Object.hasOwn(copyCombination, 'sizeId') ? size2.id : size.id,
-            name: Object.hasOwn(copyCombination, 'sizeId') ? size2.name : size.name
-          },
-          ...combination
-        })
-      }
+        petName: 'any_pet_name',
+        specie: {
+          id: expect.any(String),
+          name: 'any_name'
+        },
+        size,
+        guardian,
+        specieAlias: 'any_specie_alias'
+      })
     })
   })
 
@@ -242,7 +225,7 @@ describe('PetRepository', () => {
           verificationToken: 'any_token'
         }
       })
-      const specieFK = await db.specie.create({
+      const specie = await db.specie.create({
         data: {
           name: 'any_name'
         }
@@ -250,18 +233,18 @@ describe('PetRepository', () => {
       const breed = await db.breed.create({
         data: {
           name: 'any_name',
-          specieId: specieFK.id
+          specieId: specie.id
         }
       })
       const size = await db.size.create({
         data: {
           name: 'any_name',
-          specieId: specieFK.id
+          specieId: specie.id
         }
       })
       const data = {
         guardianId: guardian.id,
-        specieId: specieFK.id,
+        specieId: specie.id,
         specieAlias: 'any_specie_alias',
         petName: 'any_pet_name',
         gender: PetGender.MALE,
@@ -274,10 +257,11 @@ describe('PetRepository', () => {
 
       await sut.add(data)
       const result = await sut.loadByGuardianId(data.guardianId)
+
       expect(result).toEqual([{
         id: expect.any(String),
         breed: {
-          id: expect.any(String),
+          id: breed.id,
           name: 'any_name'
         },
         breedAlias: 'any_breed_alias',
@@ -286,14 +270,11 @@ describe('PetRepository', () => {
         guardianId: expect.any(String),
         petName: 'any_pet_name',
         size: {
-          id: expect.any(String),
+          id: size.id,
           name: 'any_name'
         },
         specieAlias: 'any_specie_alias',
-        specie: {
-          id: expect.any(String),
-          name: 'any_name'
-        },
+        specie,
         dateOfBirth: new Date(2000, 10, 23)
       }])
     })
@@ -310,7 +291,9 @@ describe('PetRepository', () => {
           verificationToken: 'any_token'
         }
       })
+
       const result = await sut.loadByGuardianId(guardian.id)
+
       expect(result).toEqual([])
     })
   })

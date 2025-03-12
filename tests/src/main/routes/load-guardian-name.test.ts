@@ -3,58 +3,33 @@ import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 import request from 'supertest'
 
 describe('LoadGuardianName route', () => {
-  beforeEach(async () => { await PrismaHelper.connect() })
+  let accessToken = ''
 
-  afterEach(async () => { await PrismaHelper.disconnect() })
+  beforeAll(async () => {
+    await PrismaHelper.connect()
 
-  it('Should return 200 on success', async () => {
-    const guardian = await request(app)
-      .post('/api/signup')
-      .send({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'johndoe@email.com',
-        password: 'Teste@123',
-        passwordConfirmation: 'Teste@123',
-        phone: '11987654321',
-        isPrivacyPolicyAccepted: true
-      })
-
-    await request(app)
-      .get(`/api/guardian/email-confirmation/${guardian.body.id as string}`)
+    await PrismaHelper.createGuardian()
 
     const { body } = await request(app)
       .post('/api/login')
       .send({
         email: 'johndoe@email.com',
-        password: 'Teste@123'
+        password: 'Test@1234'
       })
 
+    accessToken = body.accessToken
+  })
+
+  afterAll(async () => { await PrismaHelper.disconnect() })
+
+  it('Should return 200 on success', async () => {
     await request(app)
       .get('/api/guardian/name')
-      .set('Authorization', `Bearer ${body.accessToken as string}`)
+      .set('Authorization', `Bearer ${accessToken}`)
       .expect(200)
   })
 
   it('Should return 400 if no access token is provided', async () => {
-    await request(app)
-      .post('/api/signup')
-      .send({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'johndoe@email.com',
-        password: 'Teste@123',
-        passwordConfirmation: 'Teste@123',
-        phone: '11987654321',
-        isPrivacyPolicyAccepted: true
-      })
-    await request(app)
-      .post('/api/login')
-      .send({
-        email: 'johndoe@email.com',
-        password: 'Teste@123'
-      })
-
     await request(app)
       .get('/api/guardian/name')
       .set('Authorization', '')
@@ -62,24 +37,6 @@ describe('LoadGuardianName route', () => {
   })
 
   it('Should return 401 if invalid access token is provided', async () => {
-    await request(app)
-      .post('/api/signup')
-      .send({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'johndoe@email.com',
-        password: 'Teste@123',
-        passwordConfirmation: 'Teste@123',
-        phone: '11987654321',
-        isPrivacyPolicyAccepted: true
-      })
-    await request(app)
-      .post('/api/login')
-      .send({
-        email: 'johndoe@email.com',
-        password: 'Teste@123'
-      })
-
     await request(app)
       .get('/api/guardian/name')
       .set('Authorization', 'Bearer invalid_token')
