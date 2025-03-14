@@ -15,7 +15,7 @@ describe('Upload Middleware', () => {
     await request(app).post('/test_upload').expect({ file: null })
   })
 
-  it('should set req.file on file if file is provided', async () => {
+  it('Should set req.file on file if file is provided', async () => {
     const filePath = resolve(__dirname, '..', '..', '..', 'utils', 'images', 'pet.jpg')
     const file = await readFile(filePath)
 
@@ -34,5 +34,15 @@ describe('Upload Middleware', () => {
           }
         })
       })
+  })
+
+  it('Should throw if file is greater than 2MB', async () => {
+    const filePath = resolve(__dirname, '..', '..', '..', 'utils', 'images', 'pet-2.jpg')
+
+    await request(app)
+      .post('/test_upload')
+      .attach('image', filePath)
+      .expect(400)
+      .expect({ error: 'File too large' })
   })
 })
