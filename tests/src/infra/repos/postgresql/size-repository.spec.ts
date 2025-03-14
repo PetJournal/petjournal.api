@@ -2,20 +2,27 @@ import { prisma as db } from '@/infra/repos/postgresql/prisma'
 import { SizeRepository } from '@/infra/repos/postgresql/size-repository'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 
-beforeEach(async () => { await PrismaHelper.connect() })
-afterEach(async () => { await PrismaHelper.disconnect() })
-
 const makeSut = (): SizeRepository => {
   return new SizeRepository()
 }
 
 describe('SizeRepository', () => {
+  beforeAll(async () => { await PrismaHelper.connect() })
+
+  beforeEach(async () => {
+    await PrismaHelper.clearSize()
+    await PrismaHelper.clearSpecie()
+  })
+
+  afterAll(async () => { await PrismaHelper.disconnect() })
+
   describe('LoadByName method', () => {
     it('Should not return a size if invalid name is provided', async () => {
       const sut = makeSut()
       const name = 'invalid_name'
       const result = await sut.loadByName(name)
-      expect(result).toBeFalsy()
+
+      expect(result).toBeUndefined()
     })
 
     it('Should return a size if a valid name is provided', async () => {
@@ -26,10 +33,15 @@ describe('SizeRepository', () => {
         name: 'any_name',
         specieId: specie.id
       }
+
       await db.size.create({ data: { name: size.name, specieId: size.specieId } })
       const result = await sut.loadByName(size.name)
-      expect(result).toBeTruthy()
-      expect(result).toMatchObject({ name: 'any_name' })
+
+      expect(result).toEqual({
+        id: expect.any(String),
+        name: 'any_name',
+        specieId: expect.any(String)
+      })
     })
   })
 
@@ -53,25 +65,15 @@ describe('SizeRepository', () => {
         }
       ]
       await db.size.createMany({ data: sizes })
+
       const result = await sut.loadCatSizes()
-      const result2 = result?.map((item) => {
-        return {
-          name: item.name
-        }
-      })
-      expect(result).toBeTruthy()
-      result2?.forEach((item) => {
-        expect([
-          {
-            name: 'any_name_1'
-          },
-          {
-            name: 'any_name_2'
-          },
-          {
-            name: 'any_name_3'
-          }
-        ]).toContainEqual(item)
+
+      expect(result).toHaveLength(3)
+      sizes.forEach((size) => {
+        expect(result).toContainEqual({
+          ...size,
+          id: expect.any(String)
+        })
       })
     })
   })
@@ -79,7 +81,7 @@ describe('SizeRepository', () => {
   describe('LoadDogSizes', () => {
     it('Should return a list of dog sizes', async () => {
       const sut = makeSut()
-      const specieName = 'any_name'
+      const specieName = 'Cachorro'
       const specie = await db.specie.create({ data: { name: specieName } })
       const sizes = [
         {
@@ -96,25 +98,15 @@ describe('SizeRepository', () => {
         }
       ]
       await db.size.createMany({ data: sizes })
+
       const result = await sut.loadDogSizes()
-      const result2 = result?.map((item) => {
-        return {
-          name: item.name
-        }
-      })
-      expect(result).toBeTruthy()
-      result2?.forEach((item) => {
-        expect([
-          {
-            name: 'any_name_1'
-          },
-          {
-            name: 'any_name_2'
-          },
-          {
-            name: 'any_name_3'
-          }
-        ]).toContainEqual(item)
+
+      expect(result).toHaveLength(3)
+      sizes.forEach((size) => {
+        expect(result).toContainEqual({
+          ...size,
+          id: expect.any(String)
+        })
       })
     })
   })

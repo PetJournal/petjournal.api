@@ -2,39 +2,28 @@ import app from '@/main/config/app'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 import request from 'supertest'
 
-beforeEach(async () => { await PrismaHelper.connect() })
-
-afterEach(async () => { await PrismaHelper.disconnect() })
-
-const makeSetup = async (): Promise<{ accessToken: string }> => {
-  const guardian = await request(app)
-    .post('/api/signup')
-    .send({
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'johndoe@email.com',
-      password: 'Test@1234',
-      passwordConfirmation: 'Test@1234',
-      phone: '11987654321',
-      isPrivacyPolicyAccepted: true
-    })
-
-  await request(app)
-    .get(`/api/guardian/email-confirmation/${guardian.body.id as string}`)
-
-  const { body } = await request(app)
-    .post('/api/login')
-    .send({
-      email: 'johndoe@email.com',
-      password: 'Test@1234'
-    })
-
-  return body
-}
-
 describe('PATCH - /api/guardian/change-password Route', () => {
+  let accessToken = ''
+
+  beforeAll(async () => {
+    await PrismaHelper.connect()
+    await PrismaHelper.createGuardian()
+
+    const { body } = await request(app)
+      .post('/api/login')
+      .send({
+        email: 'johndoe@email.com',
+        password: 'Test@1234'
+      })
+
+    accessToken = body.accessToken
+  })
+
+  afterAll(async () => {
+    await PrismaHelper.disconnect()
+  })
+
   it('Should return 400 if the password field is not provided', async () => {
-    const { accessToken } = await makeSetup()
     const response = await request(app)
       .patch('/api/guardian/change-password')
       .set('Authorization', accessToken)
@@ -47,7 +36,6 @@ describe('PATCH - /api/guardian/change-password Route', () => {
   }, 10000)
 
   it('Should return 400 if the passwordConfirmation field is not provided', async () => {
-    const { accessToken } = await makeSetup()
     const response = await request(app)
       .patch('/api/guardian/change-password')
       .set('Authorization', accessToken)
@@ -60,7 +48,6 @@ describe('PATCH - /api/guardian/change-password Route', () => {
   })
 
   it('Should return 400 if the password is invalid', async () => {
-    const { accessToken } = await makeSetup()
     const response = await request(app)
       .patch('/api/guardian/change-password')
       .set('Authorization', accessToken)
@@ -74,7 +61,6 @@ describe('PATCH - /api/guardian/change-password Route', () => {
   })
 
   it('Should return 400 if the passwordConfirmation is different from password', async () => {
-    const { accessToken } = await makeSetup()
     const response = await request(app)
       .patch('/api/guardian/change-password')
       .set('Authorization', accessToken)
@@ -88,7 +74,6 @@ describe('PATCH - /api/guardian/change-password Route', () => {
   })
 
   it('Should return a status 200 when the password is successfully updated', async () => {
-    const { accessToken } = await makeSetup()
     const response = await request(app)
       .patch('/api/guardian/change-password')
       .set('Authorization', accessToken)
