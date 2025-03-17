@@ -49,7 +49,8 @@ describe('DbAddPet Use Case', () => {
     breedName: 'any_breed_name',
     size: 'any_size',
     castrated: false,
-    dateOfBirth: new Date(2000, 10, 23)
+    dateOfBirth: new Date(2000, 10, 23),
+    image: Buffer.from('any_image')
   }
 
   describe('GuardianRepository', () => {

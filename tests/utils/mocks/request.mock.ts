@@ -96,7 +96,9 @@ const makeFakePetRegistryRequest = (): PetRegistryRequest => {
     dateOfBirth: new Date(2000, 10, 23)
   }
 
-  return { body }
+  const file = Buffer.from('any_image')
+
+  return { body, file }
 }
 
 const makeFakeUpdatePetRequest = (): UpdatePetRequest => {

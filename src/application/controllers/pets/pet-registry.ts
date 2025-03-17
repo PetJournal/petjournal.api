@@ -22,6 +22,7 @@ export class PetRegistryController implements Controller {
       const { specieName, petName, breedName, size, castrated } = httpRequest.body
       const gender = httpRequest.body.gender.toUpperCase()
       const dateOfBirth = new Date(httpRequest.body.dateOfBirth)
+      const image = httpRequest.file ?? null
 
       const result = await this.addPet.add({
         guardianId,
@@ -31,7 +32,8 @@ export class PetRegistryController implements Controller {
         breedName,
         size,
         castrated,
-        dateOfBirth
+        dateOfBirth,
+        image
       })
       if (!result.isSuccess) {
         return notAcceptable(result.error as Error)

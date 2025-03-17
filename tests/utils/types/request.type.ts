@@ -53,6 +53,7 @@ interface PetRegistryRequest {
     castrated: boolean
     dateOfBirth: Date
   }
+  file?: Buffer
 }
 
 interface UpdatePetRequest {

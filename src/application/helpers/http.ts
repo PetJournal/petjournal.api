@@ -5,6 +5,7 @@ export interface HttpRequest {
   params?: any
   body?: any
   authorization?: any
+  file?: Buffer
 }
 
 export interface HttpResponse {

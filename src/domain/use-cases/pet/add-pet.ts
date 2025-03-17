@@ -16,6 +16,7 @@ export namespace AddPet {
     size: string
     castrated: boolean
     dateOfBirth: Date
+    image: Buffer | null
   }
 
   export interface Result {
