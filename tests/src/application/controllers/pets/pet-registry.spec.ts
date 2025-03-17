@@ -61,7 +61,8 @@ describe('PetRegistry Controller', () => {
         breedName: httpRequest.body.breedName,
         size: httpRequest.body.size,
         castrated: httpRequest.body.castrated,
-        dateOfBirth: httpRequest.body.dateOfBirth
+        dateOfBirth: httpRequest.body.dateOfBirth,
+        image: httpRequest.file
       })
     })
   })
