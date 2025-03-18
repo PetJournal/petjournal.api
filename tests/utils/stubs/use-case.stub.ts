@@ -20,7 +20,8 @@ import {
   type SendEmail
 } from '@/domain/use-cases'
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
-import { mockFakeAppointPet, mockFakePetAdded, mockFakePetUpdated, mockFakePetByGuardianIdLoaded, mockFakeSpecieAdded } from '../mocks'
+import { mockFakeAppointPet, mockFakePetUpdated, mockFakePetByGuardianIdLoaded, mockFakeSpecieAdded, makeFakeGuardianData, mockFakeBreedAdded, mockFakeSizeAdded } from '../mocks'
+import { PetGender } from '@/domain/models'
 
 const mockGuardianUseCase = {
   id: 'any_id',
@@ -113,9 +114,30 @@ const makeFakeValidateVerificationTokenUseCase = (): ValidateVerificationToken =
 const makeFakeAddPetUseCase = (): AddPet => {
   class AddGuardianStub implements AddPet {
     async add (petData: AddPet.Params): Promise<AddPet.Result> {
-      const result = {
+      const {
+        password,
+        accessToken,
+        verificationToken,
+        verificationTokenCreatedAt,
+        ...guardian
+      } = makeFakeGuardianData()
+
+      const result: AddPet.Result = {
         isSuccess: true,
-        data: mockFakePetAdded()
+        data: {
+          id: 'any_id',
+          guardian,
+          specie: mockFakeSpecieAdded(),
+          specieAlias: 'any_specie_alias',
+          breed: mockFakeBreedAdded(),
+          breedAlias: 'any_breed_alias',
+          petName: 'any_pet_name',
+          gender: PetGender.MALE,
+          size: mockFakeSizeAdded(),
+          castrated: false,
+          image: 'any_image',
+          dateOfBirth: new Date(2000, 10, 23)
+        }
       }
       return result
     }
@@ -134,7 +156,7 @@ const makeFakeLoadPetsUseCase = (): LoadPets => {
 
 const makeFakeUpdatePetUseCase = (): UpdatePet => {
   class UpdatePetStub implements UpdatePet {
-    async update (petData: UpdatePet.Params): Promise<AddPet.Result> {
+    async update (petData: UpdatePet.Params): Promise<UpdatePet.Result> {
       const result = {
         isSuccess: true,
         data: mockFakePetUpdated()

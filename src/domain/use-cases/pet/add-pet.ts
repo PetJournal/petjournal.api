@@ -22,7 +22,35 @@ export namespace AddPet {
   export interface Result {
     isSuccess: boolean
     error?: Error
-    data?: AddPetRepository.Result
+    data?: {
+      id: string
+      guardian: {
+        id: string
+        firstName: string
+        lastName: string
+        email: string
+        phone: string
+      }
+      specie: {
+        id: string
+        name: string
+      }
+      specieAlias?: string | null
+      petName: string
+      gender: string
+      breed: {
+        id: string
+        name: string
+      }
+      breedAlias: string
+      size: {
+        id: string
+        name: string
+      }
+      castrated: boolean
+      dateOfBirth: Date
+      image: string
+    }
   }
 
   export interface Dependencies {

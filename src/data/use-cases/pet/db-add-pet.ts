@@ -73,7 +73,8 @@ export class DbAddPet implements AddPet {
         breedAlias: pet?.breedAlias as string,
         size: pet?.size as Size & { id: string },
         castrated: pet?.castrated as boolean,
-        dateOfBirth: pet?.dateOfBirth as Date
+        dateOfBirth: pet?.dateOfBirth as Date,
+        image: ''
       }
     }
   }

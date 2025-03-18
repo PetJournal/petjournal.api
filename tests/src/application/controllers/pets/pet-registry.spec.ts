@@ -92,6 +92,9 @@ describe('PetRegistry Controller', () => {
 
     const httpResponse = await sut.handle(httpRequest)
 
-    expect(httpResponse).toEqual(create(mockFakePetAdded()))
+    expect(httpResponse).toEqual(create({
+      ...mockFakePetAdded(),
+      specieAlias: 'any_specie_alias'
+    }))
   })
 })

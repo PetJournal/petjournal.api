@@ -138,7 +138,11 @@ describe('DbAddPet Use Case', () => {
 
     expect(result).toEqual({
       isSuccess: true,
-      data: mockFakePetAdded()
+      data: {
+        ...mockFakePetAdded(),
+        image: '',
+        specieAlias: 'any_specie_alias'
+      }
     })
   })
 })
