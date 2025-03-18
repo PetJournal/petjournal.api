@@ -32,7 +32,8 @@ import {
   type LoadPetByIdRepository,
   type UpdatePetRepository,
   type DeletePetByIdRepository,
-  type UpdateEmailConfirmationRepository
+  type UpdateEmailConfirmationRepository,
+  type FileStorage
 } from '@/data/protocols'
 import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
 import { type LoadDogSizesRepository } from '@/data/protocols/db/size/load-dog-sizes-repository'
@@ -276,6 +277,16 @@ const makeFakeLoadPetByIdRepository = (): LoadPetByIdRepository => {
   return new LoadPetByGuardianIdRepositoryStub()
 }
 
+const makeFakeFileStorage = (): FileStorage => {
+  class FileStorageStub implements FileStorage {
+    async save (file: Buffer): Promise<string> {
+      return 'any_url'
+    }
+  }
+
+  return new FileStorageStub()
+}
+
 export {
   mockHashService,
   mockTokenService,
@@ -292,5 +303,6 @@ export {
   makeFakeTokenService,
   makeFakeLoadCatSizesRepository,
   makeFakeLoadDogSizesRepository,
-  makeFakeSizeRepository
+  makeFakeSizeRepository,
+  makeFakeFileStorage
 }
