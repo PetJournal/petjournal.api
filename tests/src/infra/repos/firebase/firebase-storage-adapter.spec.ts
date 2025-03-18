@@ -63,4 +63,13 @@ describe('FirebaseStorageAdapter', () => {
 
     expect(getDownloadURLSpy).toHaveBeenCalledWith({ fakeRef: true })
   })
+
+  it('Should return null if an error occurs', async () => {
+    const { sut } = makeSut()
+    jest.spyOn(firebase, 'getDownloadURL').mockRejectedValueOnce(new Error())
+
+    const result = await sut.save(params)
+
+    expect(result).toBeNull()
+  })
 })
