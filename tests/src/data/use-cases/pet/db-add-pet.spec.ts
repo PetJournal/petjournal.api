@@ -150,6 +150,15 @@ describe('DbAddPet Use Case', () => {
           image: 'any_url'
         })
       })
+
+      it('Should not call update method if image is not provided', async () => {
+        const { sut, petRepositoryStub } = makeSut()
+        const updateSpy = jest.spyOn(petRepositoryStub, 'update')
+
+        await sut.add({ ...params, image: null })
+
+        expect(updateSpy).not.toHaveBeenCalled()
+      })
     })
   })
 
