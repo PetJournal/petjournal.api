@@ -1,5 +1,5 @@
 import { NotAcceptableError } from '@/application/errors'
-import { type FileStorage, type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
+import { type FileStorage, type AddPetRepository, type LoadGuardianByIdRepository, type UpdatePetRepository } from '@/data/protocols'
 import { DbAddPet } from '@/data/use-cases'
 import { PetGender } from '@/domain/models/pet'
 import { type AddPet, type AppointPet } from '@/domain/use-cases'
@@ -18,7 +18,7 @@ import {
 interface SutTypes {
   sut: DbAddPet
   guardianRepositoryStub: LoadGuardianByIdRepository
-  petRepositoryStub: AddPetRepository
+  petRepositoryStub: AddPetRepository & UpdatePetRepository
   appointPetStub: AppointPet
   fileStorageStub: FileStorage
 }
@@ -91,48 +91,65 @@ describe('DbAddPet Use Case', () => {
   })
 
   describe('PetRepository', () => {
-    it('Should call add method with correct values', async () => {
-      const { sut, petRepositoryStub } = makeSut()
-      const addSpy = jest.spyOn(petRepositoryStub, 'add')
+    describe('Add Method', () => {
+      it('Should call add method with correct values', async () => {
+        const { sut, petRepositoryStub } = makeSut()
+        const addSpy = jest.spyOn(petRepositoryStub, 'add')
 
-      await sut.add(params)
+        await sut.add(params)
 
-      expect(addSpy).toHaveBeenCalledWith({
-        guardianId: mockFakeGuardianAdded().id,
-        specieId: mockFakeSpecieAdded().id,
-        specieAlias: 'any_specie_alias',
-        petName: params.petName,
-        gender: params.gender,
-        breedId: mockFakeBreedAdded().id,
-        breedAlias: 'any_breed_alias',
-        sizeId: mockFakeSizeAdded().id,
-        castrated: false,
-        dateOfBirth: params.dateOfBirth
+        expect(addSpy).toHaveBeenCalledWith({
+          guardianId: mockFakeGuardianAdded().id,
+          specieId: mockFakeSpecieAdded().id,
+          specieAlias: 'any_specie_alias',
+          petName: params.petName,
+          gender: params.gender,
+          breedId: mockFakeBreedAdded().id,
+          breedAlias: 'any_breed_alias',
+          sizeId: mockFakeSizeAdded().id,
+          castrated: false,
+          dateOfBirth: params.dateOfBirth
+        })
+      })
+
+      it('Should return not acceptable error if wrong breed or size is provided to cat or dog', async () => {
+        const { sut, appointPetStub } = makeSut()
+        jest.spyOn(appointPetStub, 'appoint').mockResolvedValueOnce({
+          isSuccess: false,
+          error: new NotAcceptableError('any_breed_name')
+        })
+
+        const result = await sut.add(params)
+
+        expect(result).toEqual({
+          isSuccess: false,
+          error: new NotAcceptableError('any_breed_name')
+        })
+      })
+
+      it('Should throw if add method throws', async () => {
+        const { sut, petRepositoryStub } = makeSut()
+        jest.spyOn(petRepositoryStub, 'add').mockRejectedValue(new Error())
+
+        const promise = sut.add(params)
+
+        await expect(promise).rejects.toThrow()
       })
     })
 
-    it('Should return not acceptable error if wrong breed or size is provided to cat or dog', async () => {
-      const { sut, appointPetStub } = makeSut()
-      jest.spyOn(appointPetStub, 'appoint').mockResolvedValueOnce({
-        isSuccess: false,
-        error: new NotAcceptableError('any_breed_name')
+    describe('Update Method', () => {
+      it('Should call update method with correct value', async () => {
+        const { sut, petRepositoryStub } = makeSut()
+        const updateSpy = jest.spyOn(petRepositoryStub, 'update')
+
+        await sut.add(params)
+
+        expect(updateSpy).toHaveBeenCalledWith({
+          guardianId: mockFakeGuardianAdded().id,
+          petId: mockFakePetAdded()?.id as string,
+          image: 'any_url'
+        })
       })
-
-      const result = await sut.add(params)
-
-      expect(result).toEqual({
-        isSuccess: false,
-        error: new NotAcceptableError('any_breed_name')
-      })
-    })
-
-    it('Should throw if add method throws', async () => {
-      const { sut, petRepositoryStub } = makeSut()
-      jest.spyOn(petRepositoryStub, 'add').mockRejectedValue(new Error())
-
-      const promise = sut.add(params)
-
-      await expect(promise).rejects.toThrow()
     })
   })
 
