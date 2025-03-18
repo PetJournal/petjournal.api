@@ -13,13 +13,16 @@ export class FirebaseStorageAdapter implements FileStorage {
   }
 
   async save ({ file, fileName }: FileStorage.Params): Promise<FileStorage.Result> {
-    const storage = getStorage(this.app)
-    const storageRef = ref(storage, fileName)
+    try {
+      const storage = getStorage(this.app)
+      const storageRef = ref(storage, fileName)
 
-    await uploadBytes(storageRef, file)
+      await uploadBytes(storageRef, file)
 
-    await getDownloadURL(storageRef)
-
-    return ''
+      await getDownloadURL(storageRef)
+      return ''
+    } catch {
+      return null
+    }
   }
 }
