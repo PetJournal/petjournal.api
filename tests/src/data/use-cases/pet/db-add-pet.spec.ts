@@ -1,10 +1,11 @@
 import { NotAcceptableError } from '@/application/errors'
-import { type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
+import { type FileStorage, type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 import { DbAddPet } from '@/data/use-cases'
 import { PetGender } from '@/domain/models/pet'
 import { type AddPet, type AppointPet } from '@/domain/use-cases'
 import {
   makeFakeAppointPetUseCase,
+  makeFakeFileStorage,
   makeFakeGuardianRepository,
   makeFakePetRepository,
   mockFakeBreedAdded,
@@ -19,24 +20,28 @@ interface SutTypes {
   guardianRepositoryStub: LoadGuardianByIdRepository
   petRepositoryStub: AddPetRepository
   appointPetStub: AppointPet
+  fileStorageStub: FileStorage
 }
 
 const makeSut = (): SutTypes => {
   const guardianRepositoryStub = makeFakeGuardianRepository()
   const petRepositoryStub = makeFakePetRepository()
   const appointPetStub = makeFakeAppointPetUseCase()
+  const fileStorageStub = makeFakeFileStorage()
 
   const sut = new DbAddPet({
     guardianRepository: guardianRepositoryStub,
     petRepository: petRepositoryStub,
-    appointPet: appointPetStub
+    appointPet: appointPetStub,
+    fileStorage: fileStorageStub
   })
 
   return {
     sut,
     guardianRepositoryStub,
     petRepositoryStub,
-    appointPetStub
+    appointPetStub,
+    fileStorageStub
   }
 }
 
@@ -128,6 +133,20 @@ describe('DbAddPet Use Case', () => {
       const promise = sut.add(params)
 
       await expect(promise).rejects.toThrow()
+    })
+  })
+
+  describe('FileStorage', () => {
+    it('Should call save method with correct value', async () => {
+      const { sut, fileStorageStub } = makeSut()
+      const saveSpy = jest.spyOn(fileStorageStub, 'save')
+
+      await sut.add(params)
+
+      expect(saveSpy).toHaveBeenCalledWith({
+        file: params.image,
+        fileName: `images/pet-${mockFakePetAdded()?.id as string}`
+      })
     })
   })
 
