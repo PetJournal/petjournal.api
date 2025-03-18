@@ -148,6 +148,15 @@ describe('DbAddPet Use Case', () => {
         fileName: `images/pet-${mockFakePetAdded()?.id as string}`
       })
     })
+
+    it('Should not call save method if image is not provided', async () => {
+      const { sut, fileStorageStub } = makeSut()
+      const saveSpy = jest.spyOn(fileStorageStub, 'save')
+
+      await sut.add({ ...params, image: null })
+
+      expect(saveSpy).not.toHaveBeenCalled()
+    })
   })
 
   it('Should return pet data when saving the pet successfully', async () => {
