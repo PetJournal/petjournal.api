@@ -42,7 +42,8 @@ DeletePetByIdRepository {
           breedAlias: true,
           size: true,
           castrated: true,
-          dateOfBirth: true
+          dateOfBirth: true,
+          image: true
         }
       })
       return pet
@@ -78,7 +79,8 @@ DeletePetByIdRepository {
         breedAlias: true,
         size: true,
         castrated: true,
-        dateOfBirth: true
+        dateOfBirth: true,
+        image: true
       }
     })
     return pet
