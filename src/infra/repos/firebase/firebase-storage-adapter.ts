@@ -1,6 +1,6 @@
 import { type FileStorage } from '@/data/protocols'
 import { type FirebaseApp, initializeApp } from 'firebase/app'
-import { getStorage, ref, uploadBytes } from 'firebase/storage'
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage'
 
 export class FirebaseStorageAdapter implements FileStorage {
   private readonly app: FirebaseApp
@@ -17,6 +17,8 @@ export class FirebaseStorageAdapter implements FileStorage {
     const storageRef = ref(storage, fileName)
 
     await uploadBytes(storageRef, file)
+
+    await getDownloadURL(storageRef)
 
     return ''
   }
