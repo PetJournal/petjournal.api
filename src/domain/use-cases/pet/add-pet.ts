@@ -1,4 +1,4 @@
-import { type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
+import { type FileStorage, type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 import { type PetGender } from '@/domain/models/pet'
 import { type AppointPet } from './appoint-pet'
 
@@ -57,5 +57,6 @@ export namespace AddPet {
     guardianRepository: LoadGuardianByIdRepository
     petRepository: AddPetRepository
     appointPet: AppointPet
+    fileStorage: FileStorage
   }
 }
