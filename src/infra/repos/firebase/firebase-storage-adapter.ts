@@ -19,8 +19,9 @@ export class FirebaseStorageAdapter implements FileStorage {
 
       await uploadBytes(storageRef, file)
 
-      await getDownloadURL(storageRef)
-      return ''
+      const fileUrl = await getDownloadURL(storageRef)
+
+      return fileUrl
     } catch {
       return null
     }
