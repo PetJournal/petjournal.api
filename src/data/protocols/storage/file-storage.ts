@@ -1,3 +1,3 @@
 export interface FileStorage {
-  save: (file: Buffer) => Promise<string>
+  save: (file: Buffer, fileName: string) => Promise<string>
 }
