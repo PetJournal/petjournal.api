@@ -1,5 +1,5 @@
 import { NotAcceptableError } from '@/application/errors'
-import { type FileStorage, type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
+import { type FileStorage, type AddPetRepository, type LoadGuardianByIdRepository, type UpdatePetRepository } from '@/data/protocols'
 import {
   type PetGender,
   type Guardian,
@@ -14,7 +14,7 @@ import {
 
 export class DbAddPet implements AddPet {
   private readonly guardianRepository: LoadGuardianByIdRepository
-  private readonly petRepository: AddPetRepository
+  private readonly petRepository: AddPetRepository & UpdatePetRepository
   private readonly appointPet: AppointPet
   private readonly fileStorage: FileStorage
 
@@ -66,8 +66,17 @@ export class DbAddPet implements AddPet {
       dateOfBirth
     })
 
+    let imageUrl: string | null = ''
     if (petData.image) {
-      await this.fileStorage.save({ file: petData.image, fileName: `images/pet-${pet?.id as string}` })
+      imageUrl = await this.fileStorage.save({ file: petData.image, fileName: `images/pet-${pet?.id as string}` })
+    }
+
+    if (imageUrl) {
+      await this.petRepository.update({
+        guardianId: guardian.id,
+        petId: pet?.id as string,
+        image: imageUrl
+      })
     }
 
     return {
