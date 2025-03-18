@@ -93,7 +93,7 @@ export class DbAddPet implements AddPet {
         size: pet?.size as Size & { id: string },
         castrated: pet?.castrated as boolean,
         dateOfBirth: pet?.dateOfBirth as Date,
-        image: ''
+        image: imageUrl as string
       }
     }
   }
