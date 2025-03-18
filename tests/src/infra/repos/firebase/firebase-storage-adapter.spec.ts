@@ -1,12 +1,13 @@
 import { FirebaseStorageAdapter } from '@/infra/repos/firebase'
-import firebaseStorage from 'firebase/storage'
+import firebase from 'firebase/storage'
 
 jest.mock('firebase/app', () => ({
   initializeApp: jest.fn().mockReturnValue({ fakeApp: true })
 }))
 
 jest.mock('firebase/storage', () => ({
-  getStorage: jest.fn()
+  getStorage: jest.fn().mockReturnValue({ fakeStorage: true }),
+  ref: jest.fn()
 }))
 
 interface SutTypes {
@@ -26,10 +27,19 @@ describe('FirebaseStorageAdapter', () => {
 
   it('Should call getStorage with correct value', async () => {
     const { sut } = makeSut()
-    const getStorageSpy = jest.spyOn(firebaseStorage, 'getStorage')
+    const getStorageSpy = jest.spyOn(firebase, 'getStorage')
 
     await sut.save(file, fileName)
 
     expect(getStorageSpy).toHaveBeenCalledWith({ fakeApp: true })
+  })
+
+  it('Should call ref with correct value', async () => {
+    const { sut } = makeSut()
+    const refSpy = jest.spyOn(firebase, 'ref')
+
+    await sut.save(file, fileName)
+
+    expect(refSpy).toHaveBeenCalledWith({ fakeStorage: true }, fileName)
   })
 })
