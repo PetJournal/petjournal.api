@@ -1,3 +1,12 @@
 export interface FileStorage {
-  save: (file: Buffer, fileName: string) => Promise<string>
+  save: (data: FileStorage.Params) => Promise<FileStorage.Result>
+}
+
+export namespace FileStorage {
+  export type Params = {
+    file: Buffer
+    fileName: string
+  }
+
+  export type Result = string | null
 }

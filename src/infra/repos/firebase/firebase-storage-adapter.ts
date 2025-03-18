@@ -1,6 +1,6 @@
 import { type FileStorage } from '@/data/protocols'
 import { type FirebaseApp, initializeApp } from 'firebase/app'
-import { getStorage, ref } from 'firebase/storage'
+import { getStorage, ref, uploadBytes } from 'firebase/storage'
 
 export class FirebaseStorageAdapter implements FileStorage {
   private readonly app: FirebaseApp
@@ -12,9 +12,11 @@ export class FirebaseStorageAdapter implements FileStorage {
     })
   }
 
-  async save (file: Buffer, fileName: string): Promise<string> {
+  async save ({ file, fileName }: FileStorage.Params): Promise<FileStorage.Result> {
     const storage = getStorage(this.app)
-    ref(storage, fileName)
+    const storageRef = ref(storage, fileName)
+
+    await uploadBytes(storageRef, file)
 
     return ''
   }

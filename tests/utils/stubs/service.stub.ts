@@ -279,7 +279,7 @@ const makeFakeLoadPetByIdRepository = (): LoadPetByIdRepository => {
 
 const makeFakeFileStorage = (): FileStorage => {
   class FileStorageStub implements FileStorage {
-    async save (file: Buffer): Promise<string> {
+    async save (data: FileStorage.Params): Promise<FileStorage.Result> {
       return 'any_url'
     }
   }
