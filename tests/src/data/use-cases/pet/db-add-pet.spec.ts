@@ -159,6 +159,15 @@ describe('DbAddPet Use Case', () => {
 
         expect(updateSpy).not.toHaveBeenCalled()
       })
+
+      it('Should throw if update method throws', async () => {
+        const { sut, petRepositoryStub } = makeSut()
+        jest.spyOn(petRepositoryStub, 'update').mockRejectedValue(new Error())
+
+        const promise = sut.add(params)
+
+        await expect(promise).rejects.toThrow()
+      })
     })
   })
 
