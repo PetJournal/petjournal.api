@@ -203,7 +203,7 @@ describe('DbAddPet Use Case', () => {
       isSuccess: true,
       data: {
         ...mockFakePetAdded(),
-        image: '',
+        image: 'any_url',
         specieAlias: 'any_specie_alias'
       }
     })
