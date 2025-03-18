@@ -8,7 +8,8 @@ jest.mock('firebase/app', () => ({
 jest.mock('firebase/storage', () => ({
   getStorage: jest.fn().mockReturnValue({ fakeStorage: true }),
   ref: jest.fn().mockReturnValue({ fakeRef: true }),
-  uploadBytes: jest.fn()
+  uploadBytes: jest.fn(),
+  getDownloadURL: jest.fn()
 }))
 
 interface SutTypes {
@@ -52,5 +53,14 @@ describe('FirebaseStorageAdapter', () => {
     await sut.save(params)
 
     expect(uploadBytesSpy).toHaveBeenCalledWith({ fakeRef: true }, file)
+  })
+
+  it('Should call getDownloadURL with correct value', async () => {
+    const { sut } = makeSut()
+    const getDownloadURLSpy = jest.spyOn(firebase, 'getDownloadURL')
+
+    await sut.save(params)
+
+    expect(getDownloadURLSpy).toHaveBeenCalledWith({ fakeRef: true })
   })
 })
