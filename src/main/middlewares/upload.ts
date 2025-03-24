@@ -14,15 +14,12 @@ const uploadMulter = multer({
 export const upload = (req: Request, res: Response, next: NextFunction): void => {
   const uploadSingle = uploadMulter.single('image')
 
-  uploadSingle(req, res, (err: any) => {
-    if (!err) {
-      next()
-    }
-
+  uploadSingle(req, res, (err) => {
     if (err instanceof multer.MulterError) {
-      return res.status(400).json({ error: err.message })
+      res.status(400).json({ error: err.message })
+      return
     }
 
-    next(err)
+    next()
   })
 }
