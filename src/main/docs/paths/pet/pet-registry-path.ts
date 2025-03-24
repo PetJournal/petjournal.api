@@ -9,18 +9,46 @@ export const petRegistryPath = {
     requestBody: {
       required: true,
       content: {
-        'application/json': {
+        'multipart/form-data': {
           schema: {
-            $ref: '#/schemas/petRegistryParams'
-          },
-          example: {
-            specieName: 'Gato',
-            petName: 'Garfield',
-            gender: 'M',
-            breedName: 'Doméstico de Pelo Curto',
-            size: 'Pequeno (Até 10Kg)',
-            castrated: true,
-            dateOfBirth: '2021-01-01T00:00:00Z'
+            type: 'object',
+            properties: {
+              specieName: {
+                type: 'string'
+              },
+              petName: {
+                type: 'string'
+              },
+              gender: {
+                type: 'string'
+              },
+              breedName: {
+                type: 'string'
+              },
+              size: {
+                type: 'string'
+              },
+              castrated: {
+                type: 'boolean'
+              },
+              dateOfBirth: {
+                type: 'string',
+                format: 'date-time'
+              },
+              image: {
+                type: 'string',
+                format: 'binary'
+              }
+            },
+            example: {
+              specieName: 'Gato',
+              petName: 'Garfield',
+              gender: 'M',
+              breedName: 'Doméstico de Pelo Curto',
+              size: 'Pequeno (Até 10Kg)',
+              castrated: true,
+              dateOfBirth: '2021-01-01T00:00:00Z'
+            }
           }
         }
       }
