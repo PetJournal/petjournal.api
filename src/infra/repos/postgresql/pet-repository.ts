@@ -115,7 +115,8 @@ DeletePetByIdRepository {
           }
         },
         castrated: true,
-        dateOfBirth: true
+        dateOfBirth: true,
+        image: true
       }
     })
     return pets
@@ -150,7 +151,8 @@ DeletePetByIdRepository {
           }
         },
         castrated: true,
-        dateOfBirth: true
+        dateOfBirth: true,
+        image: true
       }
     })
     return pet

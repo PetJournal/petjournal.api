@@ -80,7 +80,8 @@ export class DbUpdatePet implements UpdatePet {
         breedAlias: petUpdateResult?.breedAlias as string,
         size: petUpdateResult?.size as Size & { id: string },
         castrated: petUpdateResult?.castrated as boolean,
-        dateOfBirth: petUpdateResult?.dateOfBirth as Date
+        dateOfBirth: petUpdateResult?.dateOfBirth as Date,
+        image: petUpdateResult?.image as string
       }
     }
   }

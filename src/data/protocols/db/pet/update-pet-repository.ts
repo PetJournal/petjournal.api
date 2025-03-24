@@ -52,5 +52,6 @@ export namespace UpdatePetRepository {
     size: SizeResultDb
     castrated: boolean
     dateOfBirth: Date
+    image: string
   } | undefined
 }

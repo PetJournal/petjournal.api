@@ -94,7 +94,8 @@ describe('PetRegistry Controller', () => {
 
     expect(httpResponse).toEqual(create({
       ...mockFakePetAdded(),
-      specieAlias: 'any_specie_alias'
+      specieAlias: 'any_specie_alias',
+      image: 'any_image'
     }))
   })
 })

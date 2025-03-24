@@ -278,7 +278,8 @@ describe('PetRepository', () => {
         },
         specieAlias: 'any_specie_alias',
         specie,
-        dateOfBirth: new Date(2000, 10, 23)
+        dateOfBirth: new Date(2000, 10, 23),
+        image: ''
       }])
     })
 
