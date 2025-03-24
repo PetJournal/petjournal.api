@@ -66,7 +66,7 @@ export class DbAddPet implements AddPet {
       dateOfBirth
     })
 
-    let imageUrl: string | null = ''
+    let imageUrl: string = ''
     if (petData.image) {
       imageUrl = await this.fileStorage.save({ file: petData.image, fileName: `images/pet-${pet?.id as string}` })
     }
@@ -93,7 +93,7 @@ export class DbAddPet implements AddPet {
         size: pet?.size as Size & { id: string },
         castrated: pet?.castrated as boolean,
         dateOfBirth: pet?.dateOfBirth as Date,
-        image: imageUrl as string
+        image: imageUrl
       }
     }
   }

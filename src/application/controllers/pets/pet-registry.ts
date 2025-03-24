@@ -12,8 +12,10 @@ export class PetRegistryController implements Controller {
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
+    // console.log('httpRequest PetRegistry', httpRequest)
     try {
-      const error = this.validation.validate(httpRequest.body)
+      const error = this.validation.validate({ ...httpRequest.body, castrated: httpRequest.body.castrated === 'true' })
+      // const error = this.validation.validate(httpRequest.body)
       if (error) {
         return badRequest(error)
       }
@@ -31,7 +33,7 @@ export class PetRegistryController implements Controller {
         gender,
         breedName,
         size,
-        castrated,
+        castrated: castrated === 'true',
         dateOfBirth,
         image
       })
@@ -49,7 +51,8 @@ export class PetRegistryController implements Controller {
         breedAlias: result.data?.breedAlias,
         size: result.data?.size,
         castrated: result.data?.castrated,
-        dateOfBirth: result.data?.dateOfBirth
+        dateOfBirth: result.data?.dateOfBirth,
+        image: result.data?.image
       })
     } catch (error) {
       return serverError(error as Error)

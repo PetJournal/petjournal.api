@@ -8,5 +8,5 @@ export namespace FileStorage {
     fileName: string
   }
 
-  export type Result = string | null
+  export type Result = string
 }
