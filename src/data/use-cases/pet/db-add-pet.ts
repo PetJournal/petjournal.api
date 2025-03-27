@@ -17,17 +17,20 @@ export class DbAddPet implements AddPet {
   private readonly petRepository: AddPetRepository & UpdatePetRepository
   private readonly appointPet: AppointPet
   private readonly fileStorage: FileStorage
+  private readonly defaultImageUrl: string
 
   constructor ({
     guardianRepository,
     petRepository,
     appointPet,
-    fileStorage
+    fileStorage,
+    defaultImageUrl
   }: AddPet.Dependencies) {
     this.guardianRepository = guardianRepository
     this.petRepository = petRepository
     this.appointPet = appointPet
     this.fileStorage = fileStorage
+    this.defaultImageUrl = defaultImageUrl
   }
 
   async add (petData: AddPet.Params): Promise<AddPet.Result> {
@@ -93,7 +96,7 @@ export class DbAddPet implements AddPet {
         size: pet?.size as Size & { id: string },
         castrated: pet?.castrated as boolean,
         dateOfBirth: pet?.dateOfBirth as Date,
-        image: imageUrl
+        image: imageUrl || this.defaultImageUrl
       }
     }
   }

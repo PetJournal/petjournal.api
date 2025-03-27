@@ -28,12 +28,14 @@ const makeSut = (): SutTypes => {
   const petRepositoryStub = makeFakePetRepository()
   const appointPetStub = makeFakeAppointPetUseCase()
   const fileStorageStub = makeFakeFileStorage()
+  const defaultImageUrl = 'any_url'
 
   const sut = new DbAddPet({
     guardianRepository: guardianRepositoryStub,
     petRepository: petRepositoryStub,
     appointPet: appointPetStub,
-    fileStorage: fileStorageStub
+    fileStorage: fileStorageStub,
+    defaultImageUrl
   })
 
   return {
