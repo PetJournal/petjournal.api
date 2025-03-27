@@ -10,5 +10,10 @@ export default {
   mailService: process.env.MAIL_SERVICE ?? '',
   mailUser: process.env.MAIL_USER ?? '',
   mailPass: process.env.MAIL_PASS ?? '',
-  nodeEnv: process.env.NODE_ENV ?? 'development'
+  nodeEnv: process.env.NODE_ENV ?? 'development',
+  firebase: {
+    projectId: process.env.FIREBASE_PROJECT_ID ?? '',
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET ?? '',
+    defaultImageUrl: process.env.FIREBASE_DEFAULT_IMAGE_URL ?? ''
+  }
 }

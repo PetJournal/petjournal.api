@@ -61,7 +61,8 @@ describe('PetRegistry Controller', () => {
         breedName: httpRequest.body.breedName,
         size: httpRequest.body.size,
         castrated: httpRequest.body.castrated,
-        dateOfBirth: httpRequest.body.dateOfBirth
+        dateOfBirth: httpRequest.body.dateOfBirth,
+        image: httpRequest.file
       })
     })
   })
@@ -91,6 +92,10 @@ describe('PetRegistry Controller', () => {
 
     const httpResponse = await sut.handle(httpRequest)
 
-    expect(httpResponse).toEqual(create(mockFakePetAdded()))
+    expect(httpResponse).toEqual(create({
+      ...mockFakePetAdded(),
+      specieAlias: 'any_specie_alias',
+      image: 'any_image'
+    }))
   })
 })

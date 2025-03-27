@@ -1,5 +1,5 @@
 import { NotAcceptableError } from '@/application/errors'
-import { type AddPetRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
+import { type FileStorage, type AddPetRepository, type LoadGuardianByIdRepository, type UpdatePetRepository } from '@/data/protocols'
 import {
   type PetGender,
   type Guardian,
@@ -14,17 +14,23 @@ import {
 
 export class DbAddPet implements AddPet {
   private readonly guardianRepository: LoadGuardianByIdRepository
-  private readonly petRepository: AddPetRepository
+  private readonly petRepository: AddPetRepository & UpdatePetRepository
   private readonly appointPet: AppointPet
+  private readonly fileStorage: FileStorage
+  private readonly defaultImageUrl: string
 
   constructor ({
     guardianRepository,
     petRepository,
-    appointPet
+    appointPet,
+    fileStorage,
+    defaultImageUrl
   }: AddPet.Dependencies) {
     this.guardianRepository = guardianRepository
     this.petRepository = petRepository
     this.appointPet = appointPet
+    this.fileStorage = fileStorage
+    this.defaultImageUrl = defaultImageUrl
   }
 
   async add (petData: AddPet.Params): Promise<AddPet.Result> {
@@ -35,6 +41,7 @@ export class DbAddPet implements AddPet {
         error: new NotAcceptableError('userId')
       }
     }
+
     const appointResult = await this.appointPet.appoint({
       specieName: petData.specieName,
       breedName: petData.breedName,
@@ -47,6 +54,7 @@ export class DbAddPet implements AddPet {
         error: appointResult.error
       }
     }
+
     const { petName, gender, dateOfBirth } = petData
     const pet = await this.petRepository.add({
       guardianId: guardian.id,
@@ -60,6 +68,20 @@ export class DbAddPet implements AddPet {
       castrated: appointResult.data?.castrated as boolean,
       dateOfBirth
     })
+
+    let imageUrl: string = ''
+    if (petData.image) {
+      imageUrl = await this.fileStorage.save({ file: petData.image, fileName: `images/pet-${pet?.id as string}` })
+    }
+
+    if (imageUrl) {
+      await this.petRepository.update({
+        guardianId: guardian.id,
+        petId: pet?.id as string,
+        image: imageUrl
+      })
+    }
+
     return {
       isSuccess: true,
       data: {
@@ -73,7 +95,8 @@ export class DbAddPet implements AddPet {
         breedAlias: pet?.breedAlias as string,
         size: pet?.size as Size & { id: string },
         castrated: pet?.castrated as boolean,
-        dateOfBirth: pet?.dateOfBirth as Date
+        dateOfBirth: pet?.dateOfBirth as Date,
+        image: imageUrl || this.defaultImageUrl
       }
     }
   }

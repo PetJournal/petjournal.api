@@ -20,7 +20,7 @@ const makeFakeGuardianData = (): Guardian => {
     id: 'any_id',
     firstName: 'any_first_name',
     lastName: 'any_last_name',
-    email: 'any_email',
+    email: 'any_email@mail.com',
     password: 'any_password',
     phone: 'any_phone',
     accessToken: 'any_token',
@@ -46,6 +46,7 @@ const mockFakePetAdded = (): AddPetRepository.Result => {
     id: 'any_id',
     guardian: mockFakeGuardianAdded(),
     specie: mockFakeSpecieAdded(),
+    specieAlias: 'any_specie_alias',
     petName: 'any_pet_name',
     gender: 'M',
     breed: mockFakeBreedAdded(),
@@ -114,13 +115,15 @@ const mockFakePetUpdated = (): UpdatePetRepository.Result => {
     id: 'any_id',
     guardian: mockFakeGuardianAdded(),
     specie: mockFakeSpecieAdded(),
+    specieAlias: 'any_specie_alias',
     petName: 'any_pet_name',
     gender: 'M',
     breed: mockFakeBreedAdded(),
     breedAlias: 'any_breed_alias',
     size: mockFakeSizeAdded(),
     castrated: false,
-    dateOfBirth: new Date(2000, 10, 23)
+    dateOfBirth: new Date(2000, 10, 23),
+    image: 'any_image'
   }
 }
 

@@ -21,6 +21,7 @@ export namespace UpdatePetRepository {
     gender?: PetGender
     castrated?: boolean
     dateOfBirth?: Date
+    image?: string
   }
 
   type GuardianResultDb = Pick<Guardian, 'firstName' | 'lastName' | 'email' | 'phone'> & {
@@ -51,5 +52,6 @@ export namespace UpdatePetRepository {
     size: SizeResultDb
     castrated: boolean
     dateOfBirth: Date
+    image: string
   } | undefined
 }

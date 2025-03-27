@@ -38,7 +38,8 @@ export class UpdatePetController implements Controller {
         breedAlias: result.data?.breedAlias,
         size: result.data?.size,
         castrated: result.data?.castrated,
-        dateOfBirth: result.data?.dateOfBirth
+        dateOfBirth: result.data?.dateOfBirth,
+        image: result.data?.image
       })
     } catch (error) {
       return serverError(error as Error)

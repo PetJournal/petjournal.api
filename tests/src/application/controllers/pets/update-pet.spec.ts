@@ -93,7 +93,7 @@ describe('UpdatePet Controller', () => {
 
     const httpResponse = await sut.handle(httpRequestWithoutBody)
 
-    expect(httpResponse).toEqual(success(mockFakePetAdded()))
+    expect(httpResponse).toEqual(success({ ...mockFakePetAdded(), image: 'any_image' }))
   })
 
   it('should return 200 (success) if valid data is provided', async () => {

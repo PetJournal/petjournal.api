@@ -103,7 +103,8 @@ describe('PetRepository', () => {
         dateOfBirth: new Date(2000, 10, 23),
         specie,
         breed,
-        size
+        size,
+        image: ''
       })
     })
   })
@@ -177,7 +178,8 @@ describe('PetRepository', () => {
         breedAlias: 'any_breed_alias',
         sizeId: size.id,
         castrated: false,
-        dateOfBirth: new Date(2000, 10, 23)
+        dateOfBirth: new Date(2000, 10, 23),
+        image: 'any_image'
       }
 
       const { id: petId, ...pet } = await db.pet.create({ data })
@@ -207,7 +209,8 @@ describe('PetRepository', () => {
         },
         size,
         guardian,
-        specieAlias: 'any_specie_alias'
+        specieAlias: 'any_specie_alias',
+        image: 'any_image'
       })
     })
   })
@@ -275,7 +278,8 @@ describe('PetRepository', () => {
         },
         specieAlias: 'any_specie_alias',
         specie,
-        dateOfBirth: new Date(2000, 10, 23)
+        dateOfBirth: new Date(2000, 10, 23),
+        image: ''
       }])
     })
 
