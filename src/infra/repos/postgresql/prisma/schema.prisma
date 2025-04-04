@@ -74,6 +74,14 @@ model Breed {
   @@map("breeds")
 }
 
+model Tag {
+  id String @id @default(uuid())
+  name String
+  color String
+
+  @@map("tags")
+}
+
 model LogError {
   id    Int      @id @default(autoincrement())
   stack String
