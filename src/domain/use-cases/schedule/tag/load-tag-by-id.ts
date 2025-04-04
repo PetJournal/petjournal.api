@@ -10,7 +10,8 @@ export namespace LoadTagById {
     id: string
     name: string
     color: string
-  }
+  } | null
+
   export type Dependencies = {
     tagRepository: LoadTagByIdRepository
   }
