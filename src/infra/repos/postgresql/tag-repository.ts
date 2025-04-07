@@ -1,7 +1,8 @@
+import { type DeleteTagRepository } from '@/data/protocols/db/tag/delete-tag-repository'
 import { prisma as db } from './prisma'
 import { type LoadTagByIdRepository, type AddTagRepository, type UpdateTagRepository, type LoadTagsRepository } from '@/data/protocols'
 
-export class TagRepository implements AddTagRepository, LoadTagByIdRepository, UpdateTagRepository, LoadTagsRepository {
+export class TagRepository implements AddTagRepository, LoadTagByIdRepository, UpdateTagRepository, LoadTagsRepository, DeleteTagRepository {
   async add (params: AddTagRepository.Params): Promise<AddTagRepository.Result> {
     try {
       const tag = await db.tag.create({
@@ -62,5 +63,13 @@ export class TagRepository implements AddTagRepository, LoadTagByIdRepository, U
       }
     })
     return tags
+  }
+
+  async deleteById (tagId: DeleteTagRepository.Param): Promise<DeleteTagRepository.Result> {
+    const tag = await db.tag.delete({ where: { id: tagId } })
+    if (!tag) {
+      return false
+    }
+    return true
   }
 }
