@@ -1,9 +1,12 @@
-import { type Tag } from '@/domain/models'
 
 export interface LoadTagsRepository {
   loadAll: () => Promise<LoadTagsRepository.Result>
 }
 
 export namespace LoadTagsRepository {
-  export type Result = Tag[]
+  export type Result = Array<{
+    id: string
+    name: string
+    color: string
+  }>
 }
