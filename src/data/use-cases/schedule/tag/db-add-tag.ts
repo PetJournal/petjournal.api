@@ -2,14 +2,14 @@ import { type AddTagRepository } from '@/data/protocols'
 import { type AddTag } from '@/domain/use-cases/schedule/tag/add-tag'
 
 export class DbAddTag implements AddTag {
-  private readonly addTagRepository: AddTagRepository
+  private readonly tagRepository: AddTagRepository
 
-  constructor ({ addTagRepository }: AddTag.Dependencies) {
-    this.addTagRepository = addTagRepository
+  constructor ({ tagRepository }: AddTag.Dependencies) {
+    this.tagRepository = tagRepository
   }
 
   async add (tagData: AddTag.Params): Promise<AddTag.Result> {
-    const tag = await this.addTagRepository.add({ name: tagData.name, color: tagData.color })
+    const tag = await this.tagRepository.add({ name: tagData.name, color: tagData.color })
     return tag
   }
 }

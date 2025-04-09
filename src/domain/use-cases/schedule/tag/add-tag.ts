@@ -17,6 +17,6 @@ export namespace AddTag {
   } | undefined
 
   export type Dependencies = {
-    addTagRepository: AddTagRepository
+    tagRepository: AddTagRepository
   }
 }
