@@ -35,5 +35,12 @@ describe('DbAddTag use case', () => {
         color: 'any_color'
       })
     })
+
+    it('Should throw if add method throws', async () => {
+      const { sut, tagRepositoryStub } = makeSut()
+      jest.spyOn(tagRepositoryStub, 'add').mockRejectedValue(new Error())
+      const promise = sut.add(params)
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
