@@ -42,5 +42,15 @@ describe('DbAddTag use case', () => {
       const promise = sut.add(params)
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should return a tag data when saving tag successfully', async () => {
+      const { sut } = makeSut()
+      const result = await sut.add(params)
+      expect(result).toEqual({
+        id: 'any_id',
+        name: 'any_name',
+        color: 'any_color'
+      })
+    })
   })
 })
