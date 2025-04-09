@@ -8,11 +8,6 @@ export class TagRepository implements AddTagRepository {
         data: {
           name: params.name,
           color: params.color
-        },
-        select: {
-          id: true,
-          name: true,
-          color: true
         }
       })
       return tag
