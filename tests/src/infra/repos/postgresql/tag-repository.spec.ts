@@ -29,4 +29,18 @@ describe('TagRepository', () => {
       })
     })
   })
+
+  describe('LoadTagById method', () => {
+    const params = {
+      name: 'any_name',
+      color: 'any_color'
+    }
+    it('Should return null if a invalid tag id is provided', async () => {
+      const sut = makeSut()
+      await sut.add(params)
+      const invalidId = 'invalid_id'
+      const tag = await sut.loadById(invalidId)
+      expect(tag).toBeNull()
+    })
+  })
 })
