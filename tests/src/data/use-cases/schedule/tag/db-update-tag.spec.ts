@@ -43,5 +43,12 @@ describe('DbUpdateTag use case', () => {
         error: new NotAcceptableError('tagId')
       })
     })
+
+    it('Should throw if loadById throws', async () => {
+      const { sut, tagRepositoryStub } = makeSut()
+      jest.spyOn(tagRepositoryStub, 'loadById').mockRejectedValue(new Error())
+      const promise = sut.update(params)
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
