@@ -60,5 +60,12 @@ describe('DbUpdateTag use case', () => {
         name: 'any_name'
       })
     })
+
+    it('Should throw if update throws', async () => {
+      const { sut, tagRepositoryStub } = makeSut()
+      jest.spyOn(tagRepositoryStub, 'update').mockRejectedValue(new Error())
+      const promise = sut.update(params)
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
