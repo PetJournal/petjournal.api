@@ -43,5 +43,15 @@ describe('DbLoadTagById use case', () => {
       const promise = sut.loadById(param)
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should return a tag on success', async () => {
+      const { sut } = makeSut()
+      const tag = await sut.loadById(param)
+      expect(tag).toEqual({
+        id: expect.any(String),
+        name: 'any_name',
+        color: 'any_color'
+      })
+    })
   })
 })
