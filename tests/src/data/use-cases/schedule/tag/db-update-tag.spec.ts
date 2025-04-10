@@ -67,5 +67,18 @@ describe('DbUpdateTag use case', () => {
       const promise = sut.update(params)
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should return a tag data on success', async () => {
+      const { sut } = makeSut()
+      const result = await sut.update(params)
+      expect(result).toEqual({
+        isSuccess: true,
+        data: {
+          id: 'any_id',
+          name: 'updated_name',
+          color: 'any_color'
+        }
+      })
+    })
   })
 })
