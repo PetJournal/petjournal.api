@@ -29,5 +29,12 @@ describe('DbLoadTagById use case', () => {
       await sut.loadById(param)
       expect(loadTagSpy).toHaveBeenCalledWith('any_id')
     })
+
+    it('Should return null if tagRepository returns null', async () => {
+      const { sut, tagRepositoryStub } = makeSut()
+      jest.spyOn(tagRepositoryStub, 'loadById').mockResolvedValueOnce(null)
+      const tag = await sut.loadById(param)
+      expect(tag).toBe(null)
+    })
   })
 })
