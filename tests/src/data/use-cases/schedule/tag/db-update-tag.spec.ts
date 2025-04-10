@@ -1,3 +1,4 @@
+import { NotAcceptableError } from '@/application/errors'
 import { type LoadTagByIdRepository, type UpdateTagRepository } from '@/data/protocols'
 import { DbUpdateTag } from '@/data/use-cases'
 import { type UpdateTag } from '@/domain/use-cases/schedule/tag'
@@ -31,6 +32,16 @@ describe('DbUpdateTag use case', () => {
       const loadTagSpy = jest.spyOn(tagRepositoryStub, 'loadById')
       await sut.update(params)
       expect(loadTagSpy).toHaveBeenCalledWith('any_id')
+    })
+
+    it('Should return NotAcceptableError if incorrect tagId is provided', async () => {
+      const { sut, tagRepositoryStub } = makeSut()
+      jest.spyOn(tagRepositoryStub, 'loadById').mockResolvedValueOnce(null)
+      const tag = await sut.update({ id: 'invalid_id', name: 'updated_name' })
+      expect(tag).toEqual({
+        isSuccess: false,
+        error: new NotAcceptableError('tagId')
+      })
     })
   })
 })
