@@ -50,5 +50,15 @@ describe('DbUpdateTag use case', () => {
       const promise = sut.update(params)
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should call update with correct values', async () => {
+      const { sut, tagRepositoryStub } = makeSut()
+      const updateTagSpy = jest.spyOn(tagRepositoryStub, 'update')
+      await sut.update(params)
+      expect(updateTagSpy).toHaveBeenCalledWith({
+        id: 'any_id',
+        name: 'any_name'
+      })
+    })
   })
 })
