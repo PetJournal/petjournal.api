@@ -14,6 +14,11 @@ describe('TagRepository', () => {
 
   afterAll(async () => { await PrismaHelper.disconnect() })
 
+  const params = {
+    name: 'any_name',
+    color: 'any_color'
+  }
+
   describe('AddTag method', () => {
     it('Should return a tag on success', async () => {
       const sut = makeSut()
@@ -31,10 +36,6 @@ describe('TagRepository', () => {
   })
 
   describe('LoadTagById method', () => {
-    const params = {
-      name: 'any_name',
-      color: 'any_color'
-    }
     it('Should return null if a invalid tag id is provided', async () => {
       const sut = makeSut()
       await sut.add(params)
@@ -53,6 +54,16 @@ describe('TagRepository', () => {
         name: 'any_name',
         color: 'any_color'
       })
+    })
+  })
+
+  describe('UpdateTag method', () => {
+    it('Should return undefined if a tag are not found', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'update').mockResolvedValueOnce(undefined)
+      await sut.add(params)
+      const tag = await sut.update({ id: 'invalid_id', name: 'updated_name' })
+      expect(tag).toBeUndefined()
     })
   })
 })
