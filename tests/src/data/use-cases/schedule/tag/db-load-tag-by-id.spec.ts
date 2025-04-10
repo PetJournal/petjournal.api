@@ -36,5 +36,12 @@ describe('DbLoadTagById use case', () => {
       const tag = await sut.loadById(param)
       expect(tag).toBe(null)
     })
+
+    it('Should throw if tagRepository throws', async () => {
+      const { sut, tagRepositoryStub } = makeSut()
+      jest.spyOn(tagRepositoryStub, 'loadById').mockRejectedValue(new Error())
+      const promise = sut.loadById(param)
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
