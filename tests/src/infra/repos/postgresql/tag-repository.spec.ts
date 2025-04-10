@@ -65,5 +65,17 @@ describe('TagRepository', () => {
       const tag = await sut.update({ id: 'invalid_id', name: 'updated_name' })
       expect(tag).toBeUndefined()
     })
+
+    it('Should return an updated tag on success', async () => {
+      const sut = makeSut()
+      const addedTag = await sut.add(params)
+      const id = addedTag?.id as string
+      const updatedTag = await sut.update({ id, name: 'updated_name' })
+      expect(updatedTag).toEqual({
+        id: expect.any(String),
+        name: 'updated_name',
+        color: 'any_color'
+      })
+    })
   })
 })
