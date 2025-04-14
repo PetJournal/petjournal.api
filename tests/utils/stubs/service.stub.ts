@@ -33,7 +33,8 @@ import {
   type UpdatePetRepository,
   type DeletePetByIdRepository,
   type UpdateEmailConfirmationRepository,
-  type FileStorage
+  type FileStorage,
+  type AddTagRepository
 } from '@/data/protocols'
 import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
 import { type LoadDogSizesRepository } from '@/data/protocols/db/size/load-dog-sizes-repository'
@@ -287,6 +288,19 @@ const makeFakeFileStorage = (): FileStorage => {
   return new FileStorageStub()
 }
 
+const makeFakeTagRepository = (): AddTagRepository => {
+  class TagRepositoryStub implements AddTagRepository {
+    async add (params: AddTagRepository.Params): Promise<AddTagRepository.Result> {
+      return {
+        id: 'any_id',
+        name: 'any_name',
+        color: 'any_color'
+      }
+    }
+  }
+  return new TagRepositoryStub()
+}
+
 export {
   mockHashService,
   mockTokenService,
@@ -304,5 +318,6 @@ export {
   makeFakeLoadCatSizesRepository,
   makeFakeLoadDogSizesRepository,
   makeFakeSizeRepository,
-  makeFakeFileStorage
+  makeFakeFileStorage,
+  makeFakeTagRepository
 }
