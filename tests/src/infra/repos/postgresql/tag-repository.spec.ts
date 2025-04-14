@@ -15,7 +15,7 @@ describe('TagRepository', () => {
 
   afterAll(async () => { await PrismaHelper.disconnect() })
 
-  describe('AddTag method', () => {
+  describe('Add method', () => {
     const params: AddTagRepository.Params = {
       name: 'any_name',
       color: 'any_color'
