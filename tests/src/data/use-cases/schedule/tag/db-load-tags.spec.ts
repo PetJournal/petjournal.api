@@ -35,5 +35,15 @@ describe('DbLoadTags use case', () => {
       const tags = await sut.loadAll()
       expect(tags).toEqual([])
     })
+
+    it('Should return an array of tags on success', async () => {
+      const { sut } = makeSut()
+      const tags = await sut.loadAll()
+      expect(tags).toEqual([{
+        id: 'any_id',
+        name: 'any_name',
+        color: 'any_color'
+      }])
+    })
   })
 })
