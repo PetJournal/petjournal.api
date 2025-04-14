@@ -100,4 +100,13 @@ describe('TagRepository', () => {
       }])
     })
   })
+
+  describe('DeleteById method', () => {
+    it('Should return undefined if an error', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'deleteById').mockRejectedValueOnce(undefined)
+      const promise = sut.deleteById('any_id')
+      await expect(promise).rejects.toBe(undefined)
+    })
+  })
 })
