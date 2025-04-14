@@ -32,5 +32,13 @@ describe('DbDeleteTagById use case', () => {
         error: new NotFoundError('tagId')
       })
     })
+
+    it('Should return true on success', async () => {
+      const { sut } = makeSut()
+      const result = await sut.deleteById('any_id')
+      expect(result).toEqual({
+        isSuccess: true
+      })
+    })
   })
 })
