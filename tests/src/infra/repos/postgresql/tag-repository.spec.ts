@@ -88,5 +88,16 @@ describe('TagRepository', () => {
       const tags = await sut.loadAll()
       expect(tags).toEqual([])
     })
+
+    it('Should return an array of tags on success', async () => {
+      const sut = makeSut()
+      await sut.add(params)
+      const tags = await sut.loadAll()
+      expect(tags).toEqual([{
+        id: expect.any(String),
+        name: 'any_name',
+        color: 'any_color'
+      }])
+    })
   })
 })
