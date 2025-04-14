@@ -30,7 +30,7 @@ describe('TagRepository', () => {
     })
   })
 
-  describe('LoadTagById method', () => {
+  describe('LoadById method', () => {
     const params = {
       name: 'any_name',
       color: 'any_color'
