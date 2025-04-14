@@ -20,11 +20,6 @@ export class TagRepository implements AddTagRepository, LoadTagByIdRepository, U
     const tag = await db.tag.findFirst({
       where: {
         id: tagId
-      },
-      select: {
-        id: true,
-        name: true,
-        color: true
       }
     })
     return tag

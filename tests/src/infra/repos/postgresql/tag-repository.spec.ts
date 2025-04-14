@@ -37,4 +37,30 @@ describe('TagRepository', () => {
       })
     })
   })
+
+  describe('LoadTagById method', () => {
+    const params = {
+      name: 'any_name',
+      color: 'any_color'
+    }
+    it('Should return null if a invalid tag id is provided', async () => {
+      const sut = makeSut()
+      await sut.add(params)
+      const invalidId = 'invalid_id'
+      const tag = await sut.loadById(invalidId)
+      expect(tag).toBeNull()
+    })
+
+    it('Should return a tag on success', async () => {
+      const sut = makeSut()
+      const tagAdded = await sut.add(params)
+      const id = tagAdded?.id as string
+      const tag = await sut.loadById(id)
+      expect(tag).toEqual({
+        id: expect.any(String),
+        name: 'any_name',
+        color: 'any_color'
+      })
+    })
+  })
 })
