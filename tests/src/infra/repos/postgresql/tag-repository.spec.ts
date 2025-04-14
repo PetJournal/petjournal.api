@@ -115,5 +115,13 @@ describe('TagRepository', () => {
       const result = await sut.deleteById('any_id')
       expect(result).toBe(false)
     })
+
+    it('Should return true on success', async () => {
+      const sut = makeSut()
+      const tag = await sut.add(params)
+      const tagId = tag?.id as string
+      const result = await sut.deleteById(tagId)
+      expect(result).toBe(true)
+    })
   })
 })
