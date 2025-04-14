@@ -28,5 +28,12 @@ describe('DbLoadTags use case', () => {
       const promise = sut.loadAll()
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should return an empty array if there are no tags', async () => {
+      const { sut, tagRepositoryStub } = makeSut()
+      jest.spyOn(tagRepositoryStub, 'loadAll').mockResolvedValueOnce([])
+      const tags = await sut.loadAll()
+      expect(tags).toEqual([])
+    })
   })
 })
