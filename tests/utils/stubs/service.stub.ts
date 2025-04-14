@@ -35,7 +35,8 @@ import {
   type UpdateEmailConfirmationRepository,
   type FileStorage,
   type AddTagRepository,
-  type LoadTagByIdRepository
+  type LoadTagByIdRepository,
+  type UpdateTagRepository
 } from '@/data/protocols'
 import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
 import { type LoadDogSizesRepository } from '@/data/protocols/db/size/load-dog-sizes-repository'
@@ -289,8 +290,8 @@ const makeFakeFileStorage = (): FileStorage => {
   return new FileStorageStub()
 }
 
-const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository => {
-  class TagRepositoryStub implements AddTagRepository, LoadTagByIdRepository {
+const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & UpdateTagRepository => {
+  class TagRepositoryStub implements AddTagRepository, LoadTagByIdRepository, UpdateTagRepository {
     async add (params: AddTagRepository.Params): Promise<AddTagRepository.Result> {
       return {
         id: 'any_id',
@@ -303,6 +304,14 @@ const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository => {
       return {
         id: 'any_id',
         name: 'any_name',
+        color: 'any_color'
+      }
+    }
+
+    async update (param: UpdateTagRepository.Params): Promise<UpdateTagRepository.Result> {
+      return {
+        id: 'any_id',
+        name: 'updated_name',
         color: 'any_color'
       }
     }

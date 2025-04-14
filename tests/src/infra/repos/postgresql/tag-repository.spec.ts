@@ -15,11 +15,11 @@ describe('TagRepository', () => {
 
   afterAll(async () => { await PrismaHelper.disconnect() })
 
+  const params: AddTagRepository.Params = {
+    name: 'any_name',
+    color: 'any_color'
+  }
   describe('Add method', () => {
-    const params: AddTagRepository.Params = {
-      name: 'any_name',
-      color: 'any_color'
-    }
     it('Should return undefined if an error', async () => {
       const sut = makeSut()
       jest.spyOn(sut, 'add').mockRejectedValue(new Error())
@@ -38,11 +38,7 @@ describe('TagRepository', () => {
     })
   })
 
-  describe('LoadTagById method', () => {
-    const params = {
-      name: 'any_name',
-      color: 'any_color'
-    }
+  describe('LoadById method', () => {
     it('Should return null if a invalid tag id is provided', async () => {
       const sut = makeSut()
       await sut.add(params)
@@ -59,6 +55,28 @@ describe('TagRepository', () => {
       expect(tag).toEqual({
         id: expect.any(String),
         name: 'any_name',
+        color: 'any_color'
+      })
+    })
+  })
+
+  describe('Update method', () => {
+    it('Should return undefined if a tag are not found', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'update').mockResolvedValueOnce(undefined)
+      await sut.add(params)
+      const tag = await sut.update({ id: 'invalid_id', name: 'updated_name' })
+      expect(tag).toBeUndefined()
+    })
+
+    it('Should return an updated tag on success', async () => {
+      const sut = makeSut()
+      const addedTag = await sut.add(params)
+      const id = addedTag?.id as string
+      const updatedTag = await sut.update({ id, name: 'updated_name' })
+      expect(updatedTag).toEqual({
+        id: expect.any(String),
+        name: 'updated_name',
         color: 'any_color'
       })
     })
