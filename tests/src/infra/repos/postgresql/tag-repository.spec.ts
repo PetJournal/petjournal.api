@@ -19,7 +19,7 @@ describe('TagRepository', () => {
     color: 'any_color'
   }
 
-  describe('AddTag method', () => {
+  describe('Add method', () => {
     it('Should return a tag on success', async () => {
       const sut = makeSut()
       const params = {
@@ -35,7 +35,7 @@ describe('TagRepository', () => {
     })
   })
 
-  describe('LoadTagById method', () => {
+  describe('LoadById method', () => {
     it('Should return null if a invalid tag id is provided', async () => {
       const sut = makeSut()
       await sut.add(params)
@@ -57,7 +57,7 @@ describe('TagRepository', () => {
     })
   })
 
-  describe('UpdateTag method', () => {
+  describe('Update method', () => {
     it('Should return undefined if a tag are not found', async () => {
       const sut = makeSut()
       jest.spyOn(sut, 'update').mockResolvedValueOnce(undefined)
