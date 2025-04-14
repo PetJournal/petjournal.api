@@ -81,4 +81,12 @@ describe('TagRepository', () => {
       })
     })
   })
+
+  describe('LoadAll method', () => {
+    it('Should return an empty array if there are not tags', async () => {
+      const sut = makeSut()
+      const tags = await sut.loadAll()
+      expect(tags).toEqual([])
+    })
+  })
 })
