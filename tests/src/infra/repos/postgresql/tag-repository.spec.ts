@@ -108,5 +108,12 @@ describe('TagRepository', () => {
       const promise = sut.deleteById('any_id')
       await expect(promise).rejects.toBe(undefined)
     })
+
+    it('Should return false if an invalid tag id is provided', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'deleteById').mockResolvedValueOnce(false)
+      const result = await sut.deleteById('any_id')
+      expect(result).toBe(false)
+    })
   })
 })
