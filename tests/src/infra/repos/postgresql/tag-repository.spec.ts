@@ -45,7 +45,6 @@ describe('TagRepository', () => {
     }
     it('Should return null if a invalid tag id is provided', async () => {
       const sut = makeSut()
-      await sut.add(params)
       const invalidId = 'invalid_id'
       const tag = await sut.loadById(invalidId)
       expect(tag).toBeNull()
