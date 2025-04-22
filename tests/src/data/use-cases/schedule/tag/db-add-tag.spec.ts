@@ -1,6 +1,6 @@
 import { type AddTagRepository } from '@/data/protocols'
 import { DbAddTag } from '@/data/use-cases'
-import { type AddTag } from '@/domain/use-cases/schedule/tag/add-tag'
+import { type AddTag } from '@/domain/use-cases/scheduler/tag/add-tag'
 import { makeFakeTagRepository } from '@/tests/utils'
 
 interface SutTypes {
