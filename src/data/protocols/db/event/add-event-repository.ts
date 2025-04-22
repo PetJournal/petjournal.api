@@ -16,5 +16,5 @@ export namespace AddEventRepository {
     start: Date
     end: Date
     date: Date
-  }
+  } | undefined
 }
