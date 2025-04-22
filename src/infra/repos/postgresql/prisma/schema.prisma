@@ -96,8 +96,20 @@ model Scheduler {
   daysOfWeek Int[] @map("days_of_week")
   daysOfMonth Int[] @map("days_of_month")
   pets Pet[] @relation("PetScheduler")
+  event Event[]
 
   @@map("schedulers")
+}
+
+model Event {
+  id String @id @default(uuid())
+  scheduler Scheduler @relation(fields: [schedulerId], references: [id])
+  schedulerId String @map("scheduler_id")
+  start DateTime
+  end DateTime
+  date DateTime
+
+  @@map("events")
 }
 
 model LogError {
