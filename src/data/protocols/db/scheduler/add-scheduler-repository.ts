@@ -14,7 +14,7 @@ export namespace AddSchedulerRepository {
     endAt: Date
     daysOfWeek: number[]
     daysOfMonth: number[]
-    pets: Pet[]
+    pets: string[]
   }
 
   export type Result = {

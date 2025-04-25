@@ -1,4 +1,5 @@
 import { type AddEventRepository, type AddSchedulerRepository, type AddTagRepository } from '@/data/protocols'
+import { type EventsGenerator } from '@/data/protocols/service'
 import { type Pet } from '@prisma/client'
 
 export interface AddScheduler {
@@ -15,7 +16,7 @@ export namespace AddScheduler {
     endAt: Date
     daysOfWeek: number[]
     daysOfMonth: number[]
-    pets: Pet[]
+    pets: string[]
   }
 
   export type Result = {
@@ -35,5 +36,6 @@ export namespace AddScheduler {
     tagRepository: AddTagRepository
     eventRepository: AddEventRepository
     schedulerRepository: AddSchedulerRepository
+    eventGenerator: EventsGenerator
   }
 }
