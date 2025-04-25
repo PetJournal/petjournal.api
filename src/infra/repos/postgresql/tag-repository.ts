@@ -33,11 +33,6 @@ export class TagRepository implements AddTagRepository, LoadTagByIdRepository, U
       },
       where: {
         id
-      },
-      select: {
-        id: true,
-        name: true,
-        color: true
       }
     })
     return tag
