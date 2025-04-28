@@ -39,13 +39,7 @@ export class TagRepository implements AddTagRepository, LoadTagByIdRepository, U
   }
 
   async loadAll (): Promise<LoadTagsRepository.Result> {
-    const tags = await db.tag.findMany({
-      select: {
-        id: true,
-        name: true,
-        color: true
-      }
-    })
+    const tags = await db.tag.findMany()
     return tags
   }
 }
