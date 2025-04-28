@@ -1,0 +1,17 @@
+export interface LoadEventByDateAndStartRepository {
+  loadByDateAndStart: (params: LoadEventByDateAndStartRepository.Params) => Promise<LoadEventByDateAndStartRepository.Result>
+}
+
+export namespace LoadEventByDateAndStartRepository {
+  export type Params = {
+    date: Date
+    start: string
+  }
+
+  export type Result = {
+    schedulerId: string
+    start: Date
+    end: Date
+    date: Date
+  } | null
+}
