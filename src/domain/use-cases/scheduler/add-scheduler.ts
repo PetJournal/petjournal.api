@@ -1,4 +1,4 @@
-import { type LoadTagByIdRepository, type AddEventRepository, type AddSchedulerRepository, type AddTagRepository, type LoadPetByIdRepository } from '@/data/protocols'
+import { type LoadTagByIdRepository, type AddSchedulerRepository, type AddTagRepository, type LoadPetByIdRepository, type DeleteSchedulerByIdRepository } from '@/data/protocols'
 import { type EventsGenerator } from '@/data/protocols/service'
 import { type Pet } from '@prisma/client'
 
@@ -41,8 +41,7 @@ export namespace AddScheduler {
   export type Dependencies = {
     tagRepository: AddTagRepository & LoadTagByIdRepository
     petRepository: LoadPetByIdRepository
-    eventRepository: AddEventRepository
-    schedulerRepository: AddSchedulerRepository
+    schedulerRepository: AddSchedulerRepository & DeleteSchedulerByIdRepository
     eventGenerator: EventsGenerator
   }
 }
