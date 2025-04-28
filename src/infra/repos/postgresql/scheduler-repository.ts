@@ -1,7 +1,7 @@
-import { type AddSchedulerRepository } from '@/data/protocols/db/scheduler/add-scheduler-repository'
 import { prisma as db } from './prisma'
+import { type AddSchedulerRepository, type DeleteSchedulerByIdRepository } from '@/data/protocols'
 
-export class SchedulerRepository implements AddSchedulerRepository {
+export class SchedulerRepository implements AddSchedulerRepository, DeleteSchedulerByIdRepository {
   async add (params: AddSchedulerRepository.Params): Promise<AddSchedulerRepository.Result> {
     const connectPets = params.pets.map(petId => ({ id: petId }))
     try {
@@ -28,5 +28,18 @@ export class SchedulerRepository implements AddSchedulerRepository {
     } catch (error) {
       return undefined
     }
+  }
+
+  async delete (param: DeleteSchedulerByIdRepository.Param): Promise<DeleteSchedulerByIdRepository.Result> {
+    const scheduler = await db.scheduler.delete({
+      where: {
+        id: param
+      }
+    })
+
+    if (!scheduler) {
+      return false
+    }
+    return true
   }
 }
