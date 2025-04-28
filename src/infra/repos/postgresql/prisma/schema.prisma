@@ -95,6 +95,7 @@ model Scheduler {
   endAt DateTime @map("end_at")
   daysOfWeek Int[] @map("days_of_week")
   daysOfMonth Int[] @map("days_of_month")
+  daily Boolean
   pets Pet[] @relation("PetScheduler")
   event Event[]
 

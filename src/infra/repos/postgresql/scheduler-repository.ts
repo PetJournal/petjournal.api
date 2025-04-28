@@ -3,7 +3,7 @@ import { prisma as db } from './prisma'
 
 export class SchedulerRepository implements AddSchedulerRepository {
   async add (params: AddSchedulerRepository.Params): Promise<AddSchedulerRepository.Result> {
-    const connectPets = params.pets.map(pet => ({ id: pet.id }))
+    const connectPets = params.pets.map(petId => ({ id: petId }))
     try {
       const scheduler = await db.scheduler.create({
         data: {
@@ -15,6 +15,7 @@ export class SchedulerRepository implements AddSchedulerRepository {
           endAt: params.endAt,
           daysOfWeek: params.daysOfWeek,
           daysOfMonth: params.daysOfMonth,
+          daily: params.daily,
           pets: {
             connect: connectPets
           }
