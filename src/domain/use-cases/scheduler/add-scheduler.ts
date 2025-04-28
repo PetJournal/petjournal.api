@@ -16,7 +16,7 @@ export namespace AddScheduler {
     endAt: Date
     daysOfWeek?: number[]
     daysOfMonth?: number[]
-    daily: boolean
+    daily?: boolean
     pets: string[]
   }
 

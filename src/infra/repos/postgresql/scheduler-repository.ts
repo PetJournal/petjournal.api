@@ -13,9 +13,9 @@ export class SchedulerRepository implements AddSchedulerRepository, DeleteSchedu
           note: params.note,
           startAt: params.startAt,
           endAt: params.endAt,
-          daysOfWeek: params.daysOfWeek,
-          daysOfMonth: params.daysOfMonth,
-          daily: params.daily,
+          daysOfWeek: params.daysOfWeek !== undefined ? params.daysOfWeek : [],
+          daysOfMonth: params.daysOfMonth !== undefined ? params.daysOfMonth : [],
+          daily: params.daily !== undefined ? params.daily : false,
           pets: {
             connect: connectPets
           }

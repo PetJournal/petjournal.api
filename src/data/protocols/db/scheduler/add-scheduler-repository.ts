@@ -14,7 +14,7 @@ export namespace AddSchedulerRepository {
     endAt: Date
     daysOfWeek?: number[]
     daysOfMonth?: number[]
-    daily: boolean
+    daily?: boolean
     pets: string[]
   }
 
@@ -26,8 +26,8 @@ export namespace AddSchedulerRepository {
     note: string
     startAt: Date
     endAt: Date
-    daysOfWeek?: number[]
-    daysOfMonth?: number[]
+    daysOfWeek: number[]
+    daysOfMonth: number[]
     daily: boolean
     pets: Pet[]
   } | undefined
