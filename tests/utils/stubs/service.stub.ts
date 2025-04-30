@@ -36,7 +36,8 @@ import {
   type FileStorage,
   type AddTagRepository,
   type LoadTagByIdRepository,
-  type UpdateTagRepository
+  type UpdateTagRepository,
+  type LoadTagsRepository
 } from '@/data/protocols'
 import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
 import { type LoadDogSizesRepository } from '@/data/protocols/db/size/load-dog-sizes-repository'
@@ -290,8 +291,8 @@ const makeFakeFileStorage = (): FileStorage => {
   return new FileStorageStub()
 }
 
-const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & UpdateTagRepository => {
-  class TagRepositoryStub implements AddTagRepository, LoadTagByIdRepository, UpdateTagRepository {
+const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & UpdateTagRepository & LoadTagsRepository => {
+  class TagRepositoryStub implements AddTagRepository, LoadTagByIdRepository, UpdateTagRepository, LoadTagsRepository {
     async add (params: AddTagRepository.Params): Promise<AddTagRepository.Result> {
       return {
         id: 'any_id',
@@ -314,6 +315,14 @@ const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & Upd
         name: 'updated_name',
         color: 'any_color'
       }
+    }
+
+    async loadAll (): Promise<LoadTagsRepository.Result> {
+      return [{
+        id: 'any_id',
+        name: 'any_name',
+        color: 'any_color'
+      }]
     }
   }
   return new TagRepositoryStub()
