@@ -6,8 +6,8 @@ export class CreateSchedulerController implements Controller {
   private readonly addScheduler: AddScheduler
   private readonly validation: Validation
 
-  constructor ({ AddScheduler, validation }: CreateSchedulerController.Dependencies) {
-    this.addScheduler = AddScheduler
+  constructor ({ addScheduler, validation }: CreateSchedulerController.Dependencies) {
+    this.addScheduler = addScheduler
     this.validation = validation
   }
 
@@ -55,6 +55,6 @@ export class CreateSchedulerController implements Controller {
 export namespace CreateSchedulerController {
   export interface Dependencies {
     validation: Validation
-    AddScheduler: AddScheduler
+    addScheduler: AddScheduler
   }
 }
