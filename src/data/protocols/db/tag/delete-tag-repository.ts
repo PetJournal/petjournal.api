@@ -4,6 +4,6 @@ export interface DeleteTagRepository {
 
 export namespace DeleteTagRepository {
   export type Param = string
-  export type Result = boolean | undefined
+  export type Result = boolean
 
 }
