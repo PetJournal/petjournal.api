@@ -15,14 +15,12 @@ describe('TagRepository', () => {
 
   afterAll(async () => { await PrismaHelper.disconnect() })
 
+  const params: AddTagRepository.Params = {
+    name: 'any_name',
+    color: 'any_color'
+  }
 
-    const params: AddTagRepository.Params = {
-      name: 'any_name',
-      color: 'any_color'
-    }
-    
   describe('Add method', () => {
-    
     it('Should return undefined if an error', async () => {
       const sut = makeSut()
       jest.spyOn(sut, 'add').mockRejectedValue(new Error())
@@ -42,7 +40,6 @@ describe('TagRepository', () => {
   })
 
   describe('LoadById method', () => {
-    
     it('Should return null if a invalid tag id is provided', async () => {
       const sut = makeSut()
       const invalidId = 'invalid_id'
@@ -82,6 +79,42 @@ describe('TagRepository', () => {
         name: 'updated_name',
         color: 'any_color'
       })
+    })
+  })
+
+  describe('LoadAll method', () => {
+    it('Should return an empty array if there are not tags', async () => {
+      const sut = makeSut()
+      const tags = await sut.loadAll()
+      expect(tags).toEqual([])
+    })
+
+    it('Should return an array of tags on success', async () => {
+      const sut = makeSut()
+      await sut.add(params)
+      const tags = await sut.loadAll()
+      expect(tags).toEqual([{
+        id: expect.any(String),
+        name: 'any_name',
+        color: 'any_color'
+      }])
+    })
+  })
+
+  describe('DeleteById method', () => {
+    it('Should return false if an invalid tag id is provided', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'deleteById').mockResolvedValueOnce(false)
+      const result = await sut.deleteById('any_id')
+      expect(result).toBe(false)
+    })
+
+    it('Should return true on success', async () => {
+      const sut = makeSut()
+      const tag = await sut.add(params)
+      const tagId = tag?.id as string
+      const result = await sut.deleteById(tagId)
+      expect(result).toBe(true)
     })
   })
 })
