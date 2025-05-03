@@ -40,6 +40,7 @@ model Pet {
   castrated   Boolean  @default(false)
   dateOfBirth DateTime @map("date_of_birth")
   image       String   @default("")
+  scheduler Scheduler[] @relation("PetScheduler")
 
   @@map("pets")
 }
@@ -78,8 +79,37 @@ model Tag {
   id String @id @default(uuid())
   name String
   color String
+  scheduler Scheduler[]
 
   @@map("tags")
+}
+
+model Scheduler {
+  id String @id @default(uuid())
+  tag Tag @relation(fields: [tagId], references: [id])
+  tagId String @map("tag_id")
+  title String
+  description String
+  note String
+  startAt DateTime @map("start_at")
+  endAt DateTime @map("end_at")
+  daysOfWeek Int[] @map("days_of_week")
+  daysOfMonth Int[] @map("days_of_month")
+  pets Pet[] @relation("PetScheduler")
+  event Event[]
+
+  @@map("schedulers")
+}
+
+model Event {
+  id String @id @default(uuid())
+  scheduler Scheduler @relation(fields: [schedulerId], references: [id])
+  schedulerId String @map("scheduler_id")
+  start DateTime
+  end DateTime
+  date DateTime
+
+  @@map("events")
 }
 
 model LogError {
