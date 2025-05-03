@@ -45,10 +45,11 @@ export class TagRepository implements AddTagRepository, LoadTagByIdRepository, U
   }
 
   async deleteById (tagId: DeleteTagRepository.Param): Promise<DeleteTagRepository.Result> {
-    const tag = await db.tag.delete({ where: { id: tagId } })
-    if (!tag) {
+    try {
+      await db.tag.delete({ where: { id: tagId } })
+      return true
+    } catch (error) {
       return false
     }
-    return true
   }
 }
