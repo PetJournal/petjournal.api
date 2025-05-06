@@ -1,6 +1,6 @@
 import { AddTagController } from '@/application/controllers/scheduler'
-import { NotAcceptableError } from '@/application/errors'
-import { notAcceptable } from '@/application/helpers'
+import { NotAcceptableError, ServerError } from '@/application/errors'
+import { notAcceptable, serverError } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type AddTag } from '@/domain/use-cases'
 import { makeFakeAddTagRequest, makeFakeAddTagUseCase, makeFakeValidation } from '@/tests/utils'
@@ -37,6 +37,13 @@ describe('AddTag Controller', () => {
       })
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(notAcceptable(new NotAcceptableError('Internal Server Error!')))
+    })
+
+    it('Should return 500(Server Error) if AddTag throws', async () => {
+      const { sut, addTagStub } = makeSut()
+      jest.spyOn(addTagStub, 'add').mockRejectedValue(new Error())
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(serverError(new ServerError('Internal server error')))
     })
   })
 })
