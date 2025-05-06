@@ -47,9 +47,12 @@ describe('DbAddTag use case', () => {
       const { sut } = makeSut()
       const result = await sut.add(params)
       expect(result).toEqual({
-        id: 'any_id',
-        name: 'any_name',
-        color: 'any_color'
+        isSuccess: true,
+        data: {
+          id: 'any_id',
+          name: 'any_name',
+          color: 'any_color'
+        }
       })
     })
   })

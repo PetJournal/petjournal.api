@@ -1,6 +1,6 @@
 import { AddTagController } from '@/application/controllers/scheduler'
 import { NotAcceptableError, ServerError } from '@/application/errors'
-import { badRequest, notAcceptable, serverError } from '@/application/helpers'
+import { badRequest, create, notAcceptable, serverError } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type AddTag } from '@/domain/use-cases'
 import { makeFakeAddTagRequest, makeFakeAddTagUseCase, makeFakeValidation } from '@/tests/utils'
@@ -71,5 +71,15 @@ describe('AddTag Controller', () => {
       await sut.handle(httpRequest)
       expect(validationSpy).toHaveBeenCalledWith(httpRequest.body)
     })
+  })
+
+  it('Should return 201 (Created) if valid data is provided', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(create({
+      id: 'any_id',
+      name: 'any_name',
+      color: 'any_color'
+    }))
   })
 })
