@@ -1,6 +1,6 @@
 import { AddTagController } from '@/application/controllers/scheduler'
 import { NotAcceptableError, ServerError } from '@/application/errors'
-import { notAcceptable, serverError } from '@/application/helpers'
+import { badRequest, notAcceptable, serverError } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type AddTag } from '@/domain/use-cases'
 import { makeFakeAddTagRequest, makeFakeAddTagUseCase, makeFakeValidation } from '@/tests/utils'
@@ -54,6 +54,15 @@ describe('AddTag Controller', () => {
         name: httpRequest.body.name,
         color: httpRequest.body.color
       })
+    })
+  })
+
+  describe('Validations', () => {
+    it('Should return 400 (BadRequest) if validation returns error', async () => {
+      const { sut, validationStub } = makeSut()
+      jest.spyOn(validationStub, 'validate').mockReturnValue(new Error())
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(badRequest(new Error()))
     })
   })
 })
