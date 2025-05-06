@@ -45,5 +45,15 @@ describe('AddTag Controller', () => {
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(serverError(new ServerError('Internal server error')))
     })
+
+    it('Should call AddTag with correct values', async () => {
+      const { sut, addTagStub } = makeSut()
+      const addTagSpy = jest.spyOn(addTagStub, 'add')
+      await sut.handle(httpRequest)
+      expect(addTagSpy).toHaveBeenCalledWith({
+        name: httpRequest.body.name,
+        color: httpRequest.body.color
+      })
+    })
   })
 })
