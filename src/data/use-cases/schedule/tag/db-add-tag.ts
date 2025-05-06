@@ -1,5 +1,5 @@
 import { type AddTagRepository } from '@/data/protocols'
-import { type AddTag } from '@/domain/use-cases/schedule/tag/add-tag'
+import { type AddTag } from '@/domain/use-cases/scheduler/tag/add-tag'
 
 export class DbAddTag implements AddTag {
   private readonly tagRepository: AddTagRepository

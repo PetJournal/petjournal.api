@@ -1,5 +1,5 @@
 import { type LoadTagsRepository } from '@/data/protocols'
-import { type LoadTags } from '@/domain/use-cases/schedule/tag'
+import { type LoadTags } from '@/domain/use-cases/scheduler/tag'
 
 export class DbLoadTags implements LoadTags {
   private readonly tagRepository: LoadTagsRepository

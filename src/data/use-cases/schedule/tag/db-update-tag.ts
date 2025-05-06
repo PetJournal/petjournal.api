@@ -1,6 +1,6 @@
 import { NotAcceptableError } from '@/application/errors'
 import { type LoadTagByIdRepository, type UpdateTagRepository } from '@/data/protocols'
-import { type UpdateTag } from '@/domain/use-cases/schedule/tag'
+import { type UpdateTag } from '@/domain/use-cases/scheduler/tag'
 
 export class DbUpdateTag implements UpdateTag {
   private readonly tagRepository: UpdateTagRepository & LoadTagByIdRepository
