@@ -1,7 +1,7 @@
 import { NotFoundError } from '@/application/errors'
 import { type DeleteTagRepository } from '@/data/protocols'
 import { DbDeleteTagById } from '@/data/use-cases'
-import { type DeleteTagById } from '@/domain/use-cases/schedule/tag'
+import { type DeleteTagById } from '@/domain/use-cases/scheduler/tag'
 import { makeFakeTagRepository } from '@/tests/utils'
 
 interface SutTypes {
