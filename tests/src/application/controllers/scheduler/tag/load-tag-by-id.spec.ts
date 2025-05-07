@@ -1,6 +1,6 @@
 import { LoadTagByIdController } from '@/application/controllers'
 import { NotAcceptableError } from '@/application/errors'
-import { serverError } from '@/application/helpers'
+import { serverError, success } from '@/application/helpers'
 import { type LoadTagById } from '@/domain/use-cases'
 import { makeFakeLoadTagByIdUseCase } from '@/tests/utils'
 
@@ -41,5 +41,15 @@ describe('LoadTagById Controller', () => {
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(serverError(new NotAcceptableError('Internal Server Error!')))
     })
+  })
+
+  it('Should return a tag on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(success({
+      id: 'any_id',
+      name: 'any_name',
+      color: 'any_color'
+    }))
   })
 })
