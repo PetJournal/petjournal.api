@@ -1,6 +1,6 @@
 import { DeleteTagByIdController } from '@/application/controllers'
 import { NotFoundError, ServerError } from '@/application/errors'
-import { notAcceptable, serverError } from '@/application/helpers'
+import { notAcceptable, serverError, success } from '@/application/helpers'
 import { type DeleteTagById } from '@/domain/use-cases/scheduler/tag'
 import { makeFakeDeleteTagByIdUseCase } from '@/tests/utils'
 
@@ -50,6 +50,15 @@ describe('DeleteTagById Controller', () => {
       jest.spyOn(deleteTagStub, 'deleteById').mockRejectedValue(new Error())
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(serverError(new ServerError('Internal server error!')))
+    })
+
+    it('Should return 200 (success) if tag was deleted', async () => {
+      const { sut } = makeSut()
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(success({
+        message: 'Tag deleted',
+        tagId: 'any_id'
+      }))
     })
   })
 })
