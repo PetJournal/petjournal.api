@@ -37,5 +37,12 @@ describe('DeleteTagById Controller', () => {
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(notAcceptable(new NotFoundError('tagId')))
     })
+
+    it('Should call deleteTag with correct value', async () => {
+      const { sut, deleteTagStub } = makeSut()
+      const deleteTagSpy = jest.spyOn(deleteTagStub, 'deleteById')
+      await sut.handle(httpRequest)
+      expect(deleteTagSpy).toHaveBeenCalledWith('any_id')
+    })
   })
 })
