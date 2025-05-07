@@ -1,6 +1,6 @@
 import { DeleteTagByIdController } from '@/application/controllers'
-import { NotFoundError } from '@/application/errors'
-import { notAcceptable } from '@/application/helpers'
+import { NotFoundError, ServerError } from '@/application/errors'
+import { notAcceptable, serverError } from '@/application/helpers'
 import { type DeleteTagById } from '@/domain/use-cases/scheduler/tag'
 import { makeFakeDeleteTagByIdUseCase } from '@/tests/utils'
 
@@ -43,6 +43,13 @@ describe('DeleteTagById Controller', () => {
       const deleteTagSpy = jest.spyOn(deleteTagStub, 'deleteById')
       await sut.handle(httpRequest)
       expect(deleteTagSpy).toHaveBeenCalledWith('any_id')
+    })
+
+    it('Should return 500(serverError) if deleteTag throws', async () => {
+      const { sut, deleteTagStub } = makeSut()
+      jest.spyOn(deleteTagStub, 'deleteById').mockRejectedValue(new Error())
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(serverError(new ServerError('Internal server error!')))
     })
   })
 })
