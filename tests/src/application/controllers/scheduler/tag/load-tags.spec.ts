@@ -1,6 +1,6 @@
 import { LoadTagsController } from '@/application/controllers'
 import { NotAcceptableError } from '@/application/errors'
-import { serverError } from '@/application/helpers'
+import { serverError, success } from '@/application/helpers'
 import { type LoadTags } from '@/domain/use-cases/scheduler/tag'
 import { makeFakeLoadTagsUseCase } from '@/tests/utils'
 
@@ -28,6 +28,13 @@ describe('LoadTags Controller', () => {
       jest.spyOn(loadTagsStub, 'loadAll').mockRejectedValue(new Error())
       const httpResponse = await sut.handle({})
       expect(httpResponse).toEqual(serverError(new NotAcceptableError('Internal server error!')))
+    })
+
+    it('Should return an empty array if there are not tags registered', async () => {
+      const { sut, loadTagsStub } = makeSut()
+      jest.spyOn(loadTagsStub, 'loadAll').mockResolvedValueOnce([])
+      const httpResponse = await sut.handle({})
+      expect(httpResponse).toEqual(success([]))
     })
   })
 })
