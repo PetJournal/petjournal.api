@@ -1,6 +1,6 @@
 import { UpdateTagController } from '@/application/controllers'
 import { NotAcceptableError, ServerError } from '@/application/errors'
-import { notAcceptable, serverError, success } from '@/application/helpers'
+import { badRequest, notAcceptable, serverError, success } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type UpdateTag } from '@/domain/use-cases/scheduler/tag'
 import { makeFakeUpdateTagUseCase, makeFakeValidation } from '@/tests/utils'
@@ -56,6 +56,15 @@ describe('UpdateTag Contoller', () => {
       const updateTagSpy = jest.spyOn(updateTagStub, 'update')
       await sut.handle(httpRequest)
       expect(updateTagSpy).toHaveBeenCalledWith({ id: 'any_tag_id', name: 'any_name' })
+    })
+  })
+
+  describe('Validation', () => {
+    it('Should return 404(badRequest) if validation returns an error', async () => {
+      const { sut, validationStub } = makeSut()
+      jest.spyOn(validationStub, 'validate').mockReturnValue(new Error())
+      const result = await sut.handle(httpRequest)
+      expect(result).toEqual(badRequest(new Error()))
     })
   })
 
