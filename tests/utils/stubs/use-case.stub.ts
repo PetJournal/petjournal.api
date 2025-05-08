@@ -24,6 +24,7 @@ import {
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
 import { mockFakeAppointPet, mockFakePetUpdated, mockFakePetByGuardianIdLoaded, mockFakeSpecieAdded, makeFakeGuardianData, mockFakeBreedAdded, mockFakeSizeAdded } from '../mocks'
 import { PetGender } from '@/domain/models'
+import { type DeleteTagById } from '@/domain/use-cases/scheduler/tag'
 import { type LoadTags } from '@/domain/use-cases/scheduler/tag'
 
 const mockGuardianUseCase = {
@@ -267,6 +268,16 @@ const makeFakeSendEmailUseCase = (): SendEmail => {
   return new SendEmailStub()
 }
 
+const makeFakeDeleteTagByIdUseCase = (): DeleteTagById => {
+  class DeleteTagByIdStub implements DeleteTagById {
+    async deleteById (tagId: DeleteTagById.Param): Promise<DeleteTagById.Result> {
+      return {
+        isSuccess: true
+      }
+    }
+  }
+  return new DeleteTagByIdStub()
+
 const makeFakeLoadTagsUseCase = (): LoadTags => {
   class LoadTagsStub implements LoadTags {
     async loadAll (): Promise<LoadTags.Result> {
@@ -328,6 +339,7 @@ export {
   makeFakeLoadCatSizesUseCase,
   makeFakeLoadDogSizesUSeCase,
   makeFakeSendEmailUseCase,
+  makeFakeDeleteTagByIdUseCase,
   makeFakeLoadTagsUseCase,
   makeFakeAddTagUseCase,
   makeFakeLoadTagByIdUseCase
