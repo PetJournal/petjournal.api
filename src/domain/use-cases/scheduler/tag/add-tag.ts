@@ -11,10 +11,14 @@ export namespace AddTag {
   }
 
   export type Result = {
-    id: string
-    name: string
-    color: string
-  } | undefined
+    isSuccess: boolean
+    error?: Error
+    data?: {
+      id: string
+      name: string
+      color: string
+    }
+  }
 
   export type Dependencies = {
     tagRepository: AddTagRepository
