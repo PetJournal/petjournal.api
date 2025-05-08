@@ -24,6 +24,7 @@ import {
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
 import { mockFakeAppointPet, mockFakePetUpdated, mockFakePetByGuardianIdLoaded, mockFakeSpecieAdded, makeFakeGuardianData, mockFakeBreedAdded, mockFakeSizeAdded } from '../mocks'
 import { PetGender } from '@/domain/models'
+import { type LoadTags } from '@/domain/use-cases/scheduler/tag'
 
 const mockGuardianUseCase = {
   id: 'any_id',
@@ -266,7 +267,19 @@ const makeFakeSendEmailUseCase = (): SendEmail => {
   return new SendEmailStub()
 }
 
-const makeFakeAddTagUseCase = (): AddTag => {
+const makeFakeLoadTagsUseCase = (): LoadTags => {
+  class LoadTagsStub implements LoadTags {
+    async loadAll (): Promise<LoadTags.Result> {
+      return [{
+        id: 'any_id',
+        name: 'any_name',
+        color: 'any_color'
+      }]
+    }
+  }
+  return new LoadTagsStub()
+
+  const makeFakeAddTagUseCase = (): AddTag => {
   class AddTagStub implements AddTag {
     async add (tagData: AddTag.Params): Promise<AddTag.Result> {
       return {
@@ -315,6 +328,7 @@ export {
   makeFakeLoadCatSizesUseCase,
   makeFakeLoadDogSizesUSeCase,
   makeFakeSendEmailUseCase,
+  makeFakeLoadTagsUseCase,
   makeFakeAddTagUseCase,
   makeFakeLoadTagByIdUseCase
 }
