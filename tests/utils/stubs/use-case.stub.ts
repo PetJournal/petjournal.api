@@ -18,6 +18,7 @@ import {
   type DeletePet,
   type EmailConfirmation,
   type SendEmail,
+  type AddTag,
   type LoadTagById
 } from '@/domain/use-cases'
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
@@ -265,6 +266,22 @@ const makeFakeSendEmailUseCase = (): SendEmail => {
   return new SendEmailStub()
 }
 
+const makeFakeAddTagUseCase = (): AddTag => {
+  class AddTagStub implements AddTag {
+    async add (tagData: AddTag.Params): Promise<AddTag.Result> {
+      return {
+        isSuccess: true,
+        data: {
+          id: 'any_id',
+          name: 'any_name',
+          color: 'any_color'
+        }
+      }
+    }
+  }
+  return new AddTagStub()
+}
+  
 const makeFakeLoadTagByIdUseCase = (): LoadTagById => {
   class LoadTagByIdStub implements LoadTagById {
     async loadById (tagId: LoadTagById.Param): Promise<LoadTagById.Result> {
@@ -298,5 +315,6 @@ export {
   makeFakeLoadCatSizesUseCase,
   makeFakeLoadDogSizesUSeCase,
   makeFakeSendEmailUseCase,
+  makeFakeAddTagUseCase,
   makeFakeLoadTagByIdUseCase
 }
