@@ -1,6 +1,6 @@
 import { UpdateTagController } from '@/application/controllers'
 import { NotAcceptableError, ServerError } from '@/application/errors'
-import { notAcceptable, serverError } from '@/application/helpers'
+import { notAcceptable, serverError, success } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type UpdateTag } from '@/domain/use-cases/scheduler/tag'
 import { makeFakeUpdateTagUseCase, makeFakeValidation } from '@/tests/utils'
@@ -57,5 +57,18 @@ describe('UpdateTag Contoller', () => {
       await sut.handle(httpRequest)
       expect(updateTagSpy).toHaveBeenCalledWith({ id: 'any_tag_id', name: 'any_name' })
     })
+  })
+
+  it('Should return 200(success) if updateTag success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(success({
+      isSuccess: true,
+      data: {
+        id: 'any_id',
+        name: 'any_name',
+        color: 'any_color'
+      }
+    }))
   })
 })
