@@ -1,1 +1,6 @@
 export * from './update-tag'
+export * from './delete-tag-by-id'
+export * from './load-tags'
+export * from './add-tag'
+export * from './load-tag-by-id'
+export * from './load-tags'

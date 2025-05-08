@@ -1,3 +1,4 @@
+import { ServerError } from '@/application/errors'
 import { type AddTagRepository } from '@/data/protocols'
 import { DbAddTag } from '@/data/use-cases'
 import { type AddTag } from '@/domain/use-cases/scheduler/tag/add-tag'
@@ -43,13 +44,26 @@ describe('DbAddTag use case', () => {
       await expect(promise).rejects.toThrow()
     })
 
+    it('Should return undefined if invalid data is provided', async () => {
+      const { sut, tagRepositoryStub } = makeSut()
+      jest.spyOn(tagRepositoryStub, 'add').mockResolvedValueOnce(undefined)
+      const result = await sut.add(params)
+      expect(result).toEqual({
+        isSuccess: false,
+        error: new ServerError('Internal Server Error!')
+      })
+    })
+
     it('Should return a tag data when saving tag successfully', async () => {
       const { sut } = makeSut()
       const result = await sut.add(params)
       expect(result).toEqual({
-        id: 'any_id',
-        name: 'any_name',
-        color: 'any_color'
+        isSuccess: true,
+        data: {
+          id: 'any_id',
+          name: 'any_name',
+          color: 'any_color'
+        }
       })
     })
   })
