@@ -66,6 +66,13 @@ describe('UpdateTag Contoller', () => {
       const result = await sut.handle(httpRequest)
       expect(result).toEqual(badRequest(new Error()))
     })
+
+    it('Should call validation with correct values', async () => {
+      const { sut, validationStub } = makeSut()
+      const validationSpy = jest.spyOn(validationStub, 'validate')
+      await sut.handle(httpRequest)
+      expect(validationSpy).toHaveBeenCalledWith({ tagId: 'any_tag_id', name: 'any_name' })
+    })
   })
 
   it('Should return 200(success) if updateTag success', async () => {
