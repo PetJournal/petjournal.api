@@ -17,8 +17,9 @@ export class UpdateTagController implements Controller {
       if (error) {
         return badRequest(error)
       }
+      const { tagId } = httpRequest.params
       const { name } = httpRequest.body
-      const result = await this.updateTag.update(name)
+      const result = await this.updateTag.update({ id: tagId, name })
       if (!result.isSuccess) {
         return notAcceptable(result.error as Error)
       }
