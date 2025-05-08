@@ -28,7 +28,7 @@ const makeSut = (): SutTypes => {
 
 describe('UpdateTag Contoller', () => {
   const httpRequest = {
-    params: 'any_tag_id',
+    params: { tagId: 'any_tag_id' },
     body: {
       name: 'any_name'
     }
@@ -49,6 +49,13 @@ describe('UpdateTag Contoller', () => {
       jest.spyOn(updateTagStub, 'update').mockRejectedValue(new Error())
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(serverError(new ServerError('Internal server Error!')))
+    })
+
+    it('Should call updateTag with correct values', async () => {
+      const { sut, updateTagStub } = makeSut()
+      const updateTagSpy = jest.spyOn(updateTagStub, 'update')
+      await sut.handle(httpRequest)
+      expect(updateTagSpy).toHaveBeenCalledWith({ id: 'any_tag_id', name: 'any_name' })
     })
   })
 })
