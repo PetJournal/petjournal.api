@@ -24,9 +24,7 @@ import {
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
 import { mockFakeAppointPet, mockFakePetUpdated, mockFakePetByGuardianIdLoaded, mockFakeSpecieAdded, makeFakeGuardianData, mockFakeBreedAdded, mockFakeSizeAdded } from '../mocks'
 import { PetGender } from '@/domain/models'
-import { type UpdateTag } from '@/domain/use-cases/scheduler/tag'
-import { type DeleteTagById } from '@/domain/use-cases/scheduler/tag'
-import { type LoadTags } from '@/domain/use-cases/scheduler/tag'
+import { type UpdateTag, type DeleteTagById, type LoadTags } from '@/domain/use-cases/scheduler/tag'
 
 const mockGuardianUseCase = {
   id: 'any_id',
@@ -309,7 +307,8 @@ const makeFakeLoadTagsUseCase = (): LoadTags => {
   return new LoadTagsStub()
 }
 
- class AddTagStub implements AddTag {
+const makeFakeAddTagUseCase = (): AddTag => {
+  class AddTagStub implements AddTag {
     async add (tagData: AddTag.Params): Promise<AddTag.Result> {
       return {
         isSuccess: true,
@@ -323,7 +322,7 @@ const makeFakeLoadTagsUseCase = (): LoadTags => {
   }
   return new AddTagStub()
 }
-  
+
 const makeFakeLoadTagByIdUseCase = (): LoadTagById => {
   class LoadTagByIdStub implements LoadTagById {
     async loadById (tagId: LoadTagById.Param): Promise<LoadTagById.Result> {
