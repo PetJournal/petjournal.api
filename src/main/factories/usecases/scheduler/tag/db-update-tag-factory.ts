@@ -2,7 +2,7 @@ import { DbUpdateTag } from '@/data/use-cases'
 import { type UpdateTag } from '@/domain/use-cases'
 import { TagRepository } from '@/infra/repos/postgresql'
 
-export const makeUpdateTag = (): DbUpdateTag => {
+export const makeDbUpdateTag = (): DbUpdateTag => {
   const tagRepository = new TagRepository()
   const dependencies: UpdateTag.Dependencies = {
     tagRepository
