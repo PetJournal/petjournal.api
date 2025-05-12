@@ -37,5 +37,12 @@ describe('Tag Routes', () => {
         color: '#324ca8'
       })
     })
+
+    it('Should return 400 if no access token is provided', async () => {
+      await request(app)
+        .post('/api/tag')
+        .set('Authorization', '')
+        .expect(400)
+    })
   })
 })
