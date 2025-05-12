@@ -45,5 +45,12 @@ describe('Tag Routes', () => {
         }
       })
     })
+
+    it('Should return 400 if no access token is provided', async () => {
+      await request(app)
+        .put('/api/tag/:tagId')
+        .set('Authorization', '')
+        .expect(400)
+    })
   })
 })
