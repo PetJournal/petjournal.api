@@ -85,6 +85,13 @@ interface EmailConfirmationRequest {
   }
 }
 
+interface AddTagRequest {
+  body: {
+    name: string
+    color: string
+  }
+}
+
 export {
   type AuthMiddlewareRequest,
   type LoginRequest,
@@ -95,5 +102,6 @@ export {
   type PetRegistryRequest,
   type UpdatePetRequest,
   type DeletePetRequest,
-  type EmailConfirmationRequest
+  type EmailConfirmationRequest,
+  type AddTagRequest
 }
