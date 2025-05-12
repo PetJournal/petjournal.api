@@ -37,4 +37,10 @@ describe('ColorValidation', () => {
     sut.validate({ color: 'any_color' })
     expect(colorValidatorSpy).toHaveBeenCalledWith('any_color')
   })
+
+  it('Should return void if a valid color field is a valid color', () => {
+    const { sut } = makeSut()
+    const result = sut.validate({ color: 'any_color' })
+    expect(result).toBeFalsy()
+  })
 })
