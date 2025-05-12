@@ -52,5 +52,22 @@ describe('Tag Routes', () => {
         .set('Authorization', '')
         .expect(400)
     })
+
+    it('Should return 406 (NotAcceptable) if invalid tagId is Provided', async () => {
+      await request(app)
+        .post('/api/tag')
+        .set('Authorization', accessToken)
+        .send({
+          name: 'Vacina',
+          color: '#324ca8'
+        })
+      const response = await request(app)
+        .put('/api/tag/b1e64ea1-0f6f-4cad-b3d6-434468cb2c5d')
+        .set('Authorization', accessToken)
+        .send({
+          name: 'tag name updated'
+        })
+      expect(response.status).toBe(406)
+    })
   })
 })
