@@ -12,7 +12,7 @@ export class ColorValidation implements Validation {
   }
 
   validate (input: any): Error | void {
-    if (typeof input[this.color] !== 'string' && input[this.color] !== null) {
+    if (typeof input[this.color] !== 'string') {
       return new InvalidParamError(this.color)
     }
     const isValid = this.validator.isValid(input[this.color])
