@@ -1,6 +1,6 @@
 import { NotFoundError } from '@/application/errors'
 import { type DeleteTagRepository } from '@/data/protocols'
-import { type DeleteTagById } from '@/domain/use-cases/schedule/tag'
+import { type DeleteTagById } from '@/domain/use-cases/scheduler/tag'
 
 export class DbDeleteTagById implements DeleteTagById {
   private readonly tagRepository: DeleteTagRepository

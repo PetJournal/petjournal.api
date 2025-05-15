@@ -1,6 +1,6 @@
 import { type LoadTagsRepository } from '@/data/protocols'
 import { DbLoadTags } from '@/data/use-cases'
-import { type LoadTags } from '@/domain/use-cases/schedule/tag'
+import { type LoadTags } from '@/domain/use-cases/scheduler/tag'
 import { makeFakeTagRepository } from '@/tests/utils'
 
 interface SutTypes {
