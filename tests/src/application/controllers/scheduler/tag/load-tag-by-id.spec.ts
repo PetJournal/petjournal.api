@@ -23,7 +23,7 @@ const makeSut = (): SutTypes => {
 
 describe('LoadTagById Controller', () => {
   const httpRequest = {
-    body: {
+    params: {
       tagId: 'any_id'
     }
   }

@@ -11,7 +11,7 @@ export class LoadTagByIdController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const { tagId } = httpRequest.body
+      const { tagId } = httpRequest.params
       const result = await this.loadTag.loadById(tagId)
       return success(result)
     } catch (error) {
