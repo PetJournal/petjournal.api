@@ -1,2 +1,5 @@
 export * from './db-add-tag-factory'
 export * from './db-update-tag-factory'
+export * from './db-load-tag-by-id-factory'
+export * from './db-load-tags-factory'
+export * from './db-delete-tag-by-id-factory'
