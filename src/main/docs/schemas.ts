@@ -12,7 +12,10 @@ import {
   sizeSchema,
   specieSchema,
   waitingCodeParamsSchema,
-  updatePetParamsSchema
+  updatePetParamsSchema,
+  tagSchema,
+  tagParamsSchema,
+  updateTagParamsSchema
 } from './schemas/'
 
 export default {
@@ -29,5 +32,8 @@ export default {
   changePasswordParams: changePasswordParamsSchema,
   waitingCodeParams: waitingCodeParamsSchema,
   petRegistryParams: petRegistryParamsSchema,
-  updatePetParams: updatePetParamsSchema
+  updatePetParams: updatePetParamsSchema,
+  tag: tagSchema,
+  addTagParams: tagParamsSchema,
+  updateTagParams: updateTagParamsSchema
 }
