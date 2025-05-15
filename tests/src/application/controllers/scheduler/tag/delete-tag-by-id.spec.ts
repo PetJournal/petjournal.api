@@ -23,7 +23,7 @@ const makeSut = (): SutTypes => {
 
 describe('DeleteTagById Controller', () => {
   const httpRequest = {
-    body: {
+    params: {
       tagId: 'any_id'
     }
   }
