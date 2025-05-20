@@ -16,4 +16,10 @@ describe('Title Validator Adapter', () => {
     const isValid = sut.isValid('invalid_title')
     expect(isValid).toBe(false)
   })
+
+  it('Should return true if validation returns true', () => {
+    const sut = makeSut()
+    const isValid = sut.isValid('valid_title')
+    expect(isValid).toBe(true)
+  })
 })
