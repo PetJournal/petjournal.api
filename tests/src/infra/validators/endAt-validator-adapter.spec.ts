@@ -16,4 +16,10 @@ describe('EndAt Validator Adapter', () => {
     const isValid = sut.isValid('2000-01-01T00:00:00Z')
     expect(isValid).toBe(false)
   })
+
+  it('Should return false if date is not a ISO8601 date', () => {
+    const sut = makeSut()
+    const isValid = sut.isValid('01-01-2025')
+    expect(isValid).toBe(false)
+  })
 })
