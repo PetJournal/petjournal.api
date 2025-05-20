@@ -17,11 +17,14 @@ import {
   type LoadPets,
   type DeletePet,
   type EmailConfirmation,
-  type SendEmail
+  type SendEmail,
+  type AddTag,
+  type LoadTagById
 } from '@/domain/use-cases'
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
 import { mockFakeAppointPet, mockFakePetUpdated, mockFakePetByGuardianIdLoaded, mockFakeSpecieAdded, makeFakeGuardianData, mockFakeBreedAdded, mockFakeSizeAdded } from '../mocks'
 import { PetGender } from '@/domain/models'
+import { type UpdateTag, type DeleteTagById, type LoadTags } from '@/domain/use-cases/scheduler/tag'
 
 const mockGuardianUseCase = {
   id: 'any_id',
@@ -264,6 +267,75 @@ const makeFakeSendEmailUseCase = (): SendEmail => {
   return new SendEmailStub()
 }
 
+const makeFakeUpdateTagUseCase = (): UpdateTag => {
+  class UpdateTagStub implements UpdateTag {
+    async update (params: UpdateTag.Params): Promise<UpdateTag.Result> {
+      return {
+        isSuccess: true,
+        data: {
+          id: 'any_id',
+          name: 'any_name',
+          color: 'any_color'
+        }
+      }
+    }
+  }
+  return new UpdateTagStub()
+}
+
+const makeFakeDeleteTagByIdUseCase = (): DeleteTagById => {
+  class DeleteTagByIdStub implements DeleteTagById {
+    async deleteById (tagId: DeleteTagById.Param): Promise<DeleteTagById.Result> {
+      return {
+        isSuccess: true
+      }
+    }
+  }
+  return new DeleteTagByIdStub()
+}
+
+const makeFakeLoadTagsUseCase = (): LoadTags => {
+  class LoadTagsStub implements LoadTags {
+    async loadAll (): Promise<LoadTags.Result> {
+      return [{
+        id: 'any_id',
+        name: 'any_name',
+        color: 'any_color'
+      }]
+    }
+  }
+  return new LoadTagsStub()
+}
+
+const makeFakeAddTagUseCase = (): AddTag => {
+  class AddTagStub implements AddTag {
+    async add (tagData: AddTag.Params): Promise<AddTag.Result> {
+      return {
+        isSuccess: true,
+        data: {
+          id: 'any_id',
+          name: 'any_name',
+          color: 'any_color'
+        }
+      }
+    }
+  }
+  return new AddTagStub()
+}
+
+const makeFakeLoadTagByIdUseCase = (): LoadTagById => {
+  class LoadTagByIdStub implements LoadTagById {
+    async loadById (tagId: LoadTagById.Param): Promise<LoadTagById.Result> {
+      return {
+        id: 'any_id',
+        name: 'any_name',
+        color: 'any_color'
+      }
+    }
+  }
+  return new LoadTagByIdStub()
+}
+
 export {
   makeFakeAddGuardianUseCase,
   makeFakeAddPetUseCase,
@@ -283,5 +355,10 @@ export {
   makeLoadDogBreedsUseCase,
   makeFakeLoadCatSizesUseCase,
   makeFakeLoadDogSizesUSeCase,
-  makeFakeSendEmailUseCase
+  makeFakeSendEmailUseCase,
+  makeFakeUpdateTagUseCase,
+  makeFakeDeleteTagByIdUseCase,
+  makeFakeLoadTagsUseCase,
+  makeFakeAddTagUseCase,
+  makeFakeLoadTagByIdUseCase
 }
