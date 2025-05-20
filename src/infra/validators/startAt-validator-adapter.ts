@@ -8,7 +8,7 @@ export class StartAtValidatorAdapter implements DateValidator {
       return false
     }
 
-    if (dateOfValidation < new Date()) {
+    if (dateOfValidation.getDate() > new Date().getDate()) {
       return false
     }
 
