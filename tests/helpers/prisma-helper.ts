@@ -1,6 +1,7 @@
 import { BcryptAdapter } from '@/infra/cryptography'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@/infra/repos/postgresql/prisma/generated'
 import { execSync } from 'child_process'
+import 'dotenv/config'
 import { join } from 'path'
 import { URL } from 'url'
 import { v4 } from 'uuid'

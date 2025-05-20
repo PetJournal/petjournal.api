@@ -70,6 +70,16 @@ export type Breed = Prisma.BreedModel
  */
 export type Tag = Prisma.TagModel
 /**
+ * Model Scheduler
+ * 
+ */
+export type Scheduler = Prisma.SchedulerModel
+/**
+ * Model Event
+ * 
+ */
+export type Event = Prisma.EventModel
+/**
  * Model LogError
  * 
  */

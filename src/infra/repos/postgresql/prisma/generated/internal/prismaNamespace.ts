@@ -400,6 +400,8 @@ export const ModelName = {
   Size: 'Size',
   Breed: 'Breed',
   Tag: 'Tag',
+  Scheduler: 'Scheduler',
+  Event: 'Event',
   LogError: 'LogError'
 } as const
 
@@ -416,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "guardian" | "pet" | "specie" | "size" | "breed" | "tag" | "logError"
+    modelProps: "guardian" | "pet" | "specie" | "size" | "breed" | "tag" | "scheduler" | "event" | "logError"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -864,6 +866,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Scheduler: {
+      payload: Prisma.$SchedulerPayload<ExtArgs>
+      fields: Prisma.SchedulerFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SchedulerFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchedulerPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SchedulerFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchedulerPayload>
+        }
+        findFirst: {
+          args: Prisma.SchedulerFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchedulerPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SchedulerFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchedulerPayload>
+        }
+        findMany: {
+          args: Prisma.SchedulerFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchedulerPayload>[]
+        }
+        create: {
+          args: Prisma.SchedulerCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchedulerPayload>
+        }
+        createMany: {
+          args: Prisma.SchedulerCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SchedulerCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchedulerPayload>[]
+        }
+        delete: {
+          args: Prisma.SchedulerDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchedulerPayload>
+        }
+        update: {
+          args: Prisma.SchedulerUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchedulerPayload>
+        }
+        deleteMany: {
+          args: Prisma.SchedulerDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SchedulerUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SchedulerUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchedulerPayload>[]
+        }
+        upsert: {
+          args: Prisma.SchedulerUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchedulerPayload>
+        }
+        aggregate: {
+          args: Prisma.SchedulerAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateScheduler>
+        }
+        groupBy: {
+          args: Prisma.SchedulerGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SchedulerGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SchedulerCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SchedulerCountAggregateOutputType> | number
+        }
+      }
+    }
+    Event: {
+      payload: Prisma.$EventPayload<ExtArgs>
+      fields: Prisma.EventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload>
+        }
+        findFirst: {
+          args: Prisma.EventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload>
+        }
+        findMany: {
+          args: Prisma.EventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload>[]
+        }
+        create: {
+          args: Prisma.EventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload>
+        }
+        createMany: {
+          args: Prisma.EventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EventCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload>[]
+        }
+        delete: {
+          args: Prisma.EventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload>
+        }
+        update: {
+          args: Prisma.EventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload>
+        }
+        deleteMany: {
+          args: Prisma.EventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EventUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload>[]
+        }
+        upsert: {
+          args: Prisma.EventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload>
+        }
+        aggregate: {
+          args: Prisma.EventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEvent>
+        }
+        groupBy: {
+          args: Prisma.EventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EventCountAggregateOutputType> | number
+        }
+      }
+    }
     LogError: {
       payload: Prisma.$LogErrorPayload<ExtArgs>
       fields: Prisma.LogErrorFieldRefs
@@ -1046,6 +1196,32 @@ export const TagScalarFieldEnum = {
 export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
 
 
+export const SchedulerScalarFieldEnum = {
+  id: 'id',
+  tagId: 'tagId',
+  title: 'title',
+  description: 'description',
+  note: 'note',
+  startAt: 'startAt',
+  endAt: 'endAt',
+  daysOfWeek: 'daysOfWeek',
+  daysOfMonth: 'daysOfMonth'
+} as const
+
+export type SchedulerScalarFieldEnum = (typeof SchedulerScalarFieldEnum)[keyof typeof SchedulerScalarFieldEnum]
+
+
+export const EventScalarFieldEnum = {
+  id: 'id',
+  schedulerId: 'schedulerId',
+  start: 'start',
+  end: 'end',
+  date: 'date'
+} as const
+
+export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
+
+
 export const LogErrorScalarFieldEnum = {
   id: 'id',
   stack: 'stack',
@@ -1121,16 +1297,16 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
- * Reference to a field of type 'Int'
+ * Reference to a field of type 'Int[]'
  */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
 /**
- * Reference to a field of type 'Int[]'
+ * Reference to a field of type 'Int'
  */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
     
 
 
@@ -1228,6 +1404,8 @@ export type GlobalOmitConfig = {
   size?: Prisma.SizeOmit
   breed?: Prisma.BreedOmit
   tag?: Prisma.TagOmit
+  scheduler?: Prisma.SchedulerOmit
+  event?: Prisma.EventOmit
   logError?: Prisma.LogErrorOmit
 }
 
