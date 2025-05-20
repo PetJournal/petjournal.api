@@ -241,6 +241,7 @@ export type PetWhereInput = {
   specie?: Prisma.XOR<Prisma.SpecieScalarRelationFilter, Prisma.SpecieWhereInput>
   breed?: Prisma.XOR<Prisma.BreedScalarRelationFilter, Prisma.BreedWhereInput>
   size?: Prisma.XOR<Prisma.SizeScalarRelationFilter, Prisma.SizeWhereInput>
+  scheduler?: Prisma.SchedulerListRelationFilter
 }
 
 export type PetOrderByWithRelationInput = {
@@ -260,6 +261,7 @@ export type PetOrderByWithRelationInput = {
   specie?: Prisma.SpecieOrderByWithRelationInput
   breed?: Prisma.BreedOrderByWithRelationInput
   size?: Prisma.SizeOrderByWithRelationInput
+  scheduler?: Prisma.SchedulerOrderByRelationAggregateInput
 }
 
 export type PetWhereUniqueInput = Prisma.AtLeast<{
@@ -282,6 +284,7 @@ export type PetWhereUniqueInput = Prisma.AtLeast<{
   specie?: Prisma.XOR<Prisma.SpecieScalarRelationFilter, Prisma.SpecieWhereInput>
   breed?: Prisma.XOR<Prisma.BreedScalarRelationFilter, Prisma.BreedWhereInput>
   size?: Prisma.XOR<Prisma.SizeScalarRelationFilter, Prisma.SizeWhereInput>
+  scheduler?: Prisma.SchedulerListRelationFilter
 }, "id">
 
 export type PetOrderByWithAggregationInput = {
@@ -333,6 +336,7 @@ export type PetCreateInput = {
   specie: Prisma.SpecieCreateNestedOneWithoutPetInput
   breed: Prisma.BreedCreateNestedOneWithoutPetInput
   size: Prisma.SizeCreateNestedOneWithoutPetInput
+  scheduler?: Prisma.SchedulerCreateNestedManyWithoutPetsInput
 }
 
 export type PetUncheckedCreateInput = {
@@ -348,6 +352,7 @@ export type PetUncheckedCreateInput = {
   castrated?: boolean
   dateOfBirth: Date | string
   image?: string
+  scheduler?: Prisma.SchedulerUncheckedCreateNestedManyWithoutPetsInput
 }
 
 export type PetUpdateInput = {
@@ -363,6 +368,7 @@ export type PetUpdateInput = {
   specie?: Prisma.SpecieUpdateOneRequiredWithoutPetNestedInput
   breed?: Prisma.BreedUpdateOneRequiredWithoutPetNestedInput
   size?: Prisma.SizeUpdateOneRequiredWithoutPetNestedInput
+  scheduler?: Prisma.SchedulerUpdateManyWithoutPetsNestedInput
 }
 
 export type PetUncheckedUpdateInput = {
@@ -378,6 +384,7 @@ export type PetUncheckedUpdateInput = {
   castrated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduler?: Prisma.SchedulerUncheckedUpdateManyWithoutPetsNestedInput
 }
 
 export type PetCreateManyInput = {
@@ -644,6 +651,44 @@ export type PetUncheckedUpdateManyWithoutBreedNestedInput = {
   deleteMany?: Prisma.PetScalarWhereInput | Prisma.PetScalarWhereInput[]
 }
 
+export type PetCreateNestedManyWithoutSchedulerInput = {
+  create?: Prisma.XOR<Prisma.PetCreateWithoutSchedulerInput, Prisma.PetUncheckedCreateWithoutSchedulerInput> | Prisma.PetCreateWithoutSchedulerInput[] | Prisma.PetUncheckedCreateWithoutSchedulerInput[]
+  connectOrCreate?: Prisma.PetCreateOrConnectWithoutSchedulerInput | Prisma.PetCreateOrConnectWithoutSchedulerInput[]
+  connect?: Prisma.PetWhereUniqueInput | Prisma.PetWhereUniqueInput[]
+}
+
+export type PetUncheckedCreateNestedManyWithoutSchedulerInput = {
+  create?: Prisma.XOR<Prisma.PetCreateWithoutSchedulerInput, Prisma.PetUncheckedCreateWithoutSchedulerInput> | Prisma.PetCreateWithoutSchedulerInput[] | Prisma.PetUncheckedCreateWithoutSchedulerInput[]
+  connectOrCreate?: Prisma.PetCreateOrConnectWithoutSchedulerInput | Prisma.PetCreateOrConnectWithoutSchedulerInput[]
+  connect?: Prisma.PetWhereUniqueInput | Prisma.PetWhereUniqueInput[]
+}
+
+export type PetUpdateManyWithoutSchedulerNestedInput = {
+  create?: Prisma.XOR<Prisma.PetCreateWithoutSchedulerInput, Prisma.PetUncheckedCreateWithoutSchedulerInput> | Prisma.PetCreateWithoutSchedulerInput[] | Prisma.PetUncheckedCreateWithoutSchedulerInput[]
+  connectOrCreate?: Prisma.PetCreateOrConnectWithoutSchedulerInput | Prisma.PetCreateOrConnectWithoutSchedulerInput[]
+  upsert?: Prisma.PetUpsertWithWhereUniqueWithoutSchedulerInput | Prisma.PetUpsertWithWhereUniqueWithoutSchedulerInput[]
+  set?: Prisma.PetWhereUniqueInput | Prisma.PetWhereUniqueInput[]
+  disconnect?: Prisma.PetWhereUniqueInput | Prisma.PetWhereUniqueInput[]
+  delete?: Prisma.PetWhereUniqueInput | Prisma.PetWhereUniqueInput[]
+  connect?: Prisma.PetWhereUniqueInput | Prisma.PetWhereUniqueInput[]
+  update?: Prisma.PetUpdateWithWhereUniqueWithoutSchedulerInput | Prisma.PetUpdateWithWhereUniqueWithoutSchedulerInput[]
+  updateMany?: Prisma.PetUpdateManyWithWhereWithoutSchedulerInput | Prisma.PetUpdateManyWithWhereWithoutSchedulerInput[]
+  deleteMany?: Prisma.PetScalarWhereInput | Prisma.PetScalarWhereInput[]
+}
+
+export type PetUncheckedUpdateManyWithoutSchedulerNestedInput = {
+  create?: Prisma.XOR<Prisma.PetCreateWithoutSchedulerInput, Prisma.PetUncheckedCreateWithoutSchedulerInput> | Prisma.PetCreateWithoutSchedulerInput[] | Prisma.PetUncheckedCreateWithoutSchedulerInput[]
+  connectOrCreate?: Prisma.PetCreateOrConnectWithoutSchedulerInput | Prisma.PetCreateOrConnectWithoutSchedulerInput[]
+  upsert?: Prisma.PetUpsertWithWhereUniqueWithoutSchedulerInput | Prisma.PetUpsertWithWhereUniqueWithoutSchedulerInput[]
+  set?: Prisma.PetWhereUniqueInput | Prisma.PetWhereUniqueInput[]
+  disconnect?: Prisma.PetWhereUniqueInput | Prisma.PetWhereUniqueInput[]
+  delete?: Prisma.PetWhereUniqueInput | Prisma.PetWhereUniqueInput[]
+  connect?: Prisma.PetWhereUniqueInput | Prisma.PetWhereUniqueInput[]
+  update?: Prisma.PetUpdateWithWhereUniqueWithoutSchedulerInput | Prisma.PetUpdateWithWhereUniqueWithoutSchedulerInput[]
+  updateMany?: Prisma.PetUpdateManyWithWhereWithoutSchedulerInput | Prisma.PetUpdateManyWithWhereWithoutSchedulerInput[]
+  deleteMany?: Prisma.PetScalarWhereInput | Prisma.PetScalarWhereInput[]
+}
+
 export type PetCreateWithoutGuardianInput = {
   id?: string
   specieAlias?: string | null
@@ -656,6 +701,7 @@ export type PetCreateWithoutGuardianInput = {
   specie: Prisma.SpecieCreateNestedOneWithoutPetInput
   breed: Prisma.BreedCreateNestedOneWithoutPetInput
   size: Prisma.SizeCreateNestedOneWithoutPetInput
+  scheduler?: Prisma.SchedulerCreateNestedManyWithoutPetsInput
 }
 
 export type PetUncheckedCreateWithoutGuardianInput = {
@@ -670,6 +716,7 @@ export type PetUncheckedCreateWithoutGuardianInput = {
   castrated?: boolean
   dateOfBirth: Date | string
   image?: string
+  scheduler?: Prisma.SchedulerUncheckedCreateNestedManyWithoutPetsInput
 }
 
 export type PetCreateOrConnectWithoutGuardianInput = {
@@ -728,6 +775,7 @@ export type PetCreateWithoutSpecieInput = {
   guardian: Prisma.GuardianCreateNestedOneWithoutPetsInput
   breed: Prisma.BreedCreateNestedOneWithoutPetInput
   size: Prisma.SizeCreateNestedOneWithoutPetInput
+  scheduler?: Prisma.SchedulerCreateNestedManyWithoutPetsInput
 }
 
 export type PetUncheckedCreateWithoutSpecieInput = {
@@ -742,6 +790,7 @@ export type PetUncheckedCreateWithoutSpecieInput = {
   castrated?: boolean
   dateOfBirth: Date | string
   image?: string
+  scheduler?: Prisma.SchedulerUncheckedCreateNestedManyWithoutPetsInput
 }
 
 export type PetCreateOrConnectWithoutSpecieInput = {
@@ -782,6 +831,7 @@ export type PetCreateWithoutSizeInput = {
   guardian: Prisma.GuardianCreateNestedOneWithoutPetsInput
   specie: Prisma.SpecieCreateNestedOneWithoutPetInput
   breed: Prisma.BreedCreateNestedOneWithoutPetInput
+  scheduler?: Prisma.SchedulerCreateNestedManyWithoutPetsInput
 }
 
 export type PetUncheckedCreateWithoutSizeInput = {
@@ -796,6 +846,7 @@ export type PetUncheckedCreateWithoutSizeInput = {
   castrated?: boolean
   dateOfBirth: Date | string
   image?: string
+  scheduler?: Prisma.SchedulerUncheckedCreateNestedManyWithoutPetsInput
 }
 
 export type PetCreateOrConnectWithoutSizeInput = {
@@ -836,6 +887,7 @@ export type PetCreateWithoutBreedInput = {
   guardian: Prisma.GuardianCreateNestedOneWithoutPetsInput
   specie: Prisma.SpecieCreateNestedOneWithoutPetInput
   size: Prisma.SizeCreateNestedOneWithoutPetInput
+  scheduler?: Prisma.SchedulerCreateNestedManyWithoutPetsInput
 }
 
 export type PetUncheckedCreateWithoutBreedInput = {
@@ -850,6 +902,7 @@ export type PetUncheckedCreateWithoutBreedInput = {
   castrated?: boolean
   dateOfBirth: Date | string
   image?: string
+  scheduler?: Prisma.SchedulerUncheckedCreateNestedManyWithoutPetsInput
 }
 
 export type PetCreateOrConnectWithoutBreedInput = {
@@ -878,6 +931,57 @@ export type PetUpdateManyWithWhereWithoutBreedInput = {
   data: Prisma.XOR<Prisma.PetUpdateManyMutationInput, Prisma.PetUncheckedUpdateManyWithoutBreedInput>
 }
 
+export type PetCreateWithoutSchedulerInput = {
+  id?: string
+  specieAlias?: string | null
+  petName: string
+  gender: string
+  breedAlias: string
+  castrated?: boolean
+  dateOfBirth: Date | string
+  image?: string
+  guardian: Prisma.GuardianCreateNestedOneWithoutPetsInput
+  specie: Prisma.SpecieCreateNestedOneWithoutPetInput
+  breed: Prisma.BreedCreateNestedOneWithoutPetInput
+  size: Prisma.SizeCreateNestedOneWithoutPetInput
+}
+
+export type PetUncheckedCreateWithoutSchedulerInput = {
+  id?: string
+  guardianId: string
+  specieId: string
+  specieAlias?: string | null
+  petName: string
+  gender: string
+  breedAlias: string
+  breedId: string
+  sizeId: string
+  castrated?: boolean
+  dateOfBirth: Date | string
+  image?: string
+}
+
+export type PetCreateOrConnectWithoutSchedulerInput = {
+  where: Prisma.PetWhereUniqueInput
+  create: Prisma.XOR<Prisma.PetCreateWithoutSchedulerInput, Prisma.PetUncheckedCreateWithoutSchedulerInput>
+}
+
+export type PetUpsertWithWhereUniqueWithoutSchedulerInput = {
+  where: Prisma.PetWhereUniqueInput
+  update: Prisma.XOR<Prisma.PetUpdateWithoutSchedulerInput, Prisma.PetUncheckedUpdateWithoutSchedulerInput>
+  create: Prisma.XOR<Prisma.PetCreateWithoutSchedulerInput, Prisma.PetUncheckedCreateWithoutSchedulerInput>
+}
+
+export type PetUpdateWithWhereUniqueWithoutSchedulerInput = {
+  where: Prisma.PetWhereUniqueInput
+  data: Prisma.XOR<Prisma.PetUpdateWithoutSchedulerInput, Prisma.PetUncheckedUpdateWithoutSchedulerInput>
+}
+
+export type PetUpdateManyWithWhereWithoutSchedulerInput = {
+  where: Prisma.PetScalarWhereInput
+  data: Prisma.XOR<Prisma.PetUpdateManyMutationInput, Prisma.PetUncheckedUpdateManyWithoutSchedulerInput>
+}
+
 export type PetCreateManyGuardianInput = {
   id?: string
   specieId: string
@@ -904,6 +1008,7 @@ export type PetUpdateWithoutGuardianInput = {
   specie?: Prisma.SpecieUpdateOneRequiredWithoutPetNestedInput
   breed?: Prisma.BreedUpdateOneRequiredWithoutPetNestedInput
   size?: Prisma.SizeUpdateOneRequiredWithoutPetNestedInput
+  scheduler?: Prisma.SchedulerUpdateManyWithoutPetsNestedInput
 }
 
 export type PetUncheckedUpdateWithoutGuardianInput = {
@@ -918,6 +1023,7 @@ export type PetUncheckedUpdateWithoutGuardianInput = {
   castrated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduler?: Prisma.SchedulerUncheckedUpdateManyWithoutPetsNestedInput
 }
 
 export type PetUncheckedUpdateManyWithoutGuardianInput = {
@@ -960,6 +1066,7 @@ export type PetUpdateWithoutSpecieInput = {
   guardian?: Prisma.GuardianUpdateOneRequiredWithoutPetsNestedInput
   breed?: Prisma.BreedUpdateOneRequiredWithoutPetNestedInput
   size?: Prisma.SizeUpdateOneRequiredWithoutPetNestedInput
+  scheduler?: Prisma.SchedulerUpdateManyWithoutPetsNestedInput
 }
 
 export type PetUncheckedUpdateWithoutSpecieInput = {
@@ -974,6 +1081,7 @@ export type PetUncheckedUpdateWithoutSpecieInput = {
   castrated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduler?: Prisma.SchedulerUncheckedUpdateManyWithoutPetsNestedInput
 }
 
 export type PetUncheckedUpdateManyWithoutSpecieInput = {
@@ -1016,6 +1124,7 @@ export type PetUpdateWithoutSizeInput = {
   guardian?: Prisma.GuardianUpdateOneRequiredWithoutPetsNestedInput
   specie?: Prisma.SpecieUpdateOneRequiredWithoutPetNestedInput
   breed?: Prisma.BreedUpdateOneRequiredWithoutPetNestedInput
+  scheduler?: Prisma.SchedulerUpdateManyWithoutPetsNestedInput
 }
 
 export type PetUncheckedUpdateWithoutSizeInput = {
@@ -1030,6 +1139,7 @@ export type PetUncheckedUpdateWithoutSizeInput = {
   castrated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduler?: Prisma.SchedulerUncheckedUpdateManyWithoutPetsNestedInput
 }
 
 export type PetUncheckedUpdateManyWithoutSizeInput = {
@@ -1072,6 +1182,7 @@ export type PetUpdateWithoutBreedInput = {
   guardian?: Prisma.GuardianUpdateOneRequiredWithoutPetsNestedInput
   specie?: Prisma.SpecieUpdateOneRequiredWithoutPetNestedInput
   size?: Prisma.SizeUpdateOneRequiredWithoutPetNestedInput
+  scheduler?: Prisma.SchedulerUpdateManyWithoutPetsNestedInput
 }
 
 export type PetUncheckedUpdateWithoutBreedInput = {
@@ -1086,6 +1197,7 @@ export type PetUncheckedUpdateWithoutBreedInput = {
   castrated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduler?: Prisma.SchedulerUncheckedUpdateManyWithoutPetsNestedInput
 }
 
 export type PetUncheckedUpdateManyWithoutBreedInput = {
@@ -1102,6 +1214,80 @@ export type PetUncheckedUpdateManyWithoutBreedInput = {
   image?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
+export type PetUpdateWithoutSchedulerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  specieAlias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  petName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  breedAlias?: Prisma.StringFieldUpdateOperationsInput | string
+  castrated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  image?: Prisma.StringFieldUpdateOperationsInput | string
+  guardian?: Prisma.GuardianUpdateOneRequiredWithoutPetsNestedInput
+  specie?: Prisma.SpecieUpdateOneRequiredWithoutPetNestedInput
+  breed?: Prisma.BreedUpdateOneRequiredWithoutPetNestedInput
+  size?: Prisma.SizeUpdateOneRequiredWithoutPetNestedInput
+}
+
+export type PetUncheckedUpdateWithoutSchedulerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  guardianId?: Prisma.StringFieldUpdateOperationsInput | string
+  specieId?: Prisma.StringFieldUpdateOperationsInput | string
+  specieAlias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  petName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  breedAlias?: Prisma.StringFieldUpdateOperationsInput | string
+  breedId?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeId?: Prisma.StringFieldUpdateOperationsInput | string
+  castrated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  image?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type PetUncheckedUpdateManyWithoutSchedulerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  guardianId?: Prisma.StringFieldUpdateOperationsInput | string
+  specieId?: Prisma.StringFieldUpdateOperationsInput | string
+  specieAlias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  petName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  breedAlias?: Prisma.StringFieldUpdateOperationsInput | string
+  breedId?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeId?: Prisma.StringFieldUpdateOperationsInput | string
+  castrated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  image?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+
+/**
+ * Count Type PetCountOutputType
+ */
+
+export type PetCountOutputType = {
+  scheduler: number
+}
+
+export type PetCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  scheduler?: boolean | PetCountOutputTypeCountSchedulerArgs
+}
+
+/**
+ * PetCountOutputType without action
+ */
+export type PetCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PetCountOutputType
+   */
+  select?: Prisma.PetCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * PetCountOutputType without action
+ */
+export type PetCountOutputTypeCountSchedulerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SchedulerWhereInput
+}
 
 
 export type PetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1121,6 +1307,8 @@ export type PetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   specie?: boolean | Prisma.SpecieDefaultArgs<ExtArgs>
   breed?: boolean | Prisma.BreedDefaultArgs<ExtArgs>
   size?: boolean | Prisma.SizeDefaultArgs<ExtArgs>
+  scheduler?: boolean | Prisma.Pet$schedulerArgs<ExtArgs>
+  _count?: boolean | Prisma.PetCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["pet"]>
 
 export type PetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1182,6 +1370,8 @@ export type PetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   specie?: boolean | Prisma.SpecieDefaultArgs<ExtArgs>
   breed?: boolean | Prisma.BreedDefaultArgs<ExtArgs>
   size?: boolean | Prisma.SizeDefaultArgs<ExtArgs>
+  scheduler?: boolean | Prisma.Pet$schedulerArgs<ExtArgs>
+  _count?: boolean | Prisma.PetCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PetIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   guardian?: boolean | Prisma.GuardianDefaultArgs<ExtArgs>
@@ -1203,6 +1393,7 @@ export type $PetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     specie: Prisma.$SpeciePayload<ExtArgs>
     breed: Prisma.$BreedPayload<ExtArgs>
     size: Prisma.$SizePayload<ExtArgs>
+    scheduler: Prisma.$SchedulerPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1615,6 +1806,7 @@ export interface Prisma__PetClient<T, Null = never, ExtArgs extends runtime.Type
   specie<T extends Prisma.SpecieDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SpecieDefaultArgs<ExtArgs>>): Prisma.Prisma__SpecieClient<runtime.Types.Result.GetResult<Prisma.$SpeciePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   breed<T extends Prisma.BreedDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BreedDefaultArgs<ExtArgs>>): Prisma.Prisma__BreedClient<runtime.Types.Result.GetResult<Prisma.$BreedPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   size<T extends Prisma.SizeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SizeDefaultArgs<ExtArgs>>): Prisma.Prisma__SizeClient<runtime.Types.Result.GetResult<Prisma.$SizePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  scheduler<T extends Prisma.Pet$schedulerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Pet$schedulerArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SchedulerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2049,6 +2241,30 @@ export type PetDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Limit how many Pets to delete.
    */
   limit?: number
+}
+
+/**
+ * Pet.scheduler
+ */
+export type Pet$schedulerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Scheduler
+   */
+  select?: Prisma.SchedulerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Scheduler
+   */
+  omit?: Prisma.SchedulerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SchedulerInclude<ExtArgs> | null
+  where?: Prisma.SchedulerWhereInput
+  orderBy?: Prisma.SchedulerOrderByWithRelationInput | Prisma.SchedulerOrderByWithRelationInput[]
+  cursor?: Prisma.SchedulerWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SchedulerScalarFieldEnum | Prisma.SchedulerScalarFieldEnum[]
 }
 
 /**
