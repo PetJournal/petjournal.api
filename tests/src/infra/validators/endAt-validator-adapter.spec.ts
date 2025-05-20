@@ -22,4 +22,10 @@ describe('EndAt Validator Adapter', () => {
     const isValid = sut.isValid('01-01-2025')
     expect(isValid).toBe(false)
   })
+
+  it('Should return true if validation returns true', () => {
+    const sut = makeSut()
+    const isValid = sut.isValid('2030-05-19T00:00:00Z')
+    expect(isValid).toBe(true)
+  })
 })
