@@ -1,7 +1,7 @@
 import { NotAcceptableError } from '@/application/errors'
 import { type LoadTagByIdRepository, type UpdateTagRepository } from '@/data/protocols'
 import { DbUpdateTag } from '@/data/use-cases'
-import { type UpdateTag } from '@/domain/use-cases/schedule/tag'
+import { type UpdateTag } from '@/domain/use-cases/scheduler/tag'
 import { makeFakeTagRepository } from '@/tests/utils'
 
 interface SutTypes {
