@@ -14,7 +14,10 @@ import {
   waitingCodeParamsSchema,
   updatePetParamsSchema,
   schedulerParamsSchema,
-  schedulerSchema
+  schedulerSchema,
+  tagSchema,
+  tagParamsSchema,
+  updateTagParamsSchema
 } from './schemas/'
 
 export default {
@@ -33,5 +36,8 @@ export default {
   petRegistryParams: petRegistryParamsSchema,
   updatePetParams: updatePetParamsSchema,
   schedulerParams: schedulerParamsSchema,
-  scheduler: schedulerSchema
+  scheduler: schedulerSchema,
+  tag: tagSchema,
+  addTagParams: tagParamsSchema,
+  updateTagParams: updateTagParamsSchema
 }

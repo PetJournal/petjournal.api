@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "./generated"
 }
 
 datasource db {
@@ -76,8 +77,8 @@ model Breed {
 }
 
 model Tag {
-  id String @id @default(uuid())
-  name String
+  id    String @id @default(uuid())
+  name  String
   color String
   scheduler Scheduler[]
 

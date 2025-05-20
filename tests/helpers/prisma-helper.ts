@@ -1,10 +1,11 @@
 import { BcryptAdapter } from '@/infra/cryptography'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@/infra/repos/postgresql/prisma/generated'
 import { execSync } from 'child_process'
 import { join } from 'path'
 import { URL } from 'url'
 import { v4 } from 'uuid'
 import { type Guardian } from '../utils'
+import 'dotenv/config'
 
 const generateDatabaseURL = (schema: string): string => {
   if (!process.env.DATABASE_URL) {

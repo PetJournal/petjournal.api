@@ -10,7 +10,8 @@ import {
   type PetRegistryRequest,
   type UpdatePetRequest,
   type DeletePetRequest,
-  type EmailConfirmationRequest
+  type EmailConfirmationRequest,
+  type AddTagRequest
 } from '@/tests/utils'
 
 const mockGuardianRequest = {
@@ -135,6 +136,14 @@ const makeFakeEmailConfirmationRequest = (): EmailConfirmationRequest => {
   return { params }
 }
 
+const makeFakeAddTagRequest = (): AddTagRequest => {
+  const body = {
+    name: 'any_name',
+    color: 'any_color'
+  }
+  return { body }
+}
+
 export {
   makeFakeSignUpRequest,
   makeFakeLoginRequest,
@@ -146,5 +155,6 @@ export {
   makeFakePetRegistryRequest,
   makeFakeUpdatePetRequest,
   makeFakeDeletePetRequest,
-  makeFakeEmailConfirmationRequest
+  makeFakeEmailConfirmationRequest,
+  makeFakeAddTagRequest
 }
