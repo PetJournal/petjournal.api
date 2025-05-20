@@ -10,4 +10,10 @@ describe('DaysOfMonth Validator Adapter', () => {
     const isValid = sut.isValid([])
     expect(isValid).toBe(false)
   })
+
+  it('Should return false if the interval is outside of 0 to 30', () => {
+    const sut = makeSut()
+    const isValid = sut.isValid([-1, 31])
+    expect(isValid).toBe(false)
+  })
 })
