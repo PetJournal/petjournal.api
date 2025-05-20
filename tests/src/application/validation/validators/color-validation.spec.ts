@@ -8,9 +8,9 @@ interface SutTypes {
 }
 
 const makeSut = (): SutTypes => {
-  const colorField: string = 'color'
+  const fieldName: string = 'color'
   const colorValidatorStub = makeFakeColorValidator()
-  const sut = new ColorValidation(colorField, colorValidatorStub)
+  const sut = new ColorValidation(fieldName, colorValidatorStub)
   return {
     sut,
     colorValidatorStub

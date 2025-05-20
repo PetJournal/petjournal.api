@@ -3,21 +3,21 @@ import { type Validation } from '@/application/protocols'
 import { type ColorValidator } from '../protocols'
 
 export class ColorValidation implements Validation {
-  private readonly color: string
+  private readonly fieldName: string
   private readonly validator: ColorValidator
 
-  constructor (color: string, validator: ColorValidator) {
-    this.color = color
+  constructor (fieldName: string, validator: ColorValidator) {
+    this.fieldName = fieldName
     this.validator = validator
   }
 
   validate (input: any): Error | void {
-    if (typeof input[this.color] !== 'string') {
-      return new InvalidParamError(this.color)
+    if (typeof input[this.fieldName] !== 'string') {
+      return new InvalidParamError(this.fieldName)
     }
-    const isValid = this.validator.isValid(input[this.color])
+    const isValid = this.validator.isValid(input[this.fieldName])
     if (!isValid) {
-      return new InvalidParamError(this.color)
+      return new InvalidParamError(this.fieldName)
     }
   }
 }
