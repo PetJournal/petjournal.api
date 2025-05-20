@@ -16,4 +16,10 @@ describe('Uuid Validator Adapter', () => {
     const isValid = sut.isValid('invalid_uuid')
     expect(isValid).toBe(false)
   })
+
+  it('Should return true if validation returns true', () => {
+    const sut = makeSut()
+    const isValid = sut.isValid('valid_uuid')
+    expect(isValid).toBe(true)
+  })
 })
