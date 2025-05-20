@@ -12,4 +12,10 @@ describe('Note Validator Adapter', () => {
     const isValid = sut.isValid('invalid_note')
     expect(isValid).toBe(false)
   })
+
+  it('Should return true if validation returns true', () => {
+    const sut = makeSut()
+    const isValid = sut.isValid('valid note')
+    expect(isValid).toBe(true)
+  })
 })
