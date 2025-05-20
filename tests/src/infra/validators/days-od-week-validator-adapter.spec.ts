@@ -16,4 +16,10 @@ describe('DaysOfWeek Validator Adapter', () => {
     const isValid = sut.isValid([7, 8])
     expect(isValid).toBe(false)
   })
+
+  it('Should return true if validator returns true', () => {
+    const sut = makeSut()
+    const isValid = sut.isValid([0, 4, 6])
+    expect(isValid).toBe(true)
+  })
 })
