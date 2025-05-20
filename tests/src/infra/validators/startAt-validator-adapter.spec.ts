@@ -14,4 +14,10 @@ describe('StartAt Validator Adapter', () => {
     const isValid = sut.isValid('invalid_date')
     expect(isValid).toBe(false)
   })
+
+  it('Should return false if date is a previous date', () => {
+    const sut = makeSut()
+    const isValid = sut.isValid('2000-01-01T00:00:00Z')
+    expect(isValid).toBe(false)
+  })
 })
