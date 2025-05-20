@@ -10,6 +10,9 @@ export class DaysOfWeekValidatorAdapter implements DaysOfWeekValidator {
         return false
       }
     }
+    if (!days.length) {
+      return false
+    }
     return true
   }
 }
