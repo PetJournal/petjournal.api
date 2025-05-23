@@ -46,4 +46,10 @@ describe('StartAt Validation', () => {
     const isValid = sut.validate({ startAt: 'any_date' })
     expect(isValid).toEqual(new InvalidParamError(fakeStartField))
   })
+
+  it('Should return void if startAt is a valid date', () => {
+    const { sut } = makeSut()
+    const isValid = sut.validate({ startAt: 'any_date' })
+    expect(isValid).toBeFalsy()
+  })
 })
