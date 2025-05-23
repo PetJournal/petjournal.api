@@ -32,4 +32,11 @@ describe('Uuid Validation', () => {
     jest.spyOn(validatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
     expect(() => { sut.validate({ uuid: 'any_uuid' }) }).toThrow()
   })
+
+  it('Should return InvalidParamError if uuid is not a valid uuid', () => {
+    const { sut, fakeFieldName, validatorStub } = makeSut()
+    jest.spyOn(validatorStub, 'isValid').mockReturnValueOnce(false)
+    const isValid = sut.validate(fakeFieldName)
+    expect(isValid).toEqual(new InvalidParamError(fakeFieldName))
+  })
 })
