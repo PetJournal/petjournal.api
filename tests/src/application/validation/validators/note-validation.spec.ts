@@ -32,4 +32,11 @@ describe('Note Validation', () => {
     jest.spyOn(validatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
     expect(() => { sut.validate({ note: 'any_note' }) }).toThrow()
   })
+
+  it('Should call validator with correct values', () => {
+    const { sut, validatorStub } = makeSut()
+    const validatorSpy = jest.spyOn(validatorStub, 'isValid')
+    sut.validate({ note: 'any_note' })
+    expect(validatorSpy).toHaveBeenCalledWith('any_note')
+  })
 })
