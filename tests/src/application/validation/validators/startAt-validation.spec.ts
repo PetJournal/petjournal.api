@@ -32,4 +32,11 @@ describe('StartAt Validation', () => {
     jest.spyOn(validatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
     expect(() => { sut.validate({ startAt: 'any_date' }) }).toThrow()
   })
+
+  it('Should call validator with correct values', () => {
+    const { sut, validatorStub } = makeSut()
+    const validatorSpy = jest.spyOn(validatorStub, 'isValid')
+    sut.validate({ startAt: 'any_date' })
+    expect(validatorSpy).toHaveBeenCalledWith('any_date')
+  })
 })
