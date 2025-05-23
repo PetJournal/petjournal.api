@@ -39,4 +39,11 @@ describe('Title Validation', () => {
     sut.validate({ title: 'any_title' })
     expect(validatorSpy).toHaveBeenCalledWith('any_title')
   })
+
+  it('Should return InvalidParamError if title is not valid', () => {
+    const { sut, fakeFieldTitle, validatorStub } = makeSut()
+    jest.spyOn(validatorStub, 'isValid').mockReturnValueOnce(false)
+    const isValid = sut.validate({ title: 'any_title' })
+    expect(isValid).toEqual(new InvalidParamError(fakeFieldTitle))
+  })
 })
