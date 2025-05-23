@@ -39,4 +39,11 @@ describe('Note Validation', () => {
     sut.validate({ note: 'any_note' })
     expect(validatorSpy).toHaveBeenCalledWith('any_note')
   })
+
+  it('Should return InvalidParamError if note is invalid', () => {
+    const { sut, fakeFieldNote, validatorStub } = makeSut()
+    jest.spyOn(validatorStub, 'isValid').mockReturnValueOnce(false)
+    const isValid = sut.validate({ note: 'any_note' })
+    expect(isValid).toEqual(new InvalidParamError(fakeFieldNote))
+  })
 })
