@@ -12,8 +12,11 @@ export class DaysOfWeekValidation implements Validation {
   }
 
   validate (input: number[]): Error | void {
+    if (!input.length) {
+      return new InvalidParamError(this.fieldDaysOfWeek)
+    }
     for (let i = 0; i < input.length; i++) {
-      if (typeof input[i] !== 'number' && input[i] !== null) {
+      if (typeof input[i] !== 'number') {
         return new InvalidParamError(this.fieldDaysOfWeek)
       }
     }
