@@ -26,4 +26,10 @@ describe('Description Validation', () => {
     const isValid = sut.validate(invalidDescriptionField)
     expect(isValid).toEqual(new InvalidParamError(fakeFieldDescription))
   })
+
+  it('Should throw if validator throws', () => {
+    const { sut, validatorStub } = makeSut()
+    jest.spyOn(validatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
+    expect(() => { sut.validate({ description: 'any_description' }) }).toThrow()
+  })
 })
