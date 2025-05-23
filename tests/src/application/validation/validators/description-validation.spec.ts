@@ -39,4 +39,11 @@ describe('Description Validation', () => {
     sut.validate({ description: 'any_description' })
     expect(validatorSpy).toHaveBeenCalledWith('any_description')
   })
+
+  it('Should return InvalidParamError if description is not valid', () => {
+    const { sut, fakeFieldDescription, validatorStub } = makeSut()
+    jest.spyOn(validatorStub, 'isValid').mockReturnValueOnce(false)
+    const isValid = sut.validate({ description: 'any_description' })
+    expect(isValid).toEqual(new InvalidParamError(fakeFieldDescription))
+  })
 })
