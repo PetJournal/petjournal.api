@@ -1,5 +1,5 @@
 import { type Validation } from '@/application/protocols'
-import { type NameValidator, type EmailValidator, type PasswordValidator, type PhoneValidator, type SizeValidator, type ColorValidator } from '@/application/validation'
+import { type NameValidator, type EmailValidator, type PasswordValidator, type PhoneValidator, type SizeValidator, type ColorValidator, type UuidValidator } from '@/application/validation'
 import { type BreedValidator } from '@/application/validation/protocols/breed-validator'
 
 interface Options {
@@ -83,6 +83,15 @@ const makeFakeColorValidator = (): ColorValidator => {
   return new ColorValidatorStub()
 }
 
+const makeFakeUuidValidator = (): UuidValidator => {
+  class UuidValidatorStub implements UuidValidator {
+    isValid (id: string): boolean {
+      return true
+    }
+  }
+  return new UuidValidatorStub()
+}
+
 export {
   makeFakeValidation,
   makeFakeEmailValidator,
@@ -91,5 +100,6 @@ export {
   makeFakePhoneValidator,
   makeFakeBreedValidator,
   makeFakeSizeValidator,
-  makeFakeColorValidator
+  makeFakeColorValidator,
+  makeFakeUuidValidator
 }
