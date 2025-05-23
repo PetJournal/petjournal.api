@@ -39,4 +39,11 @@ describe('StartAt Validation', () => {
     sut.validate({ startAt: 'any_date' })
     expect(validatorSpy).toHaveBeenCalledWith('any_date')
   })
+
+  it('Should return InvalidParamError if startAt is not a valid date', () => {
+    const { sut, fakeStartField, validatorStub } = makeSut()
+    jest.spyOn(validatorStub, 'isValid').mockReturnValueOnce(false)
+    const isValid = sut.validate({ startAt: 'any_date' })
+    expect(isValid).toEqual(new InvalidParamError(fakeStartField))
+  })
 })
