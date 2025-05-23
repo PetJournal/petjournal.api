@@ -1,5 +1,5 @@
 import { type Validation } from '@/application/protocols'
-import { type NameValidator, type EmailValidator, type PasswordValidator, type PhoneValidator, type SizeValidator, type ColorValidator, type UuidValidator, type TitleValidator } from '@/application/validation'
+import { type NameValidator, type EmailValidator, type PasswordValidator, type PhoneValidator, type SizeValidator, type ColorValidator, type UuidValidator, type TitleValidator, type DateValidator } from '@/application/validation'
 import { type BreedValidator } from '@/application/validation/protocols/breed-validator'
 
 interface Options {
@@ -101,6 +101,15 @@ const makeFakeTitleValidator = (): TitleValidator => {
   return new TitleValidatorStub()
 }
 
+const makeFakeDateValidator = (): DateValidator => {
+  class DateValidatorStub implements DateValidator {
+    isValid (date: string): boolean {
+      return true
+    }
+  }
+  return new DateValidatorStub()
+}
+
 export {
   makeFakeValidation,
   makeFakeEmailValidator,
@@ -111,5 +120,6 @@ export {
   makeFakeSizeValidator,
   makeFakeColorValidator,
   makeFakeUuidValidator,
-  makeFakeTitleValidator
+  makeFakeTitleValidator,
+  makeFakeDateValidator
 }
