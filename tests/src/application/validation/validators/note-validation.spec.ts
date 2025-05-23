@@ -26,4 +26,10 @@ describe('Note Validation', () => {
     const isValid = sut.validate(invalidFieldNote)
     expect(isValid).toEqual(new InvalidParamError(fakeFieldNote))
   })
+
+  it('Should throw if validator throws', () => {
+    const { sut, validatorStub } = makeSut()
+    jest.spyOn(validatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
+    expect(() => { sut.validate({ note: 'any_note' }) }).toThrow()
+  })
 })
