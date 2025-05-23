@@ -45,4 +45,10 @@ describe('Days Of Week Validation', () => {
     const isValid = sut.validate([0, 4, 10])
     expect(isValid).toEqual(new InvalidParamError(fakeFieldDaysOfWeek))
   })
+
+  it('Should return void if array of days are valid', () => {
+    const { sut } = makeSut()
+    const isValid = sut.validate([0, 4, 6])
+    expect(isValid).toBeFalsy()
+  })
 })
