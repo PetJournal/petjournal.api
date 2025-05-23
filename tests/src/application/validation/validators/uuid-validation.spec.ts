@@ -39,4 +39,11 @@ describe('Uuid Validation', () => {
     const isValid = sut.validate(fakeFieldName)
     expect(isValid).toEqual(new InvalidParamError(fakeFieldName))
   })
+
+  it('Should call validator with corect params', () => {
+    const { sut, validatorStub } = makeSut()
+    const validatorSpy = jest.spyOn(validatorStub, 'isValid')
+    sut.validate({ uuid: 'any_uuid' })
+    expect(validatorSpy).toHaveBeenCalledWith('any_uuid')
+  })
 })
