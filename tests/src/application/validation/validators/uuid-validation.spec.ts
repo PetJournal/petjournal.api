@@ -46,4 +46,10 @@ describe('Uuid Validation', () => {
     sut.validate({ uuid: 'any_uuid' })
     expect(validatorSpy).toHaveBeenCalledWith('any_uuid')
   })
+
+  it('Should return void if uuid is valid', () => {
+    const { sut } = makeSut()
+    const isValid = sut.validate({ uuid: 'any_uuid' })
+    expect(isValid).toBeFalsy()
+  })
 })
