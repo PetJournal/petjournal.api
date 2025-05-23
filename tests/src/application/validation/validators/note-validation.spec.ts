@@ -46,4 +46,10 @@ describe('Note Validation', () => {
     const isValid = sut.validate({ note: 'any_note' })
     expect(isValid).toEqual(new InvalidParamError(fakeFieldNote))
   })
+
+  it('Should return void if note is valid', () => {
+    const { sut } = makeSut()
+    const isValid = sut.validate({ note: 'any_note' })
+    expect(isValid).toBeFalsy()
+  })
 })
