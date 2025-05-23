@@ -46,4 +46,10 @@ describe('Description Validation', () => {
     const isValid = sut.validate({ description: 'any_description' })
     expect(isValid).toEqual(new InvalidParamError(fakeFieldDescription))
   })
+
+  it('Should return void if description is valid', () => {
+    const { sut } = makeSut()
+    const isValid = sut.validate({ description: 'any_description' })
+    expect(isValid).toBeFalsy()
+  })
 })
