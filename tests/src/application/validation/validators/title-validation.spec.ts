@@ -26,4 +26,10 @@ describe('Title Validation', () => {
     const isValid = sut.validate(invalidFieldTitle)
     expect(isValid).toEqual(new InvalidParamError('title'))
   })
+
+  it('Should throw if validator throws', () => {
+    const { sut, validatorStub } = makeSut()
+    jest.spyOn(validatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
+    expect(() => { sut.validate({ title: 'any_title' }) }).toThrow()
+  })
 })
