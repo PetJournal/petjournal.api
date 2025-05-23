@@ -26,4 +26,10 @@ describe('EndAt Validation', () => {
     const isValid = sut.validate(invalidEndAtField)
     expect(isValid).toEqual(new InvalidParamError(fakeEndAtField))
   })
+
+  it('Should throw if validator throws', () => {
+    const { sut, validatorStub } = makeSut()
+    jest.spyOn(validatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
+    expect(() => { sut.validate({ endAt: 'any_date' }) }).toThrow()
+  })
 })
