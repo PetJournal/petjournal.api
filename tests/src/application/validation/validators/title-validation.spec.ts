@@ -32,4 +32,11 @@ describe('Title Validation', () => {
     jest.spyOn(validatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
     expect(() => { sut.validate({ title: 'any_title' }) }).toThrow()
   })
+
+  it('Should call validator with correct values', () => {
+    const { sut, validatorStub } = makeSut()
+    const validatorSpy = jest.spyOn(validatorStub, 'isValid')
+    sut.validate({ title: 'any_title' })
+    expect(validatorSpy).toHaveBeenCalledWith('any_title')
+  })
 })
