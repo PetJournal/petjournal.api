@@ -46,4 +46,10 @@ describe('EndAt Validation', () => {
     const isValid = sut.validate({ endAt: 'any_date' })
     expect(isValid).toEqual(new InvalidParamError(fakeEndAtField))
   })
+
+  it('Should return void if EndAt is valid', () => {
+    const { sut } = makeSut()
+    const isValid = sut.validate({ endAt: 'any_date' })
+    expect(isValid).toBeFalsy()
+  })
 })
