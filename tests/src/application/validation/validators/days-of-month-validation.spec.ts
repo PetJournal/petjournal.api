@@ -45,4 +45,10 @@ describe('DaysOfMonth Validation', () => {
     const isValid = sut.validate([0, 4, 50])
     expect(isValid).toEqual(new InvalidParamError(fakeDaysOfMonthField))
   })
+
+  it('Should return void if array of days is valid', () => {
+    const { sut } = makeSut()
+    const isValid = sut.validate([0, 4, 30])
+    expect(isValid).toBeFalsy()
+  })
 })
