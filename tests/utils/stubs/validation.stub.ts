@@ -1,5 +1,5 @@
 import { type Validation } from '@/application/protocols'
-import { type NameValidator, type EmailValidator, type PasswordValidator, type PhoneValidator, type SizeValidator, type ColorValidator, type UuidValidator, type TitleValidator, type DateValidator, type NoteValidator, type DescriptionValidator } from '@/application/validation'
+import { type NameValidator, type EmailValidator, type PasswordValidator, type PhoneValidator, type SizeValidator, type ColorValidator, type UuidValidator, type TitleValidator, type DateValidator, type NoteValidator, type DescriptionValidator, type DaysOfWeekValidator } from '@/application/validation'
 import { type BreedValidator } from '@/application/validation/protocols/breed-validator'
 
 interface Options {
@@ -128,6 +128,15 @@ const makeFakeDescriptionValidator = (): DescriptionValidator => {
   return new DescriptionValidatorStub()
 }
 
+const makeFakeDaysOfWeekValidator = (): DaysOfWeekValidator => {
+  class DaysOfWeekValidatorStub implements DaysOfWeekValidator {
+    isValid (days: number[]): boolean {
+      return true
+    }
+  }
+  return new DaysOfWeekValidatorStub()
+}
+
 export {
   makeFakeValidation,
   makeFakeEmailValidator,
@@ -141,5 +150,6 @@ export {
   makeFakeTitleValidator,
   makeFakeDateValidator,
   makeFakeNoteValidator,
-  makeFakeDescriptionValidator
+  makeFakeDescriptionValidator,
+  makeFakeDaysOfWeekValidator
 }
