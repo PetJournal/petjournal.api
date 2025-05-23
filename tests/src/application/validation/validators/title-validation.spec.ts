@@ -46,4 +46,10 @@ describe('Title Validation', () => {
     const isValid = sut.validate({ title: 'any_title' })
     expect(isValid).toEqual(new InvalidParamError(fakeFieldTitle))
   })
+
+  it('Should return void if title is valid', () => {
+    const { sut } = makeSut()
+    const isValid = sut.validate({ title: 'any_title' })
+    expect(isValid).toBeFalsy()
+  })
 })
