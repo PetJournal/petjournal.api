@@ -38,4 +38,11 @@ describe('DaysOfMonth Validation', () => {
     sut.validate([0])
     expect(validatorSpy).toHaveBeenCalledWith([0])
   })
+
+  it('Should return InvalidParamError if validator returns false', () => {
+    const { sut, fakeDaysOfMonthField, validatorStub } = makeSut()
+    jest.spyOn(validatorStub, 'isValid').mockReturnValueOnce(false)
+    const isValid = sut.validate([0, 4, 50])
+    expect(isValid).toEqual(new InvalidParamError(fakeDaysOfMonthField))
+  })
 })
