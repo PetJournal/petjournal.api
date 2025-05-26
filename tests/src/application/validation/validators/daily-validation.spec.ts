@@ -45,4 +45,10 @@ describe('Daily Validation', () => {
     const isValid = sut.validate({ daily: 11 })
     expect(isValid).toEqual(new InvalidParamError(fakeDailyField))
   })
+
+  it('Should return void if daily is valid', () => {
+    const { sut } = makeSut()
+    const isValid = sut.validate({ daily: true })
+    expect(isValid).toBeFalsy()
+  })
 })
