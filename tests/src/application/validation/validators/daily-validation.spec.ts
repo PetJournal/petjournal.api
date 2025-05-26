@@ -38,4 +38,11 @@ describe('Daily Validation', () => {
     sut.validate({ daily: true })
     expect(validatorSpy).toHaveBeenCalledWith(true)
   })
+
+  it('Should return InvalidParamError if validator returns false', () => {
+    const { sut, fakeDailyField, validatorStub } = makeSut()
+    jest.spyOn(validatorStub, 'isValid').mockReturnValueOnce(false)
+    const isValid = sut.validate({ daily: 11 })
+    expect(isValid).toEqual(new InvalidParamError(fakeDailyField))
+  })
 })
