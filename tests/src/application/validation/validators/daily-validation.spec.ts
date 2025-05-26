@@ -25,4 +25,10 @@ describe('Daily Validation', () => {
     const isValid = sut.validate('invalid_daily')
     expect(isValid).toEqual(new InvalidParamError(fakeDailyField))
   })
+
+  it('Should throw if validator throws', () => {
+    const { sut, validatorStub } = makeSut()
+    jest.spyOn(validatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
+    expect(() => { sut.validate({ daily: true }) }).toThrow()
+  })
 })
