@@ -31,4 +31,11 @@ describe('Daily Validation', () => {
     jest.spyOn(validatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
     expect(() => { sut.validate({ daily: true }) }).toThrow()
   })
+
+  it('Should call validator with correct values', () => {
+    const { sut, validatorStub } = makeSut()
+    const validatorSpy = jest.spyOn(validatorStub, 'isValid')
+    sut.validate({ daily: true })
+    expect(validatorSpy).toHaveBeenCalledWith(true)
+  })
 })
