@@ -11,16 +11,16 @@ export class DaysOfMonthValidation implements Validation {
     this.validator = validator
   }
 
-  validate (input: number[]): Error | void {
-    if (!input.length) {
+  validate (input: any): Error | void {
+    if (!input.daysOfMonth.length) {
       return new InvalidParamError(this.fieldDaysOfMonth)
     }
-    for (let i = 0; i < input.length; i++) {
-      if (typeof input[i] !== 'number') {
+    for (let i = 0; i < input.daysOfMonth.length; i++) {
+      if (typeof input.daysOfMonth[i] !== 'number') {
         return new InvalidParamError(this.fieldDaysOfMonth)
       }
     }
-    const isValid = this.validator.isValid(input)
+    const isValid = this.validator.isValid(input.daysOfMonth)
     if (!isValid) {
       return new InvalidParamError(this.fieldDaysOfMonth)
     }
