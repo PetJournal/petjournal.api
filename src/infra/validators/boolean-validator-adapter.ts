@@ -3,6 +3,6 @@ import validator from 'validator'
 
 export class BooleanValidatorAdapter implements BooleanValidator {
   isValid (param: any): boolean {
-    return validator.isBoolean(param)
+    return validator.isBoolean(param.toString())
   }
 }
