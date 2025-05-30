@@ -22,7 +22,6 @@ export class EventRepository implements AddEventRepository, LoadEventByDateAndSt
   async loadByDateAndStart (params: LoadEventByDateAndStartRepository.Params): Promise<LoadEventByDateAndStartRepository.Result> {
     const event = await db.event.findFirst({
       where: {
-        date: params.date,
         start: params.start
       }
     })
