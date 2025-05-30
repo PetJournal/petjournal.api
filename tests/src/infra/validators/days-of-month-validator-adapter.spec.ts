@@ -19,7 +19,7 @@ describe('DaysOfMonth Validator Adapter', () => {
 
   it('Should return true if validator returns true', () => {
     const sut = makeSut()
-    const isValid = sut.isValid([0, 4, 30])
+    const isValid = sut.isValid([1, 4, 31])
     expect(isValid).toBe(true)
   })
 })
