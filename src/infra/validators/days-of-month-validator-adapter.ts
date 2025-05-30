@@ -6,7 +6,7 @@ export class DaysOfMonthValidatorAdapter implements DaysOfMonthValidator {
       if (isNaN(days[i])) {
         return false
       }
-      if (!days.every(day => day >= 0 && day <= 30)) {
+      if (!days.every(day => day >= 1 && day <= 31)) {
         return false
       }
     }
