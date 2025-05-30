@@ -25,7 +25,9 @@ describe('StartAt Validator Adapter', () => {
 
   it('Should return true if date is a valid date', () => {
     const sut = makeSut()
-    const isValid = sut.isValid('2025-05-19T00:00:00Z')
+    const validDate = new Date()
+    validDate.setDate(validDate.getDate() + 1)
+    const isValid = sut.isValid(validDate.toISOString())
     expect(isValid).toBe(true)
   })
 })
