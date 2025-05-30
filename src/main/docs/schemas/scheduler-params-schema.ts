@@ -51,7 +51,7 @@ export const schedulerParamsSchema = {
       items: {
         type: 'string'
       },
-      example: '[49fa84f8-20f9-40dd-b3bc-75e894ba0501, cbc5097a-bee5-45d2-9a7e-2fd29c9cf47d]'
+      example: ['49fa84f8-20f9-40dd-b3bc-75e894ba0501', 'cbc5097a-bee5-45d2-9a7e-2fd29c9cf47d']
     }
 
   },
