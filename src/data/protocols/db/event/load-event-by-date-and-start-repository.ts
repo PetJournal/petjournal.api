@@ -4,8 +4,7 @@ export interface LoadEventByDateAndStartRepository {
 
 export namespace LoadEventByDateAndStartRepository {
   export type Params = {
-    date: Date
-    start: string
+    start: Date
   }
 
   export type Result = {
