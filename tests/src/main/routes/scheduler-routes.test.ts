@@ -57,7 +57,7 @@ const generateDate = (): any => {
   start.setUTCHours(18, 0, 0, 0)
   end.setUTCHours(19, 0, 0, 0)
   start.setDate(start.getDate() + 1)
-  end.setDate(start.getDate() + 3)
+  end.setDate(end.getDate() + 3)
   return {
     startAt: start,
     endAt: end
