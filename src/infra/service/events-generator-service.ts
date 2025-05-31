@@ -16,7 +16,7 @@ export class EventsGeneratorService implements EventsGenerator {
 
     if (daysOfWeek) {
       const events = []
-      const currentDate = new Date(startAt)
+      const currentDate = new Date(startAt.toISOString())
       while (currentDate <= endAt) {
         if (daysOfWeek.includes(currentDate.getDay())) {
           const event = await this.eventRepository.loadByDateAndStart({ start: currentDate })
@@ -52,7 +52,7 @@ export class EventsGeneratorService implements EventsGenerator {
 
     if (daysOfMonth) {
       const events = []
-      const currentDate = new Date(startAt)
+      const currentDate = new Date(startAt.toISOString())
       while (currentDate <= endAt) {
         if (daysOfMonth.includes(currentDate.getDate())) {
           const event = await this.eventRepository.loadByDateAndStart({ start: currentDate })
@@ -88,7 +88,7 @@ export class EventsGeneratorService implements EventsGenerator {
 
     if (daily) {
       const events = []
-      const currentDate = new Date(startAt)
+      const currentDate = new Date(startAt.toISOString())
       while (currentDate <= endAt) {
         const event = await this.eventRepository.loadByDateAndStart({ start: currentDate })
         if (event) {
