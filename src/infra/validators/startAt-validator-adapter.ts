@@ -4,7 +4,7 @@ import validator from 'validator'
 export class StartAtValidatorAdapter implements DateValidator {
   isValid (date: string): boolean {
     const dateOfValidation = new Date(date)
-    if (isNaN(dateOfValidation.getTime())) {
+    if (!validator.isISO8601(date)) {
       return false
     }
 
@@ -12,6 +12,6 @@ export class StartAtValidatorAdapter implements DateValidator {
       return false
     }
 
-    return validator.isISO8601(date)
+    return true
   }
 }
