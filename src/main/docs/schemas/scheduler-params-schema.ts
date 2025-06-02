@@ -38,7 +38,7 @@ export const schedulerParamsSchema = {
       items: {
         type: 'number'
       },
-      example: '[0, 16, 31]',
+      example: '[1, 16, 31]',
       nullable: true
     },
     daily: {
