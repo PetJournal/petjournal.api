@@ -2,7 +2,13 @@ export const createSchedulerPath = {
   post: {
     tags: ['scheduler'],
     summary: 'create a new scheduler',
-    description: 'create a new scheduler to generate events(tasks)',
+    description: `
+    create a new scheduler to generate events(tasks)
+      daysOfWeek, daysOfMonth, daily can be undefined
+      a scheduler without daysOfWeek, daysOfMonth and daily is a single event.
+      daysOfWeek gap are 0 to 6
+      daysOfMonth gar are 1 to 31
+    `,
     security: [{
       bearerAuth: []
     }],
