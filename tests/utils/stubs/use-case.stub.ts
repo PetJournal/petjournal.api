@@ -274,6 +274,7 @@ const makeFakeUpdateTagUseCase = (): UpdateTag => {
         isSuccess: true,
         data: {
           id: 'any_id',
+          guardianId: 'any_guardian_id',
           name: 'any_name',
           color: 'any_color'
         }
@@ -299,6 +300,7 @@ const makeFakeLoadTagsUseCase = (): LoadTags => {
     async loadAll (): Promise<LoadTags.Result> {
       return [{
         id: 'any_id',
+        guardianId: 'any_guardian_id',
         name: 'any_name',
         color: 'any_color'
       }]
@@ -314,6 +316,7 @@ const makeFakeAddTagUseCase = (): AddTag => {
         isSuccess: true,
         data: {
           id: 'any_id',
+          guardianId: 'any_guardian_id',
           name: 'any_name',
           color: 'any_color'
         }
@@ -328,6 +331,7 @@ const makeFakeLoadTagByIdUseCase = (): LoadTagById => {
     async loadById (tagId: LoadTagById.Param): Promise<LoadTagById.Result> {
       return {
         id: 'any_id',
+        guardianId: 'any_guardian_id',
         name: 'any_name',
         color: 'any_color'
       }

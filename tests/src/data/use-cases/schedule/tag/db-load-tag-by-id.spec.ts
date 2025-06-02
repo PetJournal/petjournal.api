@@ -49,6 +49,7 @@ describe('DbLoadTagById use case', () => {
       const tag = await sut.loadById(param)
       expect(tag).toEqual({
         id: expect.any(String),
+        guardianId: expect.any(String),
         name: 'any_name',
         color: 'any_color'
       })

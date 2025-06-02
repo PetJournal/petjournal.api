@@ -11,11 +11,13 @@ describe('TagRepository', () => {
 
   beforeEach(async () => {
     await PrismaHelper.clearTag()
+    await PrismaHelper.clearGuardian()
   })
 
   afterAll(async () => { await PrismaHelper.disconnect() })
 
   const params: AddTagRepository.Params = {
+    guardianId: 'any_guardian_id',
     name: 'any_name',
     color: 'any_color'
   }
@@ -30,9 +32,11 @@ describe('TagRepository', () => {
 
     it('Should return a tag on success', async () => {
       const sut = makeSut()
-      const tag = await sut.add(params)
+      const guardian = await PrismaHelper.createGuardian()
+      const tag = await sut.add({ ...params, guardianId: guardian.id })
       expect(tag).toEqual({
         id: expect.any(String),
+        guardianId: expect.any(String),
         name: 'any_name',
         color: 'any_color'
       })
@@ -49,11 +53,13 @@ describe('TagRepository', () => {
 
     it('Should return a tag on success', async () => {
       const sut = makeSut()
-      const tagAdded = await sut.add(params)
+      const guardian = await PrismaHelper.createGuardian()
+      const tagAdded = await sut.add({ ...params, guardianId: guardian.id })
       const id = tagAdded?.id as string
       const tag = await sut.loadById(id)
       expect(tag).toEqual({
         id: expect.any(String),
+        guardianId: expect.any(String),
         name: 'any_name',
         color: 'any_color'
       })
@@ -71,11 +77,13 @@ describe('TagRepository', () => {
 
     it('Should return an updated tag on success', async () => {
       const sut = makeSut()
-      const addedTag = await sut.add(params)
+      const guardian = await PrismaHelper.createGuardian()
+      const addedTag = await sut.add({ ...params, guardianId: guardian.id })
       const id = addedTag?.id as string
       const updatedTag = await sut.update({ id, name: 'updated_name' })
       expect(updatedTag).toEqual({
         id: expect.any(String),
+        guardianId: expect.any(String),
         name: 'updated_name',
         color: 'any_color'
       })
@@ -91,10 +99,12 @@ describe('TagRepository', () => {
 
     it('Should return an array of tags on success', async () => {
       const sut = makeSut()
-      await sut.add(params)
+      const guardian = await PrismaHelper.createGuardian()
+      await sut.add({ ...params, guardianId: guardian.id })
       const tags = await sut.loadAll()
       expect(tags).toEqual([{
         id: expect.any(String),
+        guardianId: expect.any(String),
         name: 'any_name',
         color: 'any_color'
       }])
@@ -111,7 +121,8 @@ describe('TagRepository', () => {
 
     it('Should return true on success', async () => {
       const sut = makeSut()
-      const tag = await sut.add(params)
+      const guardian = await PrismaHelper.createGuardian()
+      const tag = await sut.add({ ...params, guardianId: guardian.id })
       const tagId = tag?.id as string
       const result = await sut.deleteById(tagId)
       expect(result).toBe(true)

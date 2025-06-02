@@ -6,6 +6,7 @@ export interface AddTag {
 
 export namespace AddTag {
   export type Params = {
+    guardianId: string
     name: string
     color: string
   }
@@ -15,6 +16,7 @@ export namespace AddTag {
     error?: Error
     data?: {
       id: string
+      guardianId: string
       name: string
       color: string
     }

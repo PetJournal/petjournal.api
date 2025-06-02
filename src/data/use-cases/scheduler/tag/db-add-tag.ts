@@ -10,7 +10,7 @@ export class DbAddTag implements AddTag {
   }
 
   async add (tagData: AddTag.Params): Promise<AddTag.Result> {
-    const tag = await this.tagRepository.add({ name: tagData.name, color: tagData.color })
+    const tag = await this.tagRepository.add({ guardianId: tagData.guardianId, name: tagData.name, color: tagData.color })
     if (!tag) {
       return {
         isSuccess: false,

@@ -33,6 +33,7 @@ describe('Tag Routes', () => {
       expect(response.status).toBe(201)
       expect(response.body).toEqual({
         id: expect.any(String),
+        guardianId: expect.any(String),
         name: 'Vacina',
         color: '#324ca8'
       })
@@ -66,6 +67,7 @@ describe('Tag Routes', () => {
         isSuccess: true,
         data: {
           id: expect.any(String),
+          guardianId: expect.any(String),
           name: 'tag name updated',
           color: '#324ca8'
         }

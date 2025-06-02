@@ -48,6 +48,7 @@ describe('LoadTagById Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(success({
       id: 'any_id',
+      guardianId: 'any_guardian_id',
       name: 'any_name',
       color: 'any_color'
     }))

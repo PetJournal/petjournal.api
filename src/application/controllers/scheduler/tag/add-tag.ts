@@ -18,12 +18,14 @@ export class AddTagController implements Controller {
         return badRequest(error)
       }
       const { name, color } = httpRequest.body
-      const result = await this.addTag.add({ name, color })
+      const guardianId = httpRequest.userId as string
+      const result = await this.addTag.add({ guardianId, name, color })
       if (!result.isSuccess) {
         return notAcceptable(result.error as Error)
       }
       return create({
         id: result.data?.id,
+        guardianId: result.data?.guardianId,
         name: result.data?.name,
         color: result.data?.color
       })

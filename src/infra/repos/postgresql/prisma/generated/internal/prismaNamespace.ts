@@ -1189,6 +1189,7 @@ export type BreedScalarFieldEnum = (typeof BreedScalarFieldEnum)[keyof typeof Br
 
 export const TagScalarFieldEnum = {
   id: 'id',
+  guardianId: 'guardianId',
   name: 'name',
   color: 'color'
 } as const

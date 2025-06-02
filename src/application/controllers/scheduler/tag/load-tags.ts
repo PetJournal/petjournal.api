@@ -11,7 +11,8 @@ export class LoadTagsController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const result = await this.loadTags.loadAll()
+      const guardianId = httpRequest.userId as string
+      const result = await this.loadTags.loadAll(guardianId)
       return success(result)
     } catch (error) {
       return serverError(error as Error)

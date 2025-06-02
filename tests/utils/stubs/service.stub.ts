@@ -297,6 +297,7 @@ const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & Upd
     async add (params: AddTagRepository.Params): Promise<AddTagRepository.Result> {
       return {
         id: 'any_id',
+        guardianId: 'any_guardian_id',
         name: 'any_name',
         color: 'any_color'
       }
@@ -305,6 +306,7 @@ const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & Upd
     async loadById (tagId: LoadTagByIdRepository.Param): Promise<LoadTagByIdRepository.Result> {
       return {
         id: 'any_id',
+        guardianId: 'any_guardian_id',
         name: 'any_name',
         color: 'any_color'
       }
@@ -313,6 +315,7 @@ const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & Upd
     async update (param: UpdateTagRepository.Params): Promise<UpdateTagRepository.Result> {
       return {
         id: 'any_id',
+        guardianId: 'any_guardian_id',
         name: 'updated_name',
         color: 'any_color'
       }
@@ -321,6 +324,7 @@ const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & Upd
     async loadAll (): Promise<LoadTagsRepository.Result> {
       return [{
         id: 'any_id',
+        guardianId: 'any_guardian_id',
         name: 'any_name',
         color: 'any_color'
       }]

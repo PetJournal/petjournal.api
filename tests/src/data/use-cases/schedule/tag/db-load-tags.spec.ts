@@ -41,6 +41,7 @@ describe('DbLoadTags use case', () => {
       const tags = await sut.loadAll()
       expect(tags).toEqual([{
         id: 'any_id',
+        guardianId: 'any_guardian_id',
         name: 'any_name',
         color: 'any_color'
       }])

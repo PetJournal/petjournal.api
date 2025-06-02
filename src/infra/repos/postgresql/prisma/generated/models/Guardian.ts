@@ -222,6 +222,7 @@ export type GuardianWhereInput = {
   verificationTokenCreatedAt?: Prisma.DateTimeFilter<"Guardian"> | Date | string
   emailConfirmation?: Prisma.BoolFilter<"Guardian"> | boolean
   pets?: Prisma.PetListRelationFilter
+  tags?: Prisma.TagListRelationFilter
 }
 
 export type GuardianOrderByWithRelationInput = {
@@ -236,6 +237,7 @@ export type GuardianOrderByWithRelationInput = {
   verificationTokenCreatedAt?: Prisma.SortOrder
   emailConfirmation?: Prisma.SortOrder
   pets?: Prisma.PetOrderByRelationAggregateInput
+  tags?: Prisma.TagOrderByRelationAggregateInput
 }
 
 export type GuardianWhereUniqueInput = Prisma.AtLeast<{
@@ -253,6 +255,7 @@ export type GuardianWhereUniqueInput = Prisma.AtLeast<{
   verificationTokenCreatedAt?: Prisma.DateTimeFilter<"Guardian"> | Date | string
   emailConfirmation?: Prisma.BoolFilter<"Guardian"> | boolean
   pets?: Prisma.PetListRelationFilter
+  tags?: Prisma.TagListRelationFilter
 }, "id" | "email" | "phone">
 
 export type GuardianOrderByWithAggregationInput = {
@@ -299,6 +302,7 @@ export type GuardianCreateInput = {
   verificationTokenCreatedAt?: Date | string
   emailConfirmation?: boolean
   pets?: Prisma.PetCreateNestedManyWithoutGuardianInput
+  tags?: Prisma.TagCreateNestedManyWithoutGuardianInput
 }
 
 export type GuardianUncheckedCreateInput = {
@@ -313,6 +317,7 @@ export type GuardianUncheckedCreateInput = {
   verificationTokenCreatedAt?: Date | string
   emailConfirmation?: boolean
   pets?: Prisma.PetUncheckedCreateNestedManyWithoutGuardianInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutGuardianInput
 }
 
 export type GuardianUpdateInput = {
@@ -327,6 +332,7 @@ export type GuardianUpdateInput = {
   verificationTokenCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailConfirmation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pets?: Prisma.PetUpdateManyWithoutGuardianNestedInput
+  tags?: Prisma.TagUpdateManyWithoutGuardianNestedInput
 }
 
 export type GuardianUncheckedUpdateInput = {
@@ -341,6 +347,7 @@ export type GuardianUncheckedUpdateInput = {
   verificationTokenCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailConfirmation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pets?: Prisma.PetUncheckedUpdateManyWithoutGuardianNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutGuardianNestedInput
 }
 
 export type GuardianCreateManyInput = {
@@ -456,6 +463,20 @@ export type GuardianUpdateOneRequiredWithoutPetsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.GuardianUpdateToOneWithWhereWithoutPetsInput, Prisma.GuardianUpdateWithoutPetsInput>, Prisma.GuardianUncheckedUpdateWithoutPetsInput>
 }
 
+export type GuardianCreateNestedOneWithoutTagsInput = {
+  create?: Prisma.XOR<Prisma.GuardianCreateWithoutTagsInput, Prisma.GuardianUncheckedCreateWithoutTagsInput>
+  connectOrCreate?: Prisma.GuardianCreateOrConnectWithoutTagsInput
+  connect?: Prisma.GuardianWhereUniqueInput
+}
+
+export type GuardianUpdateOneRequiredWithoutTagsNestedInput = {
+  create?: Prisma.XOR<Prisma.GuardianCreateWithoutTagsInput, Prisma.GuardianUncheckedCreateWithoutTagsInput>
+  connectOrCreate?: Prisma.GuardianCreateOrConnectWithoutTagsInput
+  upsert?: Prisma.GuardianUpsertWithoutTagsInput
+  connect?: Prisma.GuardianWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.GuardianUpdateToOneWithWhereWithoutTagsInput, Prisma.GuardianUpdateWithoutTagsInput>, Prisma.GuardianUncheckedUpdateWithoutTagsInput>
+}
+
 export type GuardianCreateWithoutPetsInput = {
   id?: string
   firstName: string
@@ -467,6 +488,7 @@ export type GuardianCreateWithoutPetsInput = {
   verificationToken: string
   verificationTokenCreatedAt?: Date | string
   emailConfirmation?: boolean
+  tags?: Prisma.TagCreateNestedManyWithoutGuardianInput
 }
 
 export type GuardianUncheckedCreateWithoutPetsInput = {
@@ -480,6 +502,7 @@ export type GuardianUncheckedCreateWithoutPetsInput = {
   verificationToken: string
   verificationTokenCreatedAt?: Date | string
   emailConfirmation?: boolean
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutGuardianInput
 }
 
 export type GuardianCreateOrConnectWithoutPetsInput = {
@@ -509,6 +532,7 @@ export type GuardianUpdateWithoutPetsInput = {
   verificationToken?: Prisma.StringFieldUpdateOperationsInput | string
   verificationTokenCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailConfirmation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tags?: Prisma.TagUpdateManyWithoutGuardianNestedInput
 }
 
 export type GuardianUncheckedUpdateWithoutPetsInput = {
@@ -522,6 +546,79 @@ export type GuardianUncheckedUpdateWithoutPetsInput = {
   verificationToken?: Prisma.StringFieldUpdateOperationsInput | string
   verificationTokenCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailConfirmation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tags?: Prisma.TagUncheckedUpdateManyWithoutGuardianNestedInput
+}
+
+export type GuardianCreateWithoutTagsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+  phone: string
+  accessToken?: string | null
+  verificationToken: string
+  verificationTokenCreatedAt?: Date | string
+  emailConfirmation?: boolean
+  pets?: Prisma.PetCreateNestedManyWithoutGuardianInput
+}
+
+export type GuardianUncheckedCreateWithoutTagsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+  phone: string
+  accessToken?: string | null
+  verificationToken: string
+  verificationTokenCreatedAt?: Date | string
+  emailConfirmation?: boolean
+  pets?: Prisma.PetUncheckedCreateNestedManyWithoutGuardianInput
+}
+
+export type GuardianCreateOrConnectWithoutTagsInput = {
+  where: Prisma.GuardianWhereUniqueInput
+  create: Prisma.XOR<Prisma.GuardianCreateWithoutTagsInput, Prisma.GuardianUncheckedCreateWithoutTagsInput>
+}
+
+export type GuardianUpsertWithoutTagsInput = {
+  update: Prisma.XOR<Prisma.GuardianUpdateWithoutTagsInput, Prisma.GuardianUncheckedUpdateWithoutTagsInput>
+  create: Prisma.XOR<Prisma.GuardianCreateWithoutTagsInput, Prisma.GuardianUncheckedCreateWithoutTagsInput>
+  where?: Prisma.GuardianWhereInput
+}
+
+export type GuardianUpdateToOneWithWhereWithoutTagsInput = {
+  where?: Prisma.GuardianWhereInput
+  data: Prisma.XOR<Prisma.GuardianUpdateWithoutTagsInput, Prisma.GuardianUncheckedUpdateWithoutTagsInput>
+}
+
+export type GuardianUpdateWithoutTagsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationToken?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationTokenCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  emailConfirmation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pets?: Prisma.PetUpdateManyWithoutGuardianNestedInput
+}
+
+export type GuardianUncheckedUpdateWithoutTagsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationToken?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationTokenCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  emailConfirmation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pets?: Prisma.PetUncheckedUpdateManyWithoutGuardianNestedInput
 }
 
 
@@ -531,10 +628,12 @@ export type GuardianUncheckedUpdateWithoutPetsInput = {
 
 export type GuardianCountOutputType = {
   pets: number
+  tags: number
 }
 
 export type GuardianCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   pets?: boolean | GuardianCountOutputTypeCountPetsArgs
+  tags?: boolean | GuardianCountOutputTypeCountTagsArgs
 }
 
 /**
@@ -554,6 +653,13 @@ export type GuardianCountOutputTypeCountPetsArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.PetWhereInput
 }
 
+/**
+ * GuardianCountOutputType without action
+ */
+export type GuardianCountOutputTypeCountTagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TagWhereInput
+}
+
 
 export type GuardianSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -567,6 +673,7 @@ export type GuardianSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   verificationTokenCreatedAt?: boolean
   emailConfirmation?: boolean
   pets?: boolean | Prisma.Guardian$petsArgs<ExtArgs>
+  tags?: boolean | Prisma.Guardian$tagsArgs<ExtArgs>
   _count?: boolean | Prisma.GuardianCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["guardian"]>
 
@@ -612,6 +719,7 @@ export type GuardianSelectScalar = {
 export type GuardianOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "password" | "phone" | "accessToken" | "verificationToken" | "verificationTokenCreatedAt" | "emailConfirmation", ExtArgs["result"]["guardian"]>
 export type GuardianInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   pets?: boolean | Prisma.Guardian$petsArgs<ExtArgs>
+  tags?: boolean | Prisma.Guardian$tagsArgs<ExtArgs>
   _count?: boolean | Prisma.GuardianCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type GuardianIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -621,6 +729,7 @@ export type $GuardianPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   name: "Guardian"
   objects: {
     pets: Prisma.$PetPayload<ExtArgs>[]
+    tags: Prisma.$TagPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1028,6 +1137,7 @@ readonly fields: GuardianFieldRefs;
 export interface Prisma__GuardianClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   pets<T extends Prisma.Guardian$petsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Guardian$petsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tags<T extends Prisma.Guardian$tagsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Guardian$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1476,6 +1586,30 @@ export type Guardian$petsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.PetScalarFieldEnum | Prisma.PetScalarFieldEnum[]
+}
+
+/**
+ * Guardian.tags
+ */
+export type Guardian$tagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Tag
+   */
+  select?: Prisma.TagSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Tag
+   */
+  omit?: Prisma.TagOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TagInclude<ExtArgs> | null
+  where?: Prisma.TagWhereInput
+  orderBy?: Prisma.TagOrderByWithRelationInput | Prisma.TagOrderByWithRelationInput[]
+  cursor?: Prisma.TagWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TagScalarFieldEnum | Prisma.TagScalarFieldEnum[]
 }
 
 /**
