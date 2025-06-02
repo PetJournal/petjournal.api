@@ -93,7 +93,8 @@ describe('TagRepository', () => {
   describe('LoadAll method', () => {
     it('Should return an empty array if there are not tags', async () => {
       const sut = makeSut()
-      const tags = await sut.loadAll()
+      const guardian = await PrismaHelper.createGuardian()
+      const tags = await sut.loadAll(guardian.id)
       expect(tags).toEqual([])
     })
 
@@ -101,7 +102,7 @@ describe('TagRepository', () => {
       const sut = makeSut()
       const guardian = await PrismaHelper.createGuardian()
       await sut.add({ ...params, guardianId: guardian.id })
-      const tags = await sut.loadAll()
+      const tags = await sut.loadAll(guardian.id)
       expect(tags).toEqual([{
         id: expect.any(String),
         guardianId: expect.any(String),
