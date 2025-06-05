@@ -1,25 +1,25 @@
 import { type EventsGenerator } from '@/data/protocols/service/events-generator'
 import { type LoadEventByDateAndStartRepository, type AddEventRepository, type AddManyEventsRepository } from '@/data/protocols'
 import { NotAcceptableError, ServerError } from '@/application/errors'
-
+import { type DateToJSDate, type DateGeneratorUtc, type DateSetTime, type DateAddDay } from '@/data/protocols/service'
 export class EventsGeneratorService implements EventsGenerator {
   private readonly eventRepository: AddEventRepository & LoadEventByDateAndStartRepository & AddManyEventsRepository
+  private readonly dateTime: DateGeneratorUtc & DateToJSDate & DateSetTime & DateAddDay
 
-  constructor ({ eventRepository }: EventsGenerator.Dependencies) {
+  constructor ({ eventRepository, dateTime }: EventsGenerator.Dependencies) {
     this.eventRepository = eventRepository
+    this.dateTime = dateTime
   }
 
   async generate ({ schedulerId, startAt, endAt, daysOfWeek, daysOfMonth, daily }: EventsGenerator.Params): Promise<EventsGenerator.Result> {
-    const [startAtDatePart] = startAt.toISOString().split('T')
-    const [startAtTimePart] = startAt.toISOString().split('T')[1].split('.')
-    const [endAtTimePart] = endAt.toISOString().split('T')[1].split('.')
+    let startAtDateTime = this.dateTime.generate(startAt)
+    const endAtDateTime = this.dateTime.generate(endAt)
 
     if (daysOfWeek) {
       const events = []
-      const currentDate = new Date(startAt.toISOString())
-      while (currentDate <= endAt) {
-        if (daysOfWeek.includes(currentDate.getDay())) {
-          const event = await this.eventRepository.loadByDateAndStart({ start: currentDate })
+      while (startAtDateTime <= endAtDateTime) {
+        if (daysOfWeek.includes(this.dateTime.toJSDate(startAtDateTime).getDay())) {
+          const event = await this.eventRepository.loadByDateAndStart({ start: this.dateTime.toJSDate(startAtDateTime) })
           if (event) {
             return {
               isSuccess: false,
@@ -29,12 +29,19 @@ export class EventsGeneratorService implements EventsGenerator {
           }
           events.push({
             schedulerId,
-            start: this.setTimeOnDate(currentDate, startAtTimePart),
-            end: this.setTimeOnDate(currentDate, endAtTimePart),
-            date: currentDate
+            start: this.dateTime.toJSDate(startAtDateTime),
+            end: this.dateTime.setTime({
+              dateTime: startAtDateTime,
+              time: {
+                hour: endAtDateTime.hour,
+                minute: endAtDateTime.minute,
+                second: endAtDateTime.second
+              }
+            }),
+            date: this.dateTime.toJSDate(startAtDateTime)
           })
         }
-        currentDate.setDate(currentDate.getDate() + 1)
+        startAtDateTime = this.dateTime.addDay(startAtDateTime)
       }
 
       const eventsAddManyResult = await this.eventRepository.addMany(events)
@@ -52,10 +59,9 @@ export class EventsGeneratorService implements EventsGenerator {
 
     if (daysOfMonth) {
       const events = []
-      const currentDate = new Date(startAt.toISOString())
-      while (currentDate <= endAt) {
-        if (daysOfMonth.includes(currentDate.getDate())) {
-          const event = await this.eventRepository.loadByDateAndStart({ start: currentDate })
+      while (startAtDateTime <= endAtDateTime) {
+        if (daysOfMonth.includes(this.dateTime.toJSDate(startAtDateTime).getDate())) {
+          const event = await this.eventRepository.loadByDateAndStart({ start: this.dateTime.toJSDate(startAtDateTime) })
           if (event) {
             return {
               isSuccess: false,
@@ -65,12 +71,19 @@ export class EventsGeneratorService implements EventsGenerator {
           }
           events.push({
             schedulerId,
-            start: this.setTimeOnDate(currentDate, startAtTimePart),
-            end: this.setTimeOnDate(currentDate, endAtTimePart),
-            date: currentDate
+            start: this.dateTime.toJSDate(startAtDateTime),
+            end: this.dateTime.setTime({
+              dateTime: startAtDateTime,
+              time: {
+                hour: endAtDateTime.hour,
+                minute: endAtDateTime.minute,
+                second: endAtDateTime.second
+              }
+            }),
+            date: this.dateTime.toJSDate(startAtDateTime)
           })
         }
-        currentDate.setDate(currentDate.getDate() + 1)
+        startAtDateTime = this.dateTime.addDay(startAtDateTime)
       }
 
       const eventsAddManyResult = await this.eventRepository.addMany(events)
@@ -88,9 +101,8 @@ export class EventsGeneratorService implements EventsGenerator {
 
     if (daily) {
       const events = []
-      const currentDate = new Date(startAt.toISOString())
-      while (currentDate <= endAt) {
-        const event = await this.eventRepository.loadByDateAndStart({ start: currentDate })
+      while (startAtDateTime <= endAtDateTime) {
+        const event = await this.eventRepository.loadByDateAndStart({ start: this.dateTime.toJSDate(startAtDateTime) })
         if (event) {
           return {
             isSuccess: false,
@@ -100,11 +112,18 @@ export class EventsGeneratorService implements EventsGenerator {
         }
         events.push({
           schedulerId,
-          start: this.setTimeOnDate(currentDate, startAtTimePart),
-          end: this.setTimeOnDate(currentDate, endAtTimePart),
-          date: currentDate
+          start: this.dateTime.toJSDate(startAtDateTime),
+          end: this.dateTime.setTime({
+            dateTime: startAtDateTime,
+            time: {
+              hour: endAtDateTime.hour,
+              minute: endAtDateTime.minute,
+              second: endAtDateTime.second
+            }
+          }),
+          date: this.dateTime.toJSDate(startAtDateTime)
         })
-        currentDate.setDate(currentDate.getDate() + 1)
+        startAtDateTime = this.dateTime.addDay(startAtDateTime)
       }
 
       const eventsAddManyResult = await this.eventRepository.addMany(events)
@@ -119,7 +138,8 @@ export class EventsGeneratorService implements EventsGenerator {
         isSuccess: true
       }
     }
-    const event = await this.eventRepository.loadByDateAndStart({ start: startAt })
+
+    const event = await this.eventRepository.loadByDateAndStart({ start: this.dateTime.toJSDate(startAtDateTime) })
     if (event) {
       return {
         isSuccess: false,
@@ -130,9 +150,9 @@ export class EventsGeneratorService implements EventsGenerator {
 
     const eventAddResult = await this.eventRepository.add({
       schedulerId,
-      start: this.setTimeOnDate(startAt, startAtTimePart),
-      end: this.setTimeOnDate(endAt, endAtTimePart),
-      date: new Date(startAtDatePart)
+      start: this.dateTime.toJSDate(startAtDateTime),
+      end: this.dateTime.toJSDate(endAtDateTime),
+      date: this.dateTime.toJSDate(startAtDateTime)
     })
 
     if (!eventAddResult) {
@@ -146,12 +166,5 @@ export class EventsGeneratorService implements EventsGenerator {
       isSuccess: true,
       data: eventAddResult
     }
-  }
-
-  private setTimeOnDate (date: Date, timePart: string): Date {
-    const [hour, minutes, seconds] = timePart.split(':')
-    const dateWithNewTime = new Date(date)
-    dateWithNewTime.setUTCHours(Number(hour), Number(minutes), Number(seconds), 0)
-    return dateWithNewTime
   }
 }
