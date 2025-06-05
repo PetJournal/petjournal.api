@@ -52,8 +52,8 @@ export class DbAddScheduler implements AddScheduler {
 
     const eventGeneratorResult = await this.eventsGenerator.generate({
       schedulerId: scheduler.id,
-      startAt: new Date(params.startAt),
-      endAt: new Date(params.endAt),
+      startAt: params.startAt,
+      endAt: params.endAt,
       daysOfWeek: params.daysOfWeek,
       daysOfMonth: params.daysOfMonth,
       daily: params.daily
