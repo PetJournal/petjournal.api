@@ -1217,8 +1217,7 @@ export const EventScalarFieldEnum = {
   id: 'id',
   schedulerId: 'schedulerId',
   start: 'start',
-  end: 'end',
-  date: 'date'
+  end: 'end'
 } as const
 
 export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]

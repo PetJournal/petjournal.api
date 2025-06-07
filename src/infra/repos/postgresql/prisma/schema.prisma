@@ -112,7 +112,6 @@ model Event {
   schedulerId String @map("scheduler_id")
   start DateTime
   end DateTime
-  date DateTime
 
   @@map("events")
 }

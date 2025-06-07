@@ -11,6 +11,5 @@ export namespace LoadEventByDateAndStartRepository {
     schedulerId: string
     start: Date
     end: Date
-    date: Date
   } | null
 }

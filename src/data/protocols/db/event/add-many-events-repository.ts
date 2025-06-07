@@ -7,7 +7,6 @@ export namespace AddManyEventsRepository {
     schedulerId: string
     start: Date
     end: Date
-    date: Date
   }>
 
   export type Result = boolean

@@ -7,7 +7,6 @@ export namespace AddEventRepository {
     schedulerId: string
     start: Date
     end: Date
-    date: Date
   }
 
   export type Result = {
@@ -15,6 +14,5 @@ export namespace AddEventRepository {
     schedulerId: string
     start: Date
     end: Date
-    date: Date
   } | undefined
 }

@@ -37,8 +37,7 @@ export class EventsGeneratorService implements EventsGenerator {
                 minute: endAtDateTime.minute,
                 second: endAtDateTime.second
               }
-            }),
-            date: this.dateTime.toJSDate(startAtDateTime)
+            })
           })
         }
         startAtDateTime = this.dateTime.addDay(startAtDateTime)
@@ -79,8 +78,7 @@ export class EventsGeneratorService implements EventsGenerator {
                 minute: endAtDateTime.minute,
                 second: endAtDateTime.second
               }
-            }),
-            date: this.dateTime.toJSDate(startAtDateTime)
+            })
           })
         }
         startAtDateTime = this.dateTime.addDay(startAtDateTime)
@@ -120,8 +118,7 @@ export class EventsGeneratorService implements EventsGenerator {
               minute: endAtDateTime.minute,
               second: endAtDateTime.second
             }
-          }),
-          date: this.dateTime.toJSDate(startAtDateTime)
+          })
         })
         startAtDateTime = this.dateTime.addDay(startAtDateTime)
       }
@@ -151,8 +148,7 @@ export class EventsGeneratorService implements EventsGenerator {
     const eventAddResult = await this.eventRepository.add({
       schedulerId,
       start: this.dateTime.toJSDate(startAtDateTime),
-      end: this.dateTime.toJSDate(endAtDateTime),
-      date: this.dateTime.toJSDate(startAtDateTime)
+      end: this.dateTime.toJSDate(endAtDateTime)
     })
 
     if (!eventAddResult) {

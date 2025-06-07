@@ -23,12 +23,10 @@ export namespace EventsGenerator {
       schedulerId: string
       start: Date
       end: Date
-      date: Date
     }> | {
       schedulerId: string
       start: Date
       end: Date
-      date: Date
     }
   }
   export type Dependencies = {

@@ -9,8 +9,7 @@ export class EventRepository implements AddEventRepository, LoadEventByDateAndSt
         data: {
           schedulerId: params.schedulerId,
           start: params.start,
-          end: params.end,
-          date: params.date
+          end: params.end
         }
       })
       return event
