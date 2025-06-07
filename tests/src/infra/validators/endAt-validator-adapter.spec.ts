@@ -11,6 +11,12 @@ describe('EndAt Validator Adapter', () => {
     expect(isValid).toBe(false)
   })
 
+  it('Should return false if in endAt is not ends with Z', () => {
+    const sut = makeSut()
+    const isValid = sut.isValid('2000-01-01T00:00:00')
+    expect(isValid).toBe(false)
+  })
+
   it('Should return false if date is a previous date', () => {
     const sut = makeSut()
     const isValid = sut.isValid('2000-01-01T00:00:00Z')
