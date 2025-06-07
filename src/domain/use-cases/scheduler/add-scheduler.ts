@@ -9,6 +9,7 @@ export interface AddScheduler {
 export namespace AddScheduler {
   export type Params = {
     tagId: string
+    guardianId: string
     title: string
     description: string
     note: string
@@ -26,6 +27,7 @@ export namespace AddScheduler {
     data?: {
       id: string
       tagId: string
+      guardianId: string
       title: string
       description: string
       note: string

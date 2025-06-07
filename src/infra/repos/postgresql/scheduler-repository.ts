@@ -8,6 +8,7 @@ export class SchedulerRepository implements AddSchedulerRepository, DeleteSchedu
       const scheduler = await db.scheduler.create({
         data: {
           tagId: params.tagId,
+          guardianId: params.guardianId,
           title: params.title,
           description: params.description,
           note: params.note,

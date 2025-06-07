@@ -3,6 +3,7 @@ export const schedulerSchema = {
   properties: {
     id: { type: 'string' },
     tagId: { type: 'string' },
+    guardianId: { type: 'string' },
     title: { type: 'string' },
     description: { type: 'string' },
     note: { type: 'string' },

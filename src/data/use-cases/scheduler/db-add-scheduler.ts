@@ -32,6 +32,7 @@ export class DbAddScheduler implements AddScheduler {
     }
     const scheduler = await this.schedulerRepository.add({
       tagId: tag.id,
+      guardianId: params.guardianId,
       title: params.title,
       description: params.description,
       note: params.note,

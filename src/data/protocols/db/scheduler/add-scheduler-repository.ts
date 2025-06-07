@@ -7,6 +7,7 @@ export interface AddSchedulerRepository {
 export namespace AddSchedulerRepository {
   export type Params = {
     tagId: string
+    guardianId: string
     title: string
     description: string
     note: string
@@ -21,6 +22,7 @@ export namespace AddSchedulerRepository {
   export type Result = {
     id: string
     tagId: string
+    guardianId: string
     title: string
     description: string
     note: string

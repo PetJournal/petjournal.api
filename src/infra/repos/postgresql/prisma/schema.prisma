@@ -21,6 +21,7 @@ model Guardian {
   emailConfirmation          Boolean  @default(false) @map("email_confirmation")
   pets                       Pet[]
   tags                       Tag[]
+  scheduler                  Scheduler[]
 
   @@map("guardians")
 }
@@ -92,6 +93,8 @@ model Scheduler {
   id String @id @default(uuid())
   tag Tag @relation(fields: [tagId], references: [id])
   tagId String @map("tag_id")
+  guardian Guardian @relation(fields: [guardianId], references: [id])
+  guardianId String @map("guardian_id")
   title String
   description String
   note String

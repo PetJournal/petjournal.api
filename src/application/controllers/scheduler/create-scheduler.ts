@@ -18,8 +18,10 @@ export class CreateSchedulerController implements Controller {
         return badRequest(error)
       }
       const { tagId, title, description, note, startAt, endAt, daysOfWeek, daysOfMonth, daily, pets } = httpRequest.body
+      const guardianId = httpRequest.userId as string
       const result = await this.addScheduler.add({
         tagId,
+        guardianId,
         title,
         description,
         note,
@@ -35,6 +37,7 @@ export class CreateSchedulerController implements Controller {
       }
       return create({
         id: result.data?.id,
+        guardianId: result.data?.guardianId,
         tagId: result.data?.tagId,
         title: result.data?.title,
         description: result.data?.description,

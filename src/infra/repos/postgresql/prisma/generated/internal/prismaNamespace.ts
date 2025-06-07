@@ -1200,6 +1200,7 @@ export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagSca
 export const SchedulerScalarFieldEnum = {
   id: 'id',
   tagId: 'tagId',
+  guardianId: 'guardianId',
   title: 'title',
   description: 'description',
   note: 'note',

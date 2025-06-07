@@ -223,6 +223,7 @@ export type GuardianWhereInput = {
   emailConfirmation?: Prisma.BoolFilter<"Guardian"> | boolean
   pets?: Prisma.PetListRelationFilter
   tags?: Prisma.TagListRelationFilter
+  scheduler?: Prisma.SchedulerListRelationFilter
 }
 
 export type GuardianOrderByWithRelationInput = {
@@ -238,6 +239,7 @@ export type GuardianOrderByWithRelationInput = {
   emailConfirmation?: Prisma.SortOrder
   pets?: Prisma.PetOrderByRelationAggregateInput
   tags?: Prisma.TagOrderByRelationAggregateInput
+  scheduler?: Prisma.SchedulerOrderByRelationAggregateInput
 }
 
 export type GuardianWhereUniqueInput = Prisma.AtLeast<{
@@ -256,6 +258,7 @@ export type GuardianWhereUniqueInput = Prisma.AtLeast<{
   emailConfirmation?: Prisma.BoolFilter<"Guardian"> | boolean
   pets?: Prisma.PetListRelationFilter
   tags?: Prisma.TagListRelationFilter
+  scheduler?: Prisma.SchedulerListRelationFilter
 }, "id" | "email" | "phone">
 
 export type GuardianOrderByWithAggregationInput = {
@@ -303,6 +306,7 @@ export type GuardianCreateInput = {
   emailConfirmation?: boolean
   pets?: Prisma.PetCreateNestedManyWithoutGuardianInput
   tags?: Prisma.TagCreateNestedManyWithoutGuardianInput
+  scheduler?: Prisma.SchedulerCreateNestedManyWithoutGuardianInput
 }
 
 export type GuardianUncheckedCreateInput = {
@@ -318,6 +322,7 @@ export type GuardianUncheckedCreateInput = {
   emailConfirmation?: boolean
   pets?: Prisma.PetUncheckedCreateNestedManyWithoutGuardianInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutGuardianInput
+  scheduler?: Prisma.SchedulerUncheckedCreateNestedManyWithoutGuardianInput
 }
 
 export type GuardianUpdateInput = {
@@ -333,6 +338,7 @@ export type GuardianUpdateInput = {
   emailConfirmation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pets?: Prisma.PetUpdateManyWithoutGuardianNestedInput
   tags?: Prisma.TagUpdateManyWithoutGuardianNestedInput
+  scheduler?: Prisma.SchedulerUpdateManyWithoutGuardianNestedInput
 }
 
 export type GuardianUncheckedUpdateInput = {
@@ -348,6 +354,7 @@ export type GuardianUncheckedUpdateInput = {
   emailConfirmation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pets?: Prisma.PetUncheckedUpdateManyWithoutGuardianNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutGuardianNestedInput
+  scheduler?: Prisma.SchedulerUncheckedUpdateManyWithoutGuardianNestedInput
 }
 
 export type GuardianCreateManyInput = {
@@ -477,6 +484,20 @@ export type GuardianUpdateOneRequiredWithoutTagsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.GuardianUpdateToOneWithWhereWithoutTagsInput, Prisma.GuardianUpdateWithoutTagsInput>, Prisma.GuardianUncheckedUpdateWithoutTagsInput>
 }
 
+export type GuardianCreateNestedOneWithoutSchedulerInput = {
+  create?: Prisma.XOR<Prisma.GuardianCreateWithoutSchedulerInput, Prisma.GuardianUncheckedCreateWithoutSchedulerInput>
+  connectOrCreate?: Prisma.GuardianCreateOrConnectWithoutSchedulerInput
+  connect?: Prisma.GuardianWhereUniqueInput
+}
+
+export type GuardianUpdateOneRequiredWithoutSchedulerNestedInput = {
+  create?: Prisma.XOR<Prisma.GuardianCreateWithoutSchedulerInput, Prisma.GuardianUncheckedCreateWithoutSchedulerInput>
+  connectOrCreate?: Prisma.GuardianCreateOrConnectWithoutSchedulerInput
+  upsert?: Prisma.GuardianUpsertWithoutSchedulerInput
+  connect?: Prisma.GuardianWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.GuardianUpdateToOneWithWhereWithoutSchedulerInput, Prisma.GuardianUpdateWithoutSchedulerInput>, Prisma.GuardianUncheckedUpdateWithoutSchedulerInput>
+}
+
 export type GuardianCreateWithoutPetsInput = {
   id?: string
   firstName: string
@@ -489,6 +510,7 @@ export type GuardianCreateWithoutPetsInput = {
   verificationTokenCreatedAt?: Date | string
   emailConfirmation?: boolean
   tags?: Prisma.TagCreateNestedManyWithoutGuardianInput
+  scheduler?: Prisma.SchedulerCreateNestedManyWithoutGuardianInput
 }
 
 export type GuardianUncheckedCreateWithoutPetsInput = {
@@ -503,6 +525,7 @@ export type GuardianUncheckedCreateWithoutPetsInput = {
   verificationTokenCreatedAt?: Date | string
   emailConfirmation?: boolean
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutGuardianInput
+  scheduler?: Prisma.SchedulerUncheckedCreateNestedManyWithoutGuardianInput
 }
 
 export type GuardianCreateOrConnectWithoutPetsInput = {
@@ -533,6 +556,7 @@ export type GuardianUpdateWithoutPetsInput = {
   verificationTokenCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailConfirmation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.TagUpdateManyWithoutGuardianNestedInput
+  scheduler?: Prisma.SchedulerUpdateManyWithoutGuardianNestedInput
 }
 
 export type GuardianUncheckedUpdateWithoutPetsInput = {
@@ -547,6 +571,7 @@ export type GuardianUncheckedUpdateWithoutPetsInput = {
   verificationTokenCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailConfirmation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.TagUncheckedUpdateManyWithoutGuardianNestedInput
+  scheduler?: Prisma.SchedulerUncheckedUpdateManyWithoutGuardianNestedInput
 }
 
 export type GuardianCreateWithoutTagsInput = {
@@ -561,6 +586,7 @@ export type GuardianCreateWithoutTagsInput = {
   verificationTokenCreatedAt?: Date | string
   emailConfirmation?: boolean
   pets?: Prisma.PetCreateNestedManyWithoutGuardianInput
+  scheduler?: Prisma.SchedulerCreateNestedManyWithoutGuardianInput
 }
 
 export type GuardianUncheckedCreateWithoutTagsInput = {
@@ -575,6 +601,7 @@ export type GuardianUncheckedCreateWithoutTagsInput = {
   verificationTokenCreatedAt?: Date | string
   emailConfirmation?: boolean
   pets?: Prisma.PetUncheckedCreateNestedManyWithoutGuardianInput
+  scheduler?: Prisma.SchedulerUncheckedCreateNestedManyWithoutGuardianInput
 }
 
 export type GuardianCreateOrConnectWithoutTagsInput = {
@@ -605,6 +632,7 @@ export type GuardianUpdateWithoutTagsInput = {
   verificationTokenCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailConfirmation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pets?: Prisma.PetUpdateManyWithoutGuardianNestedInput
+  scheduler?: Prisma.SchedulerUpdateManyWithoutGuardianNestedInput
 }
 
 export type GuardianUncheckedUpdateWithoutTagsInput = {
@@ -619,6 +647,83 @@ export type GuardianUncheckedUpdateWithoutTagsInput = {
   verificationTokenCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailConfirmation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pets?: Prisma.PetUncheckedUpdateManyWithoutGuardianNestedInput
+  scheduler?: Prisma.SchedulerUncheckedUpdateManyWithoutGuardianNestedInput
+}
+
+export type GuardianCreateWithoutSchedulerInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+  phone: string
+  accessToken?: string | null
+  verificationToken: string
+  verificationTokenCreatedAt?: Date | string
+  emailConfirmation?: boolean
+  pets?: Prisma.PetCreateNestedManyWithoutGuardianInput
+  tags?: Prisma.TagCreateNestedManyWithoutGuardianInput
+}
+
+export type GuardianUncheckedCreateWithoutSchedulerInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+  phone: string
+  accessToken?: string | null
+  verificationToken: string
+  verificationTokenCreatedAt?: Date | string
+  emailConfirmation?: boolean
+  pets?: Prisma.PetUncheckedCreateNestedManyWithoutGuardianInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutGuardianInput
+}
+
+export type GuardianCreateOrConnectWithoutSchedulerInput = {
+  where: Prisma.GuardianWhereUniqueInput
+  create: Prisma.XOR<Prisma.GuardianCreateWithoutSchedulerInput, Prisma.GuardianUncheckedCreateWithoutSchedulerInput>
+}
+
+export type GuardianUpsertWithoutSchedulerInput = {
+  update: Prisma.XOR<Prisma.GuardianUpdateWithoutSchedulerInput, Prisma.GuardianUncheckedUpdateWithoutSchedulerInput>
+  create: Prisma.XOR<Prisma.GuardianCreateWithoutSchedulerInput, Prisma.GuardianUncheckedCreateWithoutSchedulerInput>
+  where?: Prisma.GuardianWhereInput
+}
+
+export type GuardianUpdateToOneWithWhereWithoutSchedulerInput = {
+  where?: Prisma.GuardianWhereInput
+  data: Prisma.XOR<Prisma.GuardianUpdateWithoutSchedulerInput, Prisma.GuardianUncheckedUpdateWithoutSchedulerInput>
+}
+
+export type GuardianUpdateWithoutSchedulerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationToken?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationTokenCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  emailConfirmation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pets?: Prisma.PetUpdateManyWithoutGuardianNestedInput
+  tags?: Prisma.TagUpdateManyWithoutGuardianNestedInput
+}
+
+export type GuardianUncheckedUpdateWithoutSchedulerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationToken?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationTokenCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  emailConfirmation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pets?: Prisma.PetUncheckedUpdateManyWithoutGuardianNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutGuardianNestedInput
 }
 
 
@@ -629,11 +734,13 @@ export type GuardianUncheckedUpdateWithoutTagsInput = {
 export type GuardianCountOutputType = {
   pets: number
   tags: number
+  scheduler: number
 }
 
 export type GuardianCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   pets?: boolean | GuardianCountOutputTypeCountPetsArgs
   tags?: boolean | GuardianCountOutputTypeCountTagsArgs
+  scheduler?: boolean | GuardianCountOutputTypeCountSchedulerArgs
 }
 
 /**
@@ -660,6 +767,13 @@ export type GuardianCountOutputTypeCountTagsArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.TagWhereInput
 }
 
+/**
+ * GuardianCountOutputType without action
+ */
+export type GuardianCountOutputTypeCountSchedulerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SchedulerWhereInput
+}
+
 
 export type GuardianSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -674,6 +788,7 @@ export type GuardianSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   emailConfirmation?: boolean
   pets?: boolean | Prisma.Guardian$petsArgs<ExtArgs>
   tags?: boolean | Prisma.Guardian$tagsArgs<ExtArgs>
+  scheduler?: boolean | Prisma.Guardian$schedulerArgs<ExtArgs>
   _count?: boolean | Prisma.GuardianCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["guardian"]>
 
@@ -720,6 +835,7 @@ export type GuardianOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 export type GuardianInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   pets?: boolean | Prisma.Guardian$petsArgs<ExtArgs>
   tags?: boolean | Prisma.Guardian$tagsArgs<ExtArgs>
+  scheduler?: boolean | Prisma.Guardian$schedulerArgs<ExtArgs>
   _count?: boolean | Prisma.GuardianCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type GuardianIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -730,6 +846,7 @@ export type $GuardianPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   objects: {
     pets: Prisma.$PetPayload<ExtArgs>[]
     tags: Prisma.$TagPayload<ExtArgs>[]
+    scheduler: Prisma.$SchedulerPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1138,6 +1255,7 @@ export interface Prisma__GuardianClient<T, Null = never, ExtArgs extends runtime
   readonly [Symbol.toStringTag]: "PrismaPromise"
   pets<T extends Prisma.Guardian$petsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Guardian$petsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tags<T extends Prisma.Guardian$tagsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Guardian$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  scheduler<T extends Prisma.Guardian$schedulerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Guardian$schedulerArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SchedulerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1610,6 +1728,30 @@ export type Guardian$tagsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.TagScalarFieldEnum | Prisma.TagScalarFieldEnum[]
+}
+
+/**
+ * Guardian.scheduler
+ */
+export type Guardian$schedulerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Scheduler
+   */
+  select?: Prisma.SchedulerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Scheduler
+   */
+  omit?: Prisma.SchedulerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SchedulerInclude<ExtArgs> | null
+  where?: Prisma.SchedulerWhereInput
+  orderBy?: Prisma.SchedulerOrderByWithRelationInput | Prisma.SchedulerOrderByWithRelationInput[]
+  cursor?: Prisma.SchedulerWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SchedulerScalarFieldEnum | Prisma.SchedulerScalarFieldEnum[]
 }
 
 /**

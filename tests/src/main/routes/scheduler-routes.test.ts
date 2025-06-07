@@ -76,6 +76,7 @@ const createSchedulerData = {
   expect: {
     id: expect.any(String),
     tagId: expect.any(String),
+    guardianId: expect.any(String),
     title: 'Passear com o cat',
     description: 'levar o cat para passear no parque',
     note: 'passeio',
