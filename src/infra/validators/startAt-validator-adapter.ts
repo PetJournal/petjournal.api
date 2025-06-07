@@ -1,16 +1,16 @@
 import { type DateValidator } from '@/application/validation'
 import validator from 'validator'
+import { DateTime } from 'luxon'
 
 export class StartAtValidatorAdapter implements DateValidator {
   isValid (date: string): boolean {
-    const dateWithoutTimeZone = new Date(date)
-    const timeZone = (+3 * 60 * 60 * 1000)
-    const dateOfValidation = new Date(dateWithoutTimeZone.getTime() + timeZone)
-    if (!validator.isISO8601(date)) {
+    if (!validator.isISO8601(date) || !date.endsWith('Z')) {
       return false
     }
 
-    if (dateOfValidation < new Date()) {
+    const dateOfValidation = DateTime.fromISO(date, { zone: 'utc' })
+    const dateNow = DateTime.fromISO(DateTime.now().toFormat('HH:mm:ss'), { zone: 'utc' })
+    if (dateOfValidation < dateNow) {
       return false
     }
 
