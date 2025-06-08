@@ -28,5 +28,12 @@ describe('Luxon Adapter', () => {
       jest.spyOn(DateTime, 'fromISO').mockImplementationOnce(() => { throw new Error() })
       expect(() => { sut.generate(fakeDate) }).toThrow()
     })
+
+    it('Should return a DateTime ISO format utc zone on success', () => {
+      const sut = makeSut()
+      jest.spyOn(DateTime, 'fromISO').mockReturnValue({ toISO: () => 'valid_date' } as any)
+      const result = sut.generate(fakeDate)
+      expect(result).toEqual(DateTime.fromISO(fakeDate.toString(), { zone: 'utc' }))
+    })
   })
 })
