@@ -116,5 +116,14 @@ describe('Luxon Adapter', () => {
       const fakeDateTime = { addDay: plusMock }
       expect(() => sut.addDay(fakeDateTime)).toThrow()
     })
+
+    it('Should add a day in dateTime on success', () => {
+      const sut = makeSut()
+      const plusMock = jest.fn(() => 'mocked_date')
+      const fakeDateTime = { plus: plusMock }
+      const result = sut.addDay(fakeDateTime)
+      expect(plusMock).toHaveBeenCalledWith({ days: 1 })
+      expect(result).toBe('mocked_date')
+    })
   })
 })
