@@ -14,13 +14,19 @@ const makeSut = (): LuxonAdapter => {
 }
 
 describe('Luxon Adapter', () => {
+  const fakeDate = new Date()
   describe('Generate', () => {
     it('Should call generate with correct values', () => {
       const sut = makeSut()
-      const fakeDate = new Date()
       const luxonSpy = jest.spyOn(DateTime, 'fromISO').mockReturnValue({ toISO: () => 'mocked_date' } as any)
       sut.generate(fakeDate)
       expect(luxonSpy).toHaveBeenCalledWith(fakeDate.toString(), { zone: 'utc' })
+    })
+
+    it('Should throw if generate throws', () => {
+      const sut = makeSut()
+      jest.spyOn(DateTime, 'fromISO').mockImplementationOnce(() => { throw new Error() })
+      expect(() => { sut.generate(fakeDate) }).toThrow()
     })
   })
 })
