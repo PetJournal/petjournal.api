@@ -36,4 +36,14 @@ describe('Luxon Adapter', () => {
       expect(result).toEqual(DateTime.fromISO(fakeDate.toString(), { zone: 'utc' }))
     })
   })
+
+  describe('toJSDate', () => {
+    it('Should throw if toJSDate throws', () => {
+      const sut = makeSut()
+      const toJSDateMock = jest.fn(() => { throw new Error() })
+      const fakeDateTime = { toJSDate: toJSDateMock }
+      expect(() => sut.toJSDate(fakeDateTime)).toThrow()
+      expect(toJSDateMock).toHaveBeenCalled()
+    })
+  })
 })
