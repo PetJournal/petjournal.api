@@ -91,5 +91,21 @@ describe('Luxon Adapter', () => {
       expect(() => sut.setTime(params)).toThrow()
       expect(setMock).toHaveBeenCalled()
     })
+
+    it('Should return a Date JS format with new time on success', () => {
+      const sut = makeSut()
+      const setMock = jest.fn().mockReturnValue({ toJSDate: jest.fn(() => 'mocked_date') })
+      const fakeDateTime = { set: setMock }
+      const params = {
+        dateTime: fakeDateTime,
+        time: {
+          hour: 10,
+          minute: 30,
+          second: 15
+        }
+      }
+      const result = sut.setTime(params)
+      expect(result).toBe('mocked_date')
+    })
   })
 })
