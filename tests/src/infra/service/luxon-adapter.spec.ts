@@ -108,4 +108,13 @@ describe('Luxon Adapter', () => {
       expect(result).toBe('mocked_date')
     })
   })
+
+  describe('AddDay', () => {
+    it('Should throw if addDay throws', () => {
+      const sut = makeSut()
+      const plusMock = jest.fn(() => { throw new Error() })
+      const fakeDateTime = { addDay: plusMock }
+      expect(() => sut.addDay(fakeDateTime)).toThrow()
+    })
+  })
 })
