@@ -4,7 +4,8 @@ import { DateTime } from 'luxon'
 jest.mock('luxon', () => {
   return {
     DateTime: {
-      fromISO: jest.fn()
+      fromISO: jest.fn(),
+      set: jest.fn()
     }
   }
 })
@@ -52,6 +53,28 @@ describe('Luxon Adapter', () => {
       const fakeDateTime = { toJSDate: toJSDateMock }
       const result = sut.toJSDate(fakeDateTime)
       expect(result).toEqual(fakeDate.toString())
+    })
+  })
+
+  describe('setTime', () => {
+    it('Should call setTime with correct values', () => {
+      const sut = makeSut()
+      const setMock = jest.fn().mockReturnValue({ toJSDate: jest.fn(() => 'mocked_date') })
+      const fakeDateTime = { set: setMock }
+      const params = {
+        dateTime: fakeDateTime,
+        time: {
+          hour: 10,
+          minute: 30,
+          second: 15
+        }
+      }
+      sut.setTime(params)
+      expect(setMock).toHaveBeenCalledWith({
+        hour: 10,
+        minute: 30,
+        second: 15
+      })
     })
   })
 })
