@@ -395,5 +395,16 @@ describe('Events Generator Service', () => {
       const promise = sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should return ServerError if add fails', async () => {
+      const { sut, eventRepositoryStub } = makeSut()
+      jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
+      jest.spyOn(eventRepositoryStub, 'add').mockResolvedValueOnce(undefined)
+      const result = await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
+      expect(result).toEqual({
+        isSuccess: false,
+        error: new ServerError('Internal Server Error!')
+      })
+    })
   })
 })
