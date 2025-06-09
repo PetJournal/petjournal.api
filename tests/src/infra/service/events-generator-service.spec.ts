@@ -228,5 +228,13 @@ describe('Events Generator Service', () => {
         error: new ServerError('Internal Server Error!')
       })
     })
+
+    it('Should return true if generate events on success', async () => {
+      const { sut, eventRepositoryStub } = makeSut()
+      jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
+      jest.spyOn(eventRepositoryStub, 'addMany').mockResolvedValueOnce(true)
+      const result = await sut.generate({ ...params, daysOfWeek: undefined, daily: false })
+      expect(result).toEqual({ isSuccess: true })
+    })
   })
 })
