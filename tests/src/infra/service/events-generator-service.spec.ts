@@ -354,5 +354,26 @@ describe('Events Generator Service', () => {
       const promise = sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should return NotAcceptableError if loadByDateAndStart returns null because date conflits', async () => {
+      const { sut, eventRepositoryStub } = makeSut()
+      jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce({
+        schedulerId: 'any_scheduler_id',
+        start: new Date('2025-06-01T10:30:00Z'),
+        end: new Date('2025-07-01T11:30:00Z')
+
+      })
+      const result = await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
+      expect(result).toEqual({
+        isSuccess: false,
+        error: new NotAcceptableError('Conflict start event'),
+        data: {
+          schedulerId: 'any_scheduler_id',
+          start: new Date('2025-06-01T10:30:00Z'),
+          end: new Date('2025-07-01T11:30:00Z')
+
+        }
+      })
+    })
   })
 })
