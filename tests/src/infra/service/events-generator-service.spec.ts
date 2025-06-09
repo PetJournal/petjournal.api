@@ -39,13 +39,24 @@ const makeSut = (): SutTypes => {
   }
 }
 
+const generateDate = (): any => {
+  const start = new Date()
+  const end = new Date()
+  start.setDate(start.getDate())
+  end.setDate(end.getDate() + 3)
+  return {
+    startAt: start,
+    endAt: end
+  }
+}
+
 describe('Events Generator Service', () => {
   const params: EventsGenerator.Params = {
     schedulerId: 'any_scheduler_id',
-    startAt: new Date(),
-    endAt: new Date(),
-    daysOfWeek: [1, 4, 6],
-    daysOfMonth: [1, 15, 31],
+    startAt: generateDate().startAt,
+    endAt: generateDate().endAt,
+    daysOfWeek: [0, 1, 6],
+    daysOfMonth: [1, 3, 6, 9, 12, 15, 18, 21, 24, 27, 29, 31],
     daily: true
   }
 
@@ -137,6 +148,15 @@ describe('Events Generator Service', () => {
       jest.spyOn(eventRepositoryStub, 'addMany').mockResolvedValueOnce(true)
       const result = await sut.generate({ ...params, daysOfMonth: undefined, daily: false })
       expect(result).toEqual({ isSuccess: true })
+    })
+  })
+
+  describe('Days of Month', () => {
+    it('Should call loadByDateAndStart with the correct value', async () => {
+      const { sut, eventRepositoryStub } = makeSut()
+      const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDateAndStart')
+      await sut.generate({ ...params, daysOfWeek: undefined, daily: false })
+      expect(loadSpy).toHaveBeenCalledWith({ start: startAtDateTimeFake.toJSDate() })
     })
   })
 })
