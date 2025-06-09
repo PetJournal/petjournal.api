@@ -42,18 +42,18 @@ const makeSut = (): SutTypes => {
 describe('Events Generator Service', () => {
   const params: EventsGenerator.Params = {
     schedulerId: 'any_scheduler_id',
-    startAt: new Date('2025-06-01T10:30:00Z'),
-    endAt: new Date('2025-07-01T11:30:00Z'),
-    daysOfWeek: [0, 4, 6],
+    startAt: new Date(),
+    endAt: new Date(),
+    daysOfWeek: [1, 4, 6],
     daysOfMonth: [1, 15, 31],
     daily: true
   }
 
-  const startAtDateTimeFake = DateTime.fromISO('2025-06-01T10:30:00Z', { zone: 'utc' })
-  const endAtDateTimeFake = DateTime.fromISO('2025-06-01T11:30:00Z', { zone: 'utc' })
+  const startAtDateTimeFake = DateTime.fromISO(params.startAt.toISOString(), { zone: 'utc' })
+  const endAtDateTimeFake = DateTime.fromISO(params.endAt.toISOString(), { zone: 'utc' })
 
   describe('Days of Week', () => {
-    it('Should calls loadByDateAndStart with the correct value', async () => {
+    it('Should call loadByDateAndStart with the correct value', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDateAndStart')
       await sut.generate({ ...params, daysOfMonth: undefined, daily: false })
@@ -69,7 +69,12 @@ describe('Events Generator Service', () => {
 
     it('Should return NotAcceptableError if loadByDateAndStart returns null because date conflits', async () => {
       const { sut, eventRepositoryStub } = makeSut()
-      jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
+      jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce({
+        schedulerId: 'any_scheduler_id',
+        start: new Date('2025-06-01T10:30:00Z'),
+        end: new Date('2025-07-01T11:30:00Z')
+
+      })
       const result = await sut.generate({ ...params, daysOfMonth: undefined, daily: false })
       expect(result).toEqual({
         isSuccess: false,
@@ -81,6 +86,30 @@ describe('Events Generator Service', () => {
 
         }
       })
+    })
+
+    it('Should call addDay with the correct value', async () => {
+      const { sut, eventRepositoryStub, dateTimeStub } = makeSut()
+      const events = [{
+        schedulerId: 'any_scheduler_id',
+        start: dateTimeStub.toJSDate(startAtDateTimeFake),
+        end: dateTimeStub.setTime({
+          dateTime: startAtDateTimeFake,
+          time: {
+            hour: endAtDateTimeFake.hour,
+            minute: endAtDateTimeFake.minute,
+            second: endAtDateTimeFake.second
+          }
+        })
+      }]
+      jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
+      const addSpy = jest.spyOn(eventRepositoryStub, 'addMany')
+      await sut.generate({ ...params, daysOfWeek: [1], daysOfMonth: undefined, daily: false })
+      expect(addSpy).toHaveBeenCalledWith([{
+        schedulerId: events[0].schedulerId,
+        start: events[0].start,
+        end: events[0].end
+      }])
     })
   })
 })
