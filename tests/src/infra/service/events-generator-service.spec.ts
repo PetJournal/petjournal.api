@@ -347,5 +347,12 @@ describe('Events Generator Service', () => {
       await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
       expect(loadSpy).toHaveBeenCalledWith({ start: startAtDateTimeFake.toJSDate() })
     })
+
+    it('Should throw if loadByDateAndStart throws', async () => {
+      const { sut, eventRepositoryStub } = makeSut()
+      jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockRejectedValue(() => { throw new Error() })
+      const promise = sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
