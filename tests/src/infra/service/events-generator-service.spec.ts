@@ -42,7 +42,6 @@ const makeSut = (): SutTypes => {
 const generateDate = (): any => {
   const start = new Date()
   const end = new Date()
-  start.setDate(start.getDate())
   end.setDate(end.getDate() + 3)
   return {
     startAt: start,
@@ -56,7 +55,7 @@ describe('Events Generator Service', () => {
     startAt: generateDate().startAt,
     endAt: generateDate().endAt,
     daysOfWeek: [0, 1, 6],
-    daysOfMonth: [1, 3, 6, 9, 12, 15, 18, 21, 24, 27, 29, 31],
+    daysOfMonth: [new Date().getDate()],
     daily: true
   }
 
@@ -209,6 +208,25 @@ describe('Events Generator Service', () => {
         start: events[0].start,
         end: events[0].end
       }])
+    })
+
+    it('Should throw if addMany throws', async () => {
+      const { sut, eventRepositoryStub } = makeSut()
+      jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
+      jest.spyOn(eventRepositoryStub, 'addMany').mockRejectedValue(() => { throw new Error() })
+      const promise = sut.generate({ ...params, daysOfWeek: undefined, daily: false })
+      await expect(promise).rejects.toThrow()
+    })
+
+    it('Should return ServerError if addMany fails', async () => {
+      const { sut, eventRepositoryStub } = makeSut()
+      jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
+      jest.spyOn(eventRepositoryStub, 'addMany').mockResolvedValueOnce(false)
+      const result = await sut.generate({ ...params, daysOfWeek: undefined, daily: false })
+      expect(result).toEqual({
+        isSuccess: false,
+        error: new ServerError('Internal Server Error!')
+      })
     })
   })
 })
