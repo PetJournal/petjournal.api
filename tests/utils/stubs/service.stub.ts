@@ -345,17 +345,17 @@ const makeFakeEventRepository = (): AddEventRepository & LoadEventByDateAndStart
     async add (params: AddEventRepository.Params): Promise<AddEventRepository.Result> {
       return {
         id: 'any_id',
-        schedulerId: 'any_guardianId',
-        start: new Date(),
-        end: new Date()
+        schedulerId: 'any_scheduler_id',
+        start: new Date('2025-06-01T10:30:00Z'),
+        end: new Date('2025-07-01T11:30:00Z')
       }
     }
 
     async loadByDateAndStart (params: LoadEventByDateAndStartRepository.Params): Promise<LoadEventByDateAndStartRepository.Result> {
       return {
-        schedulerId: 'any_guardianId',
-        start: new Date(),
-        end: new Date()
+        schedulerId: 'any_scheduler_id',
+        start: new Date('2025-06-01T10:30:00Z'),
+        end: new Date('2025-07-01T11:30:00Z')
       }
     }
 

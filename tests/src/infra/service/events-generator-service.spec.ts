@@ -1,3 +1,4 @@
+import { NotAcceptableError } from '@/application/errors'
 import { type AddEventRepository, type AddManyEventsRepository, type LoadEventByDateAndStartRepository } from '@/data/protocols'
 import { type EventsGenerator, type DateAddDay, type DateGeneratorUtc, type DateSetTime, type DateToJSDate } from '@/data/protocols/service'
 import { EventsGeneratorService } from '@/infra/service'
@@ -61,9 +62,25 @@ describe('Events Generator Service', () => {
 
     it('Should throw if loadByDateAndStart throws', async () => {
       const { sut, eventRepositoryStub } = makeSut()
-      jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockImplementation(() => { throw new Error() })
+      jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockRejectedValue(() => { throw new Error() })
       const promise = sut.generate({ ...params, daysOfMonth: undefined, daily: false })
       await expect(promise).rejects.toThrow()
+    })
+
+    it('Should return NotAcceptableError if loadByDateAndStart returns null because date conflits', async () => {
+      const { sut, eventRepositoryStub } = makeSut()
+      jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
+      const result = await sut.generate({ ...params, daysOfMonth: undefined, daily: false })
+      expect(result).toEqual({
+        isSuccess: false,
+        error: new NotAcceptableError('Conflict start event'),
+        data: {
+          schedulerId: 'any_scheduler_id',
+          start: new Date('2025-06-01T10:30:00Z'),
+          end: new Date('2025-07-01T11:30:00Z')
+
+        }
+      })
     })
   })
 })
