@@ -237,4 +237,13 @@ describe('Events Generator Service', () => {
       expect(result).toEqual({ isSuccess: true })
     })
   })
+
+  describe('Daily', () => {
+    it('Should call loadByDateAndStart with the correct value', async () => {
+      const { sut, eventRepositoryStub } = makeSut()
+      const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDateAndStart')
+      await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined })
+      expect(loadSpy).toHaveBeenCalledWith({ start: startAtDateTimeFake.toJSDate() })
+    })
+  })
 })
