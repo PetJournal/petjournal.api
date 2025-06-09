@@ -1,4 +1,4 @@
-import { NotAcceptableError } from '@/application/errors'
+import { NotAcceptableError, ServerError } from '@/application/errors'
 import { type AddEventRepository, type AddManyEventsRepository, type LoadEventByDateAndStartRepository } from '@/data/protocols'
 import { type EventsGenerator, type DateAddDay, type DateGeneratorUtc, type DateSetTime, type DateToJSDate } from '@/data/protocols/service'
 import { EventsGeneratorService } from '@/infra/service'
@@ -88,7 +88,7 @@ describe('Events Generator Service', () => {
       })
     })
 
-    it('Should call addDay with the correct value', async () => {
+    it('Should call addMany with the correct value', async () => {
       const { sut, eventRepositoryStub, dateTimeStub } = makeSut()
       const events = [{
         schedulerId: 'any_scheduler_id',
@@ -112,12 +112,23 @@ describe('Events Generator Service', () => {
       }])
     })
 
-    it('Should throw if addDay throws', async () => {
+    it('Should throw if addMany throws', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'addMany').mockRejectedValue(() => { throw new Error() })
       const promise = sut.generate({ ...params, daysOfMonth: undefined, daily: false })
       await expect(promise).rejects.toThrow()
+    })
+
+    it('Should return ServerError if addMany fails', async () => {
+      const { sut, eventRepositoryStub } = makeSut()
+      jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
+      jest.spyOn(eventRepositoryStub, 'addMany').mockResolvedValueOnce(false)
+      const result = await sut.generate({ ...params, daysOfMonth: undefined, daily: false })
+      expect(result).toEqual({
+        isSuccess: false,
+        error: new ServerError('Internal Server Error!')
+      })
     })
   })
 })
