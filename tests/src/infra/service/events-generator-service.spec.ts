@@ -141,7 +141,7 @@ describe('Events Generator Service', () => {
       })
     })
 
-    it('Should return true if generate events on success', async () => {
+    it('Should return true if generate weekly events on success', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'addMany').mockResolvedValueOnce(true)
@@ -229,7 +229,7 @@ describe('Events Generator Service', () => {
       })
     })
 
-    it('Should return true if generate events on success', async () => {
+    it('Should return true if generate monthly events on success', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'addMany').mockResolvedValueOnce(true)
@@ -330,7 +330,7 @@ describe('Events Generator Service', () => {
       })
     })
 
-    it('Should return true if generate events on success', async () => {
+    it('Should return true if generate daily events on success', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
@@ -404,6 +404,27 @@ describe('Events Generator Service', () => {
       expect(result).toEqual({
         isSuccess: false,
         error: new ServerError('Internal Server Error!')
+      })
+    })
+
+    it('Should return true if generate Punctual event on success', async () => {
+      const { sut, eventRepositoryStub, dateTimeStub } = makeSut()
+      jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
+      jest.spyOn(eventRepositoryStub, 'add').mockResolvedValue({
+        id: 'any_id',
+        schedulerId: 'any_scheduler_id',
+        start: dateTimeStub.toJSDate(startAtDateTimeFake),
+        end: dateTimeStub.toJSDate(endAtDateTimeFake)
+      })
+      const result = await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
+      expect(result).toEqual({
+        isSuccess: true,
+        data: {
+          id: 'any_id',
+          schedulerId: 'any_scheduler_id',
+          start: dateTimeStub.toJSDate(startAtDateTimeFake),
+          end: dateTimeStub.toJSDate(endAtDateTimeFake)
+        }
       })
     })
   })
