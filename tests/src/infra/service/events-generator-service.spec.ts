@@ -186,5 +186,29 @@ describe('Events Generator Service', () => {
         }
       })
     })
+
+    it('Should call addMany with the correct value', async () => {
+      const { sut, eventRepositoryStub, dateTimeStub } = makeSut()
+      const events = [{
+        schedulerId: 'any_scheduler_id',
+        start: dateTimeStub.toJSDate(startAtDateTimeFake),
+        end: dateTimeStub.setTime({
+          dateTime: startAtDateTimeFake,
+          time: {
+            hour: endAtDateTimeFake.hour,
+            minute: endAtDateTimeFake.minute,
+            second: endAtDateTimeFake.second
+          }
+        })
+      }]
+      jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
+      const addSpy = jest.spyOn(eventRepositoryStub, 'addMany')
+      await sut.generate({ ...params, daysOfMonth: [new Date().getDate()], daysOfWeek: undefined, daily: false })
+      expect(addSpy).toHaveBeenCalledWith([{
+        schedulerId: events[0].schedulerId,
+        start: events[0].start,
+        end: events[0].end
+      }])
+    })
   })
 })
