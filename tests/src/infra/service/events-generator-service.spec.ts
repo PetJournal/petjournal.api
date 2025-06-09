@@ -111,5 +111,13 @@ describe('Events Generator Service', () => {
         end: events[0].end
       }])
     })
+
+    it('Should throw if addDay throws', async () => {
+      const { sut, eventRepositoryStub } = makeSut()
+      jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
+      jest.spyOn(eventRepositoryStub, 'addMany').mockRejectedValue(() => { throw new Error() })
+      const promise = sut.generate({ ...params, daysOfMonth: undefined, daily: false })
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
