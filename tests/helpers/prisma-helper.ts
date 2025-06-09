@@ -56,6 +56,12 @@ export const PrismaHelper = {
   async clearTag (): Promise<void> {
     await prisma.tag.deleteMany()
   },
+  async clearEvent (): Promise<void> {
+    await prisma.event.deleteMany()
+  },
+  async clearScheduler (): Promise<void> {
+    await prisma.scheduler.deleteMany()
+  },
   async createGuardian (): Promise<Guardian> {
     const bcryptAdapter = new BcryptAdapter(3)
     return await prisma.guardian.create({
