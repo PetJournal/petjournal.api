@@ -38,7 +38,10 @@ import {
   type LoadTagByIdRepository,
   type UpdateTagRepository,
   type LoadTagsRepository,
-  type DeleteTagRepository
+  type DeleteTagRepository,
+  type AddEventRepository,
+  type LoadEventByDateAndStartRepository,
+  type AddManyEventsRepository
 } from '@/data/protocols'
 import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
 import { type LoadDogSizesRepository } from '@/data/protocols/db/size/load-dog-sizes-repository'
@@ -337,6 +340,32 @@ const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & Upd
   return new TagRepositoryStub()
 }
 
+const makeFakeEventRepository = (): AddEventRepository & LoadEventByDateAndStartRepository & AddManyEventsRepository => {
+  class EventRepositoryStub implements AddEventRepository, LoadEventByDateAndStartRepository, AddManyEventsRepository {
+    async add (params: AddEventRepository.Params): Promise<AddEventRepository.Result> {
+      return {
+        id: 'any_id',
+        schedulerId: 'any_guardianId',
+        start: new Date(),
+        end: new Date()
+      }
+    }
+
+    async loadByDateAndStart (params: LoadEventByDateAndStartRepository.Params): Promise<LoadEventByDateAndStartRepository.Result> {
+      return {
+        schedulerId: 'any_guardianId',
+        start: new Date(),
+        end: new Date()
+      }
+    }
+
+    async addMany (params: AddManyEventsRepository.Params): Promise<AddManyEventsRepository.Result> {
+      return true
+    }
+  }
+  return new EventRepositoryStub()
+}
+
 export {
   mockHashService,
   mockTokenService,
@@ -355,5 +384,6 @@ export {
   makeFakeLoadDogSizesRepository,
   makeFakeSizeRepository,
   makeFakeFileStorage,
-  makeFakeTagRepository
+  makeFakeTagRepository,
+  makeFakeEventRepository
 }
