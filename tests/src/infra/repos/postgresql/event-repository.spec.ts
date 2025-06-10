@@ -144,5 +144,15 @@ describe('Event Repository', () => {
       }])
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should return false if invalid data is provided', async () => {
+      const sut = makeSut()
+      const result = await sut.addMany([{
+        schedulerId: 'any_scheduler_id',
+        start: new Date(),
+        end: new Date()
+      }])
+      expect(result).toBe(false)
+    })
   })
 })
