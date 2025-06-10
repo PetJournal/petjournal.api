@@ -77,8 +77,7 @@ export const PrismaHelper = {
       }
     })
   },
-  async createPet (): Promise<Pet> {
-    const guardian = await this.createGuardian()
+  async createPet (guardianId: string): Promise<Pet> {
     const specie = await prisma.specie.create({
       data: {
         name: 'any_name'
@@ -98,7 +97,7 @@ export const PrismaHelper = {
     })
     return await prisma.pet.create({
       data: {
-        guardianId: guardian.id,
+        guardianId,
         specieId: specie.id,
         specieAlias: 'any_specie_alias',
         petName: 'any_pet_name',
