@@ -110,5 +110,34 @@ describe('Scheduler Repository', () => {
       const promise = sut.delete('any_scheduler_id')
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should return true on delete success', async () => {
+      const sut = makeSut()
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
+      const tag = await prisma.tag.create({
+        data: {
+          guardianId: guardian.id,
+          name: 'any_name',
+          color: 'any_color'
+        }
+      })
+      const data = {
+        tagId: tag.id,
+        guardianId: guardian.id,
+        title: 'any_title',
+        description: 'any_description',
+        note: 'any_note',
+        startAt: new Date('2024-04-04T15:00:00Z'),
+        endAt: new Date('2025-04-04T17:00:00Z'),
+        daysOfWeek: [],
+        daysOfMonth: [],
+        daily: false,
+        pets: { connect: [{ id: pet.id }] }
+      }
+      const scheduler = await prisma.scheduler.create({ data })
+      const result = await sut.delete(scheduler.id)
+      expect(result).toBe(true)
+    })
   })
 })
