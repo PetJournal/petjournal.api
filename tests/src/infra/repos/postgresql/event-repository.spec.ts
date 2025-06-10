@@ -75,4 +75,13 @@ describe('Event Repository', () => {
       })
     })
   })
+
+  describe('loadByDateAndStart Method', () => {
+    it('Should return null if non existent date is provided', async () => {
+      const sut = makeSut()
+      const fakeDate = new Date('01-01-2001')
+      const result = await sut.loadByDateAndStart({ start: fakeDate })
+      expect(result).toBe(null)
+    })
+  })
 })
