@@ -103,5 +103,12 @@ describe('Scheduler Repository', () => {
       const result = await sut.delete('any_scheduler_id')
       expect(result).toBe(false)
     })
+
+    it('Should throw if delete throws', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'delete').mockRejectedValue(new Error())
+      const promise = sut.delete('any_scheduler_id')
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
