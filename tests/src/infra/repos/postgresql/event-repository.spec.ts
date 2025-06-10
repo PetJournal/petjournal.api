@@ -83,5 +83,13 @@ describe('Event Repository', () => {
       const result = await sut.loadByDateAndStart({ start: fakeDate })
       expect(result).toBe(null)
     })
+
+    it('Should throw if load throws', async () => {
+      const sut = makeSut()
+      const fakeDate = new Date('01-01-2001')
+      jest.spyOn(sut, 'loadByDateAndStart').mockRejectedValue(new Error())
+      const promise = sut.loadByDateAndStart({ start: fakeDate })
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
