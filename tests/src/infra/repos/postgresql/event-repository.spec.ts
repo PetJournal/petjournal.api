@@ -21,8 +21,12 @@ describe('Event Repository', () => {
 
   beforeEach(async () => {
     await PrismaHelper.clearEvent()
-    await PrismaHelper.clearPet()
     await PrismaHelper.clearScheduler()
+    await PrismaHelper.clearTag()
+    await PrismaHelper.clearPet()
+    await PrismaHelper.clearSize()
+    await PrismaHelper.clearBreed()
+    await PrismaHelper.clearSpecie()
     await PrismaHelper.clearGuardian()
   })
 
@@ -44,17 +48,18 @@ describe('Event Repository', () => {
 
     it('Should return an event if a valid data is provided', async () => {
       const sut = makeSut()
-      const pet = await PrismaHelper.createPet()
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
       const tag = await prisma.tag.create({
         data: {
-          guardianId: pet.guardian.id,
+          guardianId: guardian.id,
           name: 'any_name',
           color: 'any_color'
         }
       })
       const data = {
         tagId: tag.id,
-        guardianId: pet.guardian.id,
+        guardianId: guardian.id,
         title: 'any_title',
         description: 'any_description',
         note: 'any_note',
@@ -94,17 +99,18 @@ describe('Event Repository', () => {
 
     it('Should return an event on success', async () => {
       const sut = makeSut()
-      const pet = await PrismaHelper.createPet()
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
       const tag = await prisma.tag.create({
         data: {
-          guardianId: pet.guardian.id,
+          guardianId: guardian.id,
           name: 'any_name',
           color: 'any_color'
         }
       })
       const schedulerData = {
         tagId: tag.id,
-        guardianId: pet.guardian.id,
+        guardianId: guardian.id,
         title: 'any_title',
         description: 'any_description',
         note: 'any_note',
@@ -157,17 +163,18 @@ describe('Event Repository', () => {
 
     it('Should return true on success', async () => {
       const sut = makeSut()
-      const pet = await PrismaHelper.createPet()
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
       const tag = await prisma.tag.create({
         data: {
-          guardianId: pet.guardian.id,
+          guardianId: guardian.id,
           name: 'any_name',
           color: 'any_color'
         }
       })
       const schedulerData = {
         tagId: tag.id,
-        guardianId: pet.guardian.id,
+        guardianId: guardian.id,
         title: 'any_title',
         description: 'any_description',
         note: 'any_note',
