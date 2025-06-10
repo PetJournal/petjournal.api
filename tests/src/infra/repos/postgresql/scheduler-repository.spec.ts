@@ -40,5 +40,12 @@ describe('Scheduler Repository', () => {
       const promise = sut.add(params)
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should return undefined if an error', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'add').mockResolvedValueOnce(undefined)
+      const result = await sut.add({ ...params, tagId: 'invalid_tagId' })
+      expect(result).toBe(undefined)
+    })
   })
 })
