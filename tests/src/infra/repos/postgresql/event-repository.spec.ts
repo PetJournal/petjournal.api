@@ -91,5 +91,45 @@ describe('Event Repository', () => {
       const promise = sut.loadByDateAndStart({ start: fakeDate })
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should return an event on success', async () => {
+      const sut = makeSut()
+      const pet = await PrismaHelper.createPet()
+      const tag = await prisma.tag.create({
+        data: {
+          guardianId: pet.guardian.id,
+          name: 'any_name',
+          color: 'any_color'
+        }
+      })
+      const schedulerData = {
+        tagId: tag.id,
+        guardianId: pet.guardian.id,
+        title: 'any_title',
+        description: 'any_description',
+        note: 'any_note',
+        startAt: new Date('2024-04-04T15:00:00Z'),
+        endAt: new Date('2025-04-04T17:00:00Z'),
+        daysOfWeek: [],
+        daysOfMonth: [],
+        daily: false,
+        pets: { connect: [{ id: pet.id }] }
+      }
+      const scheduler = await prisma.scheduler.create({ data: schedulerData })
+      const event = await prisma.event.create({
+        data: {
+          schedulerId: scheduler.id,
+          start: schedulerData.startAt,
+          end: schedulerData.endAt
+        }
+      })
+      const result = await sut.loadByDateAndStart({ start: event.start })
+      expect(result).toEqual({
+        id: expect.any(String),
+        schedulerId: event.schedulerId,
+        start: event.start,
+        end: event.end
+      })
+    })
   })
 })
