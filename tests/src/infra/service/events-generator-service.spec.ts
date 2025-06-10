@@ -54,7 +54,7 @@ describe('Events Generator Service', () => {
     schedulerId: 'any_scheduler_id',
     startAt: generateDate().startAt,
     endAt: generateDate().endAt,
-    daysOfWeek: [0, 1, 6],
+    daysOfWeek: [new Date().getDay()],
     daysOfMonth: [new Date().getDate()],
     daily: true
   }
@@ -114,7 +114,7 @@ describe('Events Generator Service', () => {
       }]
       jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
       const addSpy = jest.spyOn(eventRepositoryStub, 'addMany')
-      await sut.generate({ ...params, daysOfWeek: [1], daysOfMonth: undefined, daily: false })
+      await sut.generate({ ...params, daysOfMonth: undefined, daily: false })
       expect(addSpy).toHaveBeenCalledWith([{
         schedulerId: events[0].schedulerId,
         start: events[0].start,
