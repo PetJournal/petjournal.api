@@ -132,4 +132,17 @@ describe('Event Repository', () => {
       })
     })
   })
+
+  describe('AddMany Method', () => {
+    it('Should throw if addMany throws', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'addMany').mockRejectedValue(new Error())
+      const promise = sut.addMany([{
+        schedulerId: 'any_scheduler_id',
+        start: new Date(),
+        end: new Date()
+      }])
+      await expect(promise).rejects.toThrow()
+    })
+  })
 })
