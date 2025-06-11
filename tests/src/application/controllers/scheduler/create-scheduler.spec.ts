@@ -1,6 +1,6 @@
 import { CreateSchedulerController } from '@/application/controllers'
 import { NotAcceptableError, ServerError } from '@/application/errors'
-import { badRequest, notAcceptable, serverError } from '@/application/helpers'
+import { badRequest, create, notAcceptable, serverError } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type AddScheduler } from '@/domain/use-cases'
 import { makeFakeAddSchedulerRequest, makeFakeAddSchedulerUseCase, makeFakeValidation } from '@/tests/utils'
@@ -90,5 +90,37 @@ describe('CreateScheduler Controller', () => {
       await sut.handle(httpRequest)
       expect(validationSpy).toHaveBeenCalledWith(httpRequest.body)
     })
+  })
+
+  it('Should return 201 (Created) if valid data is provided', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(create({
+      id: expect.any(String),
+      tagId: expect.any(String),
+      guardianId: expect.any(String),
+      title: 'any_title',
+      description: 'any_description',
+      note: 'any_note',
+      startAt: new Date('2024-04-04T15:00:00Z'),
+      endAt: new Date('2025-04-04T17:00:00Z'),
+      daysOfWeek: [],
+      daysOfMonth: [],
+      daily: false,
+      pets: [{
+        id: expect.any(String),
+        specieAlias: 'any_specie_alias',
+        guardianId: expect.any(String),
+        specieId: expect.any(String),
+        petName: 'any_pet_name',
+        gender: 'M',
+        breedAlias: 'any_breed_alias',
+        breedId: expect.any(String),
+        sizeId: expect.any(String),
+        castrated: false,
+        dateOfBirth: new Date('2000-11-23T02:00:00.000Z'),
+        image: ''
+      }]
+    }))
   })
 })
