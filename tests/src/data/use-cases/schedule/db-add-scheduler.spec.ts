@@ -88,5 +88,15 @@ describe('DbAddScheduler Use case', () => {
       const promise = sut.add(params)
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should return NotAcceptableError if an invalid petId is provided', async () => {
+      const { sut, petRepositoryStub } = makeSut()
+      jest.spyOn(petRepositoryStub, 'loadById').mockResolvedValueOnce(null)
+      const result = await sut.add(params)
+      expect(result).toEqual({
+        isSuccess: false,
+        error: new NotAcceptableError('petId')
+      })
+    })
   })
 })
