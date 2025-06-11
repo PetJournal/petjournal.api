@@ -158,7 +158,8 @@ const makeFakeAddSchedulerRequest = (): AddSchedulerRequest => {
     daily: undefined,
     pets: ['any_pet_id']
   }
-  return { body }
+  const userId = 'any_guardian_id'
+  return { body, userId }
 }
 
 export {

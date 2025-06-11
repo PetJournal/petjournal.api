@@ -55,5 +55,24 @@ describe('CreateScheduler Controller', () => {
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(serverError(new ServerError('Internal Server Error')))
     })
+
+    it('Should call add with correct values', async () => {
+      const { sut, addSchedulerStub } = makeSut()
+      const addSpy = jest.spyOn(addSchedulerStub, 'add')
+      await sut.handle(httpRequest)
+      expect(addSpy).toHaveBeenCalledWith({
+        tagId: httpRequest.body.tagId,
+        guardianId: httpRequest.userId,
+        title: httpRequest.body.title,
+        description: httpRequest.body.description,
+        note: httpRequest.body.note,
+        startAt: httpRequest.body.startAt,
+        endAt: httpRequest.body.endAt,
+        daysOfWeek: httpRequest.body.daysOfWeek,
+        daysOfMonth: httpRequest.body.daysOfMonth,
+        daily: httpRequest.body.daily,
+        pets: httpRequest.body.pets
+      })
+    })
   })
 })

@@ -105,6 +105,7 @@ interface AddSchedulerRequest {
     daily: boolean | undefined
     pets: string[]
   }
+  userId: string
 }
 
 export {
