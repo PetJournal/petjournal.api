@@ -186,4 +186,38 @@ describe('DbAddScheduler Use case', () => {
       })
     })
   })
+  it('Should return true if add success', async () => {
+    const { sut } = makeSut()
+    const result = await sut.add(params)
+    expect(result).toEqual({
+      isSuccess: true,
+      data: {
+        id: 'any_id',
+        tagId: 'any_tag_id',
+        guardianId: 'any_guardian_id',
+        title: 'any_title',
+        description: 'any_description',
+        note: 'any_note',
+        startAt: new Date('2024-04-04T15:00:00Z'),
+        endAt: new Date('2025-04-04T17:00:00Z'),
+        daysOfWeek: [],
+        daysOfMonth: [],
+        daily: false,
+        pets: [{
+          breedAlias: 'any_breed_alias',
+          breedId: 'any_breed_id',
+          castrated: false,
+          dateOfBirth: new Date('2000-11-23T02:00:00.000Z'),
+          gender: 'M',
+          guardianId: 'any_guardian_id',
+          id: 'any_id',
+          image: '',
+          petName: 'any_pet_name',
+          sizeId: 'any_size_id',
+          specieAlias: 'any_specie_alias',
+          specieId: 'any_specie_id'
+        }]
+      }
+    })
+  })
 })
