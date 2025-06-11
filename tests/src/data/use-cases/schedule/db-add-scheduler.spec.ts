@@ -1,4 +1,4 @@
-import { NotAcceptableError } from '@/application/errors'
+import { NotAcceptableError, ServerError } from '@/application/errors'
 import { type AddSchedulerRepository, type AddTagRepository, type DeleteSchedulerByIdRepository, type LoadPetByIdRepository, type LoadTagByIdRepository } from '@/data/protocols'
 import { type EventsGenerator } from '@/data/protocols/service'
 import { DbAddScheduler } from '@/data/use-cases/scheduler/db-add-scheduler'
@@ -125,6 +125,16 @@ describe('DbAddScheduler Use case', () => {
       jest.spyOn(schedulerRepositoryStub, 'add').mockRejectedValue(new Error())
       const promise = sut.add(params)
       await expect(promise).rejects.toThrow()
+    })
+
+    it('Should return ServerError if add fails', async () => {
+      const { sut, schedulerRepositoryStub } = makeSut()
+      jest.spyOn(schedulerRepositoryStub, 'add').mockResolvedValueOnce(undefined)
+      const result = await sut.add(params)
+      expect(result).toEqual({
+        isSuccess: false,
+        error: new ServerError('Internal Server Error')
+      })
     })
   })
 })
