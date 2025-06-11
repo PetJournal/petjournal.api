@@ -1,3 +1,4 @@
+import { NotAcceptableError } from '@/application/errors'
 import { type AddSchedulerRepository, type AddTagRepository, type DeleteSchedulerByIdRepository, type LoadPetByIdRepository, type LoadTagByIdRepository } from '@/data/protocols'
 import { type EventsGenerator } from '@/data/protocols/service'
 import { DbAddScheduler } from '@/data/use-cases/scheduler/db-add-scheduler'
@@ -60,6 +61,16 @@ describe('DbAddScheduler Use case', () => {
       jest.spyOn(tagRepositoryStub, 'loadById').mockRejectedValue(new Error())
       const promise = sut.add(params)
       await expect(promise).rejects.toThrow()
+    })
+
+    it('Should return NotAcceptableError if an invalid tagId is provided', async () => {
+      const { sut, tagRepositoryStub } = makeSut()
+      jest.spyOn(tagRepositoryStub, 'loadById').mockResolvedValueOnce(null)
+      const result = await sut.add(params)
+      expect(result).toEqual({
+        isSuccess: false,
+        error: new NotAcceptableError('tagId')
+      })
     })
   })
 })
