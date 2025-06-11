@@ -1,6 +1,6 @@
 import { CreateSchedulerController } from '@/application/controllers'
 import { NotAcceptableError, ServerError } from '@/application/errors'
-import { notAcceptable, serverError } from '@/application/helpers'
+import { badRequest, notAcceptable, serverError } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type AddScheduler } from '@/domain/use-cases'
 import { makeFakeAddSchedulerRequest, makeFakeAddSchedulerUseCase, makeFakeValidation } from '@/tests/utils'
@@ -73,6 +73,15 @@ describe('CreateScheduler Controller', () => {
         daily: httpRequest.body.daily,
         pets: httpRequest.body.pets
       })
+    })
+  })
+
+  describe('Validations', () => {
+    it('Should return 400 (BadRequest) if validation returns error', async () => {
+      const { sut, validationStub } = makeSut()
+      jest.spyOn(validationStub, 'validate').mockReturnValue(new Error())
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(badRequest(new Error()))
     })
   })
 })
