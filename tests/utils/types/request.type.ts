@@ -92,6 +92,21 @@ interface AddTagRequest {
   }
 }
 
+interface AddSchedulerRequest {
+  body: {
+    tagId: string
+    title: string
+    description: string
+    note: string
+    startAt: Date
+    endAt: Date
+    daysOfWeek: number[] | undefined
+    daysOfMonth: number[] | undefined
+    daily: boolean | undefined
+    pets: string[]
+  }
+}
+
 export {
   type AuthMiddlewareRequest,
   type LoginRequest,
@@ -103,5 +118,6 @@ export {
   type UpdatePetRequest,
   type DeletePetRequest,
   type EmailConfirmationRequest,
-  type AddTagRequest
+  type AddTagRequest,
+  type AddSchedulerRequest
 }
