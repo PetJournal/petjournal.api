@@ -73,4 +73,13 @@ describe('DbAddScheduler Use case', () => {
       })
     })
   })
+
+  describe('PetRepository', () => {
+    it('Should call loadById with correct value', async () => {
+      const { sut, petRepositoryStub } = makeSut()
+      const loadSpy = jest.spyOn(petRepositoryStub, 'loadById')
+      await sut.add(params)
+      expect(loadSpy).toHaveBeenCalledWith('any_pet_id')
+    })
+  })
 })
