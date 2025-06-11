@@ -173,11 +173,12 @@ describe('DbAddScheduler Use case', () => {
     })
 
     it('Should return ServerError if generate fails', async () => {
-      const { sut, eventsGeneratorStub } = makeSut()
+      const { sut, schedulerRepositoryStub, eventsGeneratorStub } = makeSut()
       jest.spyOn(eventsGeneratorStub, 'generate').mockResolvedValueOnce({
         isSuccess: false,
         error: new ServerError('Internal Server Error!')
       })
+      jest.spyOn(schedulerRepositoryStub, 'delete').mockResolvedValueOnce(true)
       const result = await sut.add(params)
       expect(result).toEqual({
         isSuccess: false,
