@@ -151,5 +151,12 @@ describe('DbAddScheduler Use case', () => {
         daily: false
       })
     })
+
+    it('Should throw if generate throws', async () => {
+      const { sut, eventsGeneratorStub } = makeSut()
+      jest.spyOn(eventsGeneratorStub, 'generate').mockRejectedValue(new Error())
+      const promise = sut.add(params)
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
