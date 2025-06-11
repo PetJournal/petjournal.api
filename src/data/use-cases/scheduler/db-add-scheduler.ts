@@ -61,7 +61,13 @@ export class DbAddScheduler implements AddScheduler {
     })
 
     if (!eventGeneratorResult.isSuccess) {
-      await this.schedulerRepository.delete(scheduler.id)
+      const schedulerDeleted = await this.schedulerRepository.delete(scheduler.id)
+      if (!schedulerDeleted) {
+        return {
+          isSuccess: false,
+          error: new ServerError('Internal Server Error')
+        }
+      }
       return {
         isSuccess: false,
         error: eventGeneratorResult.error
