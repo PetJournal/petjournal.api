@@ -99,4 +99,25 @@ describe('DbAddScheduler Use case', () => {
       })
     })
   })
+
+  describe('SchedulerRepository', () => {
+    it('Should call add with correct values', async () => {
+      const { sut, schedulerRepositoryStub } = makeSut()
+      const addSpy = jest.spyOn(schedulerRepositoryStub, 'add')
+      await sut.add(params)
+      expect(addSpy).toHaveBeenCalledWith({
+        tagId: 'any_id',
+        guardianId: 'any_guardian_id',
+        title: 'any_title',
+        description: 'any_description',
+        note: 'any_note',
+        startAt: new Date('2024-04-04T15:00:00Z'),
+        endAt: new Date('2025-04-04T17:00:00Z'),
+        daysOfWeek: [],
+        daysOfMonth: [],
+        daily: false,
+        pets: ['any_pet_id']
+      })
+    })
+  })
 })
