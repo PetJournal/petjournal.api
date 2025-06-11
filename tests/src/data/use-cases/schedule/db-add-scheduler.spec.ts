@@ -149,6 +149,17 @@ describe('DbAddScheduler Use case', () => {
         await sut.add(params)
         expect(deleteSpy).toHaveBeenCalledWith('any_id')
       })
+
+      it('Should throw if delete throws', async () => {
+        const { sut, schedulerRepositoryStub, eventsGeneratorStub } = makeSut()
+        jest.spyOn(eventsGeneratorStub, 'generate').mockResolvedValueOnce({
+          isSuccess: false,
+          error: new ServerError('Internal Server Error!')
+        })
+        jest.spyOn(schedulerRepositoryStub, 'delete').mockRejectedValue(new Error())
+        const promise = sut.add(params)
+        await expect(promise).rejects.toThrow()
+      })
     })
   })
   describe('EventsGenerator', () => {
