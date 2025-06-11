@@ -24,7 +24,7 @@ export class DbAddScheduler implements AddScheduler {
         error: new NotAcceptableError('tagId')
       }
     }
-    if (!this.checkPets(params.pets)) {
+    if (!(await this.checkPets(params.pets))) {
       return {
         isSuccess: false,
         error: new NotAcceptableError('petId')
