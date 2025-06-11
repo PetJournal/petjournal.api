@@ -38,5 +38,15 @@ describe('CreateScheduler Controller', () => {
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(notAcceptable(new NotAcceptableError('tagId')))
     })
+
+    it('Should return 406(Not Acceptable) if invalid petId is provided', async () => {
+      const { sut, addSchedulerStub } = makeSut()
+      jest.spyOn(addSchedulerStub, 'add').mockResolvedValue({
+        isSuccess: false,
+        error: new NotAcceptableError('petId')
+      })
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(notAcceptable(new NotAcceptableError('petId')))
+    })
   })
 })
