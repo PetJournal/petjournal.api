@@ -54,5 +54,12 @@ describe('DbAddScheduler Use case', () => {
       await sut.add(params)
       expect(loadSpy).toHaveBeenCalledWith('any_tag_id')
     })
+
+    it('Should throw if loadById throws', async () => {
+      const { sut, tagRepositoryStub } = makeSut()
+      jest.spyOn(tagRepositoryStub, 'loadById').mockRejectedValue(new Error())
+      const promise = sut.add(params)
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
