@@ -119,5 +119,12 @@ describe('DbAddScheduler Use case', () => {
         pets: ['any_pet_id']
       })
     })
+
+    it('Should throw if add throws', async () => {
+      const { sut, schedulerRepositoryStub } = makeSut()
+      jest.spyOn(schedulerRepositoryStub, 'add').mockRejectedValue(new Error())
+      const promise = sut.add(params)
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
