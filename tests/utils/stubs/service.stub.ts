@@ -41,10 +41,13 @@ import {
   type DeleteTagRepository,
   type AddEventRepository,
   type LoadEventByDateAndStartRepository,
-  type AddManyEventsRepository
+  type AddManyEventsRepository,
+  type AddSchedulerRepository,
+  type DeleteSchedulerByIdRepository
 } from '@/data/protocols'
 import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
 import { type LoadDogSizesRepository } from '@/data/protocols/db/size/load-dog-sizes-repository'
+import { type EventsGenerator } from '@/data/protocols/service'
 
 const mockHashService = {
   hashedValue: 'hashed_value'
@@ -366,6 +369,61 @@ const makeFakeEventRepository = (): AddEventRepository & LoadEventByDateAndStart
   return new EventRepositoryStub()
 }
 
+const makeFakeSchedulerRepository = (): AddSchedulerRepository & DeleteSchedulerByIdRepository => {
+  class SchedulerRepositoryStub implements AddSchedulerRepository, DeleteSchedulerByIdRepository {
+    async add (params: AddSchedulerRepository.Params): Promise<AddSchedulerRepository.Result> {
+      return {
+        id: 'any_id',
+        tagId: 'any_tag_id',
+        guardianId: 'any_guardian_id',
+        title: 'any_title',
+        description: 'any_description',
+        note: 'any_note',
+        startAt: new Date('2024-04-04T15:00:00Z'),
+        endAt: new Date('2025-04-04T17:00:00Z'),
+        daysOfWeek: [],
+        daysOfMonth: [],
+        daily: false,
+        pets: [{
+          id: 'any_id',
+          specieAlias: 'any_specie_alias',
+          guardianId: 'any_guardian_id',
+          specieId: 'any_specie_id',
+          petName: 'any_pet_name',
+          gender: 'M',
+          breedAlias: 'any_breed_alias',
+          breedId: 'any_breed_id',
+          sizeId: 'any_size_id',
+          castrated: false,
+          dateOfBirth: new Date('2000-11-23T02:00:00.000Z'),
+          image: ''
+        }]
+      }
+    }
+
+    async delete (param: DeleteSchedulerByIdRepository.Param): Promise<DeleteSchedulerByIdRepository.Result> {
+      return true
+    }
+  }
+  return new SchedulerRepositoryStub()
+}
+
+const makeFakeEventsGenerator = (): EventsGenerator => {
+  class EventsGeneratorStub implements EventsGenerator {
+    async generate (params: EventsGenerator.Params): Promise<EventsGenerator.Result> {
+      return {
+        isSuccess: true,
+        data: {
+          schedulerId: 'any_scheduler_id',
+          start: new Date('2024-04-04T15:00:00Z'),
+          end: new Date('2025-04-04T17:00:00Z')
+        }
+      }
+    }
+  }
+  return new EventsGeneratorStub()
+}
+
 export {
   mockHashService,
   mockTokenService,
@@ -385,5 +443,7 @@ export {
   makeFakeSizeRepository,
   makeFakeFileStorage,
   makeFakeTagRepository,
-  makeFakeEventRepository
+  makeFakeEventRepository,
+  makeFakeSchedulerRepository,
+  makeFakeEventsGenerator
 }
