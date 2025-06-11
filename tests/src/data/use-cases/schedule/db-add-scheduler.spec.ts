@@ -137,4 +137,19 @@ describe('DbAddScheduler Use case', () => {
       })
     })
   })
+  describe('EventsGenerator', () => {
+    it('Should call generate with correct values', async () => {
+      const { sut, eventsGeneratorStub } = makeSut()
+      const loadSpy = jest.spyOn(eventsGeneratorStub, 'generate')
+      await sut.add(params)
+      expect(loadSpy).toHaveBeenCalledWith({
+        schedulerId: 'any_id',
+        startAt: new Date('2024-04-04T15:00:00Z'),
+        endAt: new Date('2025-04-04T17:00:00Z'),
+        daysOfWeek: [],
+        daysOfMonth: [],
+        daily: false
+      })
+    })
+  })
 })
