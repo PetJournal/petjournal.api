@@ -101,39 +101,53 @@ describe('DbAddScheduler Use case', () => {
   })
 
   describe('SchedulerRepository', () => {
-    it('Should call add with correct values', async () => {
-      const { sut, schedulerRepositoryStub } = makeSut()
-      const addSpy = jest.spyOn(schedulerRepositoryStub, 'add')
-      await sut.add(params)
-      expect(addSpy).toHaveBeenCalledWith({
-        tagId: 'any_id',
-        guardianId: 'any_guardian_id',
-        title: 'any_title',
-        description: 'any_description',
-        note: 'any_note',
-        startAt: new Date('2024-04-04T15:00:00Z'),
-        endAt: new Date('2025-04-04T17:00:00Z'),
-        daysOfWeek: [],
-        daysOfMonth: [],
-        daily: false,
-        pets: ['any_pet_id']
+    describe('Add Method', () => {
+      it('Should call add with correct values', async () => {
+        const { sut, schedulerRepositoryStub } = makeSut()
+        const addSpy = jest.spyOn(schedulerRepositoryStub, 'add')
+        await sut.add(params)
+        expect(addSpy).toHaveBeenCalledWith({
+          tagId: 'any_id',
+          guardianId: 'any_guardian_id',
+          title: 'any_title',
+          description: 'any_description',
+          note: 'any_note',
+          startAt: new Date('2024-04-04T15:00:00Z'),
+          endAt: new Date('2025-04-04T17:00:00Z'),
+          daysOfWeek: [],
+          daysOfMonth: [],
+          daily: false,
+          pets: ['any_pet_id']
+        })
+      })
+
+      it('Should throw if add throws', async () => {
+        const { sut, schedulerRepositoryStub } = makeSut()
+        jest.spyOn(schedulerRepositoryStub, 'add').mockRejectedValue(new Error())
+        const promise = sut.add(params)
+        await expect(promise).rejects.toThrow()
+      })
+
+      it('Should return ServerError if add fails', async () => {
+        const { sut, schedulerRepositoryStub } = makeSut()
+        jest.spyOn(schedulerRepositoryStub, 'add').mockResolvedValueOnce(undefined)
+        const result = await sut.add(params)
+        expect(result).toEqual({
+          isSuccess: false,
+          error: new ServerError('Internal Server Error')
+        })
       })
     })
-
-    it('Should throw if add throws', async () => {
-      const { sut, schedulerRepositoryStub } = makeSut()
-      jest.spyOn(schedulerRepositoryStub, 'add').mockRejectedValue(new Error())
-      const promise = sut.add(params)
-      await expect(promise).rejects.toThrow()
-    })
-
-    it('Should return ServerError if add fails', async () => {
-      const { sut, schedulerRepositoryStub } = makeSut()
-      jest.spyOn(schedulerRepositoryStub, 'add').mockResolvedValueOnce(undefined)
-      const result = await sut.add(params)
-      expect(result).toEqual({
-        isSuccess: false,
-        error: new ServerError('Internal Server Error')
+    describe('Delete Method', () => {
+      it('Should call delete with correct value', async () => {
+        const { sut, schedulerRepositoryStub, eventsGeneratorStub } = makeSut()
+        jest.spyOn(eventsGeneratorStub, 'generate').mockResolvedValueOnce({
+          isSuccess: false,
+          error: new ServerError('Internal Server Error!')
+        })
+        const deleteSpy = jest.spyOn(schedulerRepositoryStub, 'delete')
+        await sut.add(params)
+        expect(deleteSpy).toHaveBeenCalledWith('any_id')
       })
     })
   })
