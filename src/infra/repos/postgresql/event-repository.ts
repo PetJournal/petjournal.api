@@ -1,8 +1,12 @@
-import { type AddEventRepository, type LoadEventByDateAndStartRepository } from '@/data/protocols'
+import {
+  type AddEventRepository, type LoadEventByDateAndStartRepository,
+  type LoadTasksByDateRepository
+} from '@/data/protocols'
 import { prisma as db } from './prisma'
 import { type AddManyEventsRepository } from '@/data/protocols/db/event/add-many-events-repository'
 
-export class EventRepository implements AddEventRepository, LoadEventByDateAndStartRepository, AddManyEventsRepository {
+export class EventRepository implements AddEventRepository, LoadEventByDateAndStartRepository, AddManyEventsRepository,
+  LoadTasksByDateRepository {
   async add (params: AddEventRepository.Params): Promise<AddEventRepository.Result> {
     try {
       const event = await db.event.create({
@@ -37,5 +41,20 @@ export class EventRepository implements AddEventRepository, LoadEventByDateAndSt
     } catch (error) {
       return false
     }
+  }
+
+  async loadByDate (params: LoadTasksByDateRepository.Params): Promise<LoadTasksByDateRepository.Result> {
+    const events = await db.event.findMany({
+      where: {
+        start: {
+          gte: params.start,
+          lte: params.end
+        }
+      },
+      orderBy: {
+        start: 'asc'
+      }
+    })
+    return events
   }
 }
