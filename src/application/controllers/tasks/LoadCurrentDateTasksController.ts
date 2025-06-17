@@ -1,37 +1,25 @@
 import {
   success,
-  badRequest,
   serverError,
   type HttpRequest,
   type HttpResponse
 } from '@/application/helpers'
-import { type Controller, type Validation } from '@/application/protocols'
+import { type Controller } from '@/application/protocols'
 import { type LoadCurrentDateTasks } from '@/domain/use-cases'
 
 export class LoadCurrentDateTasksController implements Controller {
   private readonly loadCurrentDateTasks: LoadCurrentDateTasks
-  private readonly validation: Validation
 
-  constructor ({ loadCurrentDateTasks, validation }: LoadCurrentDateTasksController.Dependencies) {
+  constructor ({ loadCurrentDateTasks }: LoadCurrentDateTasksController.Dependencies) {
     this.loadCurrentDateTasks = loadCurrentDateTasks
-    this.validation = validation
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const error = this.validation.validate(httpRequest.body)
-      if (error) {
-        return badRequest(error)
-      }
+      const now = new Date()
+      now.setUTCHours(0, 0, 0, 0)
 
-      const dateParam = httpRequest.body?.date
-      const date = new Date(dateParam)
-
-      if (isNaN(date.getTime())) {
-        return badRequest(new Error('Invalid date'))
-      }
-
-      const result = await this.loadCurrentDateTasks.load({ date })
+      const result = await this.loadCurrentDateTasks.load({ date: now })
       return success(result)
     } catch (error) {
       return serverError(error as Error)
@@ -41,7 +29,6 @@ export class LoadCurrentDateTasksController implements Controller {
 
 export namespace LoadCurrentDateTasksController {
   export interface Dependencies {
-    validation: Validation
     loadCurrentDateTasks: LoadCurrentDateTasks
   }
 }
