@@ -4,7 +4,7 @@ import { adaptRoute } from '../adapters'
 import { makeLoadCurrentDateTasksController } from '../factories'
 
 export default (router: Router): void => {
-  router.post(
+  router.get(
     '/tasks/current-date',
     auth,
     accountConfirmation,

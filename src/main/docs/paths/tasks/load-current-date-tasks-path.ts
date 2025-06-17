@@ -1,33 +1,15 @@
 export const loadCurrentDateTasksPath = {
-  post: {
+  get: {
     tags: ['task'],
-    summary: 'List tasks in current',
+    summary: 'List tasks of current day',
     security: [
       {
         bearerAuth: []
       }
     ],
-    requestBody: {
-      required: true,
-      content: {
-        'application/json': {
-          schema: {
-            type: 'object',
-            properties: {
-              date: {
-                type: 'string',
-                format: 'date',
-                example: '2025-06-16'
-              }
-            },
-            required: ['date']
-          }
-        }
-      }
-    },
     responses: {
       200: {
-        description: 'Sucess',
+        description: 'Success',
         content: {
           'application/json': {
             schema: {
@@ -45,35 +27,18 @@ export const loadCurrentDateTasksPath = {
           }
         }
       },
-      400: {
-        description: 'Invalid request',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/schemas/error'
-            },
-            example: {
-              error: 'Missing param: authorization'
-            }
-          }
-        }
-      },
       401: {
-        description: 'Unauthorized guardian',
+        description: 'Unauthorized',
         content: {
           'application/json': {
-            schema: {
-              $ref: '#/schemas/error'
-            },
+            schema: { $ref: '#/schemas/error' },
             example: {
               error: 'Invalid or expired token'
             }
           }
         }
       },
-      500: {
-        $ref: '#/components/serverError'
-      }
+      500: { $ref: '#/components/serverError' }
     }
   }
 }
