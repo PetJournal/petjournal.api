@@ -53,6 +53,24 @@ export class EventRepository implements AddEventRepository, LoadEventByDateAndSt
       },
       orderBy: {
         start: 'asc'
+      },
+      include: {
+        scheduler: {
+          include: {
+            tag: {
+              select: {
+                name: true,
+                color: true
+              }
+            },
+            pets: {
+              select: {
+                id: true,
+                image: true
+              }
+            }
+          }
+        }
       }
     })
     return events

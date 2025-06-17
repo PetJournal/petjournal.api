@@ -10,8 +10,26 @@ export namespace LoadTasksByDateRepository {
 
   export type Result = Array<{
     id: string
-    schedulerId: string
     start: Date
     end: Date
+    scheduler: {
+      id: string
+      title: string
+      description: string
+      note: string
+      startAt: Date
+      endAt: Date
+      daysOfWeek: number[]
+      daysOfMonth: number[]
+      daily: boolean
+      tag: {
+        name: string
+        color: string
+      }
+      pets: Array<{
+        id: string
+        image: string
+      }>
+    }
   }>
 }
