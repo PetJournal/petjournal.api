@@ -12,6 +12,7 @@ export namespace LoadTasksByDateRepository {
     id: string
     start: Date
     end: Date
+    schedulerId: string
     scheduler: {
       id: string
       title: string
