@@ -8,10 +8,8 @@ describe('LoadCurrentDateTasks route', () => {
   beforeAll(async () => {
     await PrismaHelper.connect()
 
-    // Crie um usuário válido para login, ou o que for necessário no seu setup
     await PrismaHelper.createGuardian()
 
-    // Login para obter token válido
     const { body } = await request(app)
       .post('/api/login')
       .send({
