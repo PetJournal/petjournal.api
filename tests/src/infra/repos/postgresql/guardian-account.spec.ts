@@ -161,7 +161,11 @@ describe('GuardianAccountRepository', () => {
       let guardian = await sut.loadByEmail(input.email) as any
       const verificationTokenCreatedAt = guardian.verificationTokenCreatedAt
 
+      jest.useFakeTimers()
+      const now = new Date()
+      jest.setSystemTime(now)
       jest.advanceTimersByTime(1000)
+      jest.useRealTimers()
 
       await sut.updateVerificationToken({
         userId: guardian.id,
