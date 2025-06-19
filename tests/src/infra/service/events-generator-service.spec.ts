@@ -1,48 +1,30 @@
 import { NotAcceptableError, ServerError } from '@/application/errors'
 import { type AddEventRepository, type AddManyEventsRepository, type LoadEventByDateAndStartRepository } from '@/data/protocols'
-import { type EventsGenerator, type DateAddDay, type DateGeneratorUtc, type DateSetTime, type DateToJSDate } from '@/data/protocols/service'
+import { type EventsGenerator } from '@/data/protocols/service'
 import { EventsGeneratorService } from '@/infra/service'
 import { makeFakeEventRepository } from '@/tests/utils'
-import { DateTime } from 'luxon'
 
 interface SutTypes {
   sut: EventsGeneratorService
   eventRepositoryStub: AddEventRepository & LoadEventByDateAndStartRepository & AddManyEventsRepository
-  dateTimeStub: DateGeneratorUtc & DateToJSDate & DateSetTime & DateAddDay
-}
-
-const makeFakeDateTimeStub = (): DateGeneratorUtc & DateToJSDate & DateSetTime & DateAddDay => {
-  return {
-    generate: jest.fn((date: Date) => {
-      return DateTime.fromJSDate(date, { zone: 'utc' })
-    }),
-    toJSDate: jest.fn((dateTime: DateTime) => dateTime.toJSDate()),
-    setTime: jest.fn(({ dateTime, time }) =>
-      dateTime.set({ hour: time.hour, minute: time.minute, second: time.second })
-    ),
-    addDay: jest.fn((dateTime: DateTime) => dateTime.plus({ days: 1 }))
-  }
 }
 
 const makeSut = (): SutTypes => {
   const eventRepositoryStub = makeFakeEventRepository()
-  const dateTimeStub = makeFakeDateTimeStub()
   const dependencies: EventsGenerator.Dependencies = {
-    eventRepository: eventRepositoryStub,
-    dateTime: dateTimeStub
+    eventRepository: eventRepositoryStub
   }
   const sut = new EventsGeneratorService(dependencies)
   return {
     sut,
-    eventRepositoryStub,
-    dateTimeStub
+    eventRepositoryStub
   }
 }
 
 const generateDate = (): any => {
   const start = new Date()
   const end = new Date()
-  end.setDate(end.getDate() + 1)
+  end.setDate(start.getDate() + 1)
   return {
     startAt: start,
     endAt: end
@@ -59,15 +41,12 @@ describe('Events Generator Service', () => {
     daily: true
   }
 
-  const startAtDateTimeFake = DateTime.fromISO(params.startAt.toISOString(), { zone: 'utc' })
-  const endAtDateTimeFake = DateTime.fromISO(params.endAt.toISOString(), { zone: 'utc' })
-
   describe('Days of Week', () => {
     it('Should call loadByDateAndStart with the correct value', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDateAndStart')
       await sut.generate({ ...params, daysOfMonth: undefined, daily: false })
-      expect(loadSpy).toHaveBeenCalledWith({ start: startAtDateTimeFake.toJSDate() })
+      expect(loadSpy).toHaveBeenCalledWith({ start: params.startAt })
     })
 
     it('Should throw if loadByDateAndStart throws', async () => {
@@ -99,26 +78,14 @@ describe('Events Generator Service', () => {
     })
 
     it('Should call addMany with the correct value', async () => {
-      const { sut, eventRepositoryStub, dateTimeStub } = makeSut()
-      const events = [{
-        schedulerId: 'any_scheduler_id',
-        start: dateTimeStub.toJSDate(startAtDateTimeFake),
-        end: dateTimeStub.setTime({
-          dateTime: startAtDateTimeFake,
-          time: {
-            hour: endAtDateTimeFake.hour,
-            minute: endAtDateTimeFake.minute,
-            second: endAtDateTimeFake.second
-          }
-        })
-      }]
+      const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
       const addSpy = jest.spyOn(eventRepositoryStub, 'addMany')
       await sut.generate({ ...params, daysOfMonth: undefined, daily: false })
       expect(addSpy).toHaveBeenCalledWith([{
-        schedulerId: events[0].schedulerId,
-        start: events[0].start,
-        end: events[0].end
+        schedulerId: 'any_scheduler_id',
+        start: params.startAt,
+        end: params.startAt
       }])
     })
 
@@ -155,7 +122,7 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDateAndStart')
       await sut.generate({ ...params, daysOfWeek: undefined, daily: false })
-      expect(loadSpy).toHaveBeenCalledWith({ start: startAtDateTimeFake.toJSDate() })
+      expect(loadSpy).toHaveBeenCalledWith({ start: params.startAt })
     })
 
     it('Should throw if loadByDateAndStart throws', async () => {
@@ -187,27 +154,16 @@ describe('Events Generator Service', () => {
     })
 
     it('Should call addMany with the correct value', async () => {
-      const { sut, eventRepositoryStub, dateTimeStub } = makeSut()
+      const { sut, eventRepositoryStub } = makeSut()
       const events = [{
         schedulerId: 'any_scheduler_id',
-        start: dateTimeStub.toJSDate(startAtDateTimeFake),
-        end: dateTimeStub.setTime({
-          dateTime: startAtDateTimeFake,
-          time: {
-            hour: endAtDateTimeFake.hour,
-            minute: endAtDateTimeFake.minute,
-            second: endAtDateTimeFake.second
-          }
-        })
+        start: params.startAt,
+        end: params.startAt
       }]
       jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
       const addSpy = jest.spyOn(eventRepositoryStub, 'addMany')
       await sut.generate({ ...params, daysOfMonth: [new Date().getDate()], daysOfWeek: undefined, daily: false })
-      expect(addSpy).toHaveBeenCalledWith([{
-        schedulerId: events[0].schedulerId,
-        start: events[0].start,
-        end: events[0].end
-      }])
+      expect(addSpy).toHaveBeenCalledWith(events)
     })
 
     it('Should throw if addMany throws', async () => {
@@ -243,7 +199,7 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDateAndStart')
       await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined })
-      expect(loadSpy).toHaveBeenCalledWith({ start: startAtDateTimeFake.toJSDate() })
+      expect(loadSpy).toHaveBeenCalledWith({ start: params.startAt })
     })
 
     it('Should throw if loadByDateAndStart throws', async () => {
@@ -275,31 +231,16 @@ describe('Events Generator Service', () => {
     })
 
     it('Should call addMany with the correct value', async () => {
-      const { sut, eventRepositoryStub, dateTimeStub } = makeSut()
-      const dateAddOneDay = dateTimeStub.addDay(startAtDateTimeFake)
+      const { sut, eventRepositoryStub } = makeSut()
       const events = [{
         schedulerId: 'any_scheduler_id',
-        start: dateTimeStub.toJSDate(startAtDateTimeFake),
-        end: dateTimeStub.setTime({
-          dateTime: startAtDateTimeFake,
-          time: {
-            hour: endAtDateTimeFake.hour,
-            minute: endAtDateTimeFake.minute,
-            second: endAtDateTimeFake.second
-          }
-        })
+        start: params.startAt,
+        end: params.startAt
       },
       {
         schedulerId: 'any_scheduler_id',
-        start: dateTimeStub.toJSDate(dateAddOneDay),
-        end: dateTimeStub.setTime({
-          dateTime: dateAddOneDay,
-          time: {
-            hour: endAtDateTimeFake.hour,
-            minute: endAtDateTimeFake.minute,
-            second: endAtDateTimeFake.second
-          }
-        })
+        start: params.endAt,
+        end: params.endAt
       }
       ]
       jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
@@ -345,7 +286,7 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDateAndStart')
       await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
-      expect(loadSpy).toHaveBeenCalledWith({ start: startAtDateTimeFake.toJSDate() })
+      expect(loadSpy).toHaveBeenCalledWith({ start: params.startAt })
     })
 
     it('Should throw if loadByDateAndStart throws', async () => {
@@ -377,14 +318,14 @@ describe('Events Generator Service', () => {
     })
 
     it('Should call add with the correct value', async () => {
-      const { sut, eventRepositoryStub, dateTimeStub } = makeSut()
+      const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
       const addSpy = jest.spyOn(eventRepositoryStub, 'add')
       await sut.generate({ ...params, daysOfMonth: undefined, daysOfWeek: undefined, daily: false })
       expect(addSpy).toHaveBeenCalledWith({
         schedulerId: 'any_scheduler_id',
-        start: dateTimeStub.toJSDate(startAtDateTimeFake),
-        end: dateTimeStub.toJSDate(endAtDateTimeFake)
+        start: params.startAt,
+        end: params.endAt
       })
     })
 
@@ -408,13 +349,13 @@ describe('Events Generator Service', () => {
     })
 
     it('Should return true if generate Punctual event on success', async () => {
-      const { sut, eventRepositoryStub, dateTimeStub } = makeSut()
+      const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDateAndStart').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'add').mockResolvedValue({
         id: 'any_id',
         schedulerId: 'any_scheduler_id',
-        start: dateTimeStub.toJSDate(startAtDateTimeFake),
-        end: dateTimeStub.toJSDate(endAtDateTimeFake)
+        start: params.startAt,
+        end: params.endAt
       })
       const result = await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
       expect(result).toEqual({
@@ -422,8 +363,8 @@ describe('Events Generator Service', () => {
         data: {
           id: 'any_id',
           schedulerId: 'any_scheduler_id',
-          start: dateTimeStub.toJSDate(startAtDateTimeFake),
-          end: dateTimeStub.toJSDate(endAtDateTimeFake)
+          start: params.startAt,
+          end: params.endAt
         }
       })
     })
