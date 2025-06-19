@@ -12,15 +12,15 @@ export class DaysOfWeekValidation implements Validation {
   }
 
   validate (input: any): Error | void {
-    if (!input.daysOfWeek.length) {
+    if (!input[this.fieldDaysOfWeek].length) {
       return new InvalidParamError(this.fieldDaysOfWeek)
     }
-    for (let i = 0; i < input.daysOfWeek.length; i++) {
-      if (typeof input.daysOfWeek[i] !== 'number') {
+    for (let i = 0; i < input[this.fieldDaysOfWeek].length; i++) {
+      if (typeof input[this.fieldDaysOfWeek][i] !== 'number') {
         return new InvalidParamError(this.fieldDaysOfWeek)
       }
     }
-    const isValid = this.validator.isValid(input.daysOfWeek)
+    const isValid = this.validator.isValid(input[this.fieldDaysOfWeek])
     if (!isValid) {
       return new InvalidParamError(this.fieldDaysOfWeek)
     }
