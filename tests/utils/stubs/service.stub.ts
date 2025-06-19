@@ -40,7 +40,7 @@ import {
   type LoadTagsRepository,
   type DeleteTagRepository,
   type AddEventRepository,
-  type LoadEventByDateAndStartRepository,
+  type LoadEventByDateRepository,
   type AddManyEventsRepository,
   type AddSchedulerRepository,
   type DeleteSchedulerByIdRepository
@@ -343,8 +343,8 @@ const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & Upd
   return new TagRepositoryStub()
 }
 
-const makeFakeEventRepository = (): AddEventRepository & LoadEventByDateAndStartRepository & AddManyEventsRepository => {
-  class EventRepositoryStub implements AddEventRepository, LoadEventByDateAndStartRepository, AddManyEventsRepository {
+const makeFakeEventRepository = (): AddEventRepository & LoadEventByDateRepository & AddManyEventsRepository => {
+  class EventRepositoryStub implements AddEventRepository, LoadEventByDateRepository, AddManyEventsRepository {
     async add (params: AddEventRepository.Params): Promise<AddEventRepository.Result> {
       return {
         id: 'any_id',
@@ -354,7 +354,7 @@ const makeFakeEventRepository = (): AddEventRepository & LoadEventByDateAndStart
       }
     }
 
-    async loadByDateAndStart (params: LoadEventByDateAndStartRepository.Params): Promise<LoadEventByDateAndStartRepository.Result> {
+    async loadByDate (params: LoadEventByDateRepository.Params): Promise<LoadEventByDateRepository.Result> {
       return {
         schedulerId: 'any_scheduler_id',
         start: new Date('2025-06-01T10:30:00Z'),

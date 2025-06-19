@@ -1,8 +1,8 @@
 import { type EventsGenerator } from '@/data/protocols/service/events-generator'
-import { type LoadEventByDateAndStartRepository, type AddEventRepository, type AddManyEventsRepository } from '@/data/protocols'
+import { type LoadEventByDateRepository, type AddEventRepository, type AddManyEventsRepository } from '@/data/protocols'
 import { NotAcceptableError, ServerError } from '@/application/errors'
 export class EventsGeneratorService implements EventsGenerator {
-  private readonly eventRepository: AddEventRepository & LoadEventByDateAndStartRepository & AddManyEventsRepository
+  private readonly eventRepository: AddEventRepository & LoadEventByDateRepository & AddManyEventsRepository
 
   constructor ({ eventRepository }: EventsGenerator.Dependencies) {
     this.eventRepository = eventRepository
@@ -16,7 +16,7 @@ export class EventsGeneratorService implements EventsGenerator {
       const events = []
       while (currentDate <= endAtDateTime) {
         if (daysOfWeek.includes(currentDate.getDay())) {
-          const event = await this.eventRepository.loadByDateAndStart({ start: currentDate })
+          const event = await this.eventRepository.loadByDate({ date: currentDate })
           if (event) {
             return {
               isSuccess: false,
@@ -57,7 +57,7 @@ export class EventsGeneratorService implements EventsGenerator {
       const events = []
       while (currentDate <= endAtDateTime) {
         if (daysOfMonth.includes(currentDate.getDate())) {
-          const event = await this.eventRepository.loadByDateAndStart({ start: currentDate })
+          const event = await this.eventRepository.loadByDate({ date: currentDate })
           if (event) {
             return {
               isSuccess: false,
@@ -97,7 +97,7 @@ export class EventsGeneratorService implements EventsGenerator {
     if (daily) {
       const events = []
       while (currentDate <= endAtDateTime) {
-        const event = await this.eventRepository.loadByDateAndStart({ start: currentDate })
+        const event = await this.eventRepository.loadByDate({ date: currentDate })
         if (event) {
           return {
             isSuccess: false,
@@ -133,7 +133,7 @@ export class EventsGeneratorService implements EventsGenerator {
       }
     }
 
-    const event = await this.eventRepository.loadByDateAndStart({ start: currentDate })
+    const event = await this.eventRepository.loadByDate({ date: currentDate })
     if (event) {
       return {
         isSuccess: false,
