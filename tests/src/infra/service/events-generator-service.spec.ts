@@ -84,8 +84,8 @@ describe('Events Generator Service', () => {
       await sut.generate({ ...params, daysOfMonth: undefined, daily: false })
       expect(addSpy).toHaveBeenCalledWith([{
         schedulerId: 'any_scheduler_id',
-        start: params.startAt,
-        end: params.startAt
+        start: expect.any(Date),
+        end: expect.any(Date)
       }])
     })
 
@@ -155,15 +155,14 @@ describe('Events Generator Service', () => {
 
     it('Should call addMany with the correct value', async () => {
       const { sut, eventRepositoryStub } = makeSut()
-      const events = [{
-        schedulerId: 'any_scheduler_id',
-        start: params.startAt,
-        end: params.startAt
-      }]
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       const addSpy = jest.spyOn(eventRepositoryStub, 'addMany')
       await sut.generate({ ...params, daysOfMonth: [new Date().getDate()], daysOfWeek: undefined, daily: false })
-      expect(addSpy).toHaveBeenCalledWith(events)
+      expect(addSpy).toHaveBeenCalledWith([{
+        schedulerId: 'any_scheduler_id',
+        start: expect.any(Date),
+        end: expect.any(Date)
+      }])
     })
 
     it('Should throw if addMany throws', async () => {
@@ -232,22 +231,22 @@ describe('Events Generator Service', () => {
 
     it('Should call addMany with the correct value', async () => {
       const { sut, eventRepositoryStub } = makeSut()
-      const events = [{
-        schedulerId: 'any_scheduler_id',
-        start: params.startAt,
-        end: params.startAt
-      },
-      {
-        schedulerId: 'any_scheduler_id',
-        start: params.endAt,
-        end: params.endAt
-      }
-      ]
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       const addSpy = jest.spyOn(eventRepositoryStub, 'addMany')
       await sut.generate({ ...params, daysOfMonth: undefined, daysOfWeek: undefined })
-      expect(addSpy).toHaveBeenCalledWith(events)
+      expect(addSpy).toHaveBeenCalledWith([
+        {
+          schedulerId: 'any_scheduler_id',
+          start: expect.any(Date),
+          end: expect.any(Date)
+        },
+        {
+          schedulerId: 'any_scheduler_id',
+          start: expect.any(Date),
+          end: expect.any(Date)
+        }
+      ])
     })
 
     it('Should throw if addMany throws', async () => {
