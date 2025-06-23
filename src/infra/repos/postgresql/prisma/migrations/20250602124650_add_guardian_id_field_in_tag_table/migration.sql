@@ -5,12 +5,6 @@
 
 */
 -- AlterTable
-ALTER TABLE "_PetScheduler" ADD CONSTRAINT "_PetScheduler_AB_pkey" PRIMARY KEY ("A", "B");
-
--- DropIndex
-DROP INDEX "_PetScheduler_AB_unique";
-
--- AlterTable
 ALTER TABLE "tags" ADD COLUMN     "guardian_id" TEXT NOT NULL;
 
 -- AddForeignKey
