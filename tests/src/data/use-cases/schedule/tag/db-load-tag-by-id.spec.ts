@@ -1,5 +1,5 @@
 import { type LoadTagByIdRepository } from '@/data/protocols'
-import { DbLoadTagById } from '@/data/use-cases/schedule/tag/db-load-tag-by-id'
+import { DbLoadTagById } from '@/data/use-cases/scheduler/tag/db-load-tag-by-id'
 import { type LoadTagById } from '@/domain/use-cases/scheduler/tag'
 import { makeFakeTagRepository } from '@/tests/utils'
 
@@ -49,6 +49,7 @@ describe('DbLoadTagById use case', () => {
       const tag = await sut.loadById(param)
       expect(tag).toEqual({
         id: expect.any(String),
+        guardianId: expect.any(String),
         name: 'any_name',
         color: 'any_color'
       })

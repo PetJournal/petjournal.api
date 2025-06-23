@@ -10,6 +10,7 @@ export namespace UpdateTagRepository {
 
   export type Result = {
     id: string
+    guardianId: string
     name: string
     color: string
   } | undefined

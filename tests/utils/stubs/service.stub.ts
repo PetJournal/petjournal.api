@@ -38,10 +38,16 @@ import {
   type LoadTagByIdRepository,
   type UpdateTagRepository,
   type LoadTagsRepository,
-  type DeleteTagRepository
+  type DeleteTagRepository,
+  type AddEventRepository,
+  type LoadEventByDateRepository,
+  type AddManyEventsRepository,
+  type AddSchedulerRepository,
+  type DeleteSchedulerByIdRepository
 } from '@/data/protocols'
 import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
 import { type LoadDogSizesRepository } from '@/data/protocols/db/size/load-dog-sizes-repository'
+import { type EventsGenerator } from '@/data/protocols/service'
 
 const mockHashService = {
   hashedValue: 'hashed_value'
@@ -297,6 +303,7 @@ const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & Upd
     async add (params: AddTagRepository.Params): Promise<AddTagRepository.Result> {
       return {
         id: 'any_id',
+        guardianId: 'any_guardian_id',
         name: 'any_name',
         color: 'any_color'
       }
@@ -305,6 +312,7 @@ const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & Upd
     async loadById (tagId: LoadTagByIdRepository.Param): Promise<LoadTagByIdRepository.Result> {
       return {
         id: 'any_id',
+        guardianId: 'any_guardian_id',
         name: 'any_name',
         color: 'any_color'
       }
@@ -313,6 +321,7 @@ const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & Upd
     async update (param: UpdateTagRepository.Params): Promise<UpdateTagRepository.Result> {
       return {
         id: 'any_id',
+        guardianId: 'any_guardian_id',
         name: 'updated_name',
         color: 'any_color'
       }
@@ -321,6 +330,7 @@ const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & Upd
     async loadAll (): Promise<LoadTagsRepository.Result> {
       return [{
         id: 'any_id',
+        guardianId: 'any_guardian_id',
         name: 'any_name',
         color: 'any_color'
       }]
@@ -331,6 +341,87 @@ const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & Upd
     }
   }
   return new TagRepositoryStub()
+}
+
+const makeFakeEventRepository = (): AddEventRepository & LoadEventByDateRepository & AddManyEventsRepository => {
+  class EventRepositoryStub implements AddEventRepository, LoadEventByDateRepository, AddManyEventsRepository {
+    async add (params: AddEventRepository.Params): Promise<AddEventRepository.Result> {
+      return {
+        id: 'any_id',
+        schedulerId: 'any_scheduler_id',
+        start: new Date('2025-06-01T10:30:00Z'),
+        end: new Date('2025-07-01T11:30:00Z')
+      }
+    }
+
+    async loadByDate (params: LoadEventByDateRepository.Params): Promise<LoadEventByDateRepository.Result> {
+      return {
+        schedulerId: 'any_scheduler_id',
+        start: new Date('2025-06-01T10:30:00Z'),
+        end: new Date('2025-07-01T11:30:00Z')
+      }
+    }
+
+    async addMany (params: AddManyEventsRepository.Params): Promise<AddManyEventsRepository.Result> {
+      return true
+    }
+  }
+  return new EventRepositoryStub()
+}
+
+const makeFakeSchedulerRepository = (): AddSchedulerRepository & DeleteSchedulerByIdRepository => {
+  class SchedulerRepositoryStub implements AddSchedulerRepository, DeleteSchedulerByIdRepository {
+    async add (params: AddSchedulerRepository.Params): Promise<AddSchedulerRepository.Result> {
+      return {
+        id: 'any_id',
+        tagId: 'any_tag_id',
+        guardianId: 'any_guardian_id',
+        title: 'any_title',
+        description: 'any_description',
+        note: 'any_note',
+        startAt: new Date('2024-04-04T15:00:00Z'),
+        endAt: new Date('2025-04-04T17:00:00Z'),
+        daysOfWeek: [],
+        daysOfMonth: [],
+        daily: false,
+        pets: [{
+          id: 'any_id',
+          specieAlias: 'any_specie_alias',
+          guardianId: 'any_guardian_id',
+          specieId: 'any_specie_id',
+          petName: 'any_pet_name',
+          gender: 'M',
+          breedAlias: 'any_breed_alias',
+          breedId: 'any_breed_id',
+          sizeId: 'any_size_id',
+          castrated: false,
+          dateOfBirth: new Date('2000-11-23T02:00:00.000Z'),
+          image: ''
+        }]
+      }
+    }
+
+    async delete (param: DeleteSchedulerByIdRepository.Param): Promise<DeleteSchedulerByIdRepository.Result> {
+      return true
+    }
+  }
+  return new SchedulerRepositoryStub()
+}
+
+const makeFakeEventsGenerator = (): EventsGenerator => {
+  class EventsGeneratorStub implements EventsGenerator {
+    async generate (params: EventsGenerator.Params): Promise<EventsGenerator.Result> {
+      return {
+        isSuccess: true,
+        data: {
+          schedulerId: 'any_scheduler_id',
+          start: new Date('2024-04-04T15:00:00Z'),
+          end: new Date('2025-04-04T17:00:00Z')
+        }
+      }
+    }
+  }
+  return new EventsGeneratorStub()
 }
 
 export {
@@ -351,5 +442,8 @@ export {
   makeFakeLoadDogSizesRepository,
   makeFakeSizeRepository,
   makeFakeFileStorage,
-  makeFakeTagRepository
+  makeFakeTagRepository,
+  makeFakeEventRepository,
+  makeFakeSchedulerRepository,
+  makeFakeEventsGenerator
 }

@@ -5,7 +5,9 @@ import 'dotenv/config'
 import { join } from 'path'
 import { URL } from 'url'
 import { v4 } from 'uuid'
-import { type Guardian } from '../utils'
+import { type Pet, type Guardian } from '../utils'
+import 'dotenv/config'
+import { PetGender } from '@/domain/models'
 
 const generateDatabaseURL = (schema: string): string => {
   if (!process.env.DATABASE_URL) {
@@ -56,6 +58,12 @@ export const PrismaHelper = {
   async clearTag (): Promise<void> {
     await prisma.tag.deleteMany()
   },
+  async clearEvent (): Promise<void> {
+    await prisma.event.deleteMany()
+  },
+  async clearScheduler (): Promise<void> {
+    await prisma.scheduler.deleteMany()
+  },
   async createGuardian (): Promise<Guardian> {
     const bcryptAdapter = new BcryptAdapter(3)
     return await prisma.guardian.create({
@@ -67,6 +75,62 @@ export const PrismaHelper = {
         phone: '11987654321',
         emailConfirmation: true,
         verificationToken: ''
+      }
+    })
+  },
+  async createPet (guardianId: string): Promise<Pet> {
+    const specie = await prisma.specie.create({
+      data: {
+        name: 'any_name'
+      }
+    })
+    const breed = await prisma.breed.create({
+      data: {
+        name: 'any_name',
+        specieId: specie.id
+      }
+    })
+    const size = await prisma.size.create({
+      data: {
+        name: 'any_name',
+        specieId: specie.id
+      }
+    })
+    return await prisma.pet.create({
+      data: {
+        guardianId,
+        specieId: specie.id,
+        specieAlias: 'any_specie_alias',
+        petName: 'any_pet_name',
+        gender: PetGender.MALE,
+        breedId: breed.id,
+        breedAlias: 'any_breed_alias',
+        sizeId: size.id,
+        castrated: false,
+        dateOfBirth: new Date(2000, 10, 23)
+      },
+      select: {
+        id: true,
+        specieAlias: true,
+        guardian: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            phone: true,
+            emailConfirmation: true
+          }
+        },
+        specie: true,
+        petName: true,
+        gender: true,
+        breed: true,
+        breedAlias: true,
+        size: true,
+        castrated: true,
+        dateOfBirth: true,
+        image: true
       }
     })
   }

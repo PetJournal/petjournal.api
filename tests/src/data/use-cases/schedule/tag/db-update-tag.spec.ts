@@ -75,6 +75,7 @@ describe('DbUpdateTag use case', () => {
         isSuccess: true,
         data: {
           id: 'any_id',
+          guardianId: 'any_guardian_id',
           name: 'updated_name',
           color: 'any_color'
         }

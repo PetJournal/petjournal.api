@@ -7,6 +7,7 @@ export class TagRepository implements AddTagRepository, LoadTagByIdRepository, U
     try {
       const tag = await db.tag.create({
         data: {
+          guardianId: params.guardianId,
           name: params.name,
           color: params.color
         }
@@ -39,8 +40,12 @@ export class TagRepository implements AddTagRepository, LoadTagByIdRepository, U
     return tag
   }
 
-  async loadAll (): Promise<LoadTagsRepository.Result> {
-    const tags = await db.tag.findMany()
+  async loadAll (guardianId: LoadTagByIdRepository.Param): Promise<LoadTagsRepository.Result> {
+    const tags = await db.tag.findMany({
+      where: {
+        guardianId
+      }
+    })
     return tags
   }
 

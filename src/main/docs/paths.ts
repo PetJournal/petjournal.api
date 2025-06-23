@@ -14,6 +14,7 @@ import {
   updatePetPath,
   deletePetPath,
   emailConfirmationPath,
+  createSchedulerPath,
   addTagPath,
   updateTagPath,
   loadTagByIdPath,
@@ -35,6 +36,7 @@ export default {
   '/breeds/dog': loadDogBreedsPath,
   '/sizes/cat': loadCatSizesPath,
   '/sizes/dog': loadDogSizesPath,
+  '/scheduler': createSchedulerPath,
   '/tag': { ...addTagPath, ...loadTagsPath },
   '/tag/{tagId}': { ...updateTagPath, ...loadTagByIdPath, ...deleteTagByIdPath }
 }

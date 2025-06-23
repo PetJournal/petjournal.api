@@ -25,22 +25,23 @@ describe('DbLoadTags use case', () => {
     it('Should throw if TagRepository throws', async () => {
       const { sut, tagRepositoryStub } = makeSut()
       jest.spyOn(tagRepositoryStub, 'loadAll').mockRejectedValue(new Error())
-      const promise = sut.loadAll()
+      const promise = sut.loadAll('any_guardian_id')
       await expect(promise).rejects.toThrow()
     })
 
     it('Should return an empty array if there are no tags', async () => {
       const { sut, tagRepositoryStub } = makeSut()
       jest.spyOn(tagRepositoryStub, 'loadAll').mockResolvedValueOnce([])
-      const tags = await sut.loadAll()
+      const tags = await sut.loadAll('any_guardian_id')
       expect(tags).toEqual([])
     })
 
     it('Should return an array of tags on success', async () => {
       const { sut } = makeSut()
-      const tags = await sut.loadAll()
+      const tags = await sut.loadAll('any_guardian_id')
       expect(tags).toEqual([{
         id: 'any_id',
+        guardianId: 'any_guardian_id',
         name: 'any_name',
         color: 'any_color'
       }])

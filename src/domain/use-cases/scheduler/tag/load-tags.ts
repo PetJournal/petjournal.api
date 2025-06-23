@@ -1,12 +1,14 @@
 import { type LoadTagsRepository } from '@/data/protocols'
 
 export interface LoadTags {
-  loadAll: () => Promise<LoadTags.Result>
+  loadAll: (param: LoadTags.Param) => Promise<LoadTags.Result>
 }
 
 export namespace LoadTags {
+  export type Param = string
   export type Result = Array<{
     id: string
+    guardianId: string
     name: string
     color: string
   }>

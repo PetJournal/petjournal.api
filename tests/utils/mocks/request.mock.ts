@@ -11,7 +11,8 @@ import {
   type UpdatePetRequest,
   type DeletePetRequest,
   type EmailConfirmationRequest,
-  type AddTagRequest
+  type AddTagRequest,
+  type AddSchedulerRequest
 } from '@/tests/utils'
 
 const mockGuardianRequest = {
@@ -144,6 +145,23 @@ const makeFakeAddTagRequest = (): AddTagRequest => {
   return { body }
 }
 
+const makeFakeAddSchedulerRequest = (): AddSchedulerRequest => {
+  const body = {
+    tagId: 'any_tag_id',
+    title: 'any_title',
+    description: 'any_description',
+    note: 'any_note',
+    startAt: new Date('2024-04-04T15:00:00Z'),
+    endAt: new Date('2025-04-04T17:00:00Z'),
+    daysOfWeek: undefined,
+    daysOfMonth: undefined,
+    daily: undefined,
+    pets: ['any_pet_id']
+  }
+  const userId = 'any_guardian_id'
+  return { body, userId }
+}
+
 export {
   makeFakeSignUpRequest,
   makeFakeLoginRequest,
@@ -156,5 +174,6 @@ export {
   makeFakeUpdatePetRequest,
   makeFakeDeletePetRequest,
   makeFakeEmailConfirmationRequest,
-  makeFakeAddTagRequest
+  makeFakeAddTagRequest,
+  makeFakeAddSchedulerRequest
 }

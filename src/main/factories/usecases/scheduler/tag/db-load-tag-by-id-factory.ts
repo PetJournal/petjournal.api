@@ -1,4 +1,4 @@
-import { DbLoadTagById } from '@/data/use-cases/schedule/tag/db-load-tag-by-id'
+import { DbLoadTagById } from '@/data/use-cases/scheduler/tag/db-load-tag-by-id'
 import { type LoadTagById } from '@/domain/use-cases'
 import { TagRepository } from '@/infra/repos/postgresql'
 

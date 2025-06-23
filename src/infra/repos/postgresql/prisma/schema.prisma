@@ -20,6 +20,8 @@ model Guardian {
   verificationTokenCreatedAt DateTime @default(now()) @map("verification_token_created_at")
   emailConfirmation          Boolean  @default(false) @map("email_confirmation")
   pets                       Pet[]
+  tags                       Tag[]
+  scheduler                  Scheduler[]
 
   @@map("guardians")
 }
@@ -78,6 +80,8 @@ model Breed {
 
 model Tag {
   id    String @id @default(uuid())
+  guardian    Guardian @relation(fields: [guardianId], references: [id])
+  guardianId  String   @map("guardian_id")
   name  String
   color String
   scheduler Scheduler[]
@@ -89,6 +93,8 @@ model Scheduler {
   id String @id @default(uuid())
   tag Tag @relation(fields: [tagId], references: [id])
   tagId String @map("tag_id")
+  guardian Guardian @relation(fields: [guardianId], references: [id])
+  guardianId String @map("guardian_id")
   title String
   description String
   note String
@@ -96,6 +102,7 @@ model Scheduler {
   endAt DateTime @map("end_at")
   daysOfWeek Int[] @map("days_of_week")
   daysOfMonth Int[] @map("days_of_month")
+  daily Boolean
   pets Pet[] @relation("PetScheduler")
   event Event[]
 
@@ -108,7 +115,6 @@ model Event {
   schedulerId String @map("scheduler_id")
   start DateTime
   end DateTime
-  date DateTime
 
   @@map("events")
 }

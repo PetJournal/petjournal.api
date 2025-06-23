@@ -13,6 +13,8 @@ import {
   specieSchema,
   waitingCodeParamsSchema,
   updatePetParamsSchema,
+  schedulerParamsSchema,
+  schedulerSchema,
   tagSchema,
   tagParamsSchema,
   updateTagParamsSchema
@@ -33,6 +35,8 @@ export default {
   waitingCodeParams: waitingCodeParamsSchema,
   petRegistryParams: petRegistryParamsSchema,
   updatePetParams: updatePetParamsSchema,
+  schedulerParams: schedulerParamsSchema,
+  scheduler: schedulerSchema,
   tag: tagSchema,
   addTagParams: tagParamsSchema,
   updateTagParams: updateTagParamsSchema

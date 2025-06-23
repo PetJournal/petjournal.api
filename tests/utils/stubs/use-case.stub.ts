@@ -19,7 +19,8 @@ import {
   type EmailConfirmation,
   type SendEmail,
   type AddTag,
-  type LoadTagById
+  type LoadTagById,
+  type AddScheduler
 } from '@/domain/use-cases'
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
 import { mockFakeAppointPet, mockFakePetUpdated, mockFakePetByGuardianIdLoaded, mockFakeSpecieAdded, makeFakeGuardianData, mockFakeBreedAdded, mockFakeSizeAdded } from '../mocks'
@@ -274,6 +275,7 @@ const makeFakeUpdateTagUseCase = (): UpdateTag => {
         isSuccess: true,
         data: {
           id: 'any_id',
+          guardianId: 'any_guardian_id',
           name: 'any_name',
           color: 'any_color'
         }
@@ -299,6 +301,7 @@ const makeFakeLoadTagsUseCase = (): LoadTags => {
     async loadAll (): Promise<LoadTags.Result> {
       return [{
         id: 'any_id',
+        guardianId: 'any_guardian_id',
         name: 'any_name',
         color: 'any_color'
       }]
@@ -314,6 +317,7 @@ const makeFakeAddTagUseCase = (): AddTag => {
         isSuccess: true,
         data: {
           id: 'any_id',
+          guardianId: 'any_guardian_id',
           name: 'any_name',
           color: 'any_color'
         }
@@ -328,12 +332,51 @@ const makeFakeLoadTagByIdUseCase = (): LoadTagById => {
     async loadById (tagId: LoadTagById.Param): Promise<LoadTagById.Result> {
       return {
         id: 'any_id',
+        guardianId: 'any_guardian_id',
         name: 'any_name',
         color: 'any_color'
       }
     }
   }
   return new LoadTagByIdStub()
+}
+
+const makeFakeAddSchedulerUseCase = (): AddScheduler => {
+  class AddSchedulerStub implements AddScheduler {
+    async add (params: AddScheduler.Params): Promise<AddScheduler.Result> {
+      return {
+        isSuccess: true,
+        data: {
+          id: 'any_id',
+          tagId: 'any_tag_id',
+          guardianId: 'any_guardian_id',
+          title: 'any_title',
+          description: 'any_description',
+          note: 'any_note',
+          startAt: new Date('2024-04-04T15:00:00Z'),
+          endAt: new Date('2025-04-04T17:00:00Z'),
+          daysOfWeek: [],
+          daysOfMonth: [],
+          daily: false,
+          pets: [{
+            id: 'any_id',
+            specieAlias: 'any_specie_alias',
+            guardianId: 'any_guardian_id',
+            specieId: 'any_specie_id',
+            petName: 'any_pet_name',
+            gender: 'M',
+            breedAlias: 'any_breed_alias',
+            breedId: 'any_breed_id',
+            sizeId: 'any_size_id',
+            castrated: false,
+            dateOfBirth: new Date('2000-11-23T02:00:00.000Z'),
+            image: ''
+          }]
+        }
+      }
+    }
+  }
+  return new AddSchedulerStub()
 }
 
 export {
@@ -360,5 +403,6 @@ export {
   makeFakeDeleteTagByIdUseCase,
   makeFakeLoadTagsUseCase,
   makeFakeAddTagUseCase,
-  makeFakeLoadTagByIdUseCase
+  makeFakeLoadTagByIdUseCase,
+  makeFakeAddSchedulerUseCase
 }

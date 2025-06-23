@@ -2198,6 +2198,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/luxon@npm:^3.6.2":
+  version: 3.6.2
+  resolution: "@types/luxon@npm:3.6.2"
+  checksum: fa7bf7d74544c77c2010739337d359c5d6f9b0424de0e0eb273f7bae203996168cc33c2ad6f3b35771eac8fea8b7e5bcce72b91d129924d0f84b91dc216de42e
+  languageName: node
+  linkType: hard
+
 "@types/mime@npm:*":
   version: 3.0.1
   resolution: "@types/mime@npm:3.0.1"
@@ -6391,6 +6398,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"luxon@npm:^3.6.1":
+  version: 3.6.1
+  resolution: "luxon@npm:3.6.1"
+  checksum: bc6c24dde90f4263f548cc5a4ea3328e9c9511bee0b2255bd319639712862f1eb14a39c1b2dcbff8a8bf6686996d28f45b8fc902994a72dd05a29cef1269a6a4
+  languageName: node
+  linkType: hard
+
 "make-dir@npm:^3.0.0, make-dir@npm:^3.1.0":
   version: 3.1.0
   resolution: "make-dir@npm:3.1.0"
@@ -7207,6 +7221,7 @@ __metadata:
     "@types/express": ^4.17.17
     "@types/jest": ^29.5.0
     "@types/jsonwebtoken": ^9.0.2
+    "@types/luxon": ^3.6.2
     "@types/module-alias": ^2.0.1
     "@types/multer": ^1.4.12
     "@types/node": ^18.15.5
@@ -7229,6 +7244,7 @@ __metadata:
     jest: ^29.5.0
     jsonwebtoken: ^9.0.0
     lint-staged: ^13.2.0
+    luxon: ^3.6.1
     module-alias: ^2.2.2
     multer: ^1.4.5-lts.1
     nodemailer: ^6.9.1

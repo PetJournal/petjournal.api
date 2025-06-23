@@ -8,8 +8,8 @@ export class DbLoadTags implements LoadTags {
     this.tagRepository = tagRepository
   }
 
-  async loadAll (): Promise<LoadTags.Result> {
-    const tags = await this.tagRepository.loadAll()
+  async loadAll (guardianId: LoadTags.Param): Promise<LoadTags.Result> {
+    const tags = await this.tagRepository.loadAll(guardianId)
     return tags
   }
 }

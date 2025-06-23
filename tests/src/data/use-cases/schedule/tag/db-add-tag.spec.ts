@@ -23,6 +23,7 @@ const makeSut = (): SutTypes => {
 
 describe('DbAddTag use case', () => {
   const params: AddTag.Params = {
+    guardianId: 'any_guardian_id',
     name: 'any_name',
     color: 'any_color'
   }
@@ -32,6 +33,7 @@ describe('DbAddTag use case', () => {
       const addTagSpy = jest.spyOn(tagRepositoryStub, 'add')
       await sut.add(params)
       expect(addTagSpy).toHaveBeenCalledWith({
+        guardianId: 'any_guardian_id',
         name: 'any_name',
         color: 'any_color'
       })
@@ -61,6 +63,7 @@ describe('DbAddTag use case', () => {
         isSuccess: true,
         data: {
           id: 'any_id',
+          guardianId: 'any_guardian_id',
           name: 'any_name',
           color: 'any_color'
         }
