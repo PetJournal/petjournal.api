@@ -1,4 +1,4 @@
-import { type LoadEventByDateAndStartRepository, type AddEventRepository } from '../db'
+import { type AddEventRepository, type LoadEventByDateRepository } from '../db'
 import { type AddManyEventsRepository } from '../db/event/add-many-events-repository'
 
 export interface EventsGenerator {
@@ -29,6 +29,6 @@ export namespace EventsGenerator {
     }
   }
   export type Dependencies = {
-    eventRepository: AddEventRepository & LoadEventByDateAndStartRepository & AddManyEventsRepository
+    eventRepository: AddEventRepository & LoadEventByDateRepository & AddManyEventsRepository
   }
 }
