@@ -6,11 +6,10 @@ export class DbLoadCurrentDateTasks implements LoadCurrentDateTasks {
     private readonly loadTasksByDateRepository: LoadTasksByDateRepository
   ) {}
 
-  async load (params: LoadCurrentDateTasks .Params): Promise<LoadCurrentDateTasks .Result> {
-    const startOfDay = new Date(params.date)
+  async load ({ date }: LoadCurrentDateTasks.Params): Promise<LoadCurrentDateTasks .Result> {
+    const startOfDay = new Date(date)
     startOfDay.setUTCHours(0, 0, 0, 0)
-
-    const endOfDay = new Date(params.date)
+    const endOfDay = new Date(date)
     endOfDay.setUTCHours(23, 59, 59, 999)
 
     return await this.loadTasksByDateRepository.loadByDate({
