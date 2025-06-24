@@ -6,7 +6,7 @@ import {
 import { prisma as db } from './prisma'
 import { type AddManyEventsRepository } from '@/data/protocols/db/event/add-many-events-repository'
 
-export class EventRepository implements AddEventRepository, AddManyEventsRepository {
+export class EventRepository implements AddEventRepository, AddManyEventsRepository, LoadTasksByDateRepository {
   async add (params: AddEventRepository.Params): Promise<AddEventRepository.Result> {
     try {
       const event = await db.event.create({
