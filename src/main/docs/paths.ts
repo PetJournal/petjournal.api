@@ -19,7 +19,8 @@ import {
   updateTagPath,
   loadTagByIdPath,
   deleteTagByIdPath,
-  loadTagsPath
+  loadTagsPath,
+  loadCurrentDateTasksPath
 } from './paths/'
 
 export default {
@@ -38,5 +39,6 @@ export default {
   '/sizes/dog': loadDogSizesPath,
   '/scheduler': createSchedulerPath,
   '/tag': { ...addTagPath, ...loadTagsPath },
-  '/tag/{tagId}': { ...updateTagPath, ...loadTagByIdPath, ...deleteTagByIdPath }
+  '/tag/{tagId}': { ...updateTagPath, ...loadTagByIdPath, ...deleteTagByIdPath },
+  '/tasks/current-date': loadCurrentDateTasksPath
 }
