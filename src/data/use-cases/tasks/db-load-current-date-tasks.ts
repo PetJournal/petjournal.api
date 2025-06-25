@@ -3,7 +3,7 @@ import { type LoadTasksByDateRepository } from '@/data/protocols'
 
 export class DbLoadCurrentDateTasks implements LoadCurrentDateTasks {
   constructor (
-    private readonly loadTasksByDateRepository: LoadTasksByDateRepository
+    private readonly eventRepository: LoadTasksByDateRepository
   ) {}
 
   async load ({ date }: LoadCurrentDateTasks.Params): Promise<LoadCurrentDateTasks .Result> {
@@ -12,7 +12,7 @@ export class DbLoadCurrentDateTasks implements LoadCurrentDateTasks {
     const endOfDay = new Date(date)
     endOfDay.setUTCHours(23, 59, 59, 999)
 
-    return await this.loadTasksByDateRepository.loadByDate({
+    return await this.eventRepository.loadAllByCurrentDate({
       start: startOfDay,
       end: endOfDay
     })

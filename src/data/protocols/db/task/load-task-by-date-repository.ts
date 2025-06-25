@@ -1,5 +1,5 @@
 export interface LoadTasksByDateRepository {
-  loadByDate: (params: LoadTasksByDateRepository.Params) => Promise<LoadTasksByDateRepository.Result>
+  loadAllByCurrentDate: (params: LoadTasksByDateRepository.Params) => Promise<LoadTasksByDateRepository.Result>
 }
 
 export namespace LoadTasksByDateRepository {

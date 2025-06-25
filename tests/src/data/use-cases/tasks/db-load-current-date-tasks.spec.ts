@@ -24,7 +24,7 @@ const makeFakeTasks = (): TaskModel[] => ([
 ])
 
 const makeFakeTaskRepository = (): LoadTasksByDateRepository => ({
-  loadByDate: jest.fn().mockResolvedValue(makeFakeTasks())
+  loadAllByCurrentDate: jest.fn().mockResolvedValue(makeFakeTasks())
 })
 
 interface SutTypes {
@@ -44,7 +44,7 @@ const makeSut = (): SutTypes => {
 describe('DbLoadCurrentDateTasks', () => {
   it('Should call loadByDate with correct UTC start and end of day', async () => {
     const { sut, taskRepositoryStub } = makeSut()
-    const loadByDateSpy = jest.spyOn(taskRepositoryStub, 'loadByDate')
+    const loadByDateSpy = jest.spyOn(taskRepositoryStub, 'loadAllByCurrentDate')
     const inputDate = new Date('2024-04-01T12:34:56Z')
 
     await sut.load({ date: inputDate })
@@ -63,14 +63,14 @@ describe('DbLoadCurrentDateTasks', () => {
 
   it('Should return an empty array if repository returns an empty array', async () => {
     const { sut, taskRepositoryStub } = makeSut()
-    jest.spyOn(taskRepositoryStub, 'loadByDate').mockResolvedValueOnce([])
+    jest.spyOn(taskRepositoryStub, 'loadAllByCurrentDate').mockResolvedValueOnce([])
     const tasks = await sut.load({ date: new Date('2024-04-01') })
     expect(tasks).toEqual([])
   })
 
   it('Should throw if repository throws', async () => {
     const { sut, taskRepositoryStub } = makeSut()
-    jest.spyOn(taskRepositoryStub, 'loadByDate').mockRejectedValueOnce(new Error('fail'))
+    jest.spyOn(taskRepositoryStub, 'loadAllByCurrentDate').mockRejectedValueOnce(new Error('fail'))
     const promise = sut.load({ date: new Date() })
     await expect(promise).rejects.toThrow('fail')
   })
