@@ -1,8 +1,8 @@
-export interface LoadTasksByDateRepository {
-  loadAllByCurrentDate: (params: LoadTasksByDateRepository.Params) => Promise<LoadTasksByDateRepository.Result>
+export interface LoadTasksByIntervalRepository {
+  loadAllByInterval: (params: LoadTasksByIntervalRepository.Params) => Promise<LoadTasksByIntervalRepository.Result>
 }
 
-export namespace LoadTasksByDateRepository {
+export namespace LoadTasksByIntervalRepository {
   export type Params = {
     start: Date
     end: Date

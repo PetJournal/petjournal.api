@@ -198,7 +198,7 @@ describe('Event Repository', () => {
   describe('loadAllByCurrentDate Method', () => {
     it('Should return an empty array if no events are found', async () => {
       const sut = makeSut()
-      const result = await sut.loadAllByCurrentDate({
+      const result = await sut.loadAllByInterval({
         start: new Date('2000-01-01T00:00:00Z'),
         end: new Date('2000-01-02T00:00:00Z')
       })
@@ -206,8 +206,8 @@ describe('Event Repository', () => {
     })
     it('Should throw if loadAllByCurrentDate throws', async () => {
       const sut = makeSut()
-      jest.spyOn(sut, 'loadAllByCurrentDate').mockRejectedValue(new Error())
-      const promise = sut.loadAllByCurrentDate({
+      jest.spyOn(sut, 'loadAllByInterval').mockRejectedValue(new Error())
+      const promise = sut.loadAllByInterval({
         start: new Date(),
         end: new Date()
       })
@@ -248,7 +248,7 @@ describe('Event Repository', () => {
           end: endAt
         }
       })
-      const result = await sut.loadAllByCurrentDate({
+      const result = await sut.loadAllByInterval({
         start: new Date('2025-06-25T00:00:00Z'),
         end: new Date('2025-06-25T23:59:59Z')
       })
