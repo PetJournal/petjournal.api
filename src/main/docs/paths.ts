@@ -20,7 +20,8 @@ import {
   loadTagByIdPath,
   deleteTagByIdPath,
   loadTagsPath,
-  loadCurrentDateTasksPath
+  loadCurrentDateTasksPath,
+  loadCurrentWeekTasksPath
 } from './paths/'
 
 export default {
@@ -40,5 +41,6 @@ export default {
   '/scheduler': createSchedulerPath,
   '/tag': { ...addTagPath, ...loadTagsPath },
   '/tag/{tagId}': { ...updateTagPath, ...loadTagByIdPath, ...deleteTagByIdPath },
-  '/tasks/current-date': loadCurrentDateTasksPath
+  '/tasks/current-date': loadCurrentDateTasksPath,
+  '/tasks/current-week': loadCurrentWeekTasksPath
 }
