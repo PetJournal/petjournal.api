@@ -8,10 +8,10 @@ import { type Controller } from '@/application/protocols'
 import { type LoadCurrentWeekTasks } from '@/domain/use-cases'
 
 export class LoadCurrentWeekTasksController implements Controller {
-  private readonly loadCurrentDateTasks: LoadCurrentWeekTasks
+  private readonly loadCurrentWeekTasks: LoadCurrentWeekTasks
 
-  constructor ({ loadCurrentDateTasks }: LoadCurrentWeekTasksController.Dependencies) {
-    this.loadCurrentDateTasks = loadCurrentDateTasks
+  constructor ({ loadCurrentWeekTasks }: LoadCurrentWeekTasksController.Dependencies) {
+    this.loadCurrentWeekTasks = loadCurrentWeekTasks
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -19,7 +19,7 @@ export class LoadCurrentWeekTasksController implements Controller {
       const now = new Date()
       now.setUTCHours(0, 0, 0, 0)
 
-      const result = await this.loadCurrentDateTasks.load({ date: now })
+      const result = await this.loadCurrentWeekTasks.load({ date: now })
       return success(result)
     } catch (error) {
       return serverError(error as Error)
@@ -29,6 +29,6 @@ export class LoadCurrentWeekTasksController implements Controller {
 
 export namespace LoadCurrentWeekTasksController {
   export interface Dependencies {
-    loadCurrentDateTasks: LoadCurrentWeekTasks
+    loadCurrentWeekTasks: LoadCurrentWeekTasks
   }
 }
