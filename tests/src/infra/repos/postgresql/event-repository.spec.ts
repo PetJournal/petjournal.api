@@ -195,7 +195,7 @@ describe('Event Repository', () => {
     })
   })
 
-  describe('loadAllByCurrentDate Method', () => {
+  describe('loadAllByInterval Method', () => {
     it('Should return an empty array if no events are found', async () => {
       const sut = makeSut()
       const result = await sut.loadAllByInterval({
@@ -204,7 +204,8 @@ describe('Event Repository', () => {
       })
       expect(result).toEqual([])
     })
-    it('Should throw if loadAllByCurrentDate throws', async () => {
+
+    it('Should throw if loadAllByInterval throws', async () => {
       const sut = makeSut()
       jest.spyOn(sut, 'loadAllByInterval').mockRejectedValue(new Error())
       const promise = sut.loadAllByInterval({
@@ -213,16 +214,13 @@ describe('Event Repository', () => {
       })
       await expect(promise).rejects.toThrow()
     })
+
     it('Should return events with scheduler, tag, and pets on success', async () => {
       const sut = makeSut()
       const guardian = await PrismaHelper.createGuardian()
       const pet = await PrismaHelper.createPet(guardian.id)
       const tag = await prisma.tag.create({
-        data: {
-          guardianId: guardian.id,
-          name: 'any_name',
-          color: 'any_color'
-        }
+        data: { guardianId: guardian.id, name: 'any_name', color: 'any_color' }
       })
       const startAt = new Date('2025-06-25T10:00:00Z')
       const endAt = new Date('2025-06-25T11:00:00Z')
@@ -242,11 +240,7 @@ describe('Event Repository', () => {
         }
       })
       await prisma.event.create({
-        data: {
-          schedulerId: scheduler.id,
-          start: startAt,
-          end: endAt
-        }
+        data: { schedulerId: scheduler.id, start: startAt, end: endAt }
       })
       const result = await sut.loadAllByInterval({
         start: new Date('2025-06-25T00:00:00Z'),
@@ -261,17 +255,107 @@ describe('Event Repository', () => {
           title: 'any_title',
           description: 'any_description',
           note: 'any_note',
-          tag: expect.objectContaining({
-            name: 'any_name',
-            color: 'any_color'
-          }),
-          pets: expect.arrayContaining([
-            expect.objectContaining({
-              id: pet.id
-            })
-          ])
+          tag: expect.objectContaining({ name: 'any_name', color: 'any_color' }),
+          pets: expect.arrayContaining([expect.objectContaining({ id: pet.id })])
         })
       }))
+    })
+
+    it('Should return all events in same day', async () => {
+      const sut = makeSut()
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
+      const tag = await prisma.tag.create({
+        data: { guardianId: guardian.id, name: 'day_event_tag', color: 'blue' }
+      })
+
+      const date = new Date('2025-07-01T10:00:00Z')
+
+      const scheduler = await prisma.scheduler.create({
+        data: {
+          tagId: tag.id,
+          guardianId: guardian.id,
+          title: 'event_day',
+          description: 'single day event',
+          note: '',
+          startAt: date,
+          endAt: date,
+          daysOfWeek: [],
+          daysOfMonth: [],
+          daily: false,
+          pets: { connect: [{ id: pet.id }] }
+        }
+      })
+
+      await prisma.event.create({
+        data: {
+          schedulerId: scheduler.id,
+          start: date,
+          end: date
+        }
+      })
+
+      const result = await sut.loadAllByInterval({
+        start: new Date('2025-07-01T00:00:00Z'),
+        end: new Date('2025-07-01T23:59:59Z')
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0]).toEqual(expect.objectContaining({
+        start: date,
+        end: date
+      }))
+    })
+
+    it('Should return all events from the same week', async () => {
+      const sut = makeSut()
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
+      const tag = await prisma.tag.create({
+        data: { guardianId: guardian.id, name: 'week_tag', color: 'green' }
+      })
+
+      const scheduler = await prisma.scheduler.create({
+        data: {
+          tagId: tag.id,
+          guardianId: guardian.id,
+          title: 'week_events',
+          description: '',
+          note: '',
+          startAt: new Date('2025-07-02T10:00:00Z'),
+          endAt: new Date('2025-07-05T10:00:00Z'),
+          daysOfWeek: [],
+          daysOfMonth: [],
+          daily: false,
+          pets: { connect: [{ id: pet.id }] }
+        }
+      })
+
+      await prisma.event.createMany({
+        data: [
+          {
+            schedulerId: scheduler.id,
+            start: new Date('2025-07-02T10:00:00Z'),
+            end: new Date('2025-07-02T11:00:00Z')
+          },
+          {
+            schedulerId: scheduler.id,
+            start: new Date('2025-07-05T14:00:00Z'),
+            end: new Date('2025-07-05T15:00:00Z')
+          }
+        ]
+      })
+
+      const result = await sut.loadAllByInterval({
+        start: new Date('2025-06-30T00:00:00Z'),
+        end: new Date('2025-07-06T23:59:59Z')
+      })
+
+      expect(result.length).toBeGreaterThanOrEqual(2)
+      expect(result).toEqual(expect.arrayContaining([
+        expect.objectContaining({ start: new Date('2025-07-02T10:00:00Z') }),
+        expect.objectContaining({ start: new Date('2025-07-05T14:00:00Z') })
+      ]))
     })
   })
 })
