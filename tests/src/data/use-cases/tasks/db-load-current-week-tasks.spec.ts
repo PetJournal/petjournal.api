@@ -67,7 +67,7 @@ const makeSut = (): SutTypes => {
 describe('DbLoadCurrentWeekTasks', () => {
   it('Should return only tasks from the current day to Saturday of the same week', async () => {
     const { sut } = makeSut()
-    const inputDate = new Date('2024-04-03T12:00:00Z') // quarta-feira
+    const inputDate = new Date('2024-04-03T12:00:00Z')
     const result = await sut.load({ date: inputDate })
 
     const expectedTasks = makeFakeTasks().filter(task => {
