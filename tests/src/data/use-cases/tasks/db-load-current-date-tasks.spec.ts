@@ -1,5 +1,5 @@
 import { DbLoadCurrentDateTasks } from '@/data/use-cases'
-import { type LoadTasksByDateRepository } from '@/data/protocols'
+import { type LoadTasksByIntervalRepository } from '@/data/protocols'
 
 interface TaskModel {
   id: string
@@ -23,13 +23,13 @@ const makeFakeTasks = (): TaskModel[] => ([
   }
 ])
 
-const makeFakeTaskRepository = (): LoadTasksByDateRepository => ({
-  loadAllByCurrentDate: jest.fn().mockResolvedValue(makeFakeTasks())
+const makeFakeTaskRepository = (): LoadTasksByIntervalRepository => ({
+  loadAllByInterval: jest.fn().mockResolvedValue(makeFakeTasks())
 })
 
 interface SutTypes {
   sut: DbLoadCurrentDateTasks
-  taskRepositoryStub: LoadTasksByDateRepository
+  taskRepositoryStub: LoadTasksByIntervalRepository
 }
 
 const makeSut = (): SutTypes => {
@@ -44,7 +44,7 @@ const makeSut = (): SutTypes => {
 describe('DbLoadCurrentDateTasks', () => {
   it('Should call loadByDate with correct UTC start and end of day', async () => {
     const { sut, taskRepositoryStub } = makeSut()
-    const loadByDateSpy = jest.spyOn(taskRepositoryStub, 'loadAllByCurrentDate')
+    const loadByDateSpy = jest.spyOn(taskRepositoryStub, 'loadAllByInterval')
     const inputDate = new Date('2024-04-01T12:34:56Z')
 
     await sut.load({ date: inputDate })
@@ -63,14 +63,14 @@ describe('DbLoadCurrentDateTasks', () => {
 
   it('Should return an empty array if repository returns an empty array', async () => {
     const { sut, taskRepositoryStub } = makeSut()
-    jest.spyOn(taskRepositoryStub, 'loadAllByCurrentDate').mockResolvedValueOnce([])
+    jest.spyOn(taskRepositoryStub, 'loadAllByInterval').mockResolvedValueOnce([])
     const tasks = await sut.load({ date: new Date('2024-04-01') })
     expect(tasks).toEqual([])
   })
 
   it('Should throw if repository throws', async () => {
     const { sut, taskRepositoryStub } = makeSut()
-    jest.spyOn(taskRepositoryStub, 'loadAllByCurrentDate').mockRejectedValueOnce(new Error('fail'))
+    jest.spyOn(taskRepositoryStub, 'loadAllByInterval').mockRejectedValueOnce(new Error('fail'))
     const promise = sut.load({ date: new Date() })
     await expect(promise).rejects.toThrow('fail')
   })
