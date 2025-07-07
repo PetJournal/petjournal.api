@@ -1,14 +1,14 @@
-import { LoadCurrentWeekTasksController } from '@/application/controllers/tasks'
+import { LoadCurrentMonthTasksController } from '@/application/controllers/tasks'
 import { type Controller } from '@/application/protocols'
 import { LoggerPgRepository } from '@/infra/repos/postgresql'
 import { DevLoggerControllerDecorator, LoggerControllerDecorator } from '@/main/decorators'
-import { makeLoadCurrentWeekTasks } from '@/main/factories/usecases/tasks'
+import { makeLoadCurrentMonthTasks } from '@/main/factories/usecases/tasks'
 
-export const makeLoadCurrentWeekTasksController = (): Controller => {
-  const loadCurrentWeekTasks = makeLoadCurrentWeekTasks()
+export const makeLoadCurrentMonthTasksController = (): Controller => {
+  const loadCurrentMonthTasks = makeLoadCurrentMonthTasks()
 
-  const controller = new LoadCurrentWeekTasksController({
-    loadCurrentWeekTasks
+  const controller = new LoadCurrentMonthTasksController({
+    loadCurrentMonthTasks
   })
 
   const loggerPgRepository = new LoggerPgRepository()

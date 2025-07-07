@@ -1,4 +1,4 @@
-import { DbLoadCurrentWeekTasks } from '@/data/use-cases'
+import { DbLoadCurrentMonthTasks } from '@/data/use-cases'
 import { type LoadTasksByIntervalRepository } from '@/data/protocols'
 
 interface TaskModel {
@@ -12,32 +12,26 @@ const makeFakeTasks = (): TaskModel[] => ([
   {
     id: 'task1',
     title: 'Task 1',
-    description: 'Outside interval - Monday',
-    date: new Date('2024-04-01T10:00:00Z')
+    description: 'Antes do dia 15',
+    date: new Date('2024-04-02T10:00:00Z')
   },
   {
     id: 'task2',
     title: 'Task 2',
-    description: 'Inside interval - Wednesday',
-    date: new Date('2024-04-03T15:00:00Z')
+    description: 'Dia 18 (válida)',
+    date: new Date('2024-04-18T15:00:00Z')
   },
   {
     id: 'task3',
     title: 'Task 3',
-    description: 'Inside interval - Thursday',
-    date: new Date('2024-04-04T12:00:00Z')
+    description: 'Dia 30 (válida)',
+    date: new Date('2024-04-30T23:00:00Z')
   },
   {
     id: 'task4',
     title: 'Task 4',
-    description: 'Inside interval - Saturday',
-    date: new Date('2024-04-06T18:30:00Z')
-  },
-  {
-    id: 'task5',
-    title: 'Task 5',
-    description: 'Outside interval - Next Sunday',
-    date: new Date('2024-04-07T08:00:00Z')
+    description: 'Outro mês (inválida)',
+    date: new Date('2024-05-01T10:00:00Z')
   }
 ])
 
@@ -51,29 +45,30 @@ const makeFakeTaskRepository = (): LoadTasksByIntervalRepository => ({
 })
 
 interface SutTypes {
-  sut: DbLoadCurrentWeekTasks
+  sut: DbLoadCurrentMonthTasks
   taskRepositoryStub: LoadTasksByIntervalRepository
 }
 
 const makeSut = (): SutTypes => {
   const taskRepositoryStub = makeFakeTaskRepository()
-  const sut = new DbLoadCurrentWeekTasks(taskRepositoryStub)
+  const sut = new DbLoadCurrentMonthTasks(taskRepositoryStub)
   return {
     sut,
     taskRepositoryStub
   }
 }
 
-describe('DbLoadCurrentWeekTasks', () => {
-  it('Should return only tasks from the current day to Saturday of the same week', async () => {
+describe('DbLoadCurrentMonthTasks', () => {
+  it('Should return only tasks from the 15th day to end of the same month', async () => {
     const { sut } = makeSut()
-    const inputDate = new Date('2024-04-03T12:00:00Z')
+    const inputDate = new Date('2024-04-15T00:00:00Z')
+
     const result = await sut.load({ date: inputDate })
 
     const expectedTasks = makeFakeTasks().filter(task => {
       const time = task.date.getTime()
-      const start = new Date(Date.UTC(2024, 3, 3, 0, 0, 0, 0)).getTime()
-      const end = new Date(Date.UTC(2024, 3, 6, 23, 59, 59, 999)).getTime()
+      const start = new Date(Date.UTC(2024, 3, 15, 0, 0, 0, 0)).getTime()
+      const end = new Date(Date.UTC(2024, 3, 30, 23, 59, 59, 999)).getTime()
       return time >= start && time <= end
     })
 

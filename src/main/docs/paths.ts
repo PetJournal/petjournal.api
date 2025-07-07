@@ -23,6 +23,7 @@ import {
   loadCurrentDateTasksPath,
   loadCurrentWeekTasksPath
 } from './paths/'
+import { loadCurrentMonthTasksPath } from './paths/tasks/load-current-month-tasks-path'
 
 export default {
   '/signup': signUpPath,
@@ -42,5 +43,6 @@ export default {
   '/tag': { ...addTagPath, ...loadTagsPath },
   '/tag/{tagId}': { ...updateTagPath, ...loadTagByIdPath, ...deleteTagByIdPath },
   '/tasks/current-date': loadCurrentDateTasksPath,
-  '/tasks/current-week': loadCurrentWeekTasksPath
+  '/tasks/current-week': loadCurrentWeekTasksPath,
+  '/tasks/current-month': loadCurrentMonthTasksPath
 }
