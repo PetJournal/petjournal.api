@@ -1,6 +1,7 @@
 import { ServerError, UnauthorizedError } from '@/application/errors'
 
 export interface HttpRequest {
+  query: any
   userId?: string
   params?: any
   body?: any
