@@ -6,7 +6,7 @@ export class DbLoadCurrentDateTasks implements LoadCurrentDateTasks {
     private readonly eventRepository: LoadTasksByIntervalRepository
   ) {}
 
-  async load ({ date }: LoadCurrentDateTasks.Params): Promise<LoadCurrentDateTasks .Result> {
+  async load ({ date, tagId }: LoadCurrentDateTasks.Params): Promise<LoadCurrentDateTasks .Result> {
     const startOfDay = new Date(date)
     startOfDay.setUTCHours(0, 0, 0, 0)
     const endOfDay = new Date(date)
@@ -14,7 +14,8 @@ export class DbLoadCurrentDateTasks implements LoadCurrentDateTasks {
 
     return await this.eventRepository.loadAllByInterval({
       start: startOfDay,
-      end: endOfDay
+      end: endOfDay,
+      tagId
     })
   }
 }
