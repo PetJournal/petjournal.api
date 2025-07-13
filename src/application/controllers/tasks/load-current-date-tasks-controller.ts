@@ -19,7 +19,13 @@ export class LoadCurrentDateTasksController implements Controller {
       const now = new Date()
       now.setUTCHours(0, 0, 0, 0)
 
-      const result = await this.loadCurrentDateTasks.load({ date: now })
+      const tagId = httpRequest.query?.tagId as string | undefined
+
+      const result = await this.loadCurrentDateTasks.load({
+        date: now,
+        tagId
+      })
+
       return success(result)
     } catch (error) {
       return serverError(error as Error)
