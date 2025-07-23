@@ -74,4 +74,20 @@ describe('DbLoadCurrentDateTasks', () => {
     const promise = sut.load({ date: new Date() })
     await expect(promise).rejects.toThrow('fail')
   })
+
+  it('Should forward tagId to repository if provided', async () => {
+    const { sut, taskRepositoryStub } = makeSut()
+    const loadSpy = jest.spyOn(taskRepositoryStub, 'loadAllByInterval')
+
+    const date = new Date('2024-04-01T12:00:00Z')
+    const tagId = 'tag-123'
+
+    await sut.load({ date, tagId })
+
+    expect(loadSpy).toHaveBeenCalledWith({
+      start: new Date(Date.UTC(2024, 3, 1, 0, 0, 0, 0)),
+      end: new Date(Date.UTC(2024, 3, 1, 23, 59, 59, 999)),
+      tagId
+    })
+  })
 })

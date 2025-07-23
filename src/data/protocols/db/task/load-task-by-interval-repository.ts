@@ -6,6 +6,7 @@ export namespace LoadTasksByIntervalRepository {
   export type Params = {
     start: Date
     end: Date
+    tagId?: string
   }
 
   export type Result = Array<{

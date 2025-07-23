@@ -7,6 +7,18 @@ export const loadCurrentDateTasksPath = {
         bearerAuth: []
       }
     ],
+    parameters: [
+      {
+        name: 'tagId',
+        in: 'query',
+        required: false,
+        schema: {
+          type: 'string',
+          format: 'uuid'
+        },
+        description: 'Optional tag ID to filter tasks'
+      }
+    ],
     responses: {
       200: {
         description: 'Success',

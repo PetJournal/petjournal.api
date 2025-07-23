@@ -50,7 +50,12 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
         start: {
           gte: params.start,
           lte: params.end
-        }
+        },
+        scheduler: params.tagId
+          ? {
+              tagId: params.tagId
+            }
+          : undefined
       },
       orderBy: {
         start: 'asc'

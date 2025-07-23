@@ -5,6 +5,7 @@ export interface LoadCurrentDateTasks {
 export namespace LoadCurrentDateTasks {
   export type Params = {
     date: Date
+    tagId?: string
   }
 
   export type Result = Array<{

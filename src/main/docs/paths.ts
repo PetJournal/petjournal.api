@@ -21,9 +21,9 @@ import {
   deleteTagByIdPath,
   loadTagsPath,
   loadCurrentDateTasksPath,
-  loadCurrentWeekTasksPath
+  loadCurrentWeekTasksPath,
+  loadCurrentMonthTasksPath
 } from './paths/'
-import { loadCurrentMonthTasksPath } from './paths/tasks/load-current-month-tasks-path'
 
 export default {
   '/signup': signUpPath,
