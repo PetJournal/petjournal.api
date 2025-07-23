@@ -7,7 +7,8 @@ export const adaptMiddleware = (middleware: Middleware) => {
     const httpRequest: HttpRequest = {
       authorization: req.headers?.authorization,
       userId: req.userId,
-      body: req.body
+      body: req.body,
+      query: req.query
     }
     const httpResponse: HttpResponse = await middleware.handle(httpRequest)
     if (httpResponse.statusCode === 200) {
