@@ -6,7 +6,6 @@ import { join } from 'path'
 import { URL } from 'url'
 import { v4 } from 'uuid'
 import { type Pet, type Guardian } from '../utils'
-import 'dotenv/config'
 import { PetGender } from '@/domain/models'
 
 const generateDatabaseURL = (schema: string): string => {

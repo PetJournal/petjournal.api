@@ -4,18 +4,22 @@ import {
   type HttpRequest,
   type HttpResponse
 } from '@/application/helpers'
-import { type Controller } from '@/application/protocols'
+import { type Validation, type Controller } from '@/application/protocols'
 import { type LoadCurrentMonthTasks } from '@/domain/use-cases'
 
 export class LoadCurrentMonthTasksController implements Controller {
   private readonly loadCurrentMonthTasks: LoadCurrentMonthTasks
+  private readonly validation: Validation
 
-  constructor ({ loadCurrentMonthTasks }: LoadCurrentMonthTasksController.Dependencies) {
+  constructor ({ loadCurrentMonthTasks, validation }: LoadCurrentMonthTasksController.Dependencies) {
     this.loadCurrentMonthTasks = loadCurrentMonthTasks
+    this.validation = validation
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
+      this.validation.validate(httpRequest.query)
+
       const now = new Date()
       now.setUTCHours(0, 0, 0, 0)
 
@@ -30,5 +34,6 @@ export class LoadCurrentMonthTasksController implements Controller {
 export namespace LoadCurrentMonthTasksController {
   export interface Dependencies {
     loadCurrentMonthTasks: LoadCurrentMonthTasks
+    validation: Validation
   }
 }
