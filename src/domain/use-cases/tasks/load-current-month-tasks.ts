@@ -5,6 +5,7 @@ export interface LoadCurrentMonthTasks {
 export namespace LoadCurrentMonthTasks {
   export type Params = {
     date: Date
+    tagId?: string
   }
 
   export type Result = Array<{
