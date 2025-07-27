@@ -1,5 +1,5 @@
 import { LoadCurrentMonthTasksController } from '@/application/controllers'
-import { success, serverError, type HttpResponse, type HttpRequest } from '@/application/helpers'
+import { success, serverError, type HttpResponse, type HttpRequest, badRequest } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type LoadCurrentMonthTasks } from '@/domain/use-cases'
 import { makeFakeValidation } from '@/tests/utils'
@@ -58,6 +58,15 @@ describe('LoadCurrentMonthTasksController', () => {
 
       expect(validateSpy).toHaveBeenCalledWith(httpRequest.query)
     })
+
+    it('Should return 400 (BadRequest) if Validation returns an error', async () => {
+      const { sut, validationStub } = makeSut()
+      jest.spyOn(validationStub, 'validate').mockReturnValue(new Error())
+
+      const httpResponse = await sut.handle(httpRequest)
+
+      expect(httpResponse).toEqual(badRequest(new Error()))
+    })
   })
 
   describe('LoadCurrentMonthTasks', () => {
@@ -67,20 +76,20 @@ describe('LoadCurrentMonthTasksController', () => {
 
       const expectedStartOfDay = new Date('2025-06-18T00:00:00.000Z')
 
-      await sut.handle({})
+      await sut.handle(httpRequest)
       expect(loadSpy).toHaveBeenCalledWith({ date: expectedStartOfDay })
     })
 
     it('Should return 500 if LoadCurrentMonthTasks throws', async () => {
       const { sut, loadCurrentMonthTasksStub } = makeSut()
       jest.spyOn(loadCurrentMonthTasksStub, 'load').mockRejectedValueOnce(new Error())
-      const httpResponse = await sut.handle({})
+      const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(makeFakeServerError())
     })
 
     it('Should return tasks on success', async () => {
       const { sut } = makeSut()
-      const httpResponse = await sut.handle({})
+      const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(success([
         { id: 'task1', schedulerId: 'sched_1', start: expect.any(Date), end: expect.any(Date) },
         { id: 'task2', schedulerId: 'sched_2', start: expect.any(Date), end: expect.any(Date) }
