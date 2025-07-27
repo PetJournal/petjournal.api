@@ -1,10 +1,11 @@
 import {
-  success,
   serverError,
+  success,
   type HttpRequest,
-  type HttpResponse
+  type HttpResponse,
+  badRequest
 } from '@/application/helpers'
-import { type Validation, type Controller } from '@/application/protocols'
+import { type Controller, type Validation } from '@/application/protocols'
 import { type LoadCurrentMonthTasks } from '@/domain/use-cases'
 
 export class LoadCurrentMonthTasksController implements Controller {
@@ -18,7 +19,10 @@ export class LoadCurrentMonthTasksController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      this.validation.validate(httpRequest.query)
+      const error = this.validation.validate(httpRequest.query)
+      if (error) {
+        return badRequest(error)
+      }
 
       const now = new Date()
       now.setUTCHours(0, 0, 0, 0)
