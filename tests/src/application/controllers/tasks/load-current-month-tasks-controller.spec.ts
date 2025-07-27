@@ -61,7 +61,7 @@ describe('LoadCurrentMonthTasksController', () => {
 
     it('Should return 400 (BadRequest) if Validation returns an error', async () => {
       const { sut, validationStub } = makeSut()
-      jest.spyOn(validationStub, 'validate').mockReturnValue(new Error())
+      jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
 
       const httpResponse = await sut.handle(httpRequest)
 
@@ -77,7 +77,7 @@ describe('LoadCurrentMonthTasksController', () => {
       const expectedStartOfDay = new Date('2025-06-18T00:00:00.000Z')
 
       await sut.handle(httpRequest)
-      expect(loadSpy).toHaveBeenCalledWith({ date: expectedStartOfDay })
+      expect(loadSpy).toHaveBeenCalledWith({ date: expectedStartOfDay, tagId: httpRequest.query.tagId })
     })
 
     it('Should return 500 if LoadCurrentMonthTasks throws', async () => {
