@@ -59,6 +59,26 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbLoadCurrentMonthTasks', () => {
+  it('Should call LoadTasksByIntervalRepository with correct value', async () => {
+    const { sut, taskRepositoryStub } = makeSut()
+    const loadSpy = jest.spyOn(taskRepositoryStub, 'loadAllByInterval')
+    const inputDate = new Date('2024-04-15T00:00:00Z')
+
+    await sut.load({ date: inputDate, tagId: 'tag123' })
+
+    const start = new Date(inputDate)
+    start.setUTCHours(0, 0, 0, 0)
+
+    const end = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + 1, 0))
+    end.setUTCHours(23, 59, 59, 999)
+
+    expect(loadSpy).toHaveBeenCalledWith({
+      start,
+      end,
+      tagId: 'tag123'
+    })
+  })
+
   it('Should return only tasks from the 15th day to end of the same month', async () => {
     const { sut } = makeSut()
     const inputDate = new Date('2024-04-15T00:00:00Z')
