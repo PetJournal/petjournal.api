@@ -2,24 +2,32 @@ import {
   success,
   serverError,
   type HttpRequest,
-  type HttpResponse
+  type HttpResponse,
+  badRequest
 } from '@/application/helpers'
-import { type Controller } from '@/application/protocols'
+import { type Validation, type Controller } from '@/application/protocols'
 import { type LoadCurrentWeekTasks } from '@/domain/use-cases'
 
 export class LoadCurrentWeekTasksController implements Controller {
   private readonly loadCurrentWeekTasks: LoadCurrentWeekTasks
+  private readonly validation: Validation
 
-  constructor ({ loadCurrentWeekTasks }: LoadCurrentWeekTasksController.Dependencies) {
+  constructor ({ loadCurrentWeekTasks, validation }: LoadCurrentWeekTasksController.Dependencies) {
     this.loadCurrentWeekTasks = loadCurrentWeekTasks
+    this.validation = validation
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
+      const error = this.validation.validate(httpRequest.query)
+      if (error) {
+        return badRequest(error)
+      }
+      const { tagId } = httpRequest.query
       const now = new Date()
       now.setUTCHours(0, 0, 0, 0)
 
-      const result = await this.loadCurrentWeekTasks.load({ date: now })
+      const result = await this.loadCurrentWeekTasks.load({ date: now, tagId })
       return success(result)
     } catch (error) {
       return serverError(error as Error)
@@ -30,5 +38,6 @@ export class LoadCurrentWeekTasksController implements Controller {
 export namespace LoadCurrentWeekTasksController {
   export interface Dependencies {
     loadCurrentWeekTasks: LoadCurrentWeekTasks
+    validation: Validation
   }
 }
