@@ -51,7 +51,7 @@ describe('LoadCurrentWeekTasksController', () => {
     expect(validationSpy).toHaveBeenCalledWith({ tagId: 'any_tagId' })
   })
 
-  it('Should return 400(Not Acceptable) if invalid tagId is provided', async () => {
+  it('Should return 400(Bad Request) if invalid tagId is provided', async () => {
     const { sut, validationStub } = makeSut()
     const error = new InvalidParamError('tagId')
     jest.spyOn(validationStub, 'validate').mockReturnValueOnce(error)
