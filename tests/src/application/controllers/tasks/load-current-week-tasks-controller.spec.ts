@@ -1,6 +1,9 @@
 import { LoadCurrentWeekTasksController } from '@/application/controllers'
-import { success, serverError, type HttpResponse } from '@/application/helpers'
+import { InvalidParamError } from '@/application/errors'
+import { success, serverError, type HttpResponse, badRequest } from '@/application/helpers'
+import { type Validation } from '@/application/protocols'
 import { type LoadCurrentWeekTasks } from '@/domain/use-cases'
+import { makeFakeValidation } from '@/tests/utils'
 
 const makeLoadCurrentWeekTasksUseCase = (): LoadCurrentWeekTasks => ({
   load: jest.fn().mockResolvedValue([
@@ -17,14 +20,17 @@ const makeFakeServerError = (): HttpResponse => {
 interface SutTypes {
   sut: LoadCurrentWeekTasksController
   loadCurrentWeekTasksStub: LoadCurrentWeekTasks
+  validationStub: Validation
 }
 
 const makeSut = (): SutTypes => {
   const loadCurrentWeekTasksStub = makeLoadCurrentWeekTasksUseCase()
-  const sut = new LoadCurrentWeekTasksController({ loadCurrentWeekTasks: loadCurrentWeekTasksStub })
+  const validationStub = makeFakeValidation()
+  const sut = new LoadCurrentWeekTasksController({ loadCurrentWeekTasks: loadCurrentWeekTasksStub, validation: validationStub })
   return {
     sut,
-    loadCurrentWeekTasksStub
+    loadCurrentWeekTasksStub,
+    validationStub
   }
 }
 
@@ -38,14 +44,29 @@ describe('LoadCurrentWeekTasksController', () => {
     jest.useRealTimers()
   })
 
+  it('Should call validation with correct value', async () => {
+    const { sut, validationStub } = makeSut()
+    const validationSpy = jest.spyOn(validationStub, 'validate')
+    await sut.handle({ query: { tagId: 'any_tagId' } })
+    expect(validationSpy).toHaveBeenCalledWith({ tagId: 'any_tagId' })
+  })
+
+  it('Should return 400(Bad Request) if invalid tagId is provided', async () => {
+    const { sut, validationStub } = makeSut()
+    const error = new InvalidParamError('tagId')
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(error)
+    const httpResponse = await sut.handle({ query: { tagId: 'invalid_tagId' } })
+    expect(httpResponse).toEqual(badRequest(error))
+  })
+
   it('Should call LoadCurrentWeekTasks with current date at start of day UTC', async () => {
     const { sut, loadCurrentWeekTasksStub } = makeSut()
     const loadSpy = jest.spyOn(loadCurrentWeekTasksStub, 'load')
 
     const expectedStartOfDay = new Date('2025-06-18T00:00:00.000Z')
 
-    await sut.handle({})
-    expect(loadSpy).toHaveBeenCalledWith({ date: expectedStartOfDay })
+    await sut.handle({ query: { tagId: 'any_tagId' } })
+    expect(loadSpy).toHaveBeenCalledWith({ date: expectedStartOfDay, tagId: 'any_tagId' })
   })
 
   it('Should return 500 if LoadCurrentWeekTasks throws', async () => {
@@ -57,7 +78,7 @@ describe('LoadCurrentWeekTasksController', () => {
 
   it('Should return tasks on success', async () => {
     const { sut } = makeSut()
-    const httpResponse = await sut.handle({})
+    const httpResponse = await sut.handle({ query: { tagId: 'any_tagId' } })
     expect(httpResponse).toEqual(success([
       { id: 'task1', schedulerId: 'sched_1', start: expect.any(Date), end: expect.any(Date) },
       { id: 'task2', schedulerId: 'sched_2', start: expect.any(Date), end: expect.any(Date) }

@@ -6,7 +6,7 @@ export class DbLoadCurrentWeekTasks implements LoadCurrentWeekTasks {
     private readonly eventRepository: LoadTasksByIntervalRepository
   ) {}
 
-  async load ({ date }: LoadCurrentWeekTasks.Params): Promise<LoadCurrentWeekTasks.Result> {
+  async load ({ date, tagId }: LoadCurrentWeekTasks.Params): Promise<LoadCurrentWeekTasks.Result> {
     const start = new Date(date)
     start.setUTCHours(0, 0, 0, 0)
 
@@ -19,7 +19,8 @@ export class DbLoadCurrentWeekTasks implements LoadCurrentWeekTasks {
 
     return await this.eventRepository.loadAllByInterval({
       start,
-      end
+      end,
+      tagId
     })
   }
 }
