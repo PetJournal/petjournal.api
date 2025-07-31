@@ -4,10 +4,11 @@ import request from 'supertest'
 
 describe('LoadTasks Routes', () => {
   let accessToken = ''
+  let tagId = ''
 
   beforeAll(async () => {
     await PrismaHelper.connect()
-    await PrismaHelper.createGuardian()
+    const { id: guardianId } = await PrismaHelper.createGuardian()
 
     const { body } = await request(app)
       .post('/api/login')
@@ -15,8 +16,10 @@ describe('LoadTasks Routes', () => {
         email: 'johndoe@email.com',
         password: 'Test@1234'
       })
+    const { id } = await PrismaHelper.createTag(guardianId)
 
     accessToken = body.accessToken
+    tagId = id
   })
 
   afterAll(async () => {
@@ -49,6 +52,22 @@ describe('LoadTasks Routes', () => {
         .get(path)
         .set('Authorization', 'Bearer invalid_token')
         .expect(401)
+    })
+  })
+
+  describe('GET - /api/tasks/current-month route with tagId', () => {
+    it('Should return 200 with tasks for the current month and tagId', async () => {
+      await request(app)
+        .get(`/api/tasks/current-month?tagId=${tagId}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(200)
+    })
+
+    it('Should return 400 if tagId is invalid', async () => {
+      await request(app)
+        .get('/api/tasks/current-month?tagId=invalid_tag_id')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(400)
     })
   })
 })

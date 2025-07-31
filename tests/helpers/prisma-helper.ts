@@ -1,12 +1,11 @@
 import { BcryptAdapter } from '@/infra/cryptography'
-import { PrismaClient } from '@/infra/repos/postgresql/prisma/generated'
+import { PrismaClient, type Tag } from '@/infra/repos/postgresql/prisma/generated'
 import { execSync } from 'child_process'
 import 'dotenv/config'
 import { join } from 'path'
 import { URL } from 'url'
 import { v4 } from 'uuid'
 import { type Pet, type Guardian } from '../utils'
-import 'dotenv/config'
 import { PetGender } from '@/domain/models'
 
 const generateDatabaseURL = (schema: string): string => {
@@ -131,6 +130,15 @@ export const PrismaHelper = {
         castrated: true,
         dateOfBirth: true,
         image: true
+      }
+    })
+  },
+  async createTag (guardianId: string): Promise<Tag> {
+    return await prisma.tag.create({
+      data: {
+        guardianId,
+        name: 'tagTest',
+        color: '#000000'
       }
     })
   }
