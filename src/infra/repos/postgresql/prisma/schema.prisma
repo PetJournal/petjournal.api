@@ -22,6 +22,7 @@ model Guardian {
   pets                       Pet[]
   tags                       Tag[]
   scheduler                  Scheduler[]
+  settings                   Settings?
 
   @@map("guardians")
 }
@@ -125,4 +126,14 @@ model LogError {
   date  DateTime
 
   @@map("log_error")
+}
+
+model Settings {
+  id                  String   @id @default(uuid())
+  guardian            Guardian @relation(fields: [guardianId], references: [id])
+  guardianId          String   @unique @map("guardian_id")
+  notification_email  Boolean  @default(true)
+  notification_mobile Boolean  @default(true)
+
+  @@map("settings")
 }
