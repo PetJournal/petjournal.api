@@ -32,7 +32,12 @@ export class GuardianAccountRepository implements
     }
 
     return await db.guardian.create({
-      data: guardianData,
+      data: {
+        ...guardianData,
+        settings: {
+          create: {} // 👈 Isso cria o settings com os valores padrão definidos no Prisma
+        }
+      },
       select: {
         id: true,
         firstName: true,
