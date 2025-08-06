@@ -43,7 +43,8 @@ import {
   type LoadEventByDateRepository,
   type AddManyEventsRepository,
   type AddSchedulerRepository,
-  type DeleteSchedulerByIdRepository
+  type DeleteSchedulerByIdRepository,
+  type LoadSettingsRepository
 } from '@/data/protocols'
 import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
 import { type LoadDogSizesRepository } from '@/data/protocols/db/size/load-dog-sizes-repository'
@@ -422,6 +423,21 @@ const makeFakeEventsGenerator = (): EventsGenerator => {
     }
   }
   return new EventsGeneratorStub()
+}
+
+export const makeFakeSettingsRepository = (): LoadSettingsRepository => {
+  class LoadSettingsRepositoryStub implements LoadSettingsRepository {
+    async loadAll (guardianId: string): Promise<LoadSettingsRepository.Result> {
+      return [
+        {
+          notification_email: true,
+          notification_mobile: true
+        }
+      ]
+    }
+  }
+
+  return new LoadSettingsRepositoryStub()
 }
 
 export {

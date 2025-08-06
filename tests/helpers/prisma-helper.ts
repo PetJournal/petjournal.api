@@ -39,6 +39,10 @@ export const PrismaHelper = {
     await prisma.$executeRawUnsafe(`DROP SCHEMA IF EXISTS "${schemaId}" CASCADE;`)
     await prisma.$disconnect()
   },
+  async clearSettings (): Promise<void> {
+    await prisma.settings.deleteMany()
+  },
+
   async clearGuardian (): Promise<void> {
     await prisma.guardian.deleteMany()
   },
