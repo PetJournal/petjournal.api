@@ -14,6 +14,6 @@ export namespace LoadSettings {
   }>
 
   export type Dependencies = {
-    tagRepository: LoadSettingsRepository
+    settingsRepository: LoadSettingsRepository
   }
 }
