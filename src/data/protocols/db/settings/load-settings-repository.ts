@@ -6,8 +6,6 @@ export interface LoadSettingsRepository {
 export namespace LoadSettingsRepository {
   export type Param = string
   export type Result = Array<{
-    id: string
-    guardianId: string
     notification_email: boolean
     notification_mobile: boolean
   }>

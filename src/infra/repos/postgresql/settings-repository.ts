@@ -4,8 +4,10 @@ import { type LoadSettingsRepository } from '@/data/protocols'
 export class SettingsRepository implements LoadSettingsRepository {
   async loadAll (guardianId: LoadSettingsRepository.Param): Promise<LoadSettingsRepository.Result> {
     const settings = await db.settings.findMany({
-      where: {
-        guardianId
+      where: { guardianId },
+      select: {
+        notification_email: true,
+        notification_mobile: true
       }
     })
     return settings
