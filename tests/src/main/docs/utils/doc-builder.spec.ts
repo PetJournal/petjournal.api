@@ -92,7 +92,7 @@ describe('DocBuilder', () => {
       },
       required: ['name']
     }
-    const result = sut.addBody(schema, true, { name: 'Example' }).build()
+    const result = sut.addJsonBody(schema, true, { name: 'Example' }).build()
 
     expect(result).toEqual({
       post: {
@@ -120,7 +120,7 @@ describe('DocBuilder', () => {
   it('Should build a doc with ref schema body', () => {
     const { sut } = makeSut()
 
-    const result = sut.addBody('#/schemas/Example').build()
+    const result = sut.addJsonBody('#/schemas/Example').build()
 
     expect(result).toEqual({
       post: {
@@ -354,6 +354,35 @@ describe('DocBuilder', () => {
             format: 'uuid'
           }
         }]
+      }
+    })
+  })
+
+  it('Should build a doc with multipart form data body', () => {
+    const { sut } = makeSut()
+
+    const schema = {
+      type: 'object' as const,
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary'
+        }
+      }
+    }
+
+    const result = sut.addMultipartFormDataBody(schema, true).build()
+
+    expect(result).toEqual({
+      post: {
+        requestBody: {
+          required: true,
+          content: {
+            'multipart/form-data': {
+              schema
+            }
+          }
+        }
       }
     })
   })
