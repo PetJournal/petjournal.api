@@ -79,4 +79,41 @@ describe('DocBuilder', () => {
       }
     })
   })
+
+  it('Should build a doc with body', () => {
+    const { sut } = makeSut()
+
+    const schema = {
+      type: 'object' as const,
+      properties: {
+        name: {
+          type: 'string'
+        }
+      },
+      required: ['name']
+    }
+    const result = sut.addBody(schema, true, { name: 'Example' }).build()
+
+    expect(result).toEqual({
+      post: {
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  name: {
+                    type: 'string'
+                  }
+                },
+                required: ['name']
+              },
+              example: { name: 'Example' }
+            }
+          }
+        }
+      }
+    })
+  })
 })
