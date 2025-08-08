@@ -163,6 +163,25 @@ export class DocBuilder<T extends HttpMethod> {
     return this
   }
 
+  addQueryParameter (name: string, description: string, type: 'string' | 'number' | 'boolean' = 'string', options: PathParameterOptions = { required: false }): DocBuilder<T> {
+    if (!this.content[this.method].parameters) {
+      this.content[this.method].parameters = []
+    }
+
+    this.content[this.method].parameters?.push({
+      name,
+      in: 'query',
+      description,
+      required: options.required,
+      schema: {
+        type,
+        format: options.format
+      }
+    })
+
+    return this
+  }
+
   addResponse (statusCode: number, schema: Response): DocBuilder<T> {
     if (!this.content[this.method].responses) {
       this.content[this.method].responses = {}
