@@ -147,4 +147,16 @@ describe('DocBuilder', () => {
       }
     })
   })
+
+  it('Should build a doc with xml produces', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addXmlProduces().build()
+
+    expect(result).toEqual({
+      post: {
+        produces: ['application/xml']
+      }
+    })
+  })
 })
