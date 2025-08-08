@@ -171,4 +171,25 @@ describe('DocBuilder', () => {
       }
     })
   })
+
+  it('Should build a doc with path parameter', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addPathParameter('id', 'ID description', 'string', { required: true, format: 'uuid' }).build()
+
+    expect(result).toEqual({
+      post: {
+        parameters: [{
+          name: 'id',
+          in: 'path',
+          description: 'ID description',
+          required: true,
+          schema: {
+            type: 'string',
+            format: 'uuid'
+          }
+        }]
+      }
+    })
+  })
 })
