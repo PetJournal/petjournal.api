@@ -8,9 +8,7 @@ describe('Settings Routes', () => {
   beforeAll(async () => {
     await PrismaHelper.connect()
 
-    // Cria um guardian válido e salva o ID
     const guardian = await PrismaHelper.createGuardian()
-    // Cria settings vinculados ao guardian
     await prisma.settings.create({
       data: {
         guardianId: guardian.id,
@@ -19,7 +17,6 @@ describe('Settings Routes', () => {
       }
     })
 
-    // Autentica e obtém o accessToken
     const { body } = await request(app)
       .post('/api/login')
       .send({

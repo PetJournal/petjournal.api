@@ -23,7 +23,6 @@ describe('SettingsRepository', () => {
       const sut = makeSut()
       const guardian = await PrismaHelper.createGuardian()
 
-      // 👉 Cria o settings no banco
       await prisma.settings.create({
         data: {
           guardianId: guardian.id,
