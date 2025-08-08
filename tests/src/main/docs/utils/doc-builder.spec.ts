@@ -19,5 +19,11 @@ describe('DocBuilder', () => {
 
       expect(sut).toBeInstanceOf(DocBuilder)
     })
+
+    it('Should create a instance for DELETE', () => {
+      const sut = DocBuilder.deleteBuilder()
+
+      expect(sut).toBeInstanceOf(DocBuilder)
+    })
   })
 })
