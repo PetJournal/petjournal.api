@@ -324,4 +324,16 @@ describe('DocBuilder', () => {
       }
     })
   })
+
+  it('Should build a doc with JWT auth security', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addJwtAuthSecurity().build()
+
+    expect(result).toEqual({
+      post: {
+        security: [{ bearerAuth: [] }]
+      }
+    })
+  })
 })
