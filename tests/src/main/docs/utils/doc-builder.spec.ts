@@ -13,5 +13,11 @@ describe('DocBuilder', () => {
 
       expect(sut).toBeInstanceOf(DocBuilder)
     })
+
+    it('Should create a instance for PUT', () => {
+      const sut = DocBuilder.putBuilder()
+
+      expect(sut).toBeInstanceOf(DocBuilder)
+    })
   })
 })
