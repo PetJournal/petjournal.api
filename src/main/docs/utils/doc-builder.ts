@@ -3,8 +3,33 @@ type Response = {
   content?: {
     'application/json': {
       schema: object
-      example?: object
+      example?: object | object[]
     }
+  }
+}
+
+type Security = {
+  bearerAuth: []
+}
+
+type SchemaBody = {
+  type: 'object' | 'array'
+  properties: object
+  required?: string[]
+}
+
+type Ref = {
+  $ref: string
+}
+
+type Parameters = {
+  name: string
+  in: 'path' | 'query'
+  description: string
+  required: boolean
+  schema: {
+    type: 'string' | 'number' | 'boolean'
+    format?: string
   }
 }
 
@@ -12,11 +37,14 @@ type Content = {
   tags: string[]
   summary: string
   description: string
+  security?: Security[]
+  produces?: string[]
+  parameters?: Parameters[]
   requestBody?: {
     required: boolean
     content: {
       'application/json': {
-        schema: string | object
+        schema: Ref | SchemaBody
         example?: object
       }
     }
@@ -28,6 +56,11 @@ type HttpMethod = 'post' | 'get' | 'put' | 'delete' | 'patch'
 
 type SwaggerDoc<T extends HttpMethod> = {
   [K in T]: Content;
+}
+
+type PathParameterOptions = {
+  required: boolean
+  format?: string
 }
 
 export class DocBuilder<T extends HttpMethod> {
@@ -74,7 +107,7 @@ export class DocBuilder<T extends HttpMethod> {
     return this
   }
 
-  addBody (schemaOrRef: string | object, required: boolean = true, example?: object): DocBuilder<T> {
+  addBody (schemaOrRef: string | SchemaBody, required: boolean = true, example?: object): DocBuilder<T> {
     const schema = typeof schemaOrRef === 'string' ? { $ref: schemaOrRef } : schemaOrRef
 
     this.content[this.method].requestBody = {
@@ -86,6 +119,47 @@ export class DocBuilder<T extends HttpMethod> {
         }
       }
     }
+    return this
+  }
+
+  addJsonProduces (): DocBuilder<T> {
+    const produces = this.content[this.method].produces
+    if (!produces) {
+      this.content[this.method].produces = ['application/json']
+    } else if (!produces.includes('application/json')) {
+      produces.push('application/json')
+    }
+
+    return this
+  }
+
+  addXmlProduces (): DocBuilder<T> {
+    const produces = this.content[this.method].produces
+    if (!produces) {
+      this.content[this.method].produces = ['application/xml']
+    } else if (!produces.includes('application/xml')) {
+      produces.push('application/xml')
+    }
+
+    return this
+  }
+
+  addPathParameter (name: string, description: string, type: 'string' | 'number' | 'boolean' = 'string', options: PathParameterOptions = { required: true }): DocBuilder<T> {
+    if (!this.content[this.method].parameters) {
+      this.content[this.method].parameters = []
+    }
+
+    this.content[this.method].parameters?.push({
+      name,
+      in: 'path',
+      description,
+      required: options.required,
+      schema: {
+        type,
+        format: options.format
+      }
+    })
+
     return this
   }
 
@@ -168,6 +242,11 @@ export class DocBuilder<T extends HttpMethod> {
       }
     })
 
+    return this
+  }
+
+  addJwtAuthSecurity (): DocBuilder<T> {
+    this.content[this.method].security = [{ bearerAuth: [] }]
     return this
   }
 
