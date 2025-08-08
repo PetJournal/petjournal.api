@@ -130,10 +130,10 @@ model LogError {
 
 model Settings {
   id                  String   @id @default(uuid())
-  guardian            Guardian @relation(fields: [guardianId], references: [id])
+  guardian   Guardian  @relation(fields: [guardianId], references: [id], onDelete: Cascade)
   guardianId          String   @unique @map("guardian_id")
-  notification_email  Boolean  @default(true)
-  notification_mobile Boolean  @default(true)
+  notificationEmail  Boolean   @map("notification_email") @default(false)
+  notificationMobile Boolean   @map("notification_mobile") @default(false)
 
   @@map("settings")
 }
