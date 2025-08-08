@@ -67,4 +67,16 @@ describe('DocBuilder', () => {
       }
     })
   })
+
+  it('Should build a doc with description', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addDescription('Test Description').build()
+
+    expect(result).toEqual({
+      post: {
+        description: 'Test Description'
+      }
+    })
+  })
 })
