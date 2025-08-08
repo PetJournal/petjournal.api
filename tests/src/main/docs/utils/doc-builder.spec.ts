@@ -220,4 +220,30 @@ describe('DocBuilder', () => {
       }
     })
   })
+
+  it('Should build a doc with bad request response', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addBadRequestResponse().build()
+
+    expect(result).toEqual({
+      post: {
+        responses: {
+          400: {
+            description: 'Invalid request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/schemas/error'
+                },
+                example: {
+                  error: 'Invalid param: example_param'
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+  })
 })
