@@ -1,49 +1,26 @@
-export const changePasswordPath = {
-  patch: {
-    tags: ['guardian'],
-    summary: 'change guardian password ',
-    description: '',
-    security: [{
-      bearerAuth: []
-    }],
-    requestBody: {
-      required: true,
-      content: {
-        'application/json': {
-          schema: {
-            $ref: '#/schemas/changePasswordParams'
-          },
+import { DocBuilder } from '../utils/doc-builder'
+
+export const changePasswordPath = DocBuilder.patchBuilder()
+  .addTags(['guardian'])
+  .addSummary('change guardian password')
+  .addJwtAuthSecurity()
+  .addBody('#/schemas/changePasswordParams', true, {
+    password: 'New_password_test@123',
+    passwordConfirmation: 'New_password_test@123'
+  })
+  .addResponse(200, {
+    description: 'Success',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
           example: {
-            password: 'New_password_test@123',
-            passwordConfirmation: 'New_password_test@123'
+            message: 'Email sent successfully'
           }
         }
-      }
-    },
-    responses: {
-      200: {
-        description: 'Success',
-        content: {
-          'application/json': {
-            schema: {
-              type: 'object',
-              example: {
-                message: 'Email sent successfully'
-              }
-            }
-          }
-        }
-      },
-      400: {
-        $ref: '#/components/badRequest',
-        example: {
-          error: 'Invalid param: password'
-        }
-      },
-      500: {
-        $ref: '#/components/serverError'
       }
     }
-  }
-
-}
+  })
+  .addBadRequestResponse()
+  .addServerErrorResponse()
+  .build()

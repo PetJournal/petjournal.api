@@ -1,44 +1,24 @@
-export const forgetPasswordPath = {
-  post: {
-    tags: ['recovery-password'],
-    summary: 'send email for recovery password',
-    description: '',
-    requestBody: {
-      required: true,
-      content: {
-        'application/json': {
-          schema: {
-            $ref: '#/schemas/forgetPasswordParams'
-          },
+import { DocBuilder } from '../utils/doc-builder'
+
+export const forgetPasswordPath = DocBuilder.postBuilder()
+  .addTags(['recovery-password'])
+  .addSummary('send email for recovery password')
+  .addBody('#/schemas/forgetPasswordParams', true, {
+    email: 'johndoe@email.com'
+  })
+  .addResponse(200, {
+    description: 'Success',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
           example: {
-            email: 'johndoe@email.com'
+            message: 'Email sent successfully'
           }
         }
-      }
-    },
-    responses: {
-      200: {
-        description: 'Success',
-        content: {
-          'application/json': {
-            schema: {
-              type: 'object',
-              example: {
-                message: 'Email sent successfully'
-              }
-            }
-          }
-        }
-      },
-      400: {
-        $ref: '#/components/badRequest',
-        example: {
-          error: 'Invalid param: email'
-        }
-      },
-      500: {
-        $ref: '#/components/serverError'
       }
     }
-  }
-}
+  })
+  .addBadRequestResponse()
+  .addServerErrorResponse()
+  .build()
