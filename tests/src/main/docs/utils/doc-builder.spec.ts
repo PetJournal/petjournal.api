@@ -116,4 +116,23 @@ describe('DocBuilder', () => {
       }
     })
   })
+
+  it('Should build a doc with ref schema body', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addBody('#/schemas/Example').build()
+
+    expect(result).toEqual({
+      post: {
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/schemas/Example' }
+            }
+          }
+        }
+      }
+    })
+  })
 })
