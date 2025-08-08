@@ -298,4 +298,30 @@ describe('DocBuilder', () => {
       }
     })
   })
+
+  it('Should build a doc with server error response', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addServerErrorResponse().build()
+
+    expect(result).toEqual({
+      post: {
+        responses: {
+          500: {
+            description: 'Internal server error',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/schemas/error'
+                },
+                example: {
+                  error: 'Internal server error. An unexpected error happened. Please try again in a moment.'
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+  })
 })
