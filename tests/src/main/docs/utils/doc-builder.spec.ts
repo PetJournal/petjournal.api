@@ -272,4 +272,30 @@ describe('DocBuilder', () => {
       }
     })
   })
+
+  it('Should build a doc with unauthorized response', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addUnauthorizedResponse().build()
+
+    expect(result).toEqual({
+      post: {
+        responses: {
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/schemas/error'
+                },
+                example: {
+                  error: 'Unauthorized'
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+  })
 })
