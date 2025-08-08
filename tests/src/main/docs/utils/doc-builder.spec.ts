@@ -192,4 +192,32 @@ describe('DocBuilder', () => {
       }
     })
   })
+
+  it('Should build a doc with response', () => {
+    const { sut } = makeSut()
+
+    const response = {
+      description: 'Success',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' }
+            }
+          }
+        }
+      }
+    }
+
+    const result = sut.addResponse(200, response).build()
+
+    expect(result).toEqual({
+      post: {
+        responses: {
+          200: response
+        }
+      }
+    })
+  })
 })
