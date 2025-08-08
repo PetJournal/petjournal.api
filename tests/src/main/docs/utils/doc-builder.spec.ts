@@ -135,4 +135,16 @@ describe('DocBuilder', () => {
       }
     })
   })
+
+  it('Should build a doc with json produces', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addJsonProduces().build()
+
+    expect(result).toEqual({
+      post: {
+        produces: ['application/json']
+      }
+    })
+  })
 })
