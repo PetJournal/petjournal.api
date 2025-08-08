@@ -4,7 +4,7 @@ export const changePasswordPath = DocBuilder.patchBuilder()
   .addTags(['guardian'])
   .addSummary('change guardian password')
   .addJwtAuthSecurity()
-  .addBody('#/schemas/changePasswordParams', true, {
+  .addJsonBody('#/schemas/changePasswordParams', true, {
     password: 'New_password_test@123',
     passwordConfirmation: 'New_password_test@123'
   })

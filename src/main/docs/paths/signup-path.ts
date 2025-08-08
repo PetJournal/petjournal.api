@@ -3,7 +3,7 @@ import { DocBuilder } from '../utils/doc-builder'
 export const signUpPath = DocBuilder.postBuilder()
   .addTags(['guardian'])
   .addSummary('adds a new guardian')
-  .addBody('#/schemas/signUpParams', true, {
+  .addJsonBody('#/schemas/signUpParams', true, {
     firstName: 'John',
     lastName: 'Doe',
     email: 'johndoe@email.com',

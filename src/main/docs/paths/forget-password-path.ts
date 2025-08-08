@@ -3,7 +3,7 @@ import { DocBuilder } from '../utils/doc-builder'
 export const forgetPasswordPath = DocBuilder.postBuilder()
   .addTags(['recovery-password'])
   .addSummary('send email for recovery password')
-  .addBody('#/schemas/forgetPasswordParams', true, {
+  .addJsonBody('#/schemas/forgetPasswordParams', true, {
     email: 'johndoe@email.com'
   })
   .addResponse(200, {

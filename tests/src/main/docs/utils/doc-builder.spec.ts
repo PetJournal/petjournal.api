@@ -386,4 +386,30 @@ describe('DocBuilder', () => {
       }
     })
   })
+
+  it('Should build a doc with not acceptable response', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addNotAcceptableResponse().build()
+
+    expect(result).toEqual({
+      post: {
+        responses: {
+          406: {
+            description: 'Not Acceptable',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/notAcceptable'
+                },
+                example: {
+                  error: 'Not acceptable: example_param'
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+  })
 })

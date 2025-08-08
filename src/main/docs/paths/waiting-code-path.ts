@@ -3,7 +3,7 @@ import { DocBuilder } from '../utils/doc-builder'
 export const waitingCodePath = DocBuilder.postBuilder()
   .addTags(['recovery-password'])
   .addSummary('send email and verificationToken for recovery password')
-  .addBody('#/schemas/waitingCodeParams', true, {
+  .addJsonBody('#/schemas/waitingCodeParams', true, {
     email: 'johndoe@email.com',
     verificationToken: '123456'
   })
