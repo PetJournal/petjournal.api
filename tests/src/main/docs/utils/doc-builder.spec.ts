@@ -1,5 +1,16 @@
 import { DocBuilder } from '@/main/docs/utils/doc-builder'
 
+interface SutTypes {
+  sut: DocBuilder<'post'>
+}
+
+const makeSut = (): SutTypes => {
+  const sut = DocBuilder.postBuilder()
+  return {
+    sut
+  }
+}
+
 describe('DocBuilder', () => {
   describe('static methods', () => {
     it('Should create a instance for GET', () => {
@@ -34,13 +45,25 @@ describe('DocBuilder', () => {
   })
 
   it('Should build a doc with tags', () => {
-    const sut = DocBuilder.postBuilder()
-      .addTags(['tag1', 'tag2'])
-      .build()
+    const { sut } = makeSut()
 
-    expect(sut).toEqual({
+    const result = sut.addTags(['tag1', 'tag2']).build()
+
+    expect(result).toEqual({
       post: {
         tags: ['tag1', 'tag2']
+      }
+    })
+  })
+
+  it('Should build a doc with summary', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addSummary('Test Summary').build()
+
+    expect(result).toEqual({
+      post: {
+        summary: 'Test Summary'
       }
     })
   })
