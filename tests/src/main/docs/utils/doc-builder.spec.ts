@@ -25,5 +25,11 @@ describe('DocBuilder', () => {
 
       expect(sut).toBeInstanceOf(DocBuilder)
     })
+
+    it('Should create a instance for PATCH', () => {
+      const sut = DocBuilder.patchBuilder()
+
+      expect(sut).toBeInstanceOf(DocBuilder)
+    })
   })
 })
