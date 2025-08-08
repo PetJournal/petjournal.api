@@ -336,4 +336,25 @@ describe('DocBuilder', () => {
       }
     })
   })
+
+  it('Should build a doc with query parameter', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addQueryParameter('tagId', 'Optional tag ID to filter tasks', 'string', { required: false, format: 'uuid' }).build()
+
+    expect(result).toEqual({
+      post: {
+        parameters: [{
+          name: 'tagId',
+          in: 'query',
+          description: 'Optional tag ID to filter tasks',
+          required: false,
+          schema: {
+            type: 'string',
+            format: 'uuid'
+          }
+        }]
+      }
+    })
+  })
 })
