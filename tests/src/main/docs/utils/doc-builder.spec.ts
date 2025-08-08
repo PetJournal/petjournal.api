@@ -246,4 +246,30 @@ describe('DocBuilder', () => {
       }
     })
   })
+
+  it('Should build a doc with conflict response', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addConflictResponse().build()
+
+    expect(result).toEqual({
+      post: {
+        responses: {
+          409: {
+            description: 'Conflict request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/schemas/error'
+                },
+                example: {
+                  error: 'Phone or Email already registered'
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+  })
 })
