@@ -32,4 +32,16 @@ describe('DocBuilder', () => {
       expect(sut).toBeInstanceOf(DocBuilder)
     })
   })
+
+  it('Should build a doc with tags', () => {
+    const sut = DocBuilder.postBuilder()
+      .addTags(['tag1', 'tag2'])
+      .build()
+
+    expect(sut).toEqual({
+      post: {
+        tags: ['tag1', 'tag2']
+      }
+    })
+  })
 })
