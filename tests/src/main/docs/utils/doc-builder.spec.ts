@@ -159,4 +159,16 @@ describe('DocBuilder', () => {
       }
     })
   })
+
+  it('Should build a doc with multiple produces', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addJsonProduces().addXmlProduces().build()
+
+    expect(result).toEqual({
+      post: {
+        produces: ['application/json', 'application/xml']
+      }
+    })
+  })
 })
