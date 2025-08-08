@@ -12,14 +12,33 @@ type Security = {
   bearerAuth: []
 }
 
-type SchemaBody = {
+type JsonSchemaBody = {
   type: 'object' | 'array'
   properties: object
   required?: string[]
+  example?: object | object[]
+}
+
+type FormDataSchemaBody = {
+  type: 'object'
+  properties: object
+  required?: string[]
+  example?: object | object[]
 }
 
 type Ref = {
   $ref: string
+}
+
+type ContentType = {
+  'application/json': {
+    schema: JsonSchemaBody | Ref
+    example?: object | object[]
+  }
+} | {
+  'multipart/form-data': {
+    schema: FormDataSchemaBody | Ref
+  }
 }
 
 type Parameters = {
@@ -42,12 +61,7 @@ type Content = {
   parameters?: Parameters[]
   requestBody?: {
     required: boolean
-    content: {
-      'application/json': {
-        schema: Ref | SchemaBody
-        example?: object
-      }
-    }
+    content: ContentType
   }
   responses: Record<number, Response>
 }
@@ -107,7 +121,7 @@ export class DocBuilder<T extends HttpMethod> {
     return this
   }
 
-  addBody (schemaOrRef: string | SchemaBody, required: boolean = true, example?: object): DocBuilder<T> {
+  addJsonBody (schemaOrRef: string | JsonSchemaBody, required: boolean = true, example?: object): DocBuilder<T> {
     const schema = typeof schemaOrRef === 'string' ? { $ref: schemaOrRef } : schemaOrRef
 
     this.content[this.method].requestBody = {
@@ -119,6 +133,22 @@ export class DocBuilder<T extends HttpMethod> {
         }
       }
     }
+
+    return this
+  }
+
+  addMultipartFormDataBody (schemaOrRef: string | FormDataSchemaBody, required: boolean = true): DocBuilder<T> {
+    const schema = typeof schemaOrRef === 'string' ? { $ref: schemaOrRef } : schemaOrRef
+
+    this.content[this.method].requestBody = {
+      required,
+      content: {
+        'multipart/form-data': {
+          schema
+        }
+      }
+    }
+
     return this
   }
 
@@ -238,6 +268,24 @@ export class DocBuilder<T extends HttpMethod> {
           },
           example: {
             error: 'Unauthorized'
+          }
+        }
+      }
+    })
+
+    return this
+  }
+
+  addNotAcceptableResponse (): DocBuilder<T> {
+    this.addResponse(406, {
+      description: 'Not Acceptable',
+      content: {
+        'application/json': {
+          schema: {
+            $ref: '#/components/notAcceptable'
+          },
+          example: {
+            error: 'Not acceptable: example_param'
           }
         }
       }
