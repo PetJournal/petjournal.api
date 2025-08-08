@@ -26,8 +26,8 @@ describe('SettingsRepository', () => {
       await prisma.settings.create({
         data: {
           guardianId: guardian.id,
-          notification_email: true,
-          notification_mobile: true
+          notificationEmail: false,
+          notificationMobile: false
         }
       })
 
@@ -35,8 +35,8 @@ describe('SettingsRepository', () => {
 
       expect(settings).toEqual([
         {
-          notification_email: true,
-          notification_mobile: true
+          notificationEmail: false,
+          notificationMobile: false
         }
       ])
     })

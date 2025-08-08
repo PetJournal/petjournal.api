@@ -33,8 +33,8 @@ describe('DbLoadSettings use case', () => {
       const { sut } = makeSut()
       const settings = await sut.loadAll('any_guardian_id')
       expect(settings).toEqual([{
-        notification_email: true,
-        notification_mobile: true
+        notificationEmail: false,
+        notificationMobile: false
       }])
     })
   })

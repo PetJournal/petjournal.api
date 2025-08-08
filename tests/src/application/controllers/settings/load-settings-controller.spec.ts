@@ -34,8 +34,8 @@ describe('LoadSettings Controller', () => {
       const { sut } = makeSut()
       const httpResponse = await sut.handle({})
       expect(httpResponse).toEqual(success([{
-        notification_email: true,
-        notification_mobile: true
+        notificationEmail: false,
+        notificationMobile: false
       }]))
     })
   })

@@ -430,8 +430,8 @@ export const makeFakeSettingsRepository = (): LoadSettingsRepository => {
     async loadAll (guardianId: string): Promise<LoadSettingsRepository.Result> {
       return [
         {
-          notification_email: true,
-          notification_mobile: true
+          notificationEmail: false,
+          notificationMobile: false
         }
       ]
     }

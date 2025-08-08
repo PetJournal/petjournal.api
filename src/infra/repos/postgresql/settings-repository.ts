@@ -6,8 +6,8 @@ export class SettingsRepository implements LoadSettingsRepository {
     const settings = await db.settings.findMany({
       where: { guardianId },
       select: {
-        notification_email: true,
-        notification_mobile: true
+        notificationEmail: true,
+        notificationMobile: true
       }
     })
     return settings

@@ -382,11 +382,11 @@ const makeFakeAddSchedulerUseCase = (): AddScheduler => {
 
 const makeFakeLoadSettingsUseCase = (): LoadSettings => {
   class LoadSettingsStub implements LoadSettings {
-    async loadAll(param: LoadSettings.Param): Promise<LoadSettings.Result> {
+    async loadAll (param: LoadSettings.Param): Promise<LoadSettings.Result> {
       return [
         {
-          notification_email: true,
-          notification_mobile: true
+          notificationEmail: false,
+          notificationMobile: false
         }
       ]
     }

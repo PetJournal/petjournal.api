@@ -12,8 +12,8 @@ describe('Settings Routes', () => {
     await prisma.settings.create({
       data: {
         guardianId: guardian.id,
-        notification_email: true,
-        notification_mobile: true
+        notificationEmail: false,
+        notificationMobile: false
       }
     })
 
@@ -40,8 +40,8 @@ describe('Settings Routes', () => {
       expect(response.status).toBe(200)
       expect(response.body).toEqual([
         {
-          notification_email: true,
-          notification_mobile: true
+          notificationEmail: false,
+          notificationMobile: false
         }
       ])
     })

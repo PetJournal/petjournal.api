@@ -20,8 +20,8 @@ export const loadSettingsPath = {
           'application/json': {
             example: [
               {
-                notification_email: true,
-                notification_mobile: true
+                notification_email: false,
+                notification_mobile: false
               }
             ]
           }

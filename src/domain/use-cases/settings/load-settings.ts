@@ -7,8 +7,8 @@ export interface LoadSettings {
 export namespace LoadSettings {
   export type Param = string
   export type Result = Array<{
-    notification_email: boolean
-    notification_mobile: boolean
+    notificationEmail: boolean
+    notificationMobile: boolean
   }>
 
   export type Dependencies = {
