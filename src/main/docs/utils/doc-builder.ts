@@ -58,6 +58,7 @@ type Content = {
   description: string
   security?: Security[]
   produces?: string[]
+  consumes?: string[]
   parameters?: Parameters[]
   requestBody?: {
     required: boolean
@@ -169,6 +170,17 @@ export class DocBuilder<T extends HttpMethod> {
       this.content[this.method].produces = ['application/xml']
     } else if (!produces.includes('application/xml')) {
       produces.push('application/xml')
+    }
+
+    return this
+  }
+
+  addJsonConsumes (): DocBuilder<T> {
+    const consumes = this.content[this.method].consumes
+    if (!consumes) {
+      this.content[this.method].consumes = ['application/json']
+    } else if (!consumes.includes('application/json')) {
+      consumes.push('application/json')
     }
 
     return this
