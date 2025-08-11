@@ -412,4 +412,16 @@ describe('DocBuilder', () => {
       }
     })
   })
+
+  it('Should build a doc with json consumes', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addJsonConsumes().build()
+
+    expect(result).toEqual({
+      post: {
+        consumes: ['application/json']
+      }
+    })
+  })
 })
