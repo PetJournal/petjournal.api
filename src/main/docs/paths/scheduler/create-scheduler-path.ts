@@ -1,54 +1,31 @@
-export const createSchedulerPath = {
-  post: {
-    tags: ['scheduler'],
-    summary: 'create a new scheduler',
-    description: `
+import { DocBuilder } from '../../utils/doc-builder'
+
+export const createSchedulerPath = DocBuilder.postBuilder()
+  .addTags(['scheduler'])
+  .addSummary('create a new scheduler')
+  .addDescription(`
     create a new scheduler to generate events(tasks)
-      daysOfWeek, daysOfMonth, daily can be undefined
-      a scheduler without daysOfWeek, daysOfMonth and daily is a single event.
-      daysOfWeek gap are 0 to 6
-      daysOfMonth gar are 1 to 31
-    `,
-    security: [{
-      bearerAuth: []
-    }],
-    consumes: [
-      'application/json'
-    ],
-    produces: [
-      'application/json',
-      'application/xml'
-    ],
-    requestBody: {
-      required: true,
-      content: {
-        'application/json': {
-          schema: {
-            $ref: '#/schemas/schedulerParams'
-          }
+    daysOfWeek, daysOfMonth, daily can be undefined
+    a scheduler without daysOfWeek, daysOfMonth and daily is a single event.
+    daysOfWeek gap are 0 to 6
+    daysOfMonth gap are 1 to 31
+  `)
+  .addJwtAuthSecurity()
+  .addJsonConsumes()
+  .addJsonProduces()
+  .addXmlProduces()
+  .addJsonBody('#/schemas/schedulerParams')
+  .addResponse(200, {
+    description: 'Success',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: '#/schemas/scheduler'
         }
-      }
-    },
-    responses: {
-      200: {
-        description: 'Success',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/schemas/scheduler'
-            }
-          }
-        }
-      },
-      400: {
-        $ref: '#/components/badRequest'
-      },
-      406: {
-        $ref: '#/components/notAcceptable'
-      },
-      500: {
-        $ref: '#/components/serverError'
       }
     }
-  }
-}
+  })
+  .addBadRequestResponse()
+  .addNotAcceptableResponse()
+  .addServerErrorResponse()
+  .build()
