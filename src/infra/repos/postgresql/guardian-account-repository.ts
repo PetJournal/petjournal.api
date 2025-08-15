@@ -9,21 +9,19 @@ import {
   type UpdateEmailConfirmationRepository
 } from '@/data/protocols'
 
-export class GuardianAccountRepository implements
-  AddGuardianRepository,
-  LoadGuardianByEmailRepository,
-  LoadGuardianByIdRepository,
-  UpdateAccessTokenRepository,
-  UpdateGuardianPasswordRepository,
-  UpdateVerificationTokenRepository,
+export class GuardianAccountRepository
+implements AddGuardianRepository, LoadGuardianByEmailRepository,
+    LoadGuardianByIdRepository,
+    UpdateAccessTokenRepository,
+    UpdateGuardianPasswordRepository,
+    UpdateVerificationTokenRepository,
   UpdateEmailConfirmationRepository {
-  async add (guardianData: AddGuardianRepository.Params): Promise<AddGuardianRepository.Result> {
+  async add (
+    guardianData: AddGuardianRepository.Params
+  ): Promise<AddGuardianRepository.Result> {
     const guardianHasEmailOrPhoneRegistered = await db.guardian.findFirst({
       where: {
-        OR: [
-          { email: guardianData.email },
-          { phone: guardianData.phone }
-        ]
+        OR: [{ email: guardianData.email }, { phone: guardianData.phone }]
       }
     })
 
@@ -32,7 +30,12 @@ export class GuardianAccountRepository implements
     }
 
     return await db.guardian.create({
-      data: guardianData,
+      data: {
+        ...guardianData,
+        settings: {
+          create: {}
+        }
+      },
       select: {
         id: true,
         firstName: true,
@@ -50,15 +53,21 @@ export class GuardianAccountRepository implements
     return Boolean(result)
   }
 
-  async loadByEmail (email: LoadGuardianByEmailRepository.Params): Promise<LoadGuardianByEmailRepository.Result> {
+  async loadByEmail (
+    email: LoadGuardianByEmailRepository.Params
+  ): Promise<LoadGuardianByEmailRepository.Result> {
     return await db.guardian.findUnique({ where: { email } })
   }
 
-  async loadById (id: LoadGuardianByIdRepository.Params): Promise<LoadGuardianByIdRepository.Result> {
+  async loadById (
+    id: LoadGuardianByIdRepository.Params
+  ): Promise<LoadGuardianByIdRepository.Result> {
     return await db.guardian.findUnique({ where: { id } })
   }
 
-  async updateAccessToken (params: UpdateAccessTokenRepository.Params): Promise<UpdateAccessTokenRepository.Result> {
+  async updateAccessToken (
+    params: UpdateAccessTokenRepository.Params
+  ): Promise<UpdateAccessTokenRepository.Result> {
     const { userId, token } = params
 
     const result = await this.checkUserId(userId)
@@ -75,7 +84,9 @@ export class GuardianAccountRepository implements
     return true
   }
 
-  async updateVerificationToken (params: UpdateVerificationTokenRepository.Params): Promise<UpdateVerificationTokenRepository.Result> {
+  async updateVerificationToken (
+    params: UpdateVerificationTokenRepository.Params
+  ): Promise<UpdateVerificationTokenRepository.Result> {
     const { userId, token } = params
 
     const result = await this.checkUserId(userId)
@@ -86,13 +97,18 @@ export class GuardianAccountRepository implements
 
     await db.guardian.update({
       where: { id: userId },
-      data: { verificationToken: token, verificationTokenCreatedAt: new Date() }
+      data: {
+        verificationToken: token,
+        verificationTokenCreatedAt: new Date()
+      }
     })
 
     return true
   }
 
-  async updatePassword (params: UpdateGuardianPasswordRepository.Params): Promise<UpdateGuardianPasswordRepository.Result> {
+  async updatePassword (
+    params: UpdateGuardianPasswordRepository.Params
+  ): Promise<UpdateGuardianPasswordRepository.Result> {
     const { userId, password } = params
 
     const result = await this.checkUserId(userId)
@@ -109,7 +125,9 @@ export class GuardianAccountRepository implements
     return true
   }
 
-  async updateEmailConfirmation (userId: UpdateEmailConfirmationRepository.Params): Promise<UpdateEmailConfirmationRepository.Result> {
+  async updateEmailConfirmation (
+    userId: UpdateEmailConfirmationRepository.Params
+  ): Promise<UpdateEmailConfirmationRepository.Result> {
     const result = await db.guardian.update({
       where: { id: userId },
       data: { emailConfirmation: true },

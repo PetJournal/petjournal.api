@@ -20,7 +20,8 @@ import {
   type SendEmail,
   type AddTag,
   type LoadTagById,
-  type AddScheduler
+  type AddScheduler,
+  type LoadSettings
 } from '@/domain/use-cases'
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
 import { mockFakeAppointPet, mockFakePetUpdated, mockFakePetByGuardianIdLoaded, mockFakeSpecieAdded, makeFakeGuardianData, mockFakeBreedAdded, mockFakeSizeAdded } from '../mocks'
@@ -379,6 +380,21 @@ const makeFakeAddSchedulerUseCase = (): AddScheduler => {
   return new AddSchedulerStub()
 }
 
+const makeFakeLoadSettingsUseCase = (): LoadSettings => {
+  class LoadSettingsStub implements LoadSettings {
+    async loadAll (param: LoadSettings.Param): Promise<LoadSettings.Result> {
+      return [
+        {
+          notificationEmail: false,
+          notificationMobile: false
+        }
+      ]
+    }
+  }
+
+  return new LoadSettingsStub()
+}
+
 export {
   makeFakeAddGuardianUseCase,
   makeFakeAddPetUseCase,
@@ -404,5 +420,6 @@ export {
   makeFakeLoadTagsUseCase,
   makeFakeAddTagUseCase,
   makeFakeLoadTagByIdUseCase,
-  makeFakeAddSchedulerUseCase
+  makeFakeAddSchedulerUseCase,
+  makeFakeLoadSettingsUseCase
 }

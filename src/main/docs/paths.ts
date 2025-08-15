@@ -22,7 +22,8 @@ import {
   loadTagsPath,
   loadCurrentDateTasksPath,
   loadCurrentWeekTasksPath,
-  loadCurrentMonthTasksPath
+  loadCurrentMonthTasksPath,
+  loadSettingsPath
 } from './paths/'
 
 export default {
@@ -44,5 +45,6 @@ export default {
   '/tag/{tagId}': { ...updateTagPath, ...loadTagByIdPath, ...deleteTagByIdPath },
   '/tasks/current-date': loadCurrentDateTasksPath,
   '/tasks/current-week': loadCurrentWeekTasksPath,
-  '/tasks/current-month': loadCurrentMonthTasksPath
+  '/tasks/current-month': loadCurrentMonthTasksPath,
+  '/settings': loadSettingsPath
 }
