@@ -17,7 +17,8 @@ import {
   schedulerSchema,
   tagSchema,
   tagParamsSchema,
-  updateTagParamsSchema
+  updateTagParamsSchema,
+  updateSettingsParamsSchema
 } from './schemas/'
 
 export default {
@@ -39,5 +40,6 @@ export default {
   scheduler: schedulerSchema,
   tag: tagSchema,
   addTagParams: tagParamsSchema,
-  updateTagParams: updateTagParamsSchema
+  updateTagParams: updateTagParamsSchema,
+  updateSettingsParams: updateSettingsParamsSchema
 }
