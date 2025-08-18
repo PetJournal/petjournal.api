@@ -49,6 +49,13 @@ describe('UpdateSettings Controller', () => {
   })
 
   describe('UpdateSettings Use case', () => {
+    it('Should call update with correct values', async () => {
+      const { sut, updateSettingsStub } = makeSut()
+      const updateSpy = jest.spyOn(updateSettingsStub, 'update')
+      await sut.handle(httpRequest)
+      expect(updateSpy).toHaveBeenCalledWith(httpRequest.body)
+    })
+
     it('Should return 406(NotAcceptable) if an invalid guardianId id provided', async () => {
       const { sut, updateSettingsStub } = makeSut()
       jest.spyOn(updateSettingsStub, 'update').mockResolvedValue({
