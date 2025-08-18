@@ -1,5 +1,6 @@
 import { UpdateSettingsController } from '@/application/controllers'
-import { badRequest, success, type HttpRequest } from '@/application/helpers'
+import { NotAcceptableError } from '@/application/errors'
+import { badRequest, notAcceptable, success, type HttpRequest } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type UpdateSettings } from '@/domain/use-cases'
 import { makeFakeUpdateSettingsUseCase, makeFakeValidation } from '@/tests/utils'
@@ -44,6 +45,18 @@ describe('UpdateSettings Controller', () => {
       const validationSpy = jest.spyOn(validationStub, 'validate')
       await sut.handle(httpRequest)
       expect(validationSpy).toHaveBeenCalledWith(httpRequest.body)
+    })
+  })
+
+  describe('UpdateSettings Use case', () => {
+    it('Should return 406(NotAcceptable) if an invalid guardianId id provided', async () => {
+      const { sut, updateSettingsStub } = makeSut()
+      jest.spyOn(updateSettingsStub, 'update').mockResolvedValue({
+        isSuccess: false,
+        error: new NotAcceptableError('userId')
+      })
+      const result = await sut.handle(httpRequest)
+      expect(result).toEqual(notAcceptable(new NotAcceptableError('userId')))
     })
   })
 
