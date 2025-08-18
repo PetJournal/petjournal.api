@@ -57,4 +57,13 @@ describe('DbUpdateSettings Use Case', () => {
       })
     })
   })
+
+  describe('Settings Repository', () => {
+    it('Should call loadAll method with correct value', async () => {
+      const { sut, settingsRepositoryStub } = makeSut()
+      const loadSpy = jest.spyOn(settingsRepositoryStub, 'loadAll')
+      await sut.update(params)
+      expect(loadSpy).toHaveBeenCalledWith(params.guardianId)
+    })
+  })
 })
