@@ -41,4 +41,26 @@ describe('SettingsRepository', () => {
       ])
     })
   })
+
+  describe('Update method', () => {
+    it('Should return an updated settings on success', async () => {
+      const sut = makeSut()
+      const guardian = await PrismaHelper.createGuardian()
+
+      const settings = await prisma.settings.create({
+        data: {
+          guardianId: guardian.id,
+          notificationEmail: false,
+          notificationMobile: false
+        }
+      })
+
+      const updatedSettings = await sut.update({ ...settings, notificationEmail: true })
+      expect(updatedSettings).toEqual({
+        guardianId: expect.any(String),
+        notificationEmail: true,
+        notificationMobile: false
+      })
+    })
+  })
 })
