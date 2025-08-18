@@ -28,7 +28,7 @@ const makeSut = (): SutTypes => {
 
 describe('DbUpdateSettings Use Case', () => {
   const params = {
-    guardianId: 'any_guardianId',
+    guardianId: 'any_id',
     notificationEmail: false,
     notificationMobile: false
   }
@@ -80,6 +80,17 @@ describe('DbUpdateSettings Use Case', () => {
       expect(result).toEqual({
         isSuccess: false,
         error: new MissingParamError('settings')
+      })
+    })
+
+    it('Should call update method with correct values', async () => {
+      const { sut, settingsRepositoryStub } = makeSut()
+      const loadSpy = jest.spyOn(settingsRepositoryStub, 'update')
+      await sut.update(params)
+      expect(loadSpy).toHaveBeenCalledWith({
+        guardianId: params.guardianId,
+        notificationEmail: params.notificationEmail,
+        notificationMobile: params.notificationMobile
       })
     })
   })
