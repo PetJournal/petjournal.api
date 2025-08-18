@@ -1,6 +1,6 @@
 import { UpdateSettingsController } from '@/application/controllers'
-import { MissingParamError, NotAcceptableError } from '@/application/errors'
-import { badRequest, notAcceptable, success, type HttpRequest } from '@/application/helpers'
+import { MissingParamError, NotAcceptableError, ServerError } from '@/application/errors'
+import { badRequest, notAcceptable, serverError, success, type HttpRequest } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type UpdateSettings } from '@/domain/use-cases'
 import { makeFakeUpdateSettingsUseCase, makeFakeValidation } from '@/tests/utils'
@@ -67,6 +67,13 @@ describe('UpdateSettings Controller', () => {
       })
       const result = await sut.handle(httpRequest)
       expect(result).toEqual(notAcceptable(new MissingParamError('settings')))
+    })
+
+    it('Should return 500(serverError) if update throws', async () => {
+      const { sut, updateSettingsStub } = makeSut()
+      jest.spyOn(updateSettingsStub, 'update').mockRejectedValue(new Error())
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(serverError(new ServerError('Internal Server Error!')))
     })
   })
 
