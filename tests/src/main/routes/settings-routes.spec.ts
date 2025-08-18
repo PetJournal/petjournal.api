@@ -61,4 +61,24 @@ describe('Settings Routes', () => {
       expect(response.status).toBe(401)
     })
   })
+
+  describe('PUT /api/settings', () => {
+    it('Should return 200 and a updated settings on success', async () => {
+      const response = await request(app)
+        .put('/api/settings')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({
+          notificationEmail: false,
+          notificationMobile: false
+        })
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual({
+        guardianId: expect.any(String),
+        notificationEmail: false,
+        notificationMobile: false
+      }
+      )
+    })
+  })
 })
