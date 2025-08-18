@@ -1,6 +1,6 @@
 export const loadSettingsPath = {
   get: {
-    settings: ['settings'],
+    tags: ['settings'],
     summary: 'load all settings',
     description: '',
     security: [{
