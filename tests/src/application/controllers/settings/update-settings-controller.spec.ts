@@ -1,5 +1,5 @@
 import { UpdateSettingsController } from '@/application/controllers'
-import { badRequest, type HttpRequest } from '@/application/helpers'
+import { badRequest, success, type HttpRequest } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type UpdateSettings } from '@/domain/use-cases'
 import { makeFakeUpdateSettingsUseCase, makeFakeValidation } from '@/tests/utils'
@@ -45,5 +45,15 @@ describe('UpdateSettings Controller', () => {
       await sut.handle(httpRequest)
       expect(validationSpy).toHaveBeenCalledWith(httpRequest.body)
     })
+  })
+
+  it('Should return updated settings on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(success({
+      guardianId: 'any_id',
+      notificationEmail: false,
+      notificationMobile: false
+    }))
   })
 })
