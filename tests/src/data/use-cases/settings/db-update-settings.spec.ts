@@ -1,4 +1,4 @@
-import { NotAcceptableError } from '@/application/errors'
+import { MissingParamError, NotAcceptableError } from '@/application/errors'
 import { type LoadGuardianByIdRepository, type LoadSettingsRepository, type UpdateSettingsRepository } from '@/data/protocols'
 import { DbUpdateSettings } from '@/data/use-cases'
 import { type UpdateSettings } from '@/domain/use-cases'
@@ -71,6 +71,16 @@ describe('DbUpdateSettings Use Case', () => {
       jest.spyOn(settingsRepositoryStub, 'loadAll').mockRejectedValue(new Error())
       const promise = sut.update(params)
       await expect(promise).rejects.toThrow()
+    })
+
+    it('Should return Missing Param error if there is not settings in guardian', async () => {
+      const { sut, settingsRepositoryStub } = makeSut()
+      jest.spyOn(settingsRepositoryStub, 'loadAll').mockResolvedValueOnce([])
+      const result = await sut.update(params)
+      expect(result).toEqual({
+        isSuccess: false,
+        error: new MissingParamError('settings')
+      })
     })
   })
 })
