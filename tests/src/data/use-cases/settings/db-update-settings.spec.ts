@@ -101,4 +101,17 @@ describe('DbUpdateSettings Use Case', () => {
       await expect(promise).rejects.toThrow()
     })
   })
+
+  it('Should return settings updated on success', async () => {
+    const { sut } = makeSut()
+    const result = await sut.update(params)
+    expect(result).toEqual({
+      isSuccess: true,
+      data: {
+        guardianId: params.guardianId,
+        notificationEmail: params.notificationEmail,
+        notificationMobile: params.notificationMobile
+      }
+    })
+  })
 })

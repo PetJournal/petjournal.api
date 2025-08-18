@@ -439,7 +439,7 @@ const makeFakeSettingsRepository = (): LoadSettingsRepository & UpdateSettingsRe
 
     async update (params: UpdateSettingsRepository.Params): Promise<UpdateSettingsRepository.Result> {
       return {
-        guardianId: 'any_guardianId',
+        guardianId: 'any_id',
         notificationEmail: false,
         notificationMobile: false
       }
