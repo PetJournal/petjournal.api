@@ -1,5 +1,5 @@
 import { UpdateSettingsController } from '@/application/controllers'
-import { NotAcceptableError } from '@/application/errors'
+import { MissingParamError, NotAcceptableError } from '@/application/errors'
 import { badRequest, notAcceptable, success, type HttpRequest } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type UpdateSettings } from '@/domain/use-cases'
@@ -57,6 +57,16 @@ describe('UpdateSettings Controller', () => {
       })
       const result = await sut.handle(httpRequest)
       expect(result).toEqual(notAcceptable(new NotAcceptableError('userId')))
+    })
+
+    it('Should return 406(NotAcceptable) if settings does not exists in guardian', async () => {
+      const { sut, updateSettingsStub } = makeSut()
+      jest.spyOn(updateSettingsStub, 'update').mockResolvedValue({
+        isSuccess: false,
+        error: new MissingParamError('settings')
+      })
+      const result = await sut.handle(httpRequest)
+      expect(result).toEqual(notAcceptable(new MissingParamError('settings')))
     })
   })
 
