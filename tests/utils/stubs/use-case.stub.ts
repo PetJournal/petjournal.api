@@ -21,7 +21,8 @@ import {
   type AddTag,
   type LoadTagById,
   type AddScheduler,
-  type LoadSettings
+  type LoadSettings,
+  type UpdateSettings
 } from '@/domain/use-cases'
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
 import { mockFakeAppointPet, mockFakePetUpdated, mockFakePetByGuardianIdLoaded, mockFakeSpecieAdded, makeFakeGuardianData, mockFakeBreedAdded, mockFakeSizeAdded } from '../mocks'
@@ -395,6 +396,22 @@ const makeFakeLoadSettingsUseCase = (): LoadSettings => {
   return new LoadSettingsStub()
 }
 
+const makeFakeUpdateSettingsUseCase = (): UpdateSettings => {
+  class UpdateSettingsStub implements UpdateSettings {
+    async update (params: UpdateSettings.Params): Promise<UpdateSettings.Result> {
+      return {
+        isSuccess: true,
+        data: {
+          guardianId: 'any_id',
+          notificationEmail: false,
+          notificationMobile: false
+        }
+      }
+    }
+  }
+  return new UpdateSettingsStub()
+}
+
 export {
   makeFakeAddGuardianUseCase,
   makeFakeAddPetUseCase,
@@ -421,5 +438,6 @@ export {
   makeFakeAddTagUseCase,
   makeFakeLoadTagByIdUseCase,
   makeFakeAddSchedulerUseCase,
-  makeFakeLoadSettingsUseCase
+  makeFakeLoadSettingsUseCase,
+  makeFakeUpdateSettingsUseCase
 }
