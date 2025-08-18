@@ -93,5 +93,12 @@ describe('DbUpdateSettings Use Case', () => {
         notificationMobile: params.notificationMobile
       })
     })
+
+    it('Should throw if update method throws', async () => {
+      const { sut, settingsRepositoryStub } = makeSut()
+      jest.spyOn(settingsRepositoryStub, 'update').mockRejectedValue(new Error())
+      const promise = sut.update(params)
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
