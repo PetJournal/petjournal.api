@@ -1,3 +1,4 @@
+import { NotAcceptableError } from '@/application/errors'
 import { type LoadGuardianByIdRepository, type LoadSettingsRepository, type UpdateSettingsRepository } from '@/data/protocols'
 import { DbUpdateSettings } from '@/data/use-cases'
 import { type UpdateSettings } from '@/domain/use-cases'
@@ -44,6 +45,16 @@ describe('DbUpdateSettings Use Case', () => {
       jest.spyOn(guardianRepositoryStub, 'loadById').mockRejectedValue(new Error())
       const promise = sut.update(params)
       await expect(promise).rejects.toThrow()
+    })
+
+    it('Should return Not Acceptable error if incorrect guardianId is provided', async () => {
+      const { sut, guardianRepositoryStub } = makeSut()
+      jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValueOnce(null)
+      const result = await sut.update({ ...params, guardianId: 'invalid_guardianId' })
+      expect(result).toEqual({
+        isSuccess: false,
+        error: new NotAcceptableError('userId')
+      })
     })
   })
 })
