@@ -65,5 +65,12 @@ describe('DbUpdateSettings Use Case', () => {
       await sut.update(params)
       expect(loadSpy).toHaveBeenCalledWith(params.guardianId)
     })
+
+    it('Should throw if loadAll method throws', async () => {
+      const { sut, settingsRepositoryStub } = makeSut()
+      jest.spyOn(settingsRepositoryStub, 'loadAll').mockRejectedValue(new Error())
+      const promise = sut.update(params)
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
