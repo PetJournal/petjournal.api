@@ -12,7 +12,7 @@ export class NotificationEmailValidation implements Validation {
   }
 
   validate (input: any): Error | void {
-    if (typeof input[this.fieldName] !== 'boolean' && input[this.fieldName] !== null) {
+    if (typeof input[this.fieldName] !== 'boolean') {
       return new InvalidParamError(this.fieldName)
     }
     const isValid = this.validator.isValid(input[this.fieldName])
