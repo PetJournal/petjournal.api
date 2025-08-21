@@ -1,7 +1,7 @@
-export const loadSettingsPath = {
-  get: {
+export const updateSettingsPath = {
+  put: {
     tags: ['settings'],
-    summary: 'load all settings',
+    summary: 'update settings',
     description: '',
     security: [{
       bearerAuth: []
@@ -13,17 +13,26 @@ export const loadSettingsPath = {
       'application/json',
       'application/xml'
     ],
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            $ref: '#/schemas/updateSettingsParams'
+          }
+        }
+      }
+    },
     responses: {
       200: {
         description: 'Success',
         content: {
           'application/json': {
-            example: [
-              {
-                notification_email: false,
-                notification_mobile: false
-              }
-            ]
+            example: {
+              guardianId: '61c2f94e-05c6-4449-be8f-aa5552e6ed57',
+              notification_email: false,
+              notification_mobile: false
+            }
           }
         }
       },
