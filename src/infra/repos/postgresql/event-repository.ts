@@ -60,6 +60,8 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
       orderBy: {
         start: 'asc'
       },
+      skip: params.offset ?? 0,
+      take: params.limit ?? 10,
       include: {
         scheduler: {
           include: {

@@ -17,6 +17,20 @@ export const loadCurrentMonthTasksPath = {
           format: 'uuid'
         },
         description: 'Optional tag ID to filter tasks'
+      },
+      {
+        name: 'page',
+        in: 'query',
+        required: false,
+        schema: { type: 'integer', minimum: 1 },
+        description: 'Page number (default = 1)'
+      },
+      {
+        name: 'limit',
+        in: 'query',
+        required: false,
+        schema: { type: 'integer', minimum: 1, maximum: 100 },
+        description: 'Number of items per page (default = 10)'
       }
     ],
     responses: {
