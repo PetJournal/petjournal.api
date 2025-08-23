@@ -357,5 +357,49 @@ describe('Event Repository', () => {
         expect.objectContaining({ start: new Date('2025-07-05T14:00:00Z') })
       ]))
     })
+
+    it('Should apply pagination with limit and offset', async () => {
+      const sut = makeSut()
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
+      const tag = await prisma.tag.create({
+        data: { guardianId: guardian.id, name: 'pagination_tag', color: 'yellow' }
+      })
+
+      const scheduler = await prisma.scheduler.create({
+        data: {
+          tagId: tag.id,
+          guardianId: guardian.id,
+          title: 'paginated_event',
+          description: '',
+          note: '',
+          startAt: new Date('2025-08-01T10:00:00Z'),
+          endAt: new Date('2025-08-01T12:00:00Z'),
+          daysOfWeek: [],
+          daysOfMonth: [],
+          daily: false,
+          pets: { connect: [{ id: pet.id }] }
+        }
+      })
+
+      await prisma.event.createMany({
+        data: [
+          { schedulerId: scheduler.id, start: new Date('2025-08-01T10:00:00Z'), end: new Date('2025-08-01T11:00:00Z') },
+          { schedulerId: scheduler.id, start: new Date('2025-08-01T11:00:00Z'), end: new Date('2025-08-01T12:00:00Z') },
+          { schedulerId: scheduler.id, start: new Date('2025-08-01T12:00:00Z'), end: new Date('2025-08-01T13:00:00Z') }
+        ]
+      })
+
+      const result = await sut.loadAllByInterval({
+        start: new Date('2025-08-01T00:00:00Z'),
+        end: new Date('2025-08-01T23:59:59Z'),
+        limit: 2,
+        offset: 1
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0].start).toEqual(new Date('2025-08-01T11:00:00Z'))
+      expect(result[1].start).toEqual(new Date('2025-08-01T12:00:00Z'))
+    })
   })
 })
