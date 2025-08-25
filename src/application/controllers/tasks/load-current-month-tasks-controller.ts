@@ -29,16 +29,17 @@ export class LoadCurrentMonthTasksController implements Controller {
       const now = new Date()
       now.setUTCHours(0, 0, 0, 0)
 
-      const offset = (Number(page) - 1) * Number(limit)
-
-      const result = await this.loadCurrentMonthTasks.load({ date: now, tagId, limit: Number(limit), offset })
+      const result = await this.loadCurrentMonthTasks.load({
+        date: now,
+        tagId,
+        page: Number(page),
+        limit: Number(limit)
+      })
       return success({
         data: result,
-        pagination: {
-          page: Number(page),
-          limit: Number(limit),
-          count: result.length
-        }
+        page,
+        limit,
+        count: result.length
       })
     } catch (error) {
       return serverError(error as Error)

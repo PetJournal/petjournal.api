@@ -7,7 +7,7 @@ export namespace LoadTasksByIntervalRepository {
     start: Date
     end: Date
     tagId?: string
-    offset?: number
+    page?: number
     limit?: number
   }
 

@@ -45,42 +45,27 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
   }
 
   async loadAllByInterval (params: LoadTasksByIntervalRepository.Params): Promise<LoadTasksByIntervalRepository.Result> {
+    const { start, end, tagId, page = 1, limit = 10 } = params
+
+    const offset = (page - 1) * limit
     const events = await db.event.findMany({
       where: {
-        start: {
-          gte: params.start,
-          lte: params.end
-        },
-        scheduler: params.tagId
-          ? {
-              tagId: params.tagId
-            }
-          : undefined
+        start: { gte: start, lte: end },
+        scheduler: tagId ? { tagId } : undefined
       },
-      orderBy: {
-        start: 'asc'
-      },
-      skip: params.offset ?? 0,
-      take: params.limit ?? 10,
+      orderBy: { start: 'asc' },
+      skip: offset,
+      take: limit,
       include: {
         scheduler: {
           include: {
-            tag: {
-              select: {
-                name: true,
-                color: true
-              }
-            },
-            pets: {
-              select: {
-                id: true,
-                image: true
-              }
-            }
+            tag: { select: { name: true, color: true } },
+            pets: { select: { id: true, image: true } }
           }
         }
       }
     })
+
     return events
   }
 }

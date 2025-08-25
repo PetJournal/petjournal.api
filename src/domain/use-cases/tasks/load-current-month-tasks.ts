@@ -6,7 +6,7 @@ export namespace LoadCurrentMonthTasks {
   export type Params = {
     date: Date
     tagId?: string
-    offset?: number
+    page?: number
     limit?: number
   }
 
