@@ -98,17 +98,16 @@ describe('LoadCurrentMonthTasksController', () => {
           { id: 'task1', schedulerId: 'sched_1', start: expect.any(Date), end: expect.any(Date) },
           { id: 'task2', schedulerId: 'sched_2', start: expect.any(Date), end: expect.any(Date) }
         ],
-        pagination: {
-          page: 1,
-          limit: 10,
-          count: 2
-        }
+        page: 1,
+        limit: 10,
+        count: 2
       }))
     })
 
-    it('Should call LoadCurrentMonthTasks with limit and offset from query', async () => {
+    it('Should call LoadCurrentMonthTasks with limit and page from query', async () => {
       const { sut, loadCurrentMonthTasksStub } = makeSut()
       const loadSpy = jest.spyOn(loadCurrentMonthTasksStub, 'load')
+      const inputDate = new Date('2025-06-18T00:00:00Z')
 
       const httpRequest: HttpRequest = {
         query: { tagId: 'anyTagId', page: 2, limit: 5 }
@@ -116,11 +115,12 @@ describe('LoadCurrentMonthTasksController', () => {
 
       await sut.handle(httpRequest)
 
-      expect(loadSpy).toHaveBeenCalledWith(expect.objectContaining({
+      expect(loadSpy).toHaveBeenCalledWith({
+        date: inputDate,
         tagId: 'anyTagId',
         limit: 5,
-        offset: 5
-      }))
+        page: 2
+      })
     })
 
     it('Should return paginated response structure', async () => {
@@ -137,11 +137,9 @@ describe('LoadCurrentMonthTasksController', () => {
           { id: 'task1', schedulerId: 'sched_1', start: expect.any(Date), end: expect.any(Date) },
           { id: 'task2', schedulerId: 'sched_2', start: expect.any(Date), end: expect.any(Date) }
         ],
-        pagination: {
-          page: 1,
-          limit: 2,
-          count: 2
-        }
+        page: 1,
+        limit: 2,
+        count: 2
       }))
     })
   })
