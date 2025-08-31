@@ -394,12 +394,12 @@ describe('Event Repository', () => {
         start: new Date('2025-08-01T00:00:00Z'),
         end: new Date('2025-08-01T23:59:59Z'),
         limit: 2,
-        offset: 1
+        page: 1
       })
 
       expect(result).toHaveLength(2)
-      expect(result[0].start).toEqual(new Date('2025-08-01T11:00:00Z'))
-      expect(result[1].start).toEqual(new Date('2025-08-01T12:00:00Z'))
+      expect(result[0].start).toEqual(new Date('2025-08-01T10:00:00Z'))
+      expect(result[1].start).toEqual(new Date('2025-08-01T11:00:00Z'))
     })
   })
 })
