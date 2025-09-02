@@ -1,42 +1,23 @@
-export const loginPath = {
-  post: {
-    tags: ['guardian'],
-    summary: 'login a guardian',
-    description: '',
-    requestBody: {
-      required: true,
-      content: {
-        'application/json': {
-          schema: {
-            $ref: '#/schemas/loginParams'
-          },
-          example: {
-            email: 'johndoe@email.com',
-            password: 'Teste@123'
-          }
+import { DocBuilder } from '../utils/doc-builder'
+
+export const loginPath = DocBuilder.postBuilder()
+  .addTags(['guardian'])
+  .addSummary('login a guardian')
+  .addJsonBody('#/schemas/loginParams', true, {
+    email: 'johndoe@email.com',
+    password: 'Teste@123'
+  })
+  .addResponse(200, {
+    description: 'Success',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: '#/schemas/accessToken'
         }
-      }
-    },
-    responses: {
-      200: {
-        description: 'Success',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/schemas/accessToken'
-            }
-          }
-        }
-      },
-      400: {
-        $ref: '#/components/badRequest'
-      },
-      401: {
-        $ref: '#/components/unauthorized'
-      },
-      500: {
-        $ref: '#/components/serverError'
       }
     }
-  }
-}
+  })
+  .addBadRequestResponse()
+  .addUnauthorizedResponse()
+  .addServerErrorResponse()
+  .build()

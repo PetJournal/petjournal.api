@@ -1,0 +1,427 @@
+import { DocBuilder } from '@/main/docs/utils/doc-builder'
+
+interface SutTypes {
+  sut: DocBuilder<'post'>
+}
+
+const makeSut = (): SutTypes => {
+  const sut = DocBuilder.postBuilder()
+  return {
+    sut
+  }
+}
+
+describe('DocBuilder', () => {
+  describe('static methods', () => {
+    it('Should create a instance for GET', () => {
+      const sut = DocBuilder.getBuilder()
+
+      expect(sut).toBeInstanceOf(DocBuilder)
+    })
+
+    it('Should create a instance for POST', () => {
+      const sut = DocBuilder.postBuilder()
+
+      expect(sut).toBeInstanceOf(DocBuilder)
+    })
+
+    it('Should create a instance for PUT', () => {
+      const sut = DocBuilder.putBuilder()
+
+      expect(sut).toBeInstanceOf(DocBuilder)
+    })
+
+    it('Should create a instance for DELETE', () => {
+      const sut = DocBuilder.deleteBuilder()
+
+      expect(sut).toBeInstanceOf(DocBuilder)
+    })
+
+    it('Should create a instance for PATCH', () => {
+      const sut = DocBuilder.patchBuilder()
+
+      expect(sut).toBeInstanceOf(DocBuilder)
+    })
+  })
+
+  it('Should build a doc with tags', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addTags(['tag1', 'tag2']).build()
+
+    expect(result).toEqual({
+      post: {
+        tags: ['tag1', 'tag2']
+      }
+    })
+  })
+
+  it('Should build a doc with summary', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addSummary('Test Summary').build()
+
+    expect(result).toEqual({
+      post: {
+        summary: 'Test Summary'
+      }
+    })
+  })
+
+  it('Should build a doc with description', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addDescription('Test Description').build()
+
+    expect(result).toEqual({
+      post: {
+        description: 'Test Description'
+      }
+    })
+  })
+
+  it('Should build a doc with body', () => {
+    const { sut } = makeSut()
+
+    const schema = {
+      type: 'object' as const,
+      properties: {
+        name: {
+          type: 'string'
+        }
+      },
+      required: ['name']
+    }
+    const result = sut.addJsonBody(schema, true, { name: 'Example' }).build()
+
+    expect(result).toEqual({
+      post: {
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  name: {
+                    type: 'string'
+                  }
+                },
+                required: ['name']
+              },
+              example: { name: 'Example' }
+            }
+          }
+        }
+      }
+    })
+  })
+
+  it('Should build a doc with ref schema body', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addJsonBody('#/schemas/Example').build()
+
+    expect(result).toEqual({
+      post: {
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/schemas/Example' }
+            }
+          }
+        }
+      }
+    })
+  })
+
+  it('Should build a doc with json produces', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addJsonProduces().build()
+
+    expect(result).toEqual({
+      post: {
+        produces: ['application/json']
+      }
+    })
+  })
+
+  it('Should build a doc with xml produces', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addXmlProduces().build()
+
+    expect(result).toEqual({
+      post: {
+        produces: ['application/xml']
+      }
+    })
+  })
+
+  it('Should build a doc with multiple produces', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addJsonProduces().addXmlProduces().build()
+
+    expect(result).toEqual({
+      post: {
+        produces: ['application/json', 'application/xml']
+      }
+    })
+  })
+
+  it('Should build a doc with path parameter', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addPathParameter('id', 'ID description', 'string', { required: true, format: 'uuid' }).build()
+
+    expect(result).toEqual({
+      post: {
+        parameters: [{
+          name: 'id',
+          in: 'path',
+          description: 'ID description',
+          required: true,
+          schema: {
+            type: 'string',
+            format: 'uuid'
+          }
+        }]
+      }
+    })
+  })
+
+  it('Should build a doc with response', () => {
+    const { sut } = makeSut()
+
+    const response = {
+      description: 'Success',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' }
+            }
+          }
+        }
+      }
+    }
+
+    const result = sut.addResponse(200, response).build()
+
+    expect(result).toEqual({
+      post: {
+        responses: {
+          200: response
+        }
+      }
+    })
+  })
+
+  it('Should build a doc with bad request response', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addBadRequestResponse().build()
+
+    expect(result).toEqual({
+      post: {
+        responses: {
+          400: {
+            description: 'Invalid request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/schemas/error'
+                },
+                example: {
+                  error: 'Invalid param: example_param'
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+  })
+
+  it('Should build a doc with conflict response', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addConflictResponse().build()
+
+    expect(result).toEqual({
+      post: {
+        responses: {
+          409: {
+            description: 'Conflict request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/schemas/error'
+                },
+                example: {
+                  error: 'Phone or Email already registered'
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+  })
+
+  it('Should build a doc with unauthorized response', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addUnauthorizedResponse().build()
+
+    expect(result).toEqual({
+      post: {
+        responses: {
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/schemas/error'
+                },
+                example: {
+                  error: 'Unauthorized'
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+  })
+
+  it('Should build a doc with server error response', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addServerErrorResponse().build()
+
+    expect(result).toEqual({
+      post: {
+        responses: {
+          500: {
+            description: 'Internal server error',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/schemas/error'
+                },
+                example: {
+                  error: 'Internal server error. An unexpected error happened. Please try again in a moment.'
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+  })
+
+  it('Should build a doc with JWT auth security', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addJwtAuthSecurity().build()
+
+    expect(result).toEqual({
+      post: {
+        security: [{ bearerAuth: [] }]
+      }
+    })
+  })
+
+  it('Should build a doc with query parameter', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addQueryParameter('tagId', 'Optional tag ID to filter tasks', 'string', { required: false, format: 'uuid' }).build()
+
+    expect(result).toEqual({
+      post: {
+        parameters: [{
+          name: 'tagId',
+          in: 'query',
+          description: 'Optional tag ID to filter tasks',
+          required: false,
+          schema: {
+            type: 'string',
+            format: 'uuid'
+          }
+        }]
+      }
+    })
+  })
+
+  it('Should build a doc with multipart form data body', () => {
+    const { sut } = makeSut()
+
+    const schema = {
+      type: 'object' as const,
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary'
+        }
+      }
+    }
+
+    const result = sut.addMultipartFormDataBody(schema, true).build()
+
+    expect(result).toEqual({
+      post: {
+        requestBody: {
+          required: true,
+          content: {
+            'multipart/form-data': {
+              schema
+            }
+          }
+        }
+      }
+    })
+  })
+
+  it('Should build a doc with not acceptable response', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addNotAcceptableResponse().build()
+
+    expect(result).toEqual({
+      post: {
+        responses: {
+          406: {
+            description: 'Not Acceptable',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/notAcceptable'
+                },
+                example: {
+                  error: 'Not acceptable: example_param'
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+  })
+
+  it('Should build a doc with json consumes', () => {
+    const { sut } = makeSut()
+
+    const result = sut.addJsonConsumes().build()
+
+    expect(result).toEqual({
+      post: {
+        consumes: ['application/json']
+      }
+    })
+  })
+})

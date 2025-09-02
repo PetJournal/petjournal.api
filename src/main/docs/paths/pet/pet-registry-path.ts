@@ -1,78 +1,58 @@
-export const petRegistryPath = {
-  post: {
-    tags: ['pet'],
-    summary: 'add a new pet',
-    description: '',
-    security: [{
-      bearerAuth: []
-    }],
-    requestBody: {
-      required: true,
-      content: {
-        'multipart/form-data': {
-          schema: {
-            type: 'object',
-            properties: {
-              specieName: {
-                type: 'string'
-              },
-              petName: {
-                type: 'string'
-              },
-              gender: {
-                type: 'string'
-              },
-              breedName: {
-                type: 'string'
-              },
-              size: {
-                type: 'string'
-              },
-              castrated: {
-                type: 'boolean'
-              },
-              dateOfBirth: {
-                type: 'string',
-                format: 'date-time'
-              },
-              image: {
-                type: 'string',
-                format: 'binary'
-              }
-            },
-            example: {
-              specieName: 'Gato',
-              petName: 'Garfield',
-              gender: 'M',
-              breedName: 'Doméstico de Pelo Curto',
-              size: 'Pequeno (Até 10Kg)',
-              castrated: true,
-              dateOfBirth: '2021-01-01T00:00:00Z'
-            }
-          }
-        }
-      }
-    },
-    responses: {
-      201: {
-        description: 'Success',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/schemas/pet'
-            }
-          }
-        }
+import { DocBuilder } from '../../utils/doc-builder'
+
+export const petRegistryPath = DocBuilder.postBuilder()
+  .addTags(['pet'])
+  .addSummary('add a new pet')
+  .addJwtAuthSecurity()
+  .addMultipartFormDataBody({
+    type: 'object',
+    properties: {
+      specieName: {
+        type: 'string',
+        example: 'Gato'
       },
-      400: {
-        $ref: '#/components/badRequest'
+      petName: {
+        type: 'string',
+        example: 'Garfield'
       },
-      406: {
-        $ref: '#/components/notAcceptable'
+      gender: {
+        type: 'string',
+        example: 'M'
       },
-      500: {
-        $ref: '#/components/serverError'
+      breedName: {
+        type: 'string',
+        example: 'Doméstico de Pelo Curto'
+      },
+      size: {
+        type: 'string',
+        example: 'Pequeno (Até 10Kg)'
+      },
+      castrated: {
+        type: 'boolean',
+        example: true
+      },
+      dateOfBirth: {
+        type: 'string',
+        format: 'date-time',
+        example: '2021-01-01T00:00:00Z'
+      },
+      image: {
+        type: 'string',
+        format: 'binary'
       }
     }
-  }
-}
+  })
+  .addResponse(201, {
+    description: 'Success',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: '#/schemas/pet'
+        }
+      }
+    }
+  })
+  .addBadRequestResponse()
+  .addNotAcceptableResponse()
+  .addServerErrorResponse()
+  .build()
