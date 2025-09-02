@@ -24,13 +24,23 @@ export class LoadCurrentMonthTasksController implements Controller {
         return badRequest(error)
       }
 
-      const { tagId } = httpRequest.query
+      const { tagId, page = 1, limit = 10 } = httpRequest.query
 
       const now = new Date()
       now.setUTCHours(0, 0, 0, 0)
 
-      const result = await this.loadCurrentMonthTasks.load({ date: now, tagId })
-      return success(result)
+      const result = await this.loadCurrentMonthTasks.load({
+        date: now,
+        tagId,
+        page: Number(page),
+        limit: Number(limit)
+      })
+      return success({
+        data: result,
+        page,
+        limit,
+        count: result.length
+      })
     } catch (error) {
       return serverError(error as Error)
     }

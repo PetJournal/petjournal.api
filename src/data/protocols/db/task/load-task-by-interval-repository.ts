@@ -7,6 +7,8 @@ export namespace LoadTasksByIntervalRepository {
     start: Date
     end: Date
     tagId?: string
+    page?: number
+    limit?: number
   }
 
   export type Result = Array<{

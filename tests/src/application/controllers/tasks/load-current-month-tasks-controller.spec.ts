@@ -77,7 +77,10 @@ describe('LoadCurrentMonthTasksController', () => {
       const expectedStartOfDay = new Date('2025-06-18T00:00:00.000Z')
 
       await sut.handle(httpRequest)
-      expect(loadSpy).toHaveBeenCalledWith({ date: expectedStartOfDay, tagId: httpRequest.query.tagId })
+      expect(loadSpy).toHaveBeenCalledWith(expect.objectContaining({
+        date: expectedStartOfDay,
+        tagId: httpRequest.query.tagId
+      }))
     })
 
     it('Should return 500 if LoadCurrentMonthTasks throws', async () => {
@@ -90,10 +93,54 @@ describe('LoadCurrentMonthTasksController', () => {
     it('Should return tasks on success', async () => {
       const { sut } = makeSut()
       const httpResponse = await sut.handle(httpRequest)
-      expect(httpResponse).toEqual(success([
-        { id: 'task1', schedulerId: 'sched_1', start: expect.any(Date), end: expect.any(Date) },
-        { id: 'task2', schedulerId: 'sched_2', start: expect.any(Date), end: expect.any(Date) }
-      ]))
+      expect(httpResponse).toEqual(success({
+        data: [
+          { id: 'task1', schedulerId: 'sched_1', start: expect.any(Date), end: expect.any(Date) },
+          { id: 'task2', schedulerId: 'sched_2', start: expect.any(Date), end: expect.any(Date) }
+        ],
+        page: 1,
+        limit: 10,
+        count: 2
+      }))
+    })
+
+    it('Should call LoadCurrentMonthTasks with limit and page from query', async () => {
+      const { sut, loadCurrentMonthTasksStub } = makeSut()
+      const loadSpy = jest.spyOn(loadCurrentMonthTasksStub, 'load')
+      const inputDate = new Date('2025-06-18T00:00:00Z')
+
+      const httpRequest: HttpRequest = {
+        query: { tagId: 'anyTagId', page: 2, limit: 5 }
+      }
+
+      await sut.handle(httpRequest)
+
+      expect(loadSpy).toHaveBeenCalledWith({
+        date: inputDate,
+        tagId: 'anyTagId',
+        limit: 5,
+        page: 2
+      })
+    })
+
+    it('Should return paginated response structure', async () => {
+      const { sut } = makeSut()
+
+      const httpRequest: HttpRequest = {
+        query: { page: 1, limit: 2 }
+      }
+
+      const httpResponse = await sut.handle(httpRequest)
+
+      expect(httpResponse).toEqual(success({
+        data: [
+          { id: 'task1', schedulerId: 'sched_1', start: expect.any(Date), end: expect.any(Date) },
+          { id: 'task2', schedulerId: 'sched_2', start: expect.any(Date), end: expect.any(Date) }
+        ],
+        page: 1,
+        limit: 2,
+        count: 2
+      }))
     })
   })
 })

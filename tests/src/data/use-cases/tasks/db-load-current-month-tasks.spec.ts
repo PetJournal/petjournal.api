@@ -18,8 +18,8 @@ const makeFakeTasks = (): TaskModel[] => ([
   {
     id: 'task2',
     title: 'Task 2',
-    description: 'Dia 18 (válida)',
-    date: new Date('2024-04-18T15:00:00Z')
+    description: 'Dia 02 (válida)',
+    date: new Date('2024-04-02T15:00:00Z')
   },
   {
     id: 'task3',
@@ -36,11 +36,15 @@ const makeFakeTasks = (): TaskModel[] => ([
 ])
 
 const makeFakeTaskRepository = (): LoadTasksByIntervalRepository => ({
-  loadAllByInterval: jest.fn().mockImplementation(async ({ start, end }) => {
-    return makeFakeTasks().filter(task => {
+  loadAllByInterval: jest.fn().mockImplementation(async ({ start, end, limit, page }) => {
+    const filtered = makeFakeTasks().filter(task => {
       const time = task.date.getTime()
       return time >= start.getTime() && time <= end.getTime()
     })
+    if (typeof page === 'number' && typeof limit === 'number') {
+      return filtered.slice(page, page + limit)
+    }
+    return filtered
   })
 })
 
@@ -107,5 +111,25 @@ describe('DbLoadCurrentMonthTasks', () => {
     jest.spyOn(taskRepositoryStub, 'loadAllByInterval').mockRejectedValueOnce(new Error('fail'))
     const promise = sut.load({ date: new Date() })
     await expect(promise).rejects.toThrow('fail')
+  })
+
+  it('Should return only the first page with limit', async () => {
+    const { sut } = makeSut()
+    const inputDate = new Date('2024-04-02T00:00:00Z')
+
+    const result = await sut.load({ date: inputDate, limit: 1, page: 0 })
+
+    expect(result).toHaveLength(1)
+    expect(result[0].id).toBe('task1')
+  })
+
+  it('Should return the second page with correct page', async () => {
+    const { sut } = makeSut()
+    const inputDate = new Date('2024-04-02T00:00:00Z')
+
+    const result = await sut.load({ date: inputDate, limit: 1, page: 1 })
+
+    expect(result).toHaveLength(1)
+    expect(result[0].id).toBe('task2')
   })
 })
