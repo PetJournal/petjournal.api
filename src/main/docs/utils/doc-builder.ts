@@ -47,7 +47,7 @@ type Parameters = {
   description: string
   required: boolean
   schema: {
-    type: 'string' | 'number' | 'boolean'
+    type: 'string' | 'number' | 'boolean' | 'integer'
     format?: string
   }
 }
@@ -205,7 +205,7 @@ export class DocBuilder<T extends HttpMethod> {
     return this
   }
 
-  addQueryParameter (name: string, description: string, type: 'string' | 'number' | 'boolean' = 'string', options: PathParameterOptions = { required: false }): DocBuilder<T> {
+  addQueryParameter (name: string, description: string, type: 'string' | 'number' | 'boolean' | 'integer' = 'string', options: PathParameterOptions = { required: false }): DocBuilder<T> {
     if (!this.content[this.method].parameters) {
       this.content[this.method].parameters = []
     }

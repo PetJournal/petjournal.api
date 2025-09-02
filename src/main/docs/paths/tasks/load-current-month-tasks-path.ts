@@ -5,6 +5,8 @@ export const loadCurrentMonthTasksPath = DocBuilder.getBuilder()
   .addSummary('List tasks of current month')
   .addJwtAuthSecurity()
   .addQueryParameter('tagId', 'Optional tag ID to filter tasks', 'string', { required: false, format: 'uuid' })
+  .addQueryParameter('page', 'Page number (default = 1)', 'integer', { required: false })
+  .addQueryParameter('limit', 'Number of items per page (default = 10)', 'integer', { required: false })
   .addResponse(200, {
     description: 'Success',
     content: {
