@@ -1,47 +1,24 @@
-export const deleteTagByIdPath = {
-  delete: {
-    tags: ['tag'],
-    summary: 'delete tag by id',
-    description: '',
-    security: [{
-      bearerAuth: []
-    }],
-    consumes: [
-      'application/json'
-    ],
-    produces: [
-      'application/json',
-      'application/xml'
-    ],
-    parameters: [{
-      name: 'tagId',
-      in: 'path',
-      description: 'tag id',
-      required: true,
-      schema: {
-        type: 'string'
-      }
-    }],
-    responses: {
-      200: {
-        description: 'Success',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/schemas/tag'
-            }
-          }
+import { DocBuilder } from '@/main/docs/utils/doc-builder'
+
+export const deleteTagByIdPath = DocBuilder.deleteBuilder()
+  .addTags(['tag'])
+  .addSummary('delete tag by id')
+  .addJwtAuthSecurity()
+  .addJsonConsumes()
+  .addJsonProduces()
+  .addXmlProduces()
+  .addPathParameter('tagId', 'tag id')
+  .addResponse(200, {
+    description: 'Success',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: '#/schemas/tag'
         }
-      },
-      400: {
-        $ref: '#/components/badRequest'
-      },
-      406: {
-        $ref: '#/components/notAcceptable'
-      },
-      500: {
-        $ref: '#/components/serverError'
       }
     }
-  }
-}
+  })
+  .addBadRequestResponse()
+  .addNotAcceptableResponse()
+  .addServerErrorResponse()
+  .build()
