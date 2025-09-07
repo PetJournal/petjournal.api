@@ -1,5 +1,5 @@
 import { LoadCurrentDateTasksController } from '@/application/controllers'
-import { success, serverError, badRequest, type HttpResponse } from '@/application/helpers'
+import { success, serverError, badRequest, type HttpResponse, type HttpRequest } from '@/application/helpers'
 import { type LoadCurrentDateTasks } from '@/domain/use-cases'
 import { type Validation } from '@/application/protocols'
 import { InvalidParamError } from '@/application/errors'
@@ -50,6 +50,10 @@ describe('LoadCurrentDateTasksController', () => {
     jest.useRealTimers()
   })
 
+  const httpRequest: HttpRequest = {
+    query: { tagId: 'anyTagId' }
+  }
+
   it('Should call Validation with correct values', async () => {
     const { sut, validationStub } = makeSut()
     const validateSpy = jest.spyOn(validationStub, 'validate')
@@ -71,14 +75,19 @@ describe('LoadCurrentDateTasksController', () => {
     expect(httpResponse).toEqual(badRequest(error))
   })
 
-  it('Should call LoadCurrentDateTasks with current date at start of day UTC', async () => {
+  it('Should call LoadCurrentDateTasks with current date at start of day UTC with pagination', async () => {
     const { sut, loadCurrentDateTasksStub } = makeSut()
     const loadSpy = jest.spyOn(loadCurrentDateTasksStub, 'load')
 
     const expectedStartOfDay = new Date('2025-06-18T00:00:00.000Z')
 
-    await sut.handle({})
-    expect(loadSpy).toHaveBeenCalledWith({ date: expectedStartOfDay })
+    await sut.handle(httpRequest)
+    expect(loadSpy).toHaveBeenCalledWith(expect.objectContaining({
+      date: expectedStartOfDay,
+      tagId: httpRequest.query.tagId,
+      limit: 10,
+      page: 1
+    }))
   })
 
   it('Should call LoadCurrentDateTasks with tagId if provided', async () => {
@@ -90,7 +99,7 @@ describe('LoadCurrentDateTasksController', () => {
 
     await sut.handle({ query: { tagId } })
 
-    expect(loadSpy).toHaveBeenCalledWith({ date: expectedStartOfDay, tagId })
+    expect(loadSpy).toHaveBeenCalledWith({ date: expectedStartOfDay, tagId, limit: 10, page: 1 })
   })
 
   it('Should return 500 if LoadCurrentDateTasks throws', async () => {
@@ -104,10 +113,15 @@ describe('LoadCurrentDateTasksController', () => {
   it('Should return tasks on success', async () => {
     const { sut } = makeSut()
 
-    const httpResponse = await sut.handle({})
-    expect(httpResponse).toEqual(success([
-      { id: 'task1', schedulerId: 'sched_1', start: expect.any(Date), end: expect.any(Date) },
-      { id: 'task2', schedulerId: 'sched_2', start: expect.any(Date), end: expect.any(Date) }
-    ]))
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(success({
+      data: [
+        { id: 'task1', schedulerId: 'sched_1', start: expect.any(Date), end: expect.any(Date) },
+        { id: 'task2', schedulerId: 'sched_2', start: expect.any(Date), end: expect.any(Date) }
+      ],
+      page: 1,
+      limit: 10,
+      count: 2
+    }))
   })
 })
