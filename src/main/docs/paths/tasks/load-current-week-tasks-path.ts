@@ -19,7 +19,10 @@ export const loadCurrentWeekTasksPath = DocBuilder.getBuilder()
               id: { type: 'string' },
               schedulerId: { type: 'string' },
               start: { type: 'string', format: 'date-time' },
-              end: { type: 'string', format: 'date-time' }
+              end: { type: 'string', format: 'date-time' },
+              page: { type: 'number', example: 1 },
+              limit: { type: 'number', example: 10 },
+              count: { type: 'number', example: 1 }
             }
           }
         }
