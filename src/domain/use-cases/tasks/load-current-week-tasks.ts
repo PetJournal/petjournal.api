@@ -6,6 +6,8 @@ export namespace LoadCurrentWeekTasks {
   export type Params = {
     date: Date
     tagId?: string
+    page?: number
+    limit?: number
   }
 
   export type Result = Array<{

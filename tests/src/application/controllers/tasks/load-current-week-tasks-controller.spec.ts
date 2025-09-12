@@ -59,14 +59,14 @@ describe('LoadCurrentWeekTasksController', () => {
     expect(httpResponse).toEqual(badRequest(error))
   })
 
-  it('Should call LoadCurrentWeekTasks with current date at start of day UTC', async () => {
+  it('Should call LoadCurrentWeekTasks with current date at start of day UTC with pagination', async () => {
     const { sut, loadCurrentWeekTasksStub } = makeSut()
     const loadSpy = jest.spyOn(loadCurrentWeekTasksStub, 'load')
 
     const expectedStartOfDay = new Date('2025-06-18T00:00:00.000Z')
 
     await sut.handle({ query: { tagId: 'any_tagId' } })
-    expect(loadSpy).toHaveBeenCalledWith({ date: expectedStartOfDay, tagId: 'any_tagId' })
+    expect(loadSpy).toHaveBeenCalledWith({ date: expectedStartOfDay, tagId: 'any_tagId', limit: 10, page: 1 })
   })
 
   it('Should return 500 if LoadCurrentWeekTasks throws', async () => {
@@ -76,12 +76,17 @@ describe('LoadCurrentWeekTasksController', () => {
     expect(httpResponse).toEqual(makeFakeServerError())
   })
 
-  it('Should return tasks on success', async () => {
+  it('Should return tasks on success with pagination', async () => {
     const { sut } = makeSut()
-    const httpResponse = await sut.handle({ query: { tagId: 'any_tagId' } })
-    expect(httpResponse).toEqual(success([
-      { id: 'task1', schedulerId: 'sched_1', start: expect.any(Date), end: expect.any(Date) },
-      { id: 'task2', schedulerId: 'sched_2', start: expect.any(Date), end: expect.any(Date) }
-    ]))
+    const httpResponse = await sut.handle({ query: { tagId: 'any_tagId', limit: 2, page: 1 } })
+    expect(httpResponse).toEqual(success({
+      data: [
+        { id: 'task1', schedulerId: 'sched_1', start: expect.any(Date), end: expect.any(Date) },
+        { id: 'task2', schedulerId: 'sched_2', start: expect.any(Date), end: expect.any(Date) }
+      ],
+      limit: 2,
+      page: 1,
+      count: 2
+    }))
   })
 })
