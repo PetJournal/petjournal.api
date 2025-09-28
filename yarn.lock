@@ -5086,6 +5086,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"helmet@npm:^8.1.0":
+  version: 8.1.0
+  resolution: "helmet@npm:8.1.0"
+  checksum: 58febddc95becb457a7dd5d062500b9e68437d4991b7a9d9455af63f35740962c258d2656cbed367fbd5704da5758408b674b2a6013e589a4a6b02be0a8d5f4e
+  languageName: node
+  linkType: hard
+
 "hexoid@npm:^1.0.0":
   version: 1.0.0
   resolution: "hexoid@npm:1.0.0"
@@ -7291,6 +7298,7 @@ __metadata:
     express: ^4.18.2
     express-prom-bundle: ^8.0.0
     firebase: ^11.4.0
+    helmet: ^8.1.0
     husky: ^8.0.0
     jest: ^29.5.0
     jsonwebtoken: ^9.0.0
