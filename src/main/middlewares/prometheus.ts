@@ -1,0 +1,10 @@
+import type { RequestHandler } from 'express'
+import promBundle from 'express-prom-bundle'
+
+export const prometheus = promBundle({
+  includeMethod: true,
+  includePath: true,
+  promClient: {
+    collectDefaultMetrics: {}
+  }
+}) as unknown as RequestHandler
