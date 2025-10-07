@@ -5,7 +5,7 @@ export class NodeMailerAdapter implements EmailService {
   private readonly transporter: Transporter
 
   constructor (transporter: EmailService.Transport) {
-    this.transporter = createTransport(transporter)
+    this.transporter = createTransport({ ...transporter, secure: false, port: 587 })
   }
 
   async send (options: EmailService.Options): Promise<EmailService.Result> {
