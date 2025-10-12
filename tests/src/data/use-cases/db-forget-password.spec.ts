@@ -7,6 +7,7 @@ import {
 } from '@/data/protocols'
 import { DbForgetPassword } from '@/data/use-cases'
 import { type ForgetPassword } from '@/domain/use-cases'
+import env from '@/main/config/env'
 import {
   makeFakeEmailService,
   makeFakeGuardianRepository,
@@ -73,15 +74,25 @@ describe('DbForgetPassword UseCase', () => {
 
       await sut.forgetPassword(params)
       expect(sendSpy).toHaveBeenCalledWith({
-        from: 'contato.petjournal@gmail.com',
-        to: 'any_email@mail.com',
+        from: {
+          email: env.emailPetJournal,
+          name: 'Pet Journal'
+        },
+        to: {
+          email: 'any_email@mail.com',
+          name: 'any_last_name'
+        },
         subject: 'any_first_name any_last_name, aqui está seu código',
         text: `
-          Olá any_first_name any_last_name,\n
-          Recebemos uma solicitação para redefinir a senha de sua conta PetJournal.\n
-          any_token\n
-          Insira este código para concluir a redefinição.\n
-          Obrigado por nos ajudar a manter sua conta segura.\n
+          Olá any_first_name any_last_name,
+          Recebemos uma solicitação para redefinir a senha de sua conta PetJournal.
+
+          any_token
+
+          Insira este código para concluir a redefinição.
+
+
+          Obrigado por nos ajudar a manter sua conta segura.
           Equipe PetJournal
         `
       })
