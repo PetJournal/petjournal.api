@@ -12,8 +12,14 @@ export namespace EmailService {
   }
 
   export interface Options {
-    from: string
-    to: string
+    from: {
+      email: string
+      name: string
+    }
+    to: {
+      email: string
+      name: string
+    }
     subject: string
     text: string
   }
