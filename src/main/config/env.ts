@@ -15,5 +15,9 @@ export default {
     projectId: process.env.FIREBASE_PROJECT_ID ?? '',
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET ?? '',
     defaultImageUrl: process.env.FIREBASE_DEFAULT_IMAGE_URL ?? ''
-  }
+  },
+  // sendgridApiKey: process.env.SENDGRID_API_KEY ?? '',
+  mailerooApiKey: process.env.MAILEROO_API_KEY ?? '',
+  mailerooApiSenderUrl: process.env.MAILEROO_API_URL ?? '',
+  emailPetJournal: process.env.MAILEROO_MAIL_USER ?? ''
 }
