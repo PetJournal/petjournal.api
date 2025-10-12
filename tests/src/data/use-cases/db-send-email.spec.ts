@@ -1,6 +1,7 @@
 import { NotFoundError } from '@/application/errors'
 import { type EmailService, type LoadGuardianByEmailRepository } from '@/data/protocols'
 import { DbSendEmail } from '@/data/use-cases'
+import env from '@/main/config/env'
 import { makeFakeEmailService, makeFakeGuardianRepository } from '@/tests/utils'
 
 interface SutTypes {
@@ -50,8 +51,14 @@ describe('DbSendEmail', () => {
     const sendEmailSpy = jest.spyOn(emailServiceStub, 'send')
     await sut.send(data)
     expect(sendEmailSpy).toHaveBeenCalledWith({
-      from: 'contato.petjournal@gmail.com',
-      to: 'any_email@mail.com',
+      from: {
+        email: env.emailPetJournal,
+        name: 'Pet Journal'
+      },
+      to: {
+        email: 'any_email@mail.com',
+        name: 'any_last_name'
+      },
       subject: 'Ative sua conta',
       text: `
           Olá any_first_name any_last_name,\n
