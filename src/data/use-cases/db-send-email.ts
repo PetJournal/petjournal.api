@@ -19,8 +19,14 @@ export class DbSendEmail implements SendEmail {
     }
 
     await this.emailService.send({
-      from: 'contato.petjournal@gmail.com',
-      to: guardian.email,
+      from: {
+        email: env.emailPetJournal,
+        name: 'Pet Journal'
+      },
+      to: {
+        email: guardian.email,
+        name: guardian.lastName
+      },
       subject: 'Ative sua conta',
       text: `
           Olá ${guardian.firstName} ${guardian.lastName},\n

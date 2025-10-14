@@ -1,1 +1,1 @@
-export * from './node-mailer-adapter'
+export * from './maileroo-adapter'
