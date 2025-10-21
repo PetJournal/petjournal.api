@@ -33,10 +33,10 @@ export async function sizeSeed (): Promise<void> {
       }
     }),
     await prisma.size.upsert({
-      where: { name: 'Grande (25 à 45Kg)' },
+      where: { name: 'Grande (25 à 44Kg)' },
       update: {},
       create: {
-        name: 'Grande (25 à 45Kg)',
+        name: 'Grande (25 à 44Kg)',
         specieId: cat.id
       }
     })
