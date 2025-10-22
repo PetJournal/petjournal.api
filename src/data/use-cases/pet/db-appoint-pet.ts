@@ -136,35 +136,17 @@ export class DbAppointPet implements AppointPet {
   }
 
   private async getSize (sizeName: string, specieName: string): Promise<SizeResult> {
-    if (this.isCatOrDog(specieName)) {
-      const size = await this.sizeRepository.loadByName(sizeName)
-      const specieResult = await this.getSpecie(specieName)
-      if (specieResult.specie.id !== size?.specieId) {
-        return {
-          error: new NotAcceptableError('size')
-        }
-      }
-      return {
-        data: {
-          size: size as Size & { id: string },
-          specieId: size?.specieId
-        }
-      }
+    const specieResult = await this.getSpecie(specieName)
+    const size = await this.sizeRepository.loadByName(sizeName)
+
+    if (!size || size.specieId !== specieResult.specie.id) {
+      return { error: new NotAcceptableError('size') }
     }
-    if (specieName === 'Outros') {
-      const otherSize = await this.sizeRepository.loadByName('Sem porte')
-      return {
-        data: {
-          size: otherSize as Size & { id: string },
-          specieId: otherSize?.specieId as string
-        }
-      }
-    }
-    const withoutSize = await this.sizeRepository.loadByName(`Sem porte ${specieName}`)
+
     return {
       data: {
-        size: withoutSize as Size & { id: string },
-        specieId: withoutSize?.specieId as string
+        size: size as Size & { id: string },
+        specieId: size.specieId
       }
     }
   }
