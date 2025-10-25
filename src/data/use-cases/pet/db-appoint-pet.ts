@@ -22,14 +22,14 @@ export class DbAppointPet implements AppointPet {
 
   async appoint (params: AppointPet.Params): Promise<AppointPet.Result> {
     const specieResult = await this.getSpecie(params.specieName)
-    const breedResult = await this.getBreed(params.breedName, specieResult.specie.name)
+    const breedResult = await this.getBreed(params.breedName, specieResult)
     if (breedResult.error) {
       return {
         isSuccess: false,
         error: breedResult.error
       }
     }
-    const sizeResult = await this.getSize(params.size, specieResult.specie.name)
+    const sizeResult = await this.getSize(params.size, specieResult)
     if (sizeResult.error) {
       return {
         isSuccess: false,
@@ -72,58 +72,36 @@ export class DbAppointPet implements AppointPet {
     }
   }
 
-  private async getBreed (breedName: string, specieName: string): Promise<BreedResult> {
-    if (this.isCatOrDog(specieName)) {
-      const breed = await this.breedRepository.loadByName(breedName)
-      if (!breed) {
-        const otherBreed = await this.breedRepository.loadByName(`Outra raça ${specieName}`)
-        return {
-          data: {
-            breed: otherBreed as Breed & { id: string },
-            breedAlias: breedName,
-            specieId: otherBreed?.specieId as string
-          }
-        }
-      }
-      if (breed.name === `Outra raça ${specieName}`) {
-        return {
-          data: {
-            breed,
-            breedAlias: `Outra raça ${specieName}`,
-            specieId: breed.specieId
-          }
-        }
-      }
-      const specieResult = await this.getSpecie(specieName)
-      if (specieResult.specie.id !== breed.specieId) {
-        return {
-          error: new NotAcceptableError('breed')
-        }
-      }
+  private async getBreed (breedName: string, specieResult: SpecieResult): Promise<BreedResult> {
+    const breed = await this.breedRepository.loadByName(breedName)
+
+    if (!breed) {
+      const defaultBreedName = this.isCatOrDog(specieResult.specie.name)
+        ? `Outra raça ${specieResult.specie.name}`
+        : specieResult.specie.name === 'Outros'
+          ? 'Sem raça'
+          : `Sem raça ${specieResult.specie.name}`
+
+      const defaultBreed = await this.breedRepository.loadByName(defaultBreedName)
       return {
         data: {
-          breed,
-          breedAlias: '',
-          specieId: breed.specieId
+          breed: defaultBreed as Breed & { id: string },
+          breedAlias: breedName,
+          specieId: defaultBreed?.specieId as string
         }
       }
     }
-    if (specieName === 'Outros') {
-      const otherBreed = await this.breedRepository.loadByName('Sem raça')
-      return {
-        data: {
-          breed: otherBreed as Breed & { id: string },
-          breedAlias: '',
-          specieId: otherBreed?.specieId as string
-        }
-      }
+
+    if (breed.specieId !== specieResult.specie.id) {
+      return { error: new NotAcceptableError('breed') }
     }
-    const withoutBreed = await this.breedRepository.loadByName(`Sem raça ${specieName}`)
+    const isOtherBreed = breed.name.startsWith('Outra raça')
+
     return {
       data: {
-        breed: withoutBreed as Breed & { id: string },
-        breedAlias: '',
-        specieId: withoutBreed?.specieId as string
+        breed: breed as Breed & { id: string },
+        breedAlias: isOtherBreed ? breed.name : '',
+        specieId: breed.specieId
       }
     }
   }
@@ -135,11 +113,14 @@ export class DbAppointPet implements AppointPet {
     return false
   }
 
-  private async getSize (sizeName: string, specieName: string): Promise<SizeResult> {
-    const specieResult = await this.getSpecie(specieName)
+  private async getSize (sizeName: string, specieResult: SpecieResult): Promise<SizeResult> {
     const size = await this.sizeRepository.loadByName(sizeName)
 
-    if (!size || size.specieId !== specieResult.specie.id) {
+    if (!size) {
+      return { error: new NotAcceptableError('size') }
+    }
+
+    if (size.specieId !== specieResult.specie.id) {
       return { error: new NotAcceptableError('size') }
     }
 
