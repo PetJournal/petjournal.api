@@ -271,7 +271,7 @@ describe('Pet Routes', () => {
       const response = await request(app)
         .put(`/api/pet/${pet.body.id as string}`)
         .set('Authorization', accessToken)
-        .send({
+        .field({
           petName: 'pet name updated'
         })
 
