@@ -6,6 +6,7 @@ import {
 } from '@/data/protocols'
 import { prisma as db } from './prisma'
 import { type AddManyEventsRepository } from '@/data/protocols/db/event/add-many-events-repository'
+import { type LoadTasksByPetIdRepository } from '@/data/protocols/db/task/load-task-by-petId-repository'
 
 export class EventRepository implements AddEventRepository, AddManyEventsRepository, LoadEventByDateRepository, LoadTasksByIntervalRepository {
   async add (params: AddEventRepository.Params): Promise<AddEventRepository.Result> {
@@ -67,5 +68,42 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
     })
 
     return events
+  }
+
+  async loadByPetId (params: LoadTasksByPetIdRepository.Params): Promise<LoadTasksByPetIdRepository.Result> {
+    const { petId, page = 1, limit = 10 } = params
+    const offset = (page - 1) * limit
+
+    const [total, events] = await Promise.all([
+      db.event.count({
+        where: {
+          scheduler: { pets: { some: { id: petId } } }
+        }
+      }),
+      db.event.findMany({
+        where: {
+          scheduler: { pets: { some: { id: petId } } }
+        },
+        orderBy: { start: 'asc' },
+        skip: offset,
+        take: limit,
+        include: {
+          scheduler: {
+            include: {
+              tag: { select: { name: true, color: true } },
+              pets: { select: { id: true, image: true } }
+            }
+          }
+        }
+      })
+    ])
+
+    return {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+      data: events
+    }
   }
 }
