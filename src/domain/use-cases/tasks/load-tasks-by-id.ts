@@ -1,4 +1,4 @@
-import { type LoadTasksByPetIdRepository } from '@/data/protocols/db/task/load-task-by-pet-repository'
+import { type LoadTasksByPetIdRepository } from '@/data/protocols/db/task/load-task-by-petId-repository'
 
 export interface LoadTasksByPetId {
   load: (params: LoadTasksByPetId.Params) => Promise<LoadTasksByPetId.Result>
