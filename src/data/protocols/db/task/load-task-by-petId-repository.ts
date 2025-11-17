@@ -1,5 +1,7 @@
 export interface LoadTasksByPetIdRepository {
-  loadByPetId: (params: LoadTasksByPetIdRepository.Params) => Promise<LoadTasksByPetIdRepository.Result>
+  loadByPetId: (
+    params: LoadTasksByPetIdRepository.Params
+  ) => Promise<LoadTasksByPetIdRepository.Result>
 }
 
 export namespace LoadTasksByPetIdRepository {
@@ -38,8 +40,9 @@ export namespace LoadTasksByPetIdRepository {
   export type Result = {
     page: number
     limit: number
-    total: number
+    totalHistory: number
     totalPages: number
-    data: Event[]
+    history: Event[]
+    nextEvents: Event[]
   }
 }

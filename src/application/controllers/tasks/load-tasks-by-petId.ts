@@ -19,7 +19,6 @@ export class LoadTasksByPetIdController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      // valida query e params
       const error = this.validation.validate({
         ...httpRequest.params,
         ...httpRequest.query
@@ -41,11 +40,12 @@ export class LoadTasksByPetIdController implements Controller {
       })
 
       return success({
-        data: result.data,
         page: result.page,
         limit: result.limit,
-        total: result.total,
-        totalPages: result.totalPages
+        totalHistory: result.totalHistory,
+        totalPages: result.totalPages,
+        history: result.history,
+        nextEvents: result.nextEvents
       })
     } catch (error) {
       return serverError(error as Error)

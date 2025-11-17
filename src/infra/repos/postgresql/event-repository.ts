@@ -74,17 +74,23 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
     const { petId, page = 1, limit = 10 } = params
     const offset = (page - 1) * limit
 
-    const [total, events] = await Promise.all([
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    const [totalHistory, history] = await Promise.all([
       db.event.count({
         where: {
-          scheduler: { pets: { some: { id: petId } } }
+          scheduler: { pets: { some: { id: petId } } },
+          start: { lt: today }
         }
       }),
+
       db.event.findMany({
         where: {
-          scheduler: { pets: { some: { id: petId } } }
+          scheduler: { pets: { some: { id: petId } } },
+          start: { lt: today }
         },
-        orderBy: { start: 'asc' },
+        orderBy: { start: 'desc' },
         skip: offset,
         take: limit,
         include: {
@@ -98,12 +104,30 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
       })
     ])
 
+    const nextEvents = await db.event.findMany({
+      where: {
+        scheduler: { pets: { some: { id: petId } } },
+        start: { gte: today }
+      },
+      orderBy: { start: 'asc' },
+      take: 4,
+      include: {
+        scheduler: {
+          include: {
+            tag: { select: { name: true, color: true } },
+            pets: { select: { id: true, image: true } }
+          }
+        }
+      }
+    })
+
     return {
       page,
       limit,
-      total,
-      totalPages: Math.ceil(total / limit),
-      data: events
+      totalHistory,
+      totalPages: Math.ceil(totalHistory / limit),
+      history,
+      nextEvents
     }
   }
 }
