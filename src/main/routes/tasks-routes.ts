@@ -24,12 +24,12 @@ export default (router: Router): void => {
   )
 
   router.get(
-    '/tasks/pet/history/:petId/',
+    '/tasks/pet/next/:petId/',
     adaptRoute(makeLoadNextTasksByPetIdController())
   )
 
   router.get(
-    '/tasks/pet/next/:petId',
+    '/tasks/pet/history/:petId',
     adaptRoute(makeLoadPreviousTasksByPetIdController())
   )
 }
