@@ -25,7 +25,8 @@ import {
   loadCurrentMonthTasksPath,
   loadSettingsPath,
   updateSettingsPath,
-  loadTasksByPetIdPath
+  loadNextTasksByPetIdPath,
+  loadPreviousTasksByPetIdPath
 } from './paths/'
 
 export default {
@@ -49,6 +50,7 @@ export default {
   '/tasks/current-week': loadCurrentWeekTasksPath,
   '/tasks/current-month': loadCurrentMonthTasksPath,
   '/settings': { ...loadSettingsPath, ...updateSettingsPath },
-  '/tasks/by-pet/{petId}': loadTasksByPetIdPath
+  '/tasks/pet/next/{petId}': loadNextTasksByPetIdPath,
+  '/tasks/pet/history/{petId}': loadPreviousTasksByPetIdPath
 
 }

@@ -1,7 +1,7 @@
 import { type Router } from 'express'
 import { auth, accountConfirmation } from '../middlewares'
 import { adaptRoute } from '../adapters'
-import { makeLoadCurrentDateTasksController, makeLoadCurrentWeekTasksController, makeLoadCurrentMonthTasksController, makeLoadTasksByPetIdController } from '../factories'
+import { makeLoadCurrentDateTasksController, makeLoadCurrentWeekTasksController, makeLoadCurrentMonthTasksController, makeLoadNextTasksByPetIdController, makeLoadPreviousTasksByPetIdController } from '../factories'
 
 export default (router: Router): void => {
   router.get(
@@ -24,9 +24,12 @@ export default (router: Router): void => {
   )
 
   router.get(
-    '/tasks/by-pet/:petId',
-    auth,
-    accountConfirmation,
-    adaptRoute(makeLoadTasksByPetIdController())
+    '/tasks/pet/history/:petId/',
+    adaptRoute(makeLoadNextTasksByPetIdController())
+  )
+
+  router.get(
+    '/tasks/pet/next/:petId',
+    adaptRoute(makeLoadPreviousTasksByPetIdController())
   )
 }
