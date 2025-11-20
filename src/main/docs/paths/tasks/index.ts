@@ -1,4 +1,5 @@
 export * from './load-current-date-tasks-path'
 export * from './load-current-week-tasks-path'
 export * from './load-current-month-tasks-path'
-export * from './load-tasks-by-pet-path'
+export * from './load-next-tasks-by-pet-path'
+export * from './load-previous-tasks-by-pet-path'
