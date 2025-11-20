@@ -5,10 +5,14 @@ import request from 'supertest'
 describe('LoadTasks Routes', () => {
   let accessToken = ''
   let tagId = ''
+  let petId = ''
 
   beforeAll(async () => {
     await PrismaHelper.connect()
     const { id: guardianId } = await PrismaHelper.createGuardian()
+    const pet = await PrismaHelper.createPet(guardianId)
+
+    petId = pet.id
 
     const { body } = await request(app)
       .post('/api/login')
@@ -16,6 +20,7 @@ describe('LoadTasks Routes', () => {
         email: 'johndoe@email.com',
         password: 'Test@1234'
       })
+
     const { id } = await PrismaHelper.createTag(guardianId)
 
     accessToken = body.accessToken
@@ -67,6 +72,34 @@ describe('LoadTasks Routes', () => {
       await request(app)
         .get('/api/tasks/current-month?tagId=invalid_tag_id')
         .set('Authorization', `Bearer ${accessToken}`)
+        .expect(400)
+    })
+  })
+
+  describe('GET - /api/tasks/pet/history/:petId/', () => {
+    it('Should return 200 on success', async () => {
+      await request(app)
+        .get(`/api/tasks/pet/history/${petId}/`)
+        .expect(200)
+    })
+
+    it('Should return 400 if petId is invalid', async () => {
+      await request(app)
+        .get('/api/tasks/pet/history/invalid_id/')
+        .expect(400)
+    })
+  })
+
+  describe('GET - /api/tasks/pet/next/:petId', () => {
+    it('Should return 200 on success', async () => {
+      await request(app)
+        .get(`/api/tasks/pet/next/${petId}`)
+        .expect(200)
+    })
+
+    it('Should return 400 if petId is invalid', async () => {
+      await request(app)
+        .get('/api/tasks/pet/next/invalid_id')
         .expect(400)
     })
   })
