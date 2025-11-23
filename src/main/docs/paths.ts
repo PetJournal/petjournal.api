@@ -24,7 +24,8 @@ import {
   loadCurrentWeekTasksPath,
   loadCurrentMonthTasksPath,
   loadSettingsPath,
-  updateSettingsPath
+  updateSettingsPath,
+  loadPetByIdPath
 } from './paths/'
 
 export default {
@@ -35,7 +36,7 @@ export default {
   '/guardian/email-confirmation/{userId}': emailConfirmationPath,
   '/waiting-code': waitingCodePath,
   '/pet': { ...petRegistryPath, ...loadPetsPath },
-  '/pet/{petId}': { ...updatePetPath, ...deletePetPath },
+  '/pet/{petId}': { ...loadPetByIdPath, ...updatePetPath, ...deletePetPath },
   '/guardian/name': loadGuardianNamePath,
   '/breeds/cat': loadCatBreedsPath,
   '/breeds/dog': loadDogBreedsPath,
