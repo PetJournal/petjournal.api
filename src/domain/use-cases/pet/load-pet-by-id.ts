@@ -29,6 +29,8 @@ export namespace LoadPetById {
       name: string
     }
     castrated: boolean
+    dateOfBirth: Date
+    image: string
   } | null
 
   export type Dependencies = {
