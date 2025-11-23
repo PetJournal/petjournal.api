@@ -33,4 +33,11 @@ describe('Load pet by id Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(makeFakeServerError())
   })
+
+  it('Should call LoadById with correct value', async () => {
+    const { sut, loadPetByIdStub } = makeSut()
+    const loadSpy = jest.spyOn(loadPetByIdStub, 'loadById')
+    await sut.handle(httpRequest)
+    expect(loadSpy).toHaveBeenCalledWith(httpRequest.params)
+  })
 })
