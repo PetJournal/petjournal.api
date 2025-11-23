@@ -10,28 +10,32 @@ export namespace LoadPetById {
   }
 
   export type Result = {
-    id: string
-    guardianId: string
-    specie: {
+    isSuccess: boolean
+    error?: Error
+    data?: {
       id: string
-      name: string
+      guardianId: string
+      specie: {
+        id: string
+        name: string
+      }
+      specieAlias: string | null
+      petName: string
+      gender: string
+      breedAlias: string
+      breed: {
+        id: string
+        name: string
+      }
+      size: {
+        id: string
+        name: string
+      }
+      castrated: boolean
+      dateOfBirth: Date
+      image: string
     }
-    specieAlias: string | null
-    petName: string
-    gender: string
-    breedAlias: string
-    breed: {
-      id: string
-      name: string
-    }
-    size: {
-      id: string
-      name: string
-    }
-    castrated: boolean
-    dateOfBirth: Date
-    image: string
-  } | null
+  }
 
   export type Dependencies = {
     petRepository: LoadPetByIdRepository

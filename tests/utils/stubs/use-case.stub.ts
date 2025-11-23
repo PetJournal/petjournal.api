@@ -164,7 +164,10 @@ const makeFakeLoadPetsUseCase = (): LoadPets => {
 const makeFakeLoadPetByIdUseCase = (): LoadPetById => {
   class LoadPetByIdStub implements LoadPetById {
     async loadById (petId: LoadPetById.Params): Promise<LoadPetById.Result> {
-      return mockFakePetByIdLoaded()
+      return {
+        isSuccess: true,
+        data: mockFakePetByIdLoaded()
+      }
     }
   }
   return new LoadPetByIdStub()

@@ -1,4 +1,4 @@
-import { serverError, success, type HttpRequest, type HttpResponse } from '@/application/helpers'
+import { badRequest, serverError, success, type HttpRequest, type HttpResponse } from '@/application/helpers'
 import { type Controller } from '@/application/protocols'
 import { type LoadPetById } from '@/domain/use-cases'
 
@@ -13,7 +13,10 @@ export class LoadPetByIdController implements Controller {
     try {
       const { petId } = httpRequest.params
       const result = await this.loadPet.loadById({ petId })
-      return success(result)
+      if (!result.isSuccess) {
+        return badRequest(result.error as Error)
+      }
+      return success(result.data)
     } catch (error) {
       return serverError(error as Error)
     }
