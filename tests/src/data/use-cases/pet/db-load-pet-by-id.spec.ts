@@ -69,7 +69,8 @@ describe('DbLoadPetsByGuardianId', () => {
           name: 'any_name'
         },
         castrated: false,
-        dateOfBirth: new Date(2000, 10, 23)
+        dateOfBirth: new Date(2000, 10, 23),
+        image: 'any_image_url'
       })
     })
   })
