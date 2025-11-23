@@ -1,5 +1,6 @@
 import { LoadPetByIdController } from '@/application/controllers'
-import { type HttpRequest } from '@/application/helpers'
+import { NotFoundError } from '@/application/errors'
+import { badRequest, type HttpRequest } from '@/application/helpers'
 import { type LoadPetById } from '@/domain/use-cases'
 import { makeFakeLoadPetByIdUseCase, makeFakeServerError } from '@/tests/utils'
 
@@ -39,5 +40,15 @@ describe('Load pet by id Controller', () => {
     const loadSpy = jest.spyOn(loadPetByIdStub, 'loadById')
     await sut.handle(httpRequest)
     expect(loadSpy).toHaveBeenCalledWith(httpRequest.params)
+  })
+
+  it('Should return 400 (BadRequest) if invalid petId is provided', async () => {
+    const { sut, loadPetByIdStub } = makeSut()
+    jest.spyOn(loadPetByIdStub, 'loadById').mockResolvedValue({
+      isSuccess: false,
+      error: new NotFoundError('petId')
+    })
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new NotFoundError('petId')))
   })
 })
