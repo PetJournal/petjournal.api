@@ -1,3 +1,5 @@
 export * from './db-load-current-date-tasks'
 export * from './db-load-current-week-tasks'
 export * from './db-load-current-month-tasks'
+export * from './db-previous-load-tasks-by-petId'
+export * from './db-next-load-tasks-by-petId'
