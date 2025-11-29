@@ -26,5 +26,6 @@ export namespace LoadPetByIdRepository {
     }
     castrated: boolean
     dateOfBirth: Date
+    image: string
   } | null
 }

@@ -22,10 +22,11 @@ import {
   type LoadTagById,
   type AddScheduler,
   type LoadSettings,
-  type UpdateSettings
+  type UpdateSettings,
+  type LoadPetById
 } from '@/domain/use-cases'
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
-import { mockFakeAppointPet, mockFakePetUpdated, mockFakePetByGuardianIdLoaded, mockFakeSpecieAdded, makeFakeGuardianData, mockFakeBreedAdded, mockFakeSizeAdded } from '../mocks'
+import { mockFakeAppointPet, mockFakePetUpdated, mockFakePetByGuardianIdLoaded, mockFakeSpecieAdded, makeFakeGuardianData, mockFakeBreedAdded, mockFakeSizeAdded, mockFakePetByIdLoaded } from '../mocks'
 import { PetGender } from '@/domain/models'
 import { type UpdateTag, type DeleteTagById, type LoadTags } from '@/domain/use-cases/scheduler/tag'
 
@@ -158,6 +159,18 @@ const makeFakeLoadPetsUseCase = (): LoadPets => {
     }
   }
   return new LoadPetsStub()
+}
+
+const makeFakeLoadPetByIdUseCase = (): LoadPetById => {
+  class LoadPetByIdStub implements LoadPetById {
+    async loadById (petId: LoadPetById.Params): Promise<LoadPetById.Result> {
+      return {
+        isSuccess: true,
+        data: mockFakePetByIdLoaded()
+      }
+    }
+  }
+  return new LoadPetByIdStub()
 }
 
 const makeFakeUpdatePetUseCase = (): UpdatePet => {
@@ -416,6 +429,7 @@ export {
   makeFakeAddGuardianUseCase,
   makeFakeAddPetUseCase,
   makeFakeLoadPetsUseCase,
+  makeFakeLoadPetByIdUseCase,
   makeFakeUpdatePetUseCase,
   makeFakeDeletePetUseCase,
   makeFakeAuthenticationUseCase,

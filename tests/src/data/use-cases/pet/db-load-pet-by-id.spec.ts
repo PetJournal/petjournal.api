@@ -1,3 +1,4 @@
+import { NotFoundError } from '@/application/errors'
 import { type LoadPetByIdRepository } from '@/data/protocols'
 import { DbLoadPetById } from '@/data/use-cases/pet/db-load-pet-by-id'
 import { type LoadPetById } from '@/domain/use-cases'
@@ -37,12 +38,15 @@ describe('DbLoadPetsByGuardianId', () => {
       expect(loadSpy).toHaveBeenCalledWith('any_pet_id')
     })
 
-    it('Should petRepository return null if no pet registered', async () => {
+    it('Should petRepository return NotFoundError if no pet registered', async () => {
       const { sut, petRepositoryStub } = makeSut()
       const petId = { petId: 'any_pet_id' }
       jest.spyOn(petRepositoryStub, 'loadById').mockResolvedValueOnce(null)
       const httpResponse = await sut.loadById(petId)
-      expect(httpResponse).toBeNull()
+      expect(httpResponse).toEqual({
+        isSuccess: false,
+        error: new NotFoundError('petId')
+      })
     })
 
     it('Should return a pet on success', async () => {
@@ -50,26 +54,30 @@ describe('DbLoadPetsByGuardianId', () => {
       const petId = { petId: 'any_pet_id' }
       const result = await sut.loadById(petId)
       expect(result).toEqual({
-        id: expect.any(String),
-        guardianId: expect.any(String),
-        specie: {
+        isSuccess: true,
+        data: {
           id: expect.any(String),
-          name: 'any_name'
-        },
-        specieAlias: '',
-        petName: 'any_pet_name',
-        gender: 'any_pet_gender',
-        breedAlias: '',
-        breed: {
-          id: 'any_id',
-          name: 'any_name'
-        },
-        size: {
-          id: 'any_id',
-          name: 'any_name'
-        },
-        castrated: false,
-        dateOfBirth: new Date(2000, 10, 23)
+          guardianId: expect.any(String),
+          specie: {
+            id: expect.any(String),
+            name: 'any_name'
+          },
+          specieAlias: '',
+          petName: 'any_pet_name',
+          gender: 'any_pet_gender',
+          breedAlias: '',
+          breed: {
+            id: 'any_id',
+            name: 'any_name'
+          },
+          size: {
+            id: 'any_id',
+            name: 'any_name'
+          },
+          castrated: false,
+          dateOfBirth: new Date(2000, 10, 23),
+          image: 'any_image_url'
+        }
       })
     })
   })
