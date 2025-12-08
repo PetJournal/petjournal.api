@@ -18,7 +18,8 @@ import {
   tagSchema,
   tagParamsSchema,
   updateTagParamsSchema,
-  updateSettingsParamsSchema
+  updateSettingsParamsSchema,
+  eventSchema
 } from './schemas/'
 
 export default {
@@ -41,5 +42,6 @@ export default {
   tag: tagSchema,
   addTagParams: tagParamsSchema,
   updateTagParams: updateTagParamsSchema,
-  updateSettingsParams: updateSettingsParamsSchema
+  updateSettingsParams: updateSettingsParamsSchema,
+  event: eventSchema
 }
