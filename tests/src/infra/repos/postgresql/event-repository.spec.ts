@@ -492,6 +492,13 @@ describe('Event Repository', () => {
 
       expect(result.events).toHaveLength(2)
     })
+
+    it('Should throw if loadBypetIdAndTagId throws', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'loadByPetIdAndTagId').mockRejectedValue(new Error())
+      const promise = sut.loadByPetIdAndTagId({ petId: 'any_id', tagId: 'any_id', limit: 1, page: 1 })
+      await expect(promise).rejects.toThrow()
+    })
   })
 
   describe('loadNextByPetId()', () => {
