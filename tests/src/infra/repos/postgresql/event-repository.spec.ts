@@ -403,6 +403,19 @@ describe('Event Repository', () => {
     })
   })
 
+  describe('loadByPetAndTagId', () => {
+    it('Should return an empty array when no events exist', async () => {
+      const sut = makeSut()
+
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
+      const tag = await PrismaHelper.createTag(guardian.id)
+
+      const result = await sut.loadByPetIdAndTagId({ petId: pet.id, tagId: tag.id })
+      expect(result.events).toEqual([])
+    })
+  })
+
   describe('loadNextByPetId()', () => {
     it('Should return empty array when no next events exist', async () => {
       const sut = makeSut()
