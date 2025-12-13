@@ -36,10 +36,19 @@ describe('DbLoadNextTasksByPetIdAndTagId', () => {
     page: 1
   }
 
-  it('Should call pet repository with correct value', async () => {
-    const { sut, petRepositoryStub } = makeSut()
-    const petRepositorySpy = jest.spyOn(petRepositoryStub, 'loadById')
-    await sut.load(params)
-    expect(petRepositorySpy).toHaveBeenCalledWith(params.petId)
+  describe('PetRepository', () => {
+    it('Should call pet repository with correct value', async () => {
+      const { sut, petRepositoryStub } = makeSut()
+      const petRepositorySpy = jest.spyOn(petRepositoryStub, 'loadById')
+      await sut.load(params)
+      expect(petRepositorySpy).toHaveBeenCalledWith(params.petId)
+    })
+
+    it('Should throw if pet repository throws', async () => {
+      const { sut, petRepositoryStub } = makeSut()
+      jest.spyOn(petRepositoryStub, 'loadById').mockRejectedValueOnce(new Error('petId'))
+      const promise = sut.load(params)
+      await expect(promise).rejects.toThrow('petId')
+    })
   })
 })
