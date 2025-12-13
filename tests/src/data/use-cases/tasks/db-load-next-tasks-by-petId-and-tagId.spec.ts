@@ -1,3 +1,4 @@
+import { NotFoundError } from '@/application/errors'
 import { type LoadNextTasksByPetIdAndTagIdRepository, type LoadPetByIdRepository, type LoadTagByIdRepository } from '@/data/protocols'
 import { DbLoadNextTasksByPetIdAndTagId } from '@/data/use-cases'
 import { type LoadNextTasksByPetIdAndTagId } from '@/domain/use-cases'
@@ -46,9 +47,19 @@ describe('DbLoadNextTasksByPetIdAndTagId', () => {
 
     it('Should throw if pet repository throws', async () => {
       const { sut, petRepositoryStub } = makeSut()
-      jest.spyOn(petRepositoryStub, 'loadById').mockRejectedValueOnce(new Error('petId'))
+      jest.spyOn(petRepositoryStub, 'loadById').mockRejectedValueOnce(new Error())
       const promise = sut.load(params)
-      await expect(promise).rejects.toThrow('petId')
+      await expect(promise).rejects.toThrow()
+    })
+
+    it('Should return NotFoundError if an invalid petId is provided', async () => {
+      const { sut, petRepositoryStub } = makeSut()
+      jest.spyOn(petRepositoryStub, 'loadById').mockResolvedValueOnce(null)
+      const result = await sut.load(params)
+      expect(result).toEqual({
+        isSuccess: false,
+        error: new NotFoundError('petId')
+      })
     })
   })
 })
