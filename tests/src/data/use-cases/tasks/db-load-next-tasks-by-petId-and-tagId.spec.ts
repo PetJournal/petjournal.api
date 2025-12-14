@@ -77,5 +77,15 @@ describe('DbLoadNextTasksByPetIdAndTagId', () => {
       const promise = sut.load(params)
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should return NotFoundError if an invalid tagId is provided', async () => {
+      const { sut, tagRepositoryStub } = makeSut()
+      jest.spyOn(tagRepositoryStub, 'loadById').mockResolvedValueOnce(null)
+      const result = await sut.load(params)
+      expect(result).toEqual({
+        isSuccess: false,
+        error: new NotFoundError('tagId')
+      })
+    })
   })
 })
