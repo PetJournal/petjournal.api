@@ -1,5 +1,6 @@
 import { LoadNextTaskByPetIdAndTagIdController } from '@/application/controllers'
-import { type HttpRequest } from '@/application/helpers'
+import { NotFoundError } from '@/application/errors'
+import { badRequest, type HttpRequest } from '@/application/helpers'
 import { type LoadNextTasksByPetIdAndTagId } from '@/domain/use-cases'
 import { makeFakeLoadNextTasksByPetIdAndTagIdUseCase, makeFakeServerError, makeFakeValidation } from '@/tests/utils'
 
@@ -46,5 +47,15 @@ describe('LoadNextTasksByPetIdAndTagId Controller', () => {
     const loadSpy = jest.spyOn(loadNextTasksByPetIdAndTagIdStub, 'load')
     await sut.handle(httpRequest)
     expect(loadSpy).toHaveBeenCalledWith({ ...httpRequest.params, ...httpRequest.query })
+  })
+
+  it('Should return 400(BadRequest) if an invlalid petId is provided', async () => {
+    const { sut, loadNextTasksByPetIdAndTagIdStub } = makeSut()
+    jest.spyOn(loadNextTasksByPetIdAndTagIdStub, 'load').mockResolvedValue({
+      isSuccess: false,
+      error: new NotFoundError('petId')
+    })
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new NotFoundError('petId')))
   })
 })
