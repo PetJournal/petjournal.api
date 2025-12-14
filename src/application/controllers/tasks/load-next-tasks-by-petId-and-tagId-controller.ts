@@ -38,7 +38,7 @@ export class LoadNextTaskByPetIdAndTagIdController implements Controller {
       return success({
         page: result.data?.page,
         limit: result.data?.limit,
-        totalPage: result.data?.totalPages,
+        totalPages: result.data?.totalPages,
         events: result.data?.events
       })
     } catch (error) {

@@ -1,6 +1,6 @@
 import { LoadNextTaskByPetIdAndTagIdController } from '@/application/controllers'
 import { NotFoundError } from '@/application/errors'
-import { badRequest, type HttpRequest } from '@/application/helpers'
+import { badRequest, success, type HttpRequest } from '@/application/helpers'
 import { type LoadNextTasksByPetIdAndTagId } from '@/domain/use-cases'
 import { makeFakeLoadNextTasksByPetIdAndTagIdUseCase, makeFakeServerError, makeFakeValidation } from '@/tests/utils'
 
@@ -67,5 +67,40 @@ describe('LoadNextTasksByPetIdAndTagId Controller', () => {
     })
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new NotFoundError('tagId')))
+  })
+
+  it('Should return an array of events on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(success({
+      page: 1,
+      limit: 10,
+      totalPages: 1,
+      events: [{
+        id: 'any_id',
+        start: new Date('2025-12-13T10:30:00Z'),
+        end: new Date('2025-12-14T10:30:00Z'),
+        schedulerId: 'any_scheduler_id',
+        scheduler: {
+          id: 'any_id',
+          title: 'any_title',
+          description: 'any_description',
+          note: 'any_note',
+          startAt: new Date('2025-12-13T10:30:00Z'),
+          endAt: new Date('2025-12-14T10:30:00Z'),
+          daysOfWeek: [],
+          daysOfMonth: [],
+          daily: false,
+          tag: {
+            name: 'any_tag',
+            color: 'any_color'
+          },
+          pets: [{
+            id: 'any_id',
+            image: 'any_image'
+          }]
+        }
+      }]
+    }))
   })
 })
