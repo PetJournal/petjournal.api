@@ -103,5 +103,43 @@ describe('DbLoadNextTasksByPetIdAndTagId', () => {
       const promise = sut.load(params)
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should return an array of events on success', async () => {
+      const { sut } = makeSut()
+      const result = await sut.load(params)
+      expect(result).toEqual({
+        isSuccess: true,
+        data: {
+          page: 1,
+          limit: 10,
+          totalPages: 1,
+          events: [{
+            id: 'any_id',
+            start: new Date('2025-12-13T10:30:00Z'),
+            end: new Date('2025-12-14T10:30:00Z'),
+            schedulerId: 'any_scheduler_id',
+            scheduler: {
+              id: 'any_id',
+              title: 'any_title',
+              description: 'any_description',
+              note: 'any_note',
+              startAt: new Date('2025-12-13T10:30:00Z'),
+              endAt: new Date('2025-12-14T10:30:00Z'),
+              daysOfWeek: [],
+              daysOfMonth: [],
+              daily: false,
+              tag: {
+                name: 'any_tag',
+                color: 'any_color'
+              },
+              pets: [{
+                id: 'any_id',
+                image: 'any_image'
+              }]
+            }
+          }]
+        }
+      })
+    })
   })
 })
