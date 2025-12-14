@@ -58,4 +58,14 @@ describe('LoadNextTasksByPetIdAndTagId Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new NotFoundError('petId')))
   })
+
+  it('Should return 400(BadRequest) if an invlalid tagId is provided', async () => {
+    const { sut, loadNextTasksByPetIdAndTagIdStub } = makeSut()
+    jest.spyOn(loadNextTasksByPetIdAndTagIdStub, 'load').mockResolvedValue({
+      isSuccess: false,
+      error: new NotFoundError('tagId')
+    })
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new NotFoundError('tagId')))
+  })
 })
