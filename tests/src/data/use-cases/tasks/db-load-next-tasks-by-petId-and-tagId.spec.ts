@@ -62,4 +62,13 @@ describe('DbLoadNextTasksByPetIdAndTagId', () => {
       })
     })
   })
+
+  describe('TagRepository', () => {
+    it('Should call tag repository with correct value', async () => {
+      const { sut, tagRepositoryStub } = makeSut()
+      const tagRepositorySpy = jest.spyOn(tagRepositoryStub, 'loadById')
+      await sut.load(params)
+      expect(tagRepositorySpy).toHaveBeenCalledWith(params.tagId)
+    })
+  })
 })
