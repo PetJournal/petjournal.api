@@ -31,8 +31,8 @@ const makeSut = (): SutTypes => {
 
 describe('DbLoadNextTasksByPetIdAndTagId', () => {
   const params: LoadNextTasksByPetIdAndTagId.Params = {
-    petId: 'any_pet_id',
-    tagId: 'any_tag_id',
+    petId: 'any_id',
+    tagId: 'any_id',
     limit: 10,
     page: 1
   }
@@ -86,6 +86,15 @@ describe('DbLoadNextTasksByPetIdAndTagId', () => {
         isSuccess: false,
         error: new NotFoundError('tagId')
       })
+    })
+  })
+
+  describe('EventRepository', () => {
+    it('Should call event repository with correct value', async () => {
+      const { sut, eventRepositoryStub } = makeSut()
+      const eventRepositorySpy = jest.spyOn(eventRepositoryStub, 'loadByPetIdAndTagId')
+      await sut.load(params)
+      expect(eventRepositorySpy).toHaveBeenCalledWith({ petId: params.petId, tagId: params.tagId })
     })
   })
 })
