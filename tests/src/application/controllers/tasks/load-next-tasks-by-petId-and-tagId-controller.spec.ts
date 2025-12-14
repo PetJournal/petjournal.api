@@ -27,6 +27,10 @@ describe('LoadNextTasksByPetIdAndTagId Controller', () => {
     params: {
       petId: 'any_id',
       tagId: 'any_id'
+    },
+    query: {
+      page: 1,
+      limit: 10
     }
   }
 
@@ -35,5 +39,12 @@ describe('LoadNextTasksByPetIdAndTagId Controller', () => {
     jest.spyOn(loadNextTasksByPetIdAndTagIdStub, 'load').mockRejectedValueOnce(new Error())
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(makeFakeServerError())
+  })
+
+  it('Should call load with correct values', async () => {
+    const { sut, loadNextTasksByPetIdAndTagIdStub } = makeSut()
+    const loadSpy = jest.spyOn(loadNextTasksByPetIdAndTagIdStub, 'load')
+    await sut.handle(httpRequest)
+    expect(loadSpy).toHaveBeenCalledWith({ ...httpRequest.params, ...httpRequest.query })
   })
 })
