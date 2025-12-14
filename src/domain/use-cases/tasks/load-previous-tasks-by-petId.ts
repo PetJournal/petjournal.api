@@ -11,5 +11,9 @@ export namespace LoadPreviousTasksByPetId {
     limit?: number
   }
 
-  export type Result = LoadPreviousTasksByPetIdRepository.Result
+  export type Result = {
+    isSuccess: boolean
+    data?: LoadPreviousTasksByPetIdRepository.Result
+    error?: Error
+  }
 }

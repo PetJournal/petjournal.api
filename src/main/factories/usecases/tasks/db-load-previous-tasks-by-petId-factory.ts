@@ -1,7 +1,12 @@
 import { DbLoadPreviousTasksByPetId } from '@/data/use-cases'
-import { EventRepository } from '@/infra/repos/postgresql'
+import { EventRepository, PetRepository } from '@/infra/repos/postgresql'
 
 export const makeLoadPreviousTasksByPetId = (): DbLoadPreviousTasksByPetId => {
   const eventRepository = new EventRepository()
-  return new DbLoadPreviousTasksByPetId(eventRepository)
+  const petRepository = new PetRepository()
+
+  return new DbLoadPreviousTasksByPetId(
+    eventRepository,
+    petRepository
+  )
 }
