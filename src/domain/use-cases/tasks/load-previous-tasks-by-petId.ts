@@ -16,4 +16,8 @@ export namespace LoadPreviousTasksByPetId {
     data?: LoadPreviousTasksByPetIdRepository.Result
     error?: Error
   }
+
+  export type Dependencies = {
+    eventRepository: LoadPreviousTasksByPetIdRepository
+  }
 }

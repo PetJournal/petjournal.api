@@ -37,12 +37,6 @@ export class LoadNextTasksByPetIdController implements Controller {
         if (result.error) {
           return badRequest(result.error)
         }
-
-        return serverError(new Error('Unexpected domain error'))
-      }
-
-      if (!result.data) {
-        return serverError(new Error('Missing data on success result'))
       }
 
       return success(result.data)
