@@ -33,10 +33,8 @@ export class LoadPreviousTasksByPetIdController implements Controller {
         limit: Number(limit)
       })
 
-      if (!result.isSuccess) {
-        if (result.error) {
-          return badRequest(result.error)
-        }
+      if (result.error) {
+        return badRequest(result.error)
       }
 
       return success(result.data)
