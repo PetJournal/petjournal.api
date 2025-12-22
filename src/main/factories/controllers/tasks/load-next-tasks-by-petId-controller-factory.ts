@@ -9,13 +9,14 @@ export const makeLoadNextTasksByPetIdController = (): Controller => {
   const loadNextTasksByPetId = makeLoadNextTasksByPetId()
   const validation = makeLoadNextTasksByPetIdValidation()
 
-  const controller = new LoadNextTasksByPetIdController({
+  const controller = new LoadNextTasksByPetIdController(
     loadNextTasksByPetId,
     validation
-  })
+  )
 
   const loggerPgRepository = new LoggerPgRepository()
-  const loggerControllerDecorator = new LoggerControllerDecorator(controller, loggerPgRepository)
+  const loggerControllerDecorator =
+    new LoggerControllerDecorator(controller, loggerPgRepository)
 
   return new DevLoggerControllerDecorator(loggerControllerDecorator)
 }

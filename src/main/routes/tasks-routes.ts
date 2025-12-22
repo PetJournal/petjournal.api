@@ -25,11 +25,15 @@ export default (router: Router): void => {
 
   router.get(
     '/tasks/pet/next/:petId/',
+    auth,
+    accountConfirmation,
     adaptRoute(makeLoadNextTasksByPetIdController())
   )
 
   router.get(
     '/tasks/pet/history/:petId',
+    auth,
+    accountConfirmation,
     adaptRoute(makeLoadPreviousTasksByPetIdController())
   )
 

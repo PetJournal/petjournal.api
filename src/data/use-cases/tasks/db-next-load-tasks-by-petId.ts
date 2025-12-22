@@ -1,16 +1,39 @@
+import { NotFoundError } from '@/application/errors'
 import { type LoadNextTasksByPetId } from '@/domain/use-cases'
-import { type LoadNextTasksByPetIdRepository } from '@/data/protocols'
+import {
+  type LoadNextTasksByPetIdRepository,
+  type LoadPetByIdRepository
+} from '@/data/protocols'
 
 export class DbLoadNextTasksByPetId implements LoadNextTasksByPetId {
   constructor (
-    private readonly eventRepository: LoadNextTasksByPetIdRepository
+    private readonly eventRepository: LoadNextTasksByPetIdRepository,
+    private readonly petRepository: LoadPetByIdRepository
   ) {}
 
-  async load ({ petId, page, limit }: LoadNextTasksByPetId.Params): Promise<LoadNextTasksByPetId.Result> {
-    return await this.eventRepository.loadNextByPetId({
+  async load ({
+    petId,
+    page,
+    limit
+  }: LoadNextTasksByPetId.Params): Promise<LoadNextTasksByPetId.Result> {
+    const petExists = await this.petRepository.loadById(petId)
+
+    if (!petExists) {
+      return {
+        isSuccess: false,
+        error: new NotFoundError('petId')
+      }
+    }
+
+    const tasks = await this.eventRepository.loadNextByPetId({
       petId,
       page,
       limit
     })
+
+    return {
+      isSuccess: true,
+      data: tasks
+    }
   }
 }

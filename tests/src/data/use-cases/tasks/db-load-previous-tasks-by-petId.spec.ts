@@ -1,7 +1,11 @@
 import { DbLoadPreviousTasksByPetId } from '@/data/use-cases'
-import { type LoadPreviousTasksByPetIdRepository } from '@/data/protocols'
+import { NotFoundError } from '@/application/errors'
+import {
+  type LoadPreviousTasksByPetIdRepository,
+  type LoadPetByIdRepository
+} from '@/data/protocols'
 
-const makeRepositoryStub = (): LoadPreviousTasksByPetIdRepository => ({
+const makeTasksRepositoryStub = (): LoadPreviousTasksByPetIdRepository => ({
   loadPreviousByPetId: jest.fn().mockResolvedValue({
     page: 1,
     limit: 10,
@@ -13,24 +17,59 @@ const makeRepositoryStub = (): LoadPreviousTasksByPetIdRepository => ({
   })
 })
 
+const makePetRepositoryStub = (): LoadPetByIdRepository => ({
+  loadById: jest.fn().mockResolvedValue({
+    id: 'pet_1'
+  })
+})
+
 interface SutTypes {
   sut: DbLoadPreviousTasksByPetId
-  repositoryStub: LoadPreviousTasksByPetIdRepository
+  tasksRepositoryStub: LoadPreviousTasksByPetIdRepository
+  petRepositoryStub: LoadPetByIdRepository
 }
 
 const makeSut = (): SutTypes => {
-  const repositoryStub = makeRepositoryStub()
-  const sut = new DbLoadPreviousTasksByPetId(repositoryStub)
+  const tasksRepositoryStub = makeTasksRepositoryStub()
+  const petRepositoryStub = makePetRepositoryStub()
+
+  const sut = new DbLoadPreviousTasksByPetId(
+    tasksRepositoryStub,
+    petRepositoryStub
+  )
+
   return {
     sut,
-    repositoryStub
+    tasksRepositoryStub,
+    petRepositoryStub
   }
 }
 
 describe('DbLoadPreviousTasksByPetId', () => {
-  it('Should call repository with correct values', async () => {
-    const { sut, repositoryStub } = makeSut()
-    const spy = jest.spyOn(repositoryStub, 'loadPreviousByPetId')
+  it('Should call petRepository with correct petId', async () => {
+    const { sut, petRepositoryStub } = makeSut()
+    const spy = jest.spyOn(petRepositoryStub, 'loadById')
+
+    await sut.load({ petId: 'pet_1', page: 1, limit: 10 })
+
+    expect(spy).toHaveBeenCalledWith('pet_1')
+  })
+
+  it('Should return NotFoundError if pet does not exist', async () => {
+    const { sut, petRepositoryStub } = makeSut()
+    jest.spyOn(petRepositoryStub, 'loadById').mockResolvedValueOnce(null)
+
+    const result = await sut.load({ petId: 'invalid_pet' })
+
+    expect(result).toEqual({
+      isSuccess: false,
+      error: new NotFoundError('petId')
+    })
+  })
+
+  it('Should call tasks repository with correct values', async () => {
+    const { sut, tasksRepositoryStub } = makeSut()
+    const spy = jest.spyOn(tasksRepositoryStub, 'loadPreviousByPetId')
 
     await sut.load({ petId: 'pet_1', page: 3, limit: 15 })
 
@@ -41,25 +80,29 @@ describe('DbLoadPreviousTasksByPetId', () => {
     })
   })
 
-  it('Should return repository result on success', async () => {
+  it('Should return history on success', async () => {
     const { sut } = makeSut()
 
     const result = await sut.load({ petId: 'pet_1', page: 1, limit: 10 })
 
     expect(result).toEqual({
-      page: 1,
-      limit: 10,
-      totalPages: 1,
-      history: [
-        { id: 'old1' },
-        { id: 'old2' }
-      ]
+      isSuccess: true,
+      data: {
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+        history: [
+          { id: 'old1' },
+          { id: 'old2' }
+        ]
+      }
     })
   })
 
-  it('Should throw if repository throws', async () => {
-    const { sut, repositoryStub } = makeSut()
-    jest.spyOn(repositoryStub, 'loadPreviousByPetId')
+  it('Should throw if tasks repository throws', async () => {
+    const { sut, tasksRepositoryStub } = makeSut()
+    jest
+      .spyOn(tasksRepositoryStub, 'loadPreviousByPetId')
       .mockRejectedValueOnce(new Error('repo_error'))
 
     await expect(
