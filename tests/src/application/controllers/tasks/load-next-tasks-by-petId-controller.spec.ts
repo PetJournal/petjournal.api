@@ -1,5 +1,5 @@
 import { LoadNextTasksByPetIdController } from '@/application/controllers'
-import { InvalidParamError } from '@/application/errors'
+import { InvalidParamError, NotFoundError } from '@/application/errors'
 import { success, serverError, badRequest } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type LoadNextTasksByPetId } from '@/domain/use-cases'
@@ -7,13 +7,16 @@ import { makeFakeValidation } from '@/tests/utils'
 
 const makeUseCaseStub = (): LoadNextTasksByPetId => ({
   load: jest.fn().mockResolvedValue({
-    page: 1,
-    limit: 10,
-    totalPages: 1,
-    nextEvents: [
-      { id: 'task1' },
-      { id: 'task2' }
-    ]
+    isSuccess: true,
+    data: {
+      page: 1,
+      limit: 10,
+      totalPages: 1,
+      nextEvents: [
+        { id: 'task1' },
+        { id: 'task2' }
+      ]
+    }
   })
 })
 
@@ -26,7 +29,12 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const validationStub = makeFakeValidation()
   const useCaseStub = makeUseCaseStub()
-  const sut = new LoadNextTasksByPetIdController({ loadNextTasksByPetId: useCaseStub, validation: validationStub })
+
+  const sut = new LoadNextTasksByPetIdController(
+    useCaseStub,
+    validationStub
+  )
+
   return {
     sut,
     validationStub,
@@ -44,19 +52,27 @@ describe('LoadNextTasksByPetIdController', () => {
       query: { page: 2, limit: 5 }
     })
 
-    expect(spy).toHaveBeenCalledWith({ petId: 'pet_1', page: 2, limit: 5 })
+    expect(spy).toHaveBeenCalledWith({
+      petId: 'pet_1',
+      page: 2,
+      limit: 5
+    })
   })
 
   it('Should return 400 if validation returns an error', async () => {
     const { sut, validationStub } = makeSut()
-    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new InvalidParamError('petId'))
+    jest
+      .spyOn(validationStub, 'validate')
+      .mockReturnValueOnce(new InvalidParamError('petId'))
 
     const response = await sut.handle({
       params: { petId: 'invalid' },
       query: {}
     })
 
-    expect(response).toEqual(badRequest(new InvalidParamError('petId')))
+    expect(response).toEqual(
+      badRequest(new InvalidParamError('petId'))
+    )
   })
 
   it('Should call use case with correct values', async () => {
@@ -73,6 +89,23 @@ describe('LoadNextTasksByPetIdController', () => {
       page: 3,
       limit: 20
     })
+  })
+
+  it('Should return 400 if use-case returns domain error', async () => {
+    const { sut, useCaseStub } = makeSut()
+    jest.spyOn(useCaseStub, 'load').mockResolvedValueOnce({
+      isSuccess: false,
+      error: new NotFoundError('petId')
+    })
+
+    const response = await sut.handle({
+      params: { petId: 'invalid_pet' },
+      query: {}
+    })
+
+    expect(response).toEqual(
+      badRequest(new NotFoundError('petId'))
+    )
   })
 
   it('Should return 500 if use-case throws', async () => {

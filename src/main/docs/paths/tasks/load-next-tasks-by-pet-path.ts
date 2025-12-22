@@ -22,7 +22,7 @@ export const loadNextTasksByPetIdPath = DocBuilder.getBuilder()
             totalPages: { type: 'number', example: 3 },
             nextEvents: {
               type: 'array',
-              items: { $ref: '#/components/schemas/Event' }
+              items: { $ref: '#/schemas/event' }
             }
           }
         }

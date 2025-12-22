@@ -79,27 +79,31 @@ describe('LoadTasks Routes', () => {
   describe('GET - /api/tasks/pet/history/:petId/', () => {
     it('Should return 200 on success', async () => {
       await request(app)
-        .get(`/api/tasks/pet/history/${petId}/`)
+        .get(`/api/tasks/pet/history/${petId}`)
+        .set('Authorization', `Bearer ${accessToken}`)
         .expect(200)
     })
 
     it('Should return 400 if petId is invalid', async () => {
       await request(app)
-        .get('/api/tasks/pet/history/invalid_id/')
+        .get('/api/tasks/pet/history/invalid_id')
+        .set('Authorization', `Bearer ${accessToken}`)
         .expect(400)
     })
   })
 
-  describe('GET - /api/tasks/pet/next/:petId', () => {
+  describe('GET - /api/tasks/pet/next/:petId/', () => {
     it('Should return 200 on success', async () => {
       await request(app)
         .get(`/api/tasks/pet/next/${petId}`)
+        .set('Authorization', `Bearer ${accessToken}`)
         .expect(200)
     })
 
     it('Should return 400 if petId is invalid', async () => {
       await request(app)
         .get('/api/tasks/pet/next/invalid_id')
+        .set('Authorization', `Bearer ${accessToken}`)
         .expect(400)
     })
   })

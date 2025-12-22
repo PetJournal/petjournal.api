@@ -11,5 +11,14 @@ export namespace LoadNextTasksByPetId {
     limit?: number
   }
 
-  export type Result = LoadNextTasksByPetIdRepository.Result
+  export type Result =
+    {
+      isSuccess: boolean
+      data?: LoadNextTasksByPetIdRepository.Result
+      error?: Error
+    }
+
+  export type Dependencies = {
+    eventRepository: LoadNextTasksByPetIdRepository
+  }
 }

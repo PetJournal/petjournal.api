@@ -9,13 +9,10 @@ import { type Validation, type Controller } from '@/application/protocols'
 import { type LoadPreviousTasksByPetId } from '@/domain/use-cases'
 
 export class LoadPreviousTasksByPetIdController implements Controller {
-  private readonly loadPreviousTasksByPetId: LoadPreviousTasksByPetId
-  private readonly validation: Validation
-
-  constructor ({ loadPreviousTasksByPetId, validation }: LoadPreviousTasksByPetIdController.Dependencies) {
-    this.loadPreviousTasksByPetId = loadPreviousTasksByPetId
-    this.validation = validation
-  }
+  constructor (
+    private readonly loadPreviousTasksByPetId: LoadPreviousTasksByPetId,
+    private readonly validation: Validation
+  ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -28,10 +25,7 @@ export class LoadPreviousTasksByPetIdController implements Controller {
       }
 
       const { petId } = httpRequest.params
-      const {
-        page = 1,
-        limit = 10
-      } = httpRequest.query
+      const { page = 1, limit = 10 } = httpRequest.query
 
       const result = await this.loadPreviousTasksByPetId.load({
         petId,
@@ -39,21 +33,13 @@ export class LoadPreviousTasksByPetIdController implements Controller {
         limit: Number(limit)
       })
 
-      return success({
-        page: result.page,
-        limit: result.limit,
-        totalPages: result.totalPages,
-        history: result.history
-      })
+      if (result.error) {
+        return badRequest(result.error)
+      }
+
+      return success(result.data)
     } catch (error) {
       return serverError(error as Error)
     }
-  }
-}
-
-export namespace LoadPreviousTasksByPetIdController {
-  export interface Dependencies {
-    loadPreviousTasksByPetId: LoadPreviousTasksByPetId
-    validation: Validation
   }
 }

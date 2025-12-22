@@ -84,16 +84,16 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
       db.event.count({
         where: {
           scheduler: { pets: { some: { id: petId } } },
-          start: { lt: today }
+          start: { gte: today }
         }
       }),
 
       db.event.findMany({
         where: {
           scheduler: { pets: { some: { id: petId } } },
-          start: { lt: today }
+          start: { gte: today }
         },
-        orderBy: { start: 'desc' },
+        orderBy: { start: 'asc' },
         skip: offset,
         take: limit,
         include: {
@@ -128,16 +128,16 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
       db.event.count({
         where: {
           scheduler: { pets: { some: { id: petId } } },
-          start: { gte: today }
+          start: { lt: today }
         }
       }),
 
       db.event.findMany({
         where: {
           scheduler: { pets: { some: { id: petId } } },
-          start: { gte: today }
+          start: { lt: today }
         },
-        orderBy: { start: 'asc' },
+        orderBy: { start: 'desc' },
         skip: offset,
         take: limit,
         include: {
