@@ -26,15 +26,7 @@ export const loadNextTasksByPetIdAndTagIdPath = DocBuilder.getBuilder()
             totalPages: { type: 'number', example: 3 },
             events: {
               type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  id: { type: 'string' },
-                  schedulerId: { type: 'string' },
-                  start: { type: 'string', format: 'date-time' },
-                  end: { type: 'string', format: 'date-time' }
-                }
-              }
+              items: { $ref: '#/schemas/event' }
             }
           }
         }
