@@ -23,7 +23,8 @@ import {
   type AddScheduler,
   type LoadSettings,
   type UpdateSettings,
-  type LoadPetById
+  type LoadPetById,
+  type LoadNextTasksByPetIdAndTagId
 } from '@/domain/use-cases'
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
 import { mockFakeAppointPet, mockFakePetUpdated, mockFakePetByGuardianIdLoaded, mockFakeSpecieAdded, makeFakeGuardianData, mockFakeBreedAdded, mockFakeSizeAdded, mockFakePetByIdLoaded } from '../mocks'
@@ -356,6 +357,47 @@ const makeFakeLoadTagByIdUseCase = (): LoadTagById => {
   return new LoadTagByIdStub()
 }
 
+const makeFakeLoadNextTasksByPetIdAndTagIdUseCase = (): LoadNextTasksByPetIdAndTagId => {
+  class LoadNextTasksByPetIdAndTagIdStub implements LoadNextTasksByPetIdAndTagId {
+    async load (params: LoadNextTasksByPetIdAndTagId.Params): Promise<LoadNextTasksByPetIdAndTagId.Result> {
+      return {
+        isSuccess: true,
+        data: {
+          page: 1,
+          limit: 10,
+          totalPages: 1,
+          events: [{
+            id: 'any_id',
+            start: new Date('2025-12-13T10:30:00Z'),
+            end: new Date('2025-12-14T10:30:00Z'),
+            schedulerId: 'any_scheduler_id',
+            scheduler: {
+              id: 'any_id',
+              title: 'any_title',
+              description: 'any_description',
+              note: 'any_note',
+              startAt: new Date('2025-12-13T10:30:00Z'),
+              endAt: new Date('2025-12-14T10:30:00Z'),
+              daysOfWeek: [],
+              daysOfMonth: [],
+              daily: false,
+              tag: {
+                name: 'any_tag',
+                color: 'any_color'
+              },
+              pets: [{
+                id: 'any_id',
+                image: 'any_image'
+              }]
+            }
+          }]
+        }
+      }
+    }
+  }
+  return new LoadNextTasksByPetIdAndTagIdStub()
+}
+
 const makeFakeAddSchedulerUseCase = (): AddScheduler => {
   class AddSchedulerStub implements AddScheduler {
     async add (params: AddScheduler.Params): Promise<AddScheduler.Result> {
@@ -453,5 +495,6 @@ export {
   makeFakeLoadTagByIdUseCase,
   makeFakeAddSchedulerUseCase,
   makeFakeLoadSettingsUseCase,
-  makeFakeUpdateSettingsUseCase
+  makeFakeUpdateSettingsUseCase,
+  makeFakeLoadNextTasksByPetIdAndTagIdUseCase
 }
