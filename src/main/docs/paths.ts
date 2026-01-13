@@ -24,7 +24,11 @@ import {
   loadCurrentWeekTasksPath,
   loadCurrentMonthTasksPath,
   loadSettingsPath,
-  updateSettingsPath
+  updateSettingsPath,
+  loadPetByIdPath,
+  loadNextTasksByPetIdPath,
+  loadPreviousTasksByPetIdPath,
+  loadNextTasksByPetIdAndTagIdPath
 } from './paths/'
 
 export default {
@@ -35,7 +39,7 @@ export default {
   '/guardian/email-confirmation/{userId}': emailConfirmationPath,
   '/waiting-code': waitingCodePath,
   '/pet': { ...petRegistryPath, ...loadPetsPath },
-  '/pet/{petId}': { ...updatePetPath, ...deletePetPath },
+  '/pet/{petId}': { ...loadPetByIdPath, ...updatePetPath, ...deletePetPath },
   '/guardian/name': loadGuardianNamePath,
   '/breeds/cat': loadCatBreedsPath,
   '/breeds/dog': loadDogBreedsPath,
@@ -47,5 +51,9 @@ export default {
   '/tasks/current-date': loadCurrentDateTasksPath,
   '/tasks/current-week': loadCurrentWeekTasksPath,
   '/tasks/current-month': loadCurrentMonthTasksPath,
-  '/settings': { ...loadSettingsPath, ...updateSettingsPath }
+  '/settings': { ...loadSettingsPath, ...updateSettingsPath },
+  '/tasks/pet/next/{petId}': loadNextTasksByPetIdPath,
+  '/tasks/pet/history/{petId}': loadPreviousTasksByPetIdPath,
+  '/tasks/pet/{petId}/tag/{tagId}': loadNextTasksByPetIdAndTagIdPath
+
 }

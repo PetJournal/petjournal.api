@@ -5,10 +5,14 @@ import request from 'supertest'
 describe('LoadTasks Routes', () => {
   let accessToken = ''
   let tagId = ''
+  let petId = ''
 
   beforeAll(async () => {
     await PrismaHelper.connect()
     const { id: guardianId } = await PrismaHelper.createGuardian()
+    const pet = await PrismaHelper.createPet(guardianId)
+
+    petId = pet.id
 
     const { body } = await request(app)
       .post('/api/login')
@@ -16,6 +20,7 @@ describe('LoadTasks Routes', () => {
         email: 'johndoe@email.com',
         password: 'Test@1234'
       })
+
     const { id } = await PrismaHelper.createTag(guardianId)
 
     accessToken = body.accessToken
@@ -66,6 +71,56 @@ describe('LoadTasks Routes', () => {
     it('Should return 400 if tagId is invalid', async () => {
       await request(app)
         .get('/api/tasks/current-month?tagId=invalid_tag_id')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(400)
+    })
+  })
+
+  describe('GET - /api/tasks/pet/history/:petId/', () => {
+    it('Should return 200 on success', async () => {
+      await request(app)
+        .get(`/api/tasks/pet/history/${petId}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(200)
+    })
+
+    it('Should return 400 if petId is invalid', async () => {
+      await request(app)
+        .get('/api/tasks/pet/history/invalid_id')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(400)
+    })
+  })
+
+  describe('GET - /api/tasks/pet/next/:petId/', () => {
+    it('Should return 200 on success', async () => {
+      await request(app)
+        .get(`/api/tasks/pet/next/${petId}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(200)
+    })
+
+    it('Should return 400 if petId is invalid', async () => {
+      await request(app)
+        .get('/api/tasks/pet/next/invalid_id')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(400)
+    })
+  })
+
+  describe('GET - /api/tasks/pet/:petId/tag/:tagId', () => {
+    it('Should return 200 on success', async () => {
+      const response = await request(app)
+        .get(`/api/tasks/pet/${petId}/tag/${tagId}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(200)
+
+      console.log(response)
+    })
+
+    it('Should return 400 if an invalid petId or tagId are provided', async () => {
+      await request(app)
+        .get('/api/tasks/pet/invalid_petId/tag/invalid_tagId')
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(400)
     })

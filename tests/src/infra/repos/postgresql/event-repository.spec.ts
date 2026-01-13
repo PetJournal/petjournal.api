@@ -402,4 +402,207 @@ describe('Event Repository', () => {
       expect(result[1].start).toEqual(new Date('2025-08-01T11:00:00Z'))
     })
   })
+
+  describe('loadByPetAndTagId', () => {
+    it('Should return an empty array when no events exist', async () => {
+      const sut = makeSut()
+
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
+      const tag = await PrismaHelper.createTag(guardian.id)
+
+      const result = await sut.loadByPetIdAndTagId({ petId: pet.id, tagId: tag.id })
+      expect(result.events).toEqual([])
+    })
+
+    it('Should return pagination information', async () => {
+      const sut = makeSut()
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
+      const tag = await PrismaHelper.createTag(guardian.id)
+
+      const dateFuture1 = generateDate().start
+      const dateFuture2 = generateDate().end
+
+      const scheduler = await prisma.scheduler.create({
+        data: {
+          guardianId: guardian.id,
+          tagId: tag.id,
+          title: 'any_title',
+          description: 'any_description',
+          note: 'any_note',
+          startAt: dateFuture1,
+          endAt: dateFuture2,
+          daysOfWeek: [],
+          daysOfMonth: [],
+          daily: false,
+          pets: { connect: [{ id: pet.id }] }
+        }
+      })
+
+      await prisma.event.createMany({
+        data: [
+          { schedulerId: scheduler.id, start: dateFuture1, end: dateFuture1 },
+          { schedulerId: scheduler.id, start: dateFuture2, end: dateFuture2 }
+        ]
+      })
+
+      const result = await sut.loadByPetIdAndTagId({ petId: pet.id, tagId: tag.id, limit: 1, page: 1 })
+
+      expect(result.page).toBe(1)
+      expect(result.limit).toBe(1)
+      expect(result.totalPages).toBe(2)
+    })
+
+    it('Should return next events by petId and tagId on success', async () => {
+      const sut = makeSut()
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
+      const tag = await PrismaHelper.createTag(guardian.id)
+
+      const dateFuture1 = generateDate().start
+      const dateFuture2 = generateDate().end
+      const datePast = new Date('2024-01-01T10:00:00Z')
+
+      const scheduler = await prisma.scheduler.create({
+        data: {
+          guardianId: guardian.id,
+          tagId: tag.id,
+          title: 'any_title',
+          description: 'any_description',
+          note: 'any_note',
+          startAt: dateFuture1,
+          endAt: dateFuture2,
+          daysOfWeek: [],
+          daysOfMonth: [],
+          daily: false,
+          pets: { connect: [{ id: pet.id }] }
+        }
+      })
+
+      await prisma.event.createMany({
+        data: [
+          { schedulerId: scheduler.id, start: dateFuture2, end: dateFuture2 },
+          { schedulerId: scheduler.id, start: dateFuture2, end: dateFuture2 },
+          { schedulerId: scheduler.id, start: datePast, end: datePast }
+        ]
+      })
+
+      const result = await sut.loadByPetIdAndTagId({ petId: pet.id, tagId: tag.id, limit: 3, page: 1 })
+
+      expect(result.events).toHaveLength(2)
+    })
+
+    it('Should throw if loadBypetIdAndTagId throws', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'loadByPetIdAndTagId').mockRejectedValue(new Error())
+      const promise = sut.loadByPetIdAndTagId({ petId: 'any_id', tagId: 'any_id', limit: 1, page: 1 })
+      await expect(promise).rejects.toThrow()
+    })
+  })
+
+  describe('loadNextByPetId()', () => {
+    it('Should return empty array when no next events exist', async () => {
+      const sut = makeSut()
+
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
+
+      const result = await sut.loadNextByPetId({ petId: pet.id })
+      expect(result.nextEvents).toEqual([])
+    })
+
+    it('Should return future events sorted ASC', async () => {
+      const sut = makeSut()
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
+      const tag = await prisma.tag.create({
+        data: { guardianId: guardian.id, name: 'future_tag', color: 'red' }
+      })
+
+      const future1 = new Date('2030-01-01T10:00:00Z')
+      const future2 = new Date('2030-01-01T12:00:00Z')
+
+      const scheduler = await prisma.scheduler.create({
+        data: {
+          guardianId: guardian.id,
+          tagId: tag.id,
+          title: 'future_events',
+          description: '',
+          note: '',
+          startAt: future1,
+          endAt: future2,
+          daysOfWeek: [],
+          daysOfMonth: [],
+          daily: false,
+          pets: { connect: [{ id: pet.id }] }
+        }
+      })
+
+      await prisma.event.createMany({
+        data: [
+          { schedulerId: scheduler.id, start: future2, end: future2 },
+          { schedulerId: scheduler.id, start: future1, end: future1 }
+        ]
+      })
+
+      const result = await sut.loadNextByPetId({ petId: pet.id })
+
+      expect(result.nextEvents).toHaveLength(2)
+      expect(result.nextEvents[0].start).toEqual(future1)
+      expect(result.nextEvents[1].start).toEqual(future2)
+    })
+  })
+
+  describe('loadPreviousByPetId()', () => {
+    it('Should return empty history when no future events exist', async () => {
+      const sut = makeSut()
+
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
+
+      const result = await sut.loadPreviousByPetId({ petId: pet.id })
+      expect(result.history).toEqual([])
+    })
+
+    it('Should return past events sorted DESC', async () => {
+      const sut = makeSut()
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
+      const tag = await prisma.tag.create({
+        data: { guardianId: guardian.id, name: 'next', color: 'blue' }
+      })
+
+      const past1 = new Date('2020-01-01T10:00:00Z')
+      const past2 = new Date('2020-01-01T12:00:00Z')
+
+      const scheduler = await prisma.scheduler.create({
+        data: {
+          guardianId: guardian.id,
+          tagId: tag.id,
+          title: 'future',
+          description: '',
+          note: '',
+          startAt: past1,
+          endAt: past2,
+          daysOfWeek: [],
+          daysOfMonth: [],
+          daily: false,
+          pets: { connect: [{ id: pet.id }] }
+        }
+      })
+
+      await prisma.event.createMany({
+        data: [
+          { schedulerId: scheduler.id, start: past1, end: past1 },
+          { schedulerId: scheduler.id, start: past2, end: past2 }
+        ]
+      })
+
+      const result = await sut.loadPreviousByPetId({ petId: pet.id })
+
+      expect(result.history[0].start).toEqual(past2)
+      expect(result.history[1].start).toEqual(past1)
+    })
+  })
 })

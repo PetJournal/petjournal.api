@@ -1,3 +1,6 @@
 export * from './load-current-date-tasks-controller'
 export * from './load-current-week-tasks-controller'
 export * from './load-current-month-tasks-controller'
+export * from './load-previous-by-petId-controller'
+export * from './load-next-tasks-by-petId-controller'
+export * from './load-next-tasks-by-petId-and-tagId-controller'

@@ -1,3 +1,4 @@
+import { NotFoundError } from '@/application/errors'
 import { type LoadPetByIdRepository } from '@/data/protocols'
 import { type LoadPetById } from '@/domain/use-cases'
 
@@ -10,6 +11,15 @@ export class DbLoadPetById implements LoadPetById {
 
   async loadById ({ petId }: LoadPetById.Params): Promise<LoadPetById.Result> {
     const result = await this.petRepository.loadById(petId)
-    return result
+    if (!result) {
+      return {
+        isSuccess: false,
+        error: new NotFoundError('petId')
+      }
+    }
+    return {
+      isSuccess: true,
+      data: result
+    }
   }
 }

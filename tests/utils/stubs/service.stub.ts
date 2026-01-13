@@ -45,7 +45,8 @@ import {
   type AddSchedulerRepository,
   type DeleteSchedulerByIdRepository,
   type LoadSettingsRepository,
-  type UpdateSettingsRepository
+  type UpdateSettingsRepository,
+  type LoadNextTasksByPetIdAndTagIdRepository
 } from '@/data/protocols'
 import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
 import { type LoadDogSizesRepository } from '@/data/protocols/db/size/load-dog-sizes-repository'
@@ -345,8 +346,8 @@ const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & Upd
   return new TagRepositoryStub()
 }
 
-const makeFakeEventRepository = (): AddEventRepository & LoadEventByDateRepository & AddManyEventsRepository => {
-  class EventRepositoryStub implements AddEventRepository, LoadEventByDateRepository, AddManyEventsRepository {
+const makeFakeEventRepository = (): AddEventRepository & LoadEventByDateRepository & AddManyEventsRepository & LoadNextTasksByPetIdAndTagIdRepository => {
+  class EventRepositoryStub implements AddEventRepository, LoadEventByDateRepository, AddManyEventsRepository, LoadNextTasksByPetIdAndTagIdRepository {
     async add (params: AddEventRepository.Params): Promise<AddEventRepository.Result> {
       return {
         id: 'any_id',
@@ -366,6 +367,39 @@ const makeFakeEventRepository = (): AddEventRepository & LoadEventByDateReposito
 
     async addMany (params: AddManyEventsRepository.Params): Promise<AddManyEventsRepository.Result> {
       return true
+    }
+
+    async loadByPetIdAndTagId (params: LoadNextTasksByPetIdAndTagIdRepository.Params): Promise<LoadNextTasksByPetIdAndTagIdRepository.Result> {
+      return {
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+        events: [{
+          id: 'any_id',
+          start: new Date('2025-12-13T10:30:00Z'),
+          end: new Date('2025-12-14T10:30:00Z'),
+          schedulerId: 'any_scheduler_id',
+          scheduler: {
+            id: 'any_id',
+            title: 'any_title',
+            description: 'any_description',
+            note: 'any_note',
+            startAt: new Date('2025-12-13T10:30:00Z'),
+            endAt: new Date('2025-12-14T10:30:00Z'),
+            daysOfWeek: [],
+            daysOfMonth: [],
+            daily: false,
+            tag: {
+              name: 'any_tag',
+              color: 'any_color'
+            },
+            pets: [{
+              id: 'any_id',
+              image: 'any_image'
+            }]
+          }
+        }]
+      }
     }
   }
   return new EventRepositoryStub()
