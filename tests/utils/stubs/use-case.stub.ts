@@ -177,11 +177,10 @@ const makeFakeLoadPetByIdUseCase = (): LoadPetById => {
 const makeFakeUpdatePetUseCase = (): UpdatePet => {
   class UpdatePetStub implements UpdatePet {
     async update (petData: UpdatePet.Params): Promise<UpdatePet.Result> {
-      const result = {
+      return {
         isSuccess: true,
         data: mockFakePetUpdated()
       }
-      return result
     }
   }
   return new UpdatePetStub()

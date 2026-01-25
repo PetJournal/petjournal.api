@@ -1,6 +1,8 @@
 import { type UpdatePetRepository, type LoadGuardianByIdRepository, type LoadPetByIdRepository } from '@/data/protocols'
 import { type PetGender } from '@/domain/models/pet'
 import { type AppointPet } from './appoint-pet'
+import { type ResultResponse } from '@/domain/types/result'
+import { type Breed, type Guardian, type Size, type Specie } from '@/domain/models'
 
 export interface UpdatePet {
   update: (petData: UpdatePet.Params) => Promise<UpdatePet.Result>
@@ -19,11 +21,30 @@ export namespace UpdatePet {
     dateOfBirth?: Date
   }
 
-  export interface Result {
-    isSuccess: boolean
-    error?: Error
-    data?: UpdatePetRepository.Result
+  type Data = {
+    id: string
+    guardian: Pick<Guardian, 'firstName' | 'lastName' | 'email' | 'phone'> & {
+      id: string
+    }
+    specie: Specie & {
+      id: string
+    }
+    specieAlias?: string | null
+    petName: string
+    gender: string
+    breed: Breed & {
+      id: string
+    }
+    breedAlias: string
+    size: Size & {
+      id: string
+    }
+    castrated: boolean
+    dateOfBirth: Date
+    image: string
   }
+
+  export type Result = ResultResponse<Data | undefined>
 
   export interface Dependencies {
     guardianRepository: LoadGuardianByIdRepository

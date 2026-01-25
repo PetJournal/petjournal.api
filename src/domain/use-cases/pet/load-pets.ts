@@ -9,7 +9,7 @@ export namespace LoadPets {
     guardianId: string
   }
 
-  export type Result = Array<{
+  interface Data {
     id: string
     guardianId: string
     specie: {
@@ -29,7 +29,9 @@ export namespace LoadPets {
       name: string
     }
     castrated: boolean
-  }>
+  }
+
+  export type Result = Data[]
 
   export type Dependencies = {
     petRepository: LoadPetByGuardianIdRepository
