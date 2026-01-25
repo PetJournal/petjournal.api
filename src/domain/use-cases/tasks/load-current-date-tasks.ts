@@ -10,10 +10,12 @@ export namespace LoadCurrentDateTasks {
     limit?: number
   }
 
-  export type Result = Array<{
+  type Task = {
     id: string
     schedulerId: string
     start: Date
     end: Date
-  }>
+  }
+
+  export type Result = Task[]
 }

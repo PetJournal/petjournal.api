@@ -25,7 +25,7 @@ export class UpdatePetController implements Controller {
       }
       const result = await this.updatePet.update(updateData)
       if (!result.isSuccess) {
-        return notAcceptable(result.error as Error)
+        return notAcceptable(result.error)
       }
       return success({
         id: result.data?.id,

@@ -14,7 +14,7 @@ export class DeleteTagByIdController implements Controller {
       const { tagId } = httpRequest.params
       const result = await this.deleteTag.deleteById(tagId)
       if (!result.isSuccess) {
-        return notAcceptable(result.error as Error)
+        return notAcceptable(result.error)
       }
       return success({
         message: 'Tag deleted',

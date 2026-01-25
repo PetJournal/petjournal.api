@@ -36,7 +36,7 @@ export class PetRegistryController implements Controller {
         image
       })
       if (!result.isSuccess) {
-        return notAcceptable(result.error as Error)
+        return notAcceptable(result.error)
       }
       return create({
         id: result.data?.id,

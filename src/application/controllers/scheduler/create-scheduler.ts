@@ -33,7 +33,7 @@ export class CreateSchedulerController implements Controller {
         pets
       })
       if (!result.isSuccess) {
-        return notAcceptable(result.error as Error)
+        return notAcceptable(result.error)
       }
       return create({
         id: result.data?.id,

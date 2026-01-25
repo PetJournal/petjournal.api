@@ -32,7 +32,7 @@ export class LoadNextTaskByPetIdAndTagIdController implements Controller {
       })
 
       if (!result.isSuccess) {
-        return badRequest(result.error as Error)
+        return badRequest(result.error)
       }
 
       return success({
