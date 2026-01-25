@@ -1,13 +1,6 @@
 import { NotAcceptableError } from '@/application/errors'
 import { type FileStorage, type AddPetRepository, type LoadGuardianByIdRepository, type UpdatePetRepository } from '@/data/protocols'
 import {
-  type PetGender,
-  type Guardian,
-  type Specie,
-  type Breed,
-  type Size
-} from '@/domain/models'
-import {
   type AddPet,
   type AppointPet
 } from '@/domain/use-cases'
@@ -58,26 +51,32 @@ export class DbAddPet implements AddPet {
     const { petName, gender, dateOfBirth } = petData
     const pet = await this.petRepository.add({
       guardianId: guardian.id,
-      specieId: appointResult.data?.specie.id,
-      specieAlias: appointResult.data?.specieAlias,
+      specieId: appointResult.data.specie.id,
+      specieAlias: appointResult.data.specieAlias,
       petName,
       gender,
-      breedId: appointResult.data?.breed.id,
-      breedAlias: appointResult.data?.breedAlias,
-      sizeId: appointResult.data?.size.id,
-      castrated: appointResult.data?.castrated,
+      breedId: appointResult.data.breed.id,
+      breedAlias: appointResult.data.breedAlias,
+      sizeId: appointResult.data.size.id,
+      castrated: appointResult.data.castrated,
       dateOfBirth
     })
+    if (!pet) {
+      return {
+        isSuccess: false,
+        error: new NotAcceptableError('petData')
+      }
+    }
 
     let imageUrl: string = ''
     if (petData.image) {
-      imageUrl = await this.fileStorage.save({ file: petData.image, fileName: `images/pet-${pet?.id as string}` })
+      imageUrl = await this.fileStorage.save({ file: petData.image, fileName: `images/pet-${pet.id}` })
     }
 
     if (imageUrl) {
       await this.petRepository.update({
         guardianId: guardian.id,
-        petId: pet?.id as string,
+        petId: pet.id,
         image: imageUrl
       })
     }
@@ -85,17 +84,17 @@ export class DbAddPet implements AddPet {
     return {
       isSuccess: true,
       data: {
-        id: pet?.id as string,
-        guardian: pet?.guardian as Guardian & { id: string },
-        specie: pet?.specie as Specie & { id: string },
-        specieAlias: pet?.specieAlias,
-        petName: pet?.petName as string,
-        gender: pet?.gender as PetGender,
-        breed: pet?.breed as Breed & { id: string },
-        breedAlias: pet?.breedAlias as string,
-        size: pet?.size as Size & { id: string },
-        castrated: pet?.castrated as boolean,
-        dateOfBirth: pet?.dateOfBirth as Date,
+        id: pet.id,
+        guardian: pet.guardian,
+        specie: pet.specie,
+        specieAlias: pet.specieAlias,
+        petName: pet.petName,
+        gender: pet.gender,
+        breed: pet.breed,
+        breedAlias: pet.breedAlias,
+        size: pet.size,
+        castrated: pet.castrated,
+        dateOfBirth: pet.dateOfBirth,
         image: imageUrl || this.defaultImageUrl
       }
     }

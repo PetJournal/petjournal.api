@@ -42,9 +42,9 @@ export class DbAppointPet implements AppointPet {
       data: {
         specie: specieResult.specie,
         specieAlias: specieResult.specieAlias,
-        breed: breedResult.data?.breed as Breed & { id: string },
-        breedAlias: breedResult.data?.breedAlias as string,
-        size: sizeResult.data?.size as Size & { id: string },
+        breed: breedResult.data.breed,
+        breedAlias: breedResult.data.breedAlias,
+        size: sizeResult.data.size,
         castrated
       }
     }
@@ -146,17 +146,23 @@ type SpecieResult = {
 }
 
 type BreedResult = {
-  error?: Error
-  data?: {
+  error: Error
+  data?: never
+} | {
+  error?: never
+  data: {
     breed: Breed & { id: string }
-    breedAlias: string | undefined
+    breedAlias: string
     specieId: string
   }
 }
 
 type SizeResult = {
-  error?: Error
-  data?: {
+  error: Error
+  data?: never
+} | {
+  error?: never
+  data: {
     size: Size & { id: string }
     specieId: string
   }
