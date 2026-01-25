@@ -16,12 +16,11 @@ export class EventsGeneratorService implements EventsGenerator {
       const events = []
       while (currentDate <= endAtDateTime) {
         if (daysOfWeek.includes(currentDate.getDay())) {
-          const event = await this.eventRepository.loadByDate({ date: currentDate })
-          if (event) {
+          const eventAlready = await this.eventRepository.loadByDate({ date: new Date(currentDate) })
+          if (eventAlready) {
             return {
               isSuccess: false,
-              error: new NotAcceptableError('Conflict start event'),
-              data: event
+              error: new NotAcceptableError('Conflict start event')
             }
           }
           const start = new Date(currentDate)
@@ -49,7 +48,8 @@ export class EventsGeneratorService implements EventsGenerator {
       }
 
       return {
-        isSuccess: true
+        isSuccess: true,
+        data: events
       }
     }
 
@@ -57,12 +57,11 @@ export class EventsGeneratorService implements EventsGenerator {
       const events = []
       while (currentDate <= endAtDateTime) {
         if (daysOfMonth.includes(currentDate.getDate())) {
-          const event = await this.eventRepository.loadByDate({ date: currentDate })
-          if (event) {
+          const eventAlreadyExists = await this.eventRepository.loadByDate({ date: new Date(currentDate) })
+          if (eventAlreadyExists) {
             return {
               isSuccess: false,
-              error: new NotAcceptableError('Conflict start event'),
-              data: event
+              error: new NotAcceptableError('Conflict start event')
             }
           }
           const start = new Date(currentDate)
@@ -90,19 +89,19 @@ export class EventsGeneratorService implements EventsGenerator {
       }
 
       return {
-        isSuccess: true
+        isSuccess: true,
+        data: events
       }
     }
 
     if (daily) {
       const events = []
       while (currentDate <= endAtDateTime) {
-        const event = await this.eventRepository.loadByDate({ date: currentDate })
+        const event = await this.eventRepository.loadByDate({ date: new Date(currentDate) })
         if (event) {
           return {
             isSuccess: false,
-            error: new NotAcceptableError('Conflict start event'),
-            data: event
+            error: new NotAcceptableError('Conflict start event')
           }
         }
         const start = new Date(currentDate)
@@ -129,16 +128,16 @@ export class EventsGeneratorService implements EventsGenerator {
       }
 
       return {
-        isSuccess: true
+        isSuccess: true,
+        data: events
       }
     }
 
-    const event = await this.eventRepository.loadByDate({ date: currentDate })
-    if (event) {
+    const eventAlreadyExists = await this.eventRepository.loadByDate({ date: new Date(currentDate) })
+    if (eventAlreadyExists) {
       return {
         isSuccess: false,
-        error: new NotAcceptableError('Conflict start event'),
-        data: event
+        error: new NotAcceptableError('Conflict start event')
       }
     }
 

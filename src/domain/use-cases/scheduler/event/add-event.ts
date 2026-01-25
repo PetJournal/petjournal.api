@@ -12,13 +12,15 @@ export namespace AddEvent {
     date: Date
   }
 
-  export type Result = {
+  type Data = {
     id: string
     schedulerId: string
     start: Date
     end: Date
     date: Date
-  } | undefined
+  }
+
+  export type Result = Data | undefined
 
   export type Dependencies = {
     eventRepository: AddEventRepository

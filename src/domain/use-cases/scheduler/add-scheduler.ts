@@ -1,5 +1,6 @@
 import { type LoadTagByIdRepository, type AddSchedulerRepository, type AddTagRepository, type LoadPetByIdRepository, type DeleteSchedulerByIdRepository } from '@/data/protocols'
 import { type EventsGenerator } from '@/data/protocols/service'
+import { type ResultResponse } from '@/domain/types/result'
 import { type Pet } from '@/infra/repos/postgresql/prisma/generated'
 
 export interface AddScheduler {
@@ -21,24 +22,22 @@ export namespace AddScheduler {
     pets: string[]
   }
 
-  export type Result = {
-    isSuccess: boolean
-    error?: Error
-    data?: {
-      id: string
-      tagId: string
-      guardianId: string
-      title: string
-      description: string
-      note: string
-      startAt: Date
-      endAt: Date
-      daysOfWeek?: number[]
-      daysOfMonth?: number[]
-      daily: boolean
-      pets: Pet[]
-    }
+  interface Data {
+    id: string
+    tagId: string
+    guardianId: string
+    title: string
+    description: string
+    note: string
+    startAt: Date
+    endAt: Date
+    daysOfWeek?: number[]
+    daysOfMonth?: number[]
+    daily: boolean
+    pets: Pet[]
   }
+
+  export type Result = ResultResponse<Data>
 
   export type Dependencies = {
     tagRepository: AddTagRepository & LoadTagByIdRepository

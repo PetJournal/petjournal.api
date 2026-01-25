@@ -304,7 +304,8 @@ const makeFakeDeleteTagByIdUseCase = (): DeleteTagById => {
   class DeleteTagByIdStub implements DeleteTagById {
     async deleteById (tagId: DeleteTagById.Param): Promise<DeleteTagById.Result> {
       return {
-        isSuccess: true
+        isSuccess: true,
+        data: undefined
       }
     }
   }

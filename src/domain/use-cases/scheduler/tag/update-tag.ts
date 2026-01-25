@@ -1,4 +1,5 @@
 import { type LoadTagByIdRepository, type UpdateTagRepository } from '@/data/protocols'
+import { type ResultResponse } from '@/domain/types/result'
 
 export interface UpdateTag {
   update: (params: UpdateTag.Params) => Promise<UpdateTag.Result>
@@ -10,11 +11,14 @@ export namespace UpdateTag {
     name: string
   }
 
-  export type Result = {
-    isSuccess: boolean
-    error?: Error
-    data?: UpdateTagRepository.Result
+  interface Data {
+    id: string
+    guardianId: string
+    name: string
+    color: string
   }
+
+  export type Result = ResultResponse<Data | undefined>
 
   export type Dependencies = {
     tagRepository: UpdateTagRepository & LoadTagByIdRepository

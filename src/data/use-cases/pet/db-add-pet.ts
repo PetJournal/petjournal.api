@@ -58,14 +58,14 @@ export class DbAddPet implements AddPet {
     const { petName, gender, dateOfBirth } = petData
     const pet = await this.petRepository.add({
       guardianId: guardian.id,
-      specieId: appointResult.data?.specie.id as string,
+      specieId: appointResult.data?.specie.id,
       specieAlias: appointResult.data?.specieAlias,
       petName,
       gender,
-      breedId: appointResult.data?.breed.id as string,
-      breedAlias: appointResult.data?.breedAlias as string,
-      sizeId: appointResult.data?.size.id as string,
-      castrated: appointResult.data?.castrated as boolean,
+      breedId: appointResult.data?.breed.id,
+      breedAlias: appointResult.data?.breedAlias,
+      sizeId: appointResult.data?.size.id,
+      castrated: appointResult.data?.castrated,
       dateOfBirth
     })
 

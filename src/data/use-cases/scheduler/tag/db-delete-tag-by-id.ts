@@ -18,7 +18,8 @@ export class DbDeleteTagById implements DeleteTagById {
       }
     }
     return {
-      isSuccess: true
+      isSuccess: true,
+      data: undefined
     }
   }
 }
