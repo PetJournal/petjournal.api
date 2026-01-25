@@ -1,4 +1,5 @@
 import { type UpdateSettingsRepository, type LoadSettingsRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
+import { type ResultResponse } from '@/domain/types/result'
 
 export interface UpdateSettings {
   update: (params: UpdateSettings.Params) => Promise<UpdateSettings.Result>
@@ -11,11 +12,13 @@ export namespace UpdateSettings {
     notificationMobile: boolean
   }
 
-  export type Result = {
-    isSuccess: boolean
-    data?: UpdateSettingsRepository.Result
-    error?: Error
+  type Data = {
+    guardianId: string
+    notificationEmail: boolean
+    notificationMobile: boolean
   }
+
+  export type Result = ResultResponse<Data>
 
   export type Dependencies = {
     guardianRepository: LoadGuardianByIdRepository
