@@ -1,7 +1,7 @@
 import { DbUpdatePet } from '@/data/use-cases'
 import { type UpdatePet, type AppointPet } from '@/domain/use-cases'
-import { type LoadPetByGuardianIdRepository, type LoadPetByIdRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
-import { makeFakeAppointPetUseCase, makeFakeGuardianRepository, makeFakePetRepository, mockFakePetByIdLoaded, mockFakePetUpdated } from '@/tests/utils'
+import { type LoadPetByGuardianIdRepository, type LoadPetByIdRepository, type LoadGuardianByIdRepository, type FileStorage, type DeleteFileStorage } from '@/data/protocols'
+import { makeFakeAppointPetUseCase, makeFakeFileStorage, makeFakeGuardianRepository, makeFakePetRepository, mockFakePetByIdLoaded, mockFakePetUpdated } from '@/tests/utils'
 import { PetGender } from '@/domain/models'
 import { NotAcceptableError } from '@/application/errors'
 
@@ -10,6 +10,7 @@ interface SutTypes {
   guardianRepositoryStub: LoadGuardianByIdRepository
   petRepositoryStub: LoadPetByGuardianIdRepository & LoadPetByIdRepository
   appointPetStub: AppointPet
+  fileStorageStub: FileStorage & DeleteFileStorage
 
 }
 
@@ -17,17 +18,20 @@ const makeSut = (): SutTypes => {
   const guardianRepositoryStub = makeFakeGuardianRepository()
   const petRepositoryStub = makeFakePetRepository()
   const appointPetStub = makeFakeAppointPetUseCase()
+  const fileStorageStub = makeFakeFileStorage()
   const dependencies: UpdatePet.Dependencies = {
     guardianRepository: guardianRepositoryStub,
     petRepository: petRepositoryStub,
-    appointPet: appointPetStub
+    appointPet: appointPetStub,
+    fileStorage: fileStorageStub
   }
   const sut = new DbUpdatePet(dependencies)
   return {
     sut,
     guardianRepositoryStub,
     petRepositoryStub,
-    appointPetStub
+    appointPetStub,
+    fileStorageStub
   }
 }
 
@@ -41,7 +45,8 @@ describe('DbUpdatePet Use Case', () => {
     breedName: 'any_breed_name',
     size: 'any_size',
     castrated: false,
-    dateOfBirth: new Date(2000, 10, 23)
+    dateOfBirth: new Date(2000, 10, 23),
+    image: Buffer.from('any_image')
   }
 
   describe('GuardianRepository', () => {
@@ -93,6 +98,20 @@ describe('DbUpdatePet Use Case', () => {
       jest.spyOn(petRepositoryStub, 'loadById').mockRejectedValue(new Error())
       const promise = sut.update(params)
       await expect(promise).rejects.toThrow()
+    })
+  })
+
+  describe('FileStorage', () => {
+    it('Should call save method with correct value', async () => {
+      const { sut, fileStorageStub } = makeSut()
+      const saveSpy = jest.spyOn(fileStorageStub, 'save')
+
+      await sut.update(params)
+
+      expect(saveSpy).toHaveBeenCalledWith({
+        file: params.image,
+        fileName: `images/pet-${mockFakePetUpdated()?.id as string}-${Date.now()}`
+      })
     })
   })
 

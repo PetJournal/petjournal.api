@@ -70,6 +70,7 @@ interface UpdatePetRequest {
   params: {
     petId: string
   }
+  file?: Buffer
 }
 
 interface DeletePetRequest {
