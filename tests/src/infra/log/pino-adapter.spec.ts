@@ -30,6 +30,7 @@ describe('PinoAdapter', () => {
 
   describe('info()', () => {
     const message = 'Test info message'
+    const meta = { userId: 123, line: 45 }
 
     it('Should call pino.info with correct message', () => {
       const { sut } = makeSut()
@@ -44,11 +45,20 @@ describe('PinoAdapter', () => {
       const { sut } = makeSut()
 
       const infoSpy = jest.spyOn(pinoInstanceMock, 'info')
-      const meta = { userId: 123, line: 45 }
 
       sut.info(message, meta)
 
       expect(infoSpy).toHaveBeenCalledWith(meta, message)
+    })
+
+    it('Should throw if pino.info throws', () => {
+      const { sut } = makeSut()
+
+      jest.spyOn(pinoInstanceMock, 'info').mockImplementationOnce(() => {
+        throw new Error()
+      })
+
+      expect(() => { sut.info(message, meta) }).toThrow()
     })
   })
 })
