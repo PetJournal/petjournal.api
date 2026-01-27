@@ -61,4 +61,18 @@ describe('PinoAdapter', () => {
       expect(() => { sut.info(message, meta) }).toThrow()
     })
   })
+
+  describe('error()', () => {
+    const message = 'Test error message'
+
+    it('Should call pino.error with correct message', () => {
+      const { sut } = makeSut()
+
+      const errorSpy = jest.spyOn(pinoInstanceMock, 'error')
+
+      sut.error(message)
+
+      expect(errorSpy).toHaveBeenCalledWith(undefined, message)
+    })
+  })
 })
