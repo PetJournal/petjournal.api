@@ -110,7 +110,7 @@ describe('DbUpdatePet Use Case', () => {
 
       expect(saveSpy).toHaveBeenCalledWith({
         file: params.image,
-        fileName: `images/pet-${mockFakePetUpdated()?.id as string}-${Date.now()}`
+        fileName: `images/pet-${mockFakePetUpdated()?.id as string}-${Math.trunc(Date.now() / 1000)}`
       })
     })
 
