@@ -29,15 +29,26 @@ describe('PinoAdapter', () => {
   })
 
   describe('info()', () => {
-    it('Should call pino.info with correct value', () => {
+    const message = 'Test info message'
+
+    it('Should call pino.info with correct message', () => {
       const { sut } = makeSut()
       const infoSpy = jest.spyOn(pinoInstanceMock, 'info')
-
-      const message = 'Test info message'
 
       sut.info(message)
 
       expect(infoSpy).toHaveBeenCalledWith(undefined, message)
+    })
+
+    it('Should call pino.info with correct message and meta', () => {
+      const { sut } = makeSut()
+
+      const infoSpy = jest.spyOn(pinoInstanceMock, 'info')
+      const meta = { userId: 123, line: 45 }
+
+      sut.info(message, meta)
+
+      expect(infoSpy).toHaveBeenCalledWith(meta, message)
     })
   })
 })
