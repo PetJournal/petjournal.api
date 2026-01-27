@@ -59,7 +59,7 @@ export class DbUpdatePet implements UpdatePet {
     }
     if (petData.image) {
       const urlOldImage = pet.image
-      const newImage = await this.fileStorage.save({ file: petData.image, fileName: `images/pet-${pet?.id}-${Date.now()}` })
+      const newImage = await this.fileStorage.save({ file: petData.image, fileName: `images/pet-${pet?.id}-${Math.trunc(Date.now() / 1000)}` })
       if (!newImage) {
         return {
           isSuccess: false,
