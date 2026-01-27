@@ -1,5 +1,5 @@
 import { NotAcceptableError } from '@/application/errors'
-import { type UpdatePetRepository, type LoadGuardianByIdRepository, type LoadPetByIdRepository } from '@/data/protocols'
+import { type UpdatePetRepository, type LoadGuardianByIdRepository, type LoadPetByIdRepository, type FileStorage, type DeleteFileStorage } from '@/data/protocols'
 import {
   type PetGender,
   type Guardian,
@@ -15,15 +15,18 @@ import {
 export class DbUpdatePet implements UpdatePet {
   private readonly guardianRepository: LoadGuardianByIdRepository
   private readonly petRepository: UpdatePetRepository & LoadPetByIdRepository
+  private readonly fileStorage: FileStorage & DeleteFileStorage
   private readonly appointPet: AppointPet
 
   constructor ({
     guardianRepository,
     petRepository,
+    fileStorage,
     appointPet
   }: UpdatePet.Dependencies) {
     this.guardianRepository = guardianRepository
     this.petRepository = petRepository
+    this.fileStorage = fileStorage
     this.appointPet = appointPet
   }
 
@@ -54,6 +57,13 @@ export class DbUpdatePet implements UpdatePet {
         error: appointResult.error
       }
     }
+    if (petData.image) {
+      const urlOldImage = pet.image
+      pet.image = await this.fileStorage.save({ file: petData.image, fileName: `images/pet-${pet?.id}-${Date.now()}` })
+      if (urlOldImage) {
+        await this.fileStorage.delete({ fileUrlOrPath: urlOldImage })
+      }
+    }
     const petUpdateResult = await this.petRepository.update({
       guardianId: guardian.id,
       petId: pet.id,
@@ -65,8 +75,10 @@ export class DbUpdatePet implements UpdatePet {
       breedAlias: appointResult.data?.breedAlias as string,
       sizeId: appointResult.data?.size.id as string,
       castrated: appointResult.data?.castrated as boolean,
-      dateOfBirth: petData.dateOfBirth ? petData.dateOfBirth : pet.dateOfBirth
+      dateOfBirth: petData.dateOfBirth ? petData.dateOfBirth : pet.dateOfBirth,
+      image: pet.image
     })
+
     return {
       isSuccess: true,
       data: {
