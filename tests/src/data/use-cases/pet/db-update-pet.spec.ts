@@ -122,6 +122,17 @@ describe('DbUpdatePet Use Case', () => {
 
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should call delete method with correct value', async () => {
+      const { sut, fileStorageStub } = makeSut()
+      const saveSpy = jest.spyOn(fileStorageStub, 'delete')
+
+      await sut.update(params)
+
+      expect(saveSpy).toHaveBeenCalledWith({
+        fileUrlOrPath: 'any_image_url'
+      })
+    })
   })
 
   describe('AppointPet', () => {
