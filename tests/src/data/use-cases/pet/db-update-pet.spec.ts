@@ -113,6 +113,15 @@ describe('DbUpdatePet Use Case', () => {
         fileName: `images/pet-${mockFakePetUpdated()?.id as string}-${Date.now()}`
       })
     })
+
+    it('Should throw if save method throws', async () => {
+      const { sut, fileStorageStub } = makeSut()
+      jest.spyOn(fileStorageStub, 'save').mockRejectedValueOnce(new Error())
+
+      const promise = sut.update(params)
+
+      await expect(promise).rejects.toThrow()
+    })
   })
 
   describe('AppointPet', () => {
