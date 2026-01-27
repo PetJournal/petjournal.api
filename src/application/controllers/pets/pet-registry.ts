@@ -39,18 +39,18 @@ export class PetRegistryController implements Controller {
         return notAcceptable(result.error)
       }
       return create({
-        id: result.data?.id,
-        guardian: result.data?.guardian,
-        specie: result.data?.specie,
-        specieAlias: result.data?.specieAlias,
-        petName: result.data?.petName,
-        gender: result.data?.gender,
-        breed: result.data?.breed,
-        breedAlias: result.data?.breedAlias,
-        size: result.data?.size,
-        castrated: result.data?.castrated,
-        dateOfBirth: result.data?.dateOfBirth,
-        image: result.data?.image
+        id: result.data.id,
+        guardian: result.data.guardian,
+        specie: result.data.specie,
+        specieAlias: result.data.specieAlias,
+        petName: result.data.petName,
+        gender: result.data.gender,
+        breed: result.data.breed,
+        breedAlias: result.data.breedAlias,
+        size: result.data.size,
+        castrated: result.data.castrated,
+        dateOfBirth: result.data.dateOfBirth,
+        image: result.data.image
       })
     } catch (error) {
       return serverError(error as Error)
