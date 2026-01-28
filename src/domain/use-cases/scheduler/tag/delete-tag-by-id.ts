@@ -7,7 +7,7 @@ export interface DeleteTagById {
 
 export namespace DeleteTagById {
   export type Param = string
-  export type Result = ResultResponse<void>
+  export type Result = ResultResponse<undefined>
 
   export type Dependencies = {
     tagRepository: DeleteTagRepository
