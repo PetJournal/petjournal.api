@@ -6,6 +6,7 @@ let pinoInstanceMock: pino.Logger
 jest.mock('pino', () => jest.fn().mockImplementation(() => {
   pinoInstanceMock = {
     info: jest.fn(),
+    debug: jest.fn(),
     error: jest.fn()
   } as unknown as pino.Logger
   return pinoInstanceMock
@@ -59,6 +60,20 @@ describe('PinoAdapter', () => {
       })
 
       expect(() => { sut.info(message, meta) }).toThrow()
+    })
+  })
+
+  describe('debug()', () => {
+    const message = 'Test debug message'
+
+    it('Should call pino.debug with correct message', () => {
+      const { sut } = makeSut()
+
+      const debugSpy = jest.spyOn(pinoInstanceMock, 'debug')
+
+      sut.debug(message)
+
+      expect(debugSpy).toHaveBeenCalledWith(undefined, message)
     })
   })
 
