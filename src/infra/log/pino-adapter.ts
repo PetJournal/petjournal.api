@@ -25,6 +25,10 @@ export class PinoAdapter implements Logger {
     this.logger.info(meta, message)
   }
 
+  debug (message: string, meta?: object): void {
+    this.logger.debug(meta, message)
+  }
+
   error (message: string, error?: Error): void {
     this.logger.error(error, message)
   }
