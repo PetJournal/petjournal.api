@@ -26,6 +26,7 @@ export class SignUpController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
+      this.logger.debug('httpRequest', { httpRequest })
       const error = this.validation.validate(httpRequest.body)
       if (error) {
         return badRequest(error)
@@ -40,6 +41,7 @@ export class SignUpController implements Controller {
         password,
         verificationToken: ''
       })
+      this.logger.debug('addGuardian result', { guardian })
 
       if (!guardian) {
         return conflict(new ConflictGuardianError())
