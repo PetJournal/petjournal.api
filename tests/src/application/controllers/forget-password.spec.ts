@@ -6,28 +6,34 @@ import { badRequest, success } from '@/application/helpers'
 import {
   makeFakeForgetPasswordRequest,
   makeFakeForgetPasswordUseCase,
+  makeFakeLogger,
   makeFakeServerError,
   makeFakeValidation
 } from '@/tests/utils'
+import { type Logger } from '@/data/protocols'
 
 interface SutTypes {
   sut: ForgetPasswordController
   forgetPasswordStub: ForgetPassword
   validationStub: Validation
+  loggerStub: Logger
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = makeFakeValidation()
   const forgetPasswordStub = makeFakeForgetPasswordUseCase()
+  const loggerStub = makeFakeLogger()
   const dependencies: ForgetPasswordController.Dependencies = {
     forgetPassword: forgetPasswordStub,
-    validation: validationStub
+    validation: validationStub,
+    logger: loggerStub
   }
   const sut = new ForgetPasswordController(dependencies)
   return {
     sut,
     forgetPasswordStub,
-    validationStub
+    validationStub,
+    loggerStub
   }
 }
 
@@ -71,6 +77,17 @@ describe('ForgetPassword Controller', () => {
       expect(validateSpy).toHaveBeenCalledWith({
         email: httpRequest.body.email
       })
+    })
+  })
+
+  describe('Logger', () => {
+    it('Should call logger.error if ForgetPassword throws', async () => {
+      const { sut, forgetPasswordStub, loggerStub } = makeSut()
+      const loggerSpy = jest.spyOn(loggerStub, 'error')
+      const error = new Error('any_error')
+      jest.spyOn(forgetPasswordStub, 'forgetPassword').mockRejectedValue(error)
+      await sut.handle(httpRequest)
+      expect(loggerSpy).toHaveBeenCalledWith(error.message, error)
     })
   })
 
