@@ -46,7 +46,8 @@ import {
   type DeleteSchedulerByIdRepository,
   type LoadSettingsRepository,
   type UpdateSettingsRepository,
-  type LoadNextTasksByPetIdAndTagIdRepository
+  type LoadNextTasksByPetIdAndTagIdRepository,
+  type Logger
 } from '@/data/protocols'
 import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
 import { type LoadDogSizesRepository } from '@/data/protocols/db/size/load-dog-sizes-repository'
@@ -483,6 +484,16 @@ const makeFakeSettingsRepository = (): LoadSettingsRepository & UpdateSettingsRe
   return new SettingsRepositoryStub()
 }
 
+const makeFakeLogger = (): Logger => {
+  class LoggerStub implements Logger {
+    info (message: string, meta?: object): void {}
+    debug (message: string, meta?: object): void {}
+    error (message: string, error?: Error): void {}
+  }
+
+  return new LoggerStub()
+}
+
 export {
   mockHashService,
   mockTokenService,
@@ -505,5 +516,6 @@ export {
   makeFakeEventRepository,
   makeFakeSchedulerRepository,
   makeFakeEventsGenerator,
-  makeFakeSettingsRepository
+  makeFakeSettingsRepository,
+  makeFakeLogger
 }
