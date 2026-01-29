@@ -8,27 +8,33 @@ import {
   makeFakeValidation,
   makeFakeLoginRequest,
   makeFakeServerError,
-  mockTokenService
+  mockTokenService,
+  makeFakeLogger
 } from '@/tests/utils'
+import { type Logger } from '@/data/protocols'
 
 interface SutTypes {
   sut: LoginController
   authenticationStub: Authentication
   validationStub: Validation
+  loggerStub: Logger
 }
 
 const makeSut = (): SutTypes => {
   const authenticationStub = makeFakeAuthenticationUseCase()
   const validationStub = makeFakeValidation()
+  const loggerStub = makeFakeLogger()
   const dependencies: LoginController.Dependencies = {
     authentication: authenticationStub,
-    validation: validationStub
+    validation: validationStub,
+    logger: loggerStub
   }
   const sut = new LoginController(dependencies)
   return {
     sut,
     authenticationStub,
-    validationStub
+    validationStub,
+    loggerStub
   }
 }
 
@@ -79,6 +85,17 @@ describe('Login Controller', () => {
         email: httpRequest.body.email,
         password: httpRequest.body.password
       })
+    })
+  })
+
+  describe('Logger', () => {
+    it('Should call logger.error if Authentication throws', async () => {
+      const { sut, authenticationStub, loggerStub } = makeSut()
+      const loggerErrorSpy = jest.spyOn(loggerStub, 'error')
+      const error = new Error('any_error')
+      jest.spyOn(authenticationStub, 'auth').mockRejectedValue(error)
+      await sut.handle(httpRequest)
+      expect(loggerErrorSpy).toHaveBeenCalledWith(error.message, error)
     })
   })
 
