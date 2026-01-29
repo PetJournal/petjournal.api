@@ -7,16 +7,19 @@ import {
   makeDbCreateAccessToken,
   makeDbValidateVerificationToken
 } from '@/main/factories/usecases'
+import { PinoAdapter } from '@/infra/log/pino-adapter'
 
 export const makeWaitingCodeController = (): Controller => {
   const validation = makeWaitingCodeValidation()
   const validateVerificationToken = makeDbValidateVerificationToken()
   const createAccessToken = makeDbCreateAccessToken()
   const loggerPgRepository = new LoggerPgRepository()
+  const logger = new PinoAdapter(WaitingCodeController.name)
   const waitingCodeController = new WaitingCodeController({
     validation,
     validateVerificationToken,
-    createAccessToken
+    createAccessToken,
+    logger
   })
   const loggerControllerDecorator = new LoggerControllerDecorator(waitingCodeController, loggerPgRepository)
   return new DevLoggerControllerDecorator(loggerControllerDecorator)
