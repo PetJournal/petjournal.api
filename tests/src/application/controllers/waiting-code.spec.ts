@@ -2,6 +2,7 @@ import { WaitingCodeController } from '@/application/controllers'
 import { MissingParamError, UnauthorizedError } from '@/application/errors'
 import { badRequest, success, unauthorized } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
+import { type Logger } from '@/data/protocols'
 import { type CreateAccessToken, type ValidateVerificationToken } from '@/domain/use-cases'
 import {
   makeFakeCreateAccessTokenUseCase,
@@ -9,7 +10,8 @@ import {
   makeFakeValidation,
   makeFakeWaitingCodeRequest,
   makeFakeValidateVerificationTokenUseCase,
-  mockTokenService
+  mockTokenService,
+  makeFakeLogger
 } from '@/tests/utils'
 
 interface SutTypes {
@@ -17,23 +19,27 @@ interface SutTypes {
   validationStub: Validation
   createAccessTokenStub: CreateAccessToken
   validateVerificationTokenStub: ValidateVerificationToken
+  loggerStub: Logger
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = makeFakeValidation()
   const createAccessTokenStub = makeFakeCreateAccessTokenUseCase()
   const validateVerificationTokenStub = makeFakeValidateVerificationTokenUseCase()
+  const loggerStub = makeFakeLogger()
   const dependencies: WaitingCodeController.Dependencies = {
     validation: validationStub,
     createAccessToken: createAccessTokenStub,
-    validateVerificationToken: validateVerificationTokenStub
+    validateVerificationToken: validateVerificationTokenStub,
+    logger: loggerStub
   }
   const sut = new WaitingCodeController(dependencies)
   return {
     sut,
     validationStub,
     createAccessTokenStub,
-    validateVerificationTokenStub
+    validateVerificationTokenStub,
+    loggerStub
   }
 }
 
@@ -79,6 +85,17 @@ describe('WaitingCode Controller', () => {
       const codeAuthSpy = jest.spyOn(validateVerificationTokenStub, 'validate')
       await sut.handle(httpRequest)
       expect(codeAuthSpy).toHaveBeenCalledWith(httpRequest.body)
+    })
+  })
+
+  describe('Logger', () => {
+    it('should call logger.error if throws', async () => {
+      const { sut, loggerStub, validateVerificationTokenStub } = makeSut()
+      const loggerErrorSpy = jest.spyOn(loggerStub, 'error')
+      const error = new Error('any_error')
+      jest.spyOn(validateVerificationTokenStub, 'validate').mockRejectedValueOnce(error)
+      await sut.handle(httpRequest)
+      expect(loggerErrorSpy).toHaveBeenCalledWith(error.message, error)
     })
   })
 
