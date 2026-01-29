@@ -2,14 +2,17 @@ import { type ForgetPassword } from '@/domain/use-cases'
 import { type Controller, type Validation } from '@/application/protocols'
 import { type HttpRequest, type HttpResponse, badRequest, success, serverError } from '@/application/helpers'
 import { NotFoundError } from '@/application/errors'
+import { type Logger } from '@/data/protocols'
 
 export class ForgetPasswordController implements Controller {
   private readonly validation: Validation
   private readonly forgetPassword: ForgetPassword
+  private readonly logger: Logger
 
-  constructor ({ validation, forgetPassword }: ForgetPasswordController.Dependencies) {
+  constructor ({ validation, forgetPassword, logger }: ForgetPasswordController.Dependencies) {
     this.validation = validation
     this.forgetPassword = forgetPassword
+    this.logger = logger
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -28,7 +31,9 @@ export class ForgetPasswordController implements Controller {
 
       return success({ message: 'Email sent successfully' })
     } catch (error) {
-      return serverError(error as Error)
+      const exception = error instanceof Error ? error : new Error(String(error))
+      this.logger.error(exception.message, exception)
+      return serverError(exception)
     }
   }
 }
@@ -37,5 +42,6 @@ export namespace ForgetPasswordController {
   export interface Dependencies {
     validation: Validation
     forgetPassword: ForgetPassword
+    logger: Logger
   }
 }
