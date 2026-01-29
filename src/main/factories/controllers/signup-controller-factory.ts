@@ -1,5 +1,6 @@
 import { SignUpController } from '@/application/controllers'
 import { type Controller } from '@/application/protocols'
+import { PinoAdapter } from '@/infra/log/pino-adapter'
 import { LoggerPgRepository } from '@/infra/repos/postgresql'
 import { DevLoggerControllerDecorator, LoggerControllerDecorator } from '@/main/decorators'
 import { makeDbAddGuardian, makeDbSendEmail, makeSignUpValidation } from '@/main/factories'
@@ -8,10 +9,12 @@ export const makeSignUpController = (): Controller => {
   const addGuardian = makeDbAddGuardian()
   const validation = makeSignUpValidation()
   const sendEmail = makeDbSendEmail()
+  const logger = new PinoAdapter(SignUpController.name)
   const dependencies: SignUpController.Dependencies = {
     addGuardian,
     validation,
-    sendEmail
+    sendEmail,
+    logger
   }
   const signUpController = new SignUpController(dependencies)
   const loggerPgRepository = new LoggerPgRepository()

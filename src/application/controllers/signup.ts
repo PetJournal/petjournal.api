@@ -9,16 +9,19 @@ import {
   create,
   badRequest
 } from '@/application/helpers'
+import { type Logger } from '@/data/protocols/log/logger'
 
 export class SignUpController implements Controller {
   private readonly addGuardian: AddGuardian
   private readonly validation: Validation
   private readonly sendEmail: SendEmail
+  private readonly logger: Logger
 
-  constructor ({ addGuardian, validation, sendEmail }: SignUpController.Dependencies) {
+  constructor ({ addGuardian, validation, sendEmail, logger }: SignUpController.Dependencies) {
     this.addGuardian = addGuardian
     this.sendEmail = sendEmail
     this.validation = validation
+    this.logger = logger
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -46,7 +49,9 @@ export class SignUpController implements Controller {
 
       return create(guardian)
     } catch (error) {
-      return serverError(error as Error)
+      const exception = error instanceof Error ? error : new Error(String(error))
+      this.logger.error(exception.message, exception)
+      return serverError(exception)
     }
   }
 }
@@ -56,5 +61,6 @@ export namespace SignUpController {
     addGuardian: AddGuardian
     sendEmail: SendEmail
     validation: Validation
+    logger: Logger
   }
 }
