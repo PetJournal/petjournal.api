@@ -19,10 +19,12 @@ export class UpdatePetController implements Controller {
       }
       const guardianId = httpRequest.userId as string
       const petId = httpRequest.params.petId as string
-      const updateData = { ...httpRequest.body, guardianId, petId }
+      const image = httpRequest.file ?? null
+      const updateData = { ...httpRequest.body, guardianId, petId, image }
       if (Object.hasOwn(updateData, 'gender')) {
         updateData.gender = updateData.gender?.toUpperCase()
       }
+
       const result = await this.updatePet.update(updateData)
       if (!result.isSuccess) {
         return notAcceptable(result.error as Error)

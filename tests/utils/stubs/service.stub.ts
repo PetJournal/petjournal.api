@@ -34,6 +34,7 @@ import {
   type DeletePetByIdRepository,
   type UpdateEmailConfirmationRepository,
   type FileStorage,
+  type DeleteFileStorage,
   type AddTagRepository,
   type LoadTagByIdRepository,
   type UpdateTagRepository,
@@ -291,11 +292,13 @@ const makeFakeLoadPetByIdRepository = (): LoadPetByIdRepository => {
   return new LoadPetByGuardianIdRepositoryStub()
 }
 
-const makeFakeFileStorage = (): FileStorage => {
+const makeFakeFileStorage = (): FileStorage & DeleteFileStorage => {
   class FileStorageStub implements FileStorage {
     async save (data: FileStorage.Params): Promise<FileStorage.Result> {
       return 'any_url'
     }
+
+    async delete (fileUrlOrPath: DeleteFileStorage.Params): Promise<DeleteFileStorage.Result> {}
   }
 
   return new FileStorageStub()
