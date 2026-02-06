@@ -1,4 +1,4 @@
-import { type UpdatePetRepository, type LoadGuardianByIdRepository, type LoadPetByIdRepository } from '@/data/protocols'
+import { type UpdatePetRepository, type LoadGuardianByIdRepository, type LoadPetByIdRepository, type FileStorage, type DeleteFileStorage } from '@/data/protocols'
 import { type PetGender } from '@/domain/models/pet'
 import { type AppointPet } from './appoint-pet'
 import { type ResultResponse } from '@/domain/types/result'
@@ -19,6 +19,7 @@ export namespace UpdatePet {
     size?: string
     castrated?: boolean
     dateOfBirth?: Date
+    image?: Buffer | null
   }
 
   type Data = {
@@ -50,5 +51,6 @@ export namespace UpdatePet {
     guardianRepository: LoadGuardianByIdRepository
     petRepository: UpdatePetRepository & LoadPetByIdRepository
     appointPet: AppointPet
+    fileStorage: FileStorage & DeleteFileStorage
   }
 }

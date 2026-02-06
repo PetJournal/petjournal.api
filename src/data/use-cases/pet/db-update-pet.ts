@@ -1,20 +1,22 @@
 import { NotAcceptableError } from '@/application/errors'
-import { type UpdatePetRepository, type LoadGuardianByIdRepository, type LoadPetByIdRepository } from '@/data/protocols'
+import { type UpdatePetRepository, type LoadGuardianByIdRepository, type LoadPetByIdRepository, type FileStorage, type DeleteFileStorage } from '@/data/protocols'
 import { type PetGender } from '@/domain/models'
 import { type UpdatePet, type AppointPet } from '@/domain/use-cases'
-
 export class DbUpdatePet implements UpdatePet {
   private readonly guardianRepository: LoadGuardianByIdRepository
   private readonly petRepository: UpdatePetRepository & LoadPetByIdRepository
+  private readonly fileStorage: FileStorage & DeleteFileStorage
   private readonly appointPet: AppointPet
 
   constructor ({
     guardianRepository,
     petRepository,
+    fileStorage,
     appointPet
   }: UpdatePet.Dependencies) {
     this.guardianRepository = guardianRepository
     this.petRepository = petRepository
+    this.fileStorage = fileStorage
     this.appointPet = appointPet
   }
 
@@ -43,6 +45,19 @@ export class DbUpdatePet implements UpdatePet {
       return {
         isSuccess: false,
         error: appointResult.error
+      }
+    }
+    if (petData.image) {
+      const urlOldImage = pet.image
+      const newImage = await this.fileStorage.save({ file: petData.image, fileName: `images/pet-${pet?.id}-${Math.trunc(Date.now() / 1000)}` })
+      if (!newImage) {
+        return {
+          isSuccess: false,
+          error: new NotAcceptableError('update image failed')
+        }
+      }
+      if (urlOldImage) {
+        await this.fileStorage.delete({ fileUrlOrPath: urlOldImage })
       }
     }
     const petUpdateResult = await this.petRepository.update({

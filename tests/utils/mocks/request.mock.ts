@@ -118,7 +118,9 @@ const makeFakeUpdatePetRequest = (): UpdatePetRequest => {
     petId: 'any_id'
   }
 
-  return { body, params, userId }
+  const file = Buffer.from('any_image')
+
+  return { body, params, userId, file }
 }
 
 const makeFakeDeletePetRequest = (): DeletePetRequest => {
