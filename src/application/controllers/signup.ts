@@ -29,13 +29,15 @@ export class SignUpController implements Controller {
       }
 
       const { firstName, lastName, email, phone, password } = httpRequest.body
+      const image = httpRequest.file ?? null
       const guardian = await this.addGuardian.add({
         firstName,
         lastName,
         email,
         phone,
         password,
-        verificationToken: ''
+        verificationToken: '',
+        image
       })
 
       if (!guardian) {
