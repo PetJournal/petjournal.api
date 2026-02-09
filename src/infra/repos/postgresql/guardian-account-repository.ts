@@ -1,3 +1,4 @@
+import { type UpdateGuardianImageRepository } from '@/data/protocols/db/guardian/update-guardian-image-repository'
 import { prisma as db } from './prisma'
 import {
   type AddGuardianRepository,
@@ -15,7 +16,8 @@ implements AddGuardianRepository, LoadGuardianByEmailRepository,
     UpdateAccessTokenRepository,
     UpdateGuardianPasswordRepository,
     UpdateVerificationTokenRepository,
-  UpdateEmailConfirmationRepository {
+  UpdateEmailConfirmationRepository,
+  UpdateGuardianImageRepository {
   async add (
     guardianData: AddGuardianRepository.Params
   ): Promise<AddGuardianRepository.Result> {
@@ -135,5 +137,25 @@ implements AddGuardianRepository, LoadGuardianByEmailRepository,
     })
 
     return result.emailConfirmation
+  }
+
+  async updateImage (params: UpdateGuardianImageRepository.Params): Promise<UpdateGuardianImageRepository.Result> {
+    const { guardianId, image } = params
+    const result = await db.guardian.update({
+      where: { id: guardianId },
+      data: { image },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        phone: true,
+        verificationToken: false,
+        emailConfirmation: true,
+        image: true
+      }
+    })
+
+    return result
   }
 }
