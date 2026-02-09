@@ -13,6 +13,9 @@ export const guardianSchema = {
     },
     phone: {
       type: 'string'
+    },
+    image: {
+      type: 'binary'
     }
   }
 }

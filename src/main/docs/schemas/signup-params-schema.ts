@@ -21,6 +21,9 @@ export const signUpParamsSchema = {
     },
     isPrivacyPolicyAccepted: {
       type: 'boolean'
+    },
+    image: {
+      type: 'binary'
     }
   }
 }
