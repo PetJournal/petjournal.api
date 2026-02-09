@@ -18,21 +18,25 @@ export class DbAddGuardian implements AddGuardian {
     const hashedPassword = await this.hashService.encrypt({ value: guardianData.password })
     const guardian = await this.guardianRepository.add(Object.assign({}, { ...guardianData, image: '' }, { password: hashedPassword }))
 
+    if (!guardian) {
+      return undefined
+    }
+
     let imageUrl: string = ''
     if (guardianData.image) {
-      imageUrl = await this.fileStorage.save({ file: guardianData.image, fileName: `images/guardian-${guardian?.id as string}` })
+      imageUrl = await this.fileStorage.save({ file: guardianData.image, fileName: `images/guardian-${guardian?.id}` })
     }
 
     if (imageUrl) {
-      await this.guardianRepository.updateImage({ guardianId: guardian?.id as string, image: imageUrl })
+      await this.guardianRepository.updateImage({ guardianId: guardian?.id, image: imageUrl })
     }
 
     return {
-      id: guardian?.id as string,
-      email: guardian?.email as string,
-      firstName: guardian?.firstName as string,
-      lastName: guardian?.lastName as string,
-      phone: guardian?.phone as string,
+      id: guardian?.id,
+      email: guardian?.email,
+      firstName: guardian?.firstName,
+      lastName: guardian?.lastName,
+      phone: guardian?.phone,
       image: imageUrl ?? this.defaultGuardianImageUrl
     }
   }
