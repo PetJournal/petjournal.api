@@ -18,6 +18,7 @@ interface SignUpRequest {
     passwordConfirmation: string
     phone: string
   }
+  file?: Buffer
 }
 
 interface ForgetPasswordRequest {

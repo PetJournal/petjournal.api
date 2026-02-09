@@ -44,8 +44,9 @@ const makeFakeSignUpRequest = (): SignUpRequest => {
     passwordConfirmation: mockGuardianRequest.passwordConfirmation,
     phone: mockGuardianRequest.phone
   }
+  const file = Buffer.from('any_image')
 
-  return { body }
+  return { body, file }
 }
 
 const makeFakeForgetPasswordRequest = (): ForgetPasswordRequest => {
