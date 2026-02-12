@@ -141,18 +141,15 @@ implements AddGuardianRepository, LoadGuardianByEmailRepository,
 
   async updateImage (params: UpdateGuardianImageRepository.Params): Promise<UpdateGuardianImageRepository.Result> {
     const { guardianId, image } = params
-    const { guardianId, image } = params
     const result = await db.guardian.update({
       where: { id: guardianId },
       data: { image },
       omit: {
         password: true,
         verificationToken: true,
-        verificationTokenCreatedAt: true,
+        verificationTokenCreatedAt: true
       }
     })
-
-    return result
 
     return result
   }
