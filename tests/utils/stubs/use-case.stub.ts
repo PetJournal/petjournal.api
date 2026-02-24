@@ -38,7 +38,8 @@ const mockGuardianUseCase = {
   email: 'any_email@mail.com',
   password: 'any_password',
   phone: 'any_phone',
-  accessToken: 'any_token'
+  accessToken: 'any_token',
+  image: ''
 }
 
 const makeFakeAddGuardianUseCase = (): AddGuardian => {
@@ -50,7 +51,8 @@ const makeFakeAddGuardianUseCase = (): AddGuardian => {
         lastName: mockGuardianUseCase.lastName,
         email: mockGuardianUseCase.email,
         password: mockGuardianUseCase.password,
-        phone: mockGuardianUseCase.phone
+        phone: mockGuardianUseCase.phone,
+        image: mockGuardianUseCase.image
       }
       return result
     }

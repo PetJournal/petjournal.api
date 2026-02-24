@@ -58,6 +58,6 @@ export namespace AddPet {
     petRepository: AddPetRepository & UpdatePetRepository
     appointPet: AppointPet
     fileStorage: FileStorage
-    defaultImageUrl: string
+    defaultPetImageUrl: string
   }
 }
