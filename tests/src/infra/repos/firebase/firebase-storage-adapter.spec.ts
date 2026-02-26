@@ -82,4 +82,14 @@ describe('FirebaseStorageAdapter', () => {
       expect(result).toBe('any_url')
     })
   })
+
+  describe('Delete Method', () => {
+    it('Should call file.delete with correct path', async () => {
+      const { sut } = makeSut()
+      const url = 'https://storage.googleapis.com/any_bucket/images/pet-123'
+      await sut.delete({ fileUrlOrPath: url })
+      expect(mockFile).toHaveBeenCalledWith('images/pet-123')
+      expect(mockDelete).toHaveBeenCalled()
+    })
+  })
 })
