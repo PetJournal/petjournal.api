@@ -75,5 +75,11 @@ describe('FirebaseStorageAdapter', () => {
       const promise = sut.save(params)
       await expect(promise).rejects.toThrow(new Error('firebase_error'))
     })
+
+    it('Should return a url on success', async () => {
+      const { sut } = makeSut()
+      const result = await sut.save(params)
+      expect(result).toBe('any_url')
+    })
   })
 })
