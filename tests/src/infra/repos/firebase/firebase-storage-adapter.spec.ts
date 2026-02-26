@@ -53,5 +53,11 @@ describe('FirebaseStorageAdapter', () => {
       await sut.save(params)
       expect(mockFile).toHaveBeenCalledWith(fileName)
     })
+
+    it('Should call file.save with correct file buffer', async () => {
+      const { sut } = makeSut()
+      await sut.save(params)
+      expect(mockSave).toHaveBeenCalledWith(file, expect.any(Object))
+    })
   })
 })
