@@ -59,5 +59,13 @@ describe('FirebaseStorageAdapter', () => {
       await sut.save(params)
       expect(mockSave).toHaveBeenCalledWith(file, expect.any(Object))
     })
+
+    it('Should call getSignedUrl to generate file link', async () => {
+      const { sut } = makeSut()
+      await sut.save(params)
+      expect(mockGetSignedUrl).toHaveBeenCalledWith(expect.objectContaining({
+        action: 'read'
+      }))
+    })
   })
 })
