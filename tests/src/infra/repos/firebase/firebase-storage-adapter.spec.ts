@@ -67,5 +67,13 @@ describe('FirebaseStorageAdapter', () => {
         action: 'read'
       }))
     })
+
+    it('Should throw if file.save throws', async () => {
+      const { sut } = makeSut()
+      mockSave.mockRejectedValueOnce(new Error('firebase_error'))
+
+      const promise = sut.save(params)
+      await expect(promise).rejects.toThrow(new Error('firebase_error'))
+    })
   })
 })
