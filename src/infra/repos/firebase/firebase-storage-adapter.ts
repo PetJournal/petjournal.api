@@ -47,16 +47,18 @@ export class FirebaseStorageAdapter implements FileStorage, DeleteFileStorage {
   }
 
   private getPathFromUrl (url: string): string | null {
-    const baseUrl = 'firebasestorage.googleapis.com'
-    if (!url.includes(baseUrl)) return null
-
     try {
-      const parts = url.split('/o/')
-      if (parts.length < 2) return null
-
-      const pathAndParams = parts[1]
-      const path = pathAndParams.split('?')[0]
-      return decodeURIComponent(path)
+      const decodedUrl = decodeURIComponent(url)
+      if (decodedUrl.includes('storage.googleapis.com')) {
+        const parts = decodedUrl.split('storage.googleapis.com/')
+        if (parts.length > 1) {
+          const pathWithBucket = parts[1].split('?')[0]
+          const pathParts = pathWithBucket.split('/')
+          pathParts.shift()
+          return pathParts.join('/')
+        }
+      }
+      return null
     } catch (error) {
       return null
     }
