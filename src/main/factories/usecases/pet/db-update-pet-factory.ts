@@ -8,7 +8,7 @@ import env from '@/main/config/env'
 export const makeDbUpdatePet = (): UpdatePet => {
   const guardianRepository = new GuardianAccountRepository()
   const petRepository = new PetRepository()
-  const fileStorage = new FirebaseStorageAdapter(env.firebase.projectId, env.firebase.storageBucket)
+  const fileStorage = new FirebaseStorageAdapter(env.firebase.projectId, env.firebase.storageBucket, env.firebase.serviceAccount)
   const appointPet = makeDbAppointPet()
   const dependencies: UpdatePet.Dependencies = {
     guardianRepository,

@@ -15,7 +15,8 @@ export default {
     projectId: process.env.FIREBASE_PROJECT_ID ?? '',
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET ?? '',
     defaultPetImageUrl: process.env.FIREBASE_DEFAULT_PET_IMAGE_URL ?? '',
-    defaultGuardianImageUrl: process.env.FIREBASE_DEFAULT_GUARDIAN_IMAGE_URL ?? ''
+    defaultGuardianImageUrl: process.env.FIREBASE_DEFAULT_GUARDIAN_IMAGE_URL ?? '',
+    serviceAccount: process.env.FIREBASE_CREDENTIALS ?? ''
   },
   mailerooApiKey: process.env.MAILEROO_API_KEY ?? '',
   mailerooApiSenderUrl: process.env.MAILEROO_API_URL ?? '',

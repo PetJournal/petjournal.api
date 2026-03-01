@@ -9,7 +9,7 @@ export const makeDbAddGuardian = (): AddGuardian => {
   const salt = Number(env.salt)
   const hashService = new BcryptAdapter(salt)
   const guardianRepository = new GuardianAccountRepository()
-  const fileStorage = new FirebaseStorageAdapter(env.firebase.projectId, env.firebase.storageBucket)
+  const fileStorage = new FirebaseStorageAdapter(env.firebase.projectId, env.firebase.storageBucket, env.firebase.serviceAccount)
   const defaultGuardianImageUrl = env.firebase.defaultGuardianImageUrl
   const addGuardian = new DbAddGuardian({
     fileStorage,
