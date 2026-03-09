@@ -218,4 +218,22 @@ describe('GuardianAccountRepository', () => {
       expect(response).toBe(true)
     })
   })
+
+  describe('UpdateImage', () => {
+    it('Should return a guardian when image is updated', async () => {
+      const sut = makeSut()
+      const { id } = await sut.add(input) as any
+      const response = await sut.updateImage({ guardianId: id, image: 'any_image' })
+      expect(response).toEqual({
+        id: expect.any(String),
+        firstName: 'any_first_name',
+        lastName: 'any_last_name',
+        phone: 'any_phone',
+        email: 'any_email@gmail.com',
+        image: 'any_image',
+        emailConfirmation: false,
+        accessToken: 'any_token'
+      })
+    })
+  })
 })
