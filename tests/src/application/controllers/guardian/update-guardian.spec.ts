@@ -71,5 +71,14 @@ describe('UpdateGuardian Controller', () => {
 
       expect(httpResponse).toEqual(badRequest(new Error()))
     })
+
+    it('Should call Validation with correct values', async () => {
+      const { sut, validationStub } = makeSut()
+      const validateSpy = jest.spyOn(validationStub, 'validate')
+
+      await sut.handle(httpRequest)
+
+      expect(validateSpy).toHaveBeenCalledWith({ ...httpRequest.body, ...httpRequest.params })
+    })
   })
 })
