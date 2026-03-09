@@ -69,5 +69,12 @@ describe('DbUpdateGuardian use case', () => {
         fileName: `images/guardian-${mockFakeGuardianUpdated()?.id}-${Math.trunc(Date.now() / 1000)}`
       })
     })
+
+    it('Should throw if save method throws', async () => {
+      const { sut, fileStorageStub } = makeSut()
+      jest.spyOn(fileStorageStub, 'save').mockRejectedValueOnce(new Error())
+      const promise = sut.update(params)
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
