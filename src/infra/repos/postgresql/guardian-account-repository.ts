@@ -9,6 +9,7 @@ import {
   type UpdateVerificationTokenRepository,
   type UpdateEmailConfirmationRepository
 } from '@/data/protocols'
+import { type UpdateGuardianRepository } from '@/data/protocols/db/guardian/update-guardian-repository'
 
 export class GuardianAccountRepository
 implements AddGuardianRepository, LoadGuardianByEmailRepository,
@@ -17,7 +18,8 @@ implements AddGuardianRepository, LoadGuardianByEmailRepository,
     UpdateGuardianPasswordRepository,
     UpdateVerificationTokenRepository,
   UpdateEmailConfirmationRepository,
-  UpdateGuardianImageRepository {
+  UpdateGuardianImageRepository,
+  UpdateGuardianRepository {
   async add (
     guardianData: AddGuardianRepository.Params
   ): Promise<AddGuardianRepository.Result> {
@@ -144,6 +146,21 @@ implements AddGuardianRepository, LoadGuardianByEmailRepository,
     const result = await db.guardian.update({
       where: { id: guardianId },
       data: { image },
+      omit: {
+        password: true,
+        verificationToken: true,
+        verificationTokenCreatedAt: true
+      }
+    })
+
+    return result
+  }
+
+  async update (params: UpdateGuardianRepository.Params): Promise<UpdateGuardianRepository.Result> {
+    const { guardianId, ...updateData } = params
+    const result = await db.guardian.update({
+      where: { id: guardianId },
+      data: updateData,
       omit: {
         password: true,
         verificationToken: true,
