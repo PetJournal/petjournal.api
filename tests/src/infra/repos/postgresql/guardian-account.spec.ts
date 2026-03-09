@@ -235,5 +235,13 @@ describe('GuardianAccountRepository', () => {
         accessToken: 'any_token'
       })
     })
+
+    it('Should return undefined if a invalid guardian id is provided', async () => {
+      const sut = makeSut()
+      await sut.add(input) as any
+      const invalidId = 'invalid_id'
+      const response = await sut.updateImage({ guardianId: invalidId, image: 'any_image' })
+      expect(response).toBeUndefined()
+    })
   })
 })
