@@ -2,7 +2,7 @@ import { NotAcceptableError } from '@/application/errors'
 import { type DeleteFileStorage, type FileStorage, type LoadGuardianByIdRepository, type UpdateGuardianRepository } from '@/data/protocols'
 import { DbUpdateGuardian } from '@/data/use-cases'
 import { type UpdateGuardian } from '@/domain/use-cases'
-import { makeFakeFileStorage, makeFakeGuardianRepository } from '@/tests/utils'
+import { makeFakeFileStorage, makeFakeGuardianRepository, mockFakeGuardianUpdated } from '@/tests/utils'
 
 interface SutTypes {
   sut: DbUpdateGuardian
@@ -31,7 +31,7 @@ describe('DbUpdateGuardian use case', () => {
     firstName: 'any_first_name',
     lastName: 'any_last_name',
     phone: 'any_phone',
-    image: null
+    image: Buffer.from('any_image')
   }
 
   describe('GuardianRepository', () => {
@@ -60,6 +60,14 @@ describe('DbUpdateGuardian use case', () => {
     })
   })
   describe('FileStorage', () => {
-
+    it('Should call save method with correct values', async () => {
+      const { sut, fileStorageStub } = makeSut()
+      const saveSpy = jest.spyOn(fileStorageStub, 'save')
+      await sut.update(params)
+      expect(saveSpy).toHaveBeenCalledWith({
+        file: params.image,
+        fileName: `images/guardian-${mockFakeGuardianUpdated()?.id}-${Math.trunc(Date.now() / 1000)}`
+      })
+    })
   })
 })
