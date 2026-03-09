@@ -3,7 +3,7 @@ import { InvalidParamError } from '@/application/errors'
 import { notAcceptable } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type UpdateGuardian } from '@/domain/use-cases'
-import { makeFakeUpdateGuardianRequest, makeFakeUpdateGuardianUseCase, makeFakeValidation } from '@/tests/utils'
+import { makeFakeServerError, makeFakeUpdateGuardianRequest, makeFakeUpdateGuardianUseCase, makeFakeValidation } from '@/tests/utils'
 
 interface SutTypes {
   sut: UpdateGuardianController
@@ -39,6 +39,13 @@ describe('UpdateGuardian Controller', () => {
       })
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(notAcceptable(new InvalidParamError('any_field')))
+    })
+
+    it('Should return 500 (ServerError) if update throws', async () => {
+      const { sut, updateGuardianStub } = makeSut()
+      jest.spyOn(updateGuardianStub, 'update').mockRejectedValue(new Error())
+      const promise = await sut.handle(httpRequest)
+      expect(promise).toEqual(makeFakeServerError())
     })
   })
 
