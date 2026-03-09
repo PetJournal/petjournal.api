@@ -197,6 +197,7 @@ const mockFakeGuardianLoaded = (): Exclude<LoadGuardianByIdRepository.Result, un
     email: 'any_email@mail.com',
     password: 'any_hashed_password',
     phone: 'any_phone',
+    image: 'any_image',
     accessToken: 'any_hashed_token',
     verificationToken: 'any_verification_token',
     verificationTokenCreatedAt: new Date(),
