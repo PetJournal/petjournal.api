@@ -3,7 +3,7 @@ import { InvalidParamError } from '@/application/errors'
 import { badRequest, notAcceptable, success } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type UpdateGuardian } from '@/domain/use-cases'
-import { makeFakeServerError, makeFakeUpdateGuardianRequest, makeFakeUpdateGuardianUseCase, makeFakeValidation, mockFakeGuardianAdded, mockFakeGuardianUpdated } from '@/tests/utils'
+import { makeFakeServerError, makeFakeUpdateGuardianRequest, makeFakeUpdateGuardianUseCase, makeFakeValidation, mockFakeGuardianUpdated } from '@/tests/utils'
 
 interface SutTypes {
   sut: UpdateGuardianController
@@ -88,6 +88,21 @@ describe('UpdateGuardian Controller', () => {
       const httpResponse = await sut.handle(httpRequestWithoutBody)
 
       expect(httpResponse).toEqual(success({ ...mockFakeGuardianUpdated(), image: '' }))
+    })
+
+    it('should return 200 (success) if valid data is provided', async () => {
+      const { sut } = makeSut()
+
+      const entries = Object.entries(httpRequest.body)
+      const f = async (prefix: any, entries: any): Promise<void> => {
+        for (let i = 0; i < entries.length; i++) {
+          Object.assign(httpRequest, { body: { ...Object.fromEntries([...prefix, entries[i]]) } })
+          const httpResponse = await sut.handle(httpRequest)
+          expect(httpResponse).toEqual(success(mockFakeGuardianUpdated()))
+          await f([...prefix, entries[i]], entries.slice(i + 1))
+        }
+      }
+      await f([], entries)
     })
   })
 })

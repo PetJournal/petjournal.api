@@ -60,7 +60,7 @@ const mockFakeGuardianUpdated = (): Exclude<UpdateGuardianRepository.Result, und
     firstName: 'any_first_name',
     lastName: 'any_last_name',
     phone: 'any_phone',
-    image: 'any_image'
+    image: ''
   }
 }
 
