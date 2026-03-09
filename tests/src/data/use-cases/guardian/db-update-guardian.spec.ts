@@ -1,3 +1,4 @@
+import { NotAcceptableError } from '@/application/errors'
 import { type DeleteFileStorage, type FileStorage, type LoadGuardianByIdRepository, type UpdateGuardianRepository } from '@/data/protocols'
 import { DbUpdateGuardian } from '@/data/use-cases'
 import { type UpdateGuardian } from '@/domain/use-cases'
@@ -39,6 +40,16 @@ describe('DbUpdateGuardian use case', () => {
       const loadByIdSpy = jest.spyOn(guardianRepositoryStub, 'loadById')
       await sut.update(params)
       expect(loadByIdSpy).toHaveBeenCalledWith(params.guardianId)
+    })
+
+    it('Should return Not Acceptable Error if incorrect guardianId is provided', async () => {
+      const { sut, guardianRepositoryStub } = makeSut()
+      jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValueOnce(null)
+      const result = await sut.update(params)
+      expect(result).toEqual({
+        isSuccess: false,
+        error: new NotAcceptableError('userId')
+      })
     })
   })
   describe('FileStorage', () => {
