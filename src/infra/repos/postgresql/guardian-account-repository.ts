@@ -150,7 +150,9 @@ implements AddGuardianRepository, LoadGuardianByEmailRepository,
         omit: {
           password: true,
           verificationToken: true,
-          verificationTokenCreatedAt: true
+          verificationTokenCreatedAt: true,
+          emailConfirmation: true,
+          accessToken: true
         }
       })
       return result
@@ -160,17 +162,23 @@ implements AddGuardianRepository, LoadGuardianByEmailRepository,
   }
 
   async update (params: UpdateGuardianRepository.Params): Promise<UpdateGuardianRepository.Result> {
-    const { guardianId, ...updateData } = params
-    const result = await db.guardian.update({
-      where: { id: guardianId },
-      data: updateData,
-      omit: {
-        password: true,
-        verificationToken: true,
-        verificationTokenCreatedAt: true
-      }
-    })
-
-    return result
+    try {
+      const { guardianId, ...updateData } = params
+      const result = await db.guardian.update({
+        where: { id: guardianId },
+        data: updateData,
+        omit: {
+          password: true,
+          verificationToken: true,
+          verificationTokenCreatedAt: true,
+          accessToken: true,
+          email: true,
+          emailConfirmation: true
+        }
+      })
+      return result
+    } catch (error) {
+      return undefined
+    }
   }
 }
