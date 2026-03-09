@@ -1,9 +1,9 @@
 import { UpdateGuardianController } from '@/application/controllers'
 import { InvalidParamError } from '@/application/errors'
-import { badRequest, notAcceptable } from '@/application/helpers'
+import { badRequest, notAcceptable, success } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type UpdateGuardian } from '@/domain/use-cases'
-import { makeFakeServerError, makeFakeUpdateGuardianRequest, makeFakeUpdateGuardianUseCase, makeFakeValidation } from '@/tests/utils'
+import { makeFakeServerError, makeFakeUpdateGuardianRequest, makeFakeUpdateGuardianUseCase, makeFakeValidation, mockFakeGuardianAdded, mockFakeGuardianUpdated } from '@/tests/utils'
 
 interface SutTypes {
   sut: UpdateGuardianController
@@ -79,6 +79,15 @@ describe('UpdateGuardian Controller', () => {
       await sut.handle(httpRequest)
 
       expect(validateSpy).toHaveBeenCalledWith({ ...httpRequest.body, ...httpRequest.params })
+    })
+
+    it('should return 200 (success) if empty data is provided', async () => {
+      const { sut } = makeSut()
+      const { body, ...httpRequestWithoutBody } = { ...httpRequest }
+
+      const httpResponse = await sut.handle(httpRequestWithoutBody)
+
+      expect(httpResponse).toEqual(success({ ...mockFakeGuardianUpdated(), image: '' }))
     })
   })
 })
