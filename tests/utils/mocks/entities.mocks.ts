@@ -11,7 +11,8 @@ import {
   type LoadPetByGuardianIdRepository,
   type LoadPetByIdRepository,
   type DeletePetByIdRepository,
-  type UpdateGuardianImageRepository
+  type UpdateGuardianImageRepository,
+  type UpdateGuardianRepository
 } from '@/data/protocols'
 import { type AppointPet } from '@/domain/use-cases'
 import { type Guardian } from '@/tests/utils/types'
@@ -42,12 +43,22 @@ const mockFakeGuardianAdded = (): Exclude<AddGuardianRepository.Result, undefine
   }
 }
 
-const mockFakeGuardianUpdated = (): Exclude<UpdateGuardianImageRepository.Result, undefined> => {
+const mockFakeGuardianImageUpdated = (): Exclude<UpdateGuardianImageRepository.Result, undefined> => {
   return {
     id: 'any_id',
     firstName: 'any_first_name',
     lastName: 'any_last_name',
     email: 'any_email@mail.com',
+    phone: 'any_phone',
+    image: 'any_image'
+  }
+}
+
+const mockFakeGuardianUpdated = (): Exclude<UpdateGuardianRepository.Result, undefined> => {
+  return {
+    id: 'any_id',
+    firstName: 'any_first_name',
+    lastName: 'any_last_name',
     phone: 'any_phone',
     image: 'any_image'
   }
@@ -209,6 +220,7 @@ export {
   makeFakeGuardianData,
   mockFakeGuardianAdded,
   mockFakeGuardianUpdated,
+  mockFakeGuardianImageUpdated,
   mockFakeGuardianLoaded,
   mockFakePetAdded,
   mockFakePetByGuardianIdLoaded,
