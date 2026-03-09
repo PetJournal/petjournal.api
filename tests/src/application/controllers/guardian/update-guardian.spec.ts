@@ -47,6 +47,19 @@ describe('UpdateGuardian Controller', () => {
       const promise = await sut.handle(httpRequest)
       expect(promise).toEqual(makeFakeServerError())
     })
+
+    it('Should call update with correct values', async () => {
+      const { sut, updateGuardianStub } = makeSut()
+      const updateSpy = jest.spyOn(updateGuardianStub, 'update')
+      await sut.handle(httpRequest)
+      expect(updateSpy).toHaveBeenCalledWith({
+        guardianId: httpRequest.params.guardianId,
+        firstName: httpRequest.body.firstName,
+        lastName: httpRequest.body.lastName,
+        phone: httpRequest.body.phone,
+        image: httpRequest.file
+      })
+    })
   })
 
   describe('Validations', () => {
