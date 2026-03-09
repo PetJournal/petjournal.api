@@ -76,5 +76,14 @@ describe('DbUpdateGuardian use case', () => {
       const promise = sut.update(params)
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should call delete method with correct values', async () => {
+      const { sut, fileStorageStub } = makeSut()
+      const deleteSpy = jest.spyOn(fileStorageStub, 'delete')
+      await sut.update(params)
+      expect(deleteSpy).toHaveBeenCalledWith({
+        fileUrlOrPath: 'any_image'
+      })
+    })
   })
 })
