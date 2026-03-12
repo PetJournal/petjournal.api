@@ -42,5 +42,12 @@ describe('Update Guardian Routes', () => {
 
       })
     })
+
+    it('Should return 400 if no access token is provided', async () => {
+      await request(app)
+        .put('/api/guardian/:guardianId')
+        .set('Authorization', '')
+        .expect(400)
+    })
   })
 })
