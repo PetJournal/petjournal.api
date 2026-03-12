@@ -2,7 +2,6 @@ import request from 'supertest'
 import app from '@/main/config/app'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 
-jest.setTimeout(30000)
 describe('Update Guardian Routes', () => {
   beforeAll(async () => {
     await PrismaHelper.connect()
@@ -44,7 +43,7 @@ describe('Update Guardian Routes', () => {
         image: ''
 
       })
-    })
+    }, 30000)
 
     it('Should return 400 if no access token is provided', async () => {
       await request(app)
