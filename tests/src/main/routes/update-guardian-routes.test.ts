@@ -8,8 +8,11 @@ describe('Update Guardian Routes', () => {
     await PrismaHelper.connect()
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await PrismaHelper.clearGuardian()
+  })
+
+  afterAll(async () => {
     await PrismaHelper.disconnect()
   })
 
@@ -48,6 +51,23 @@ describe('Update Guardian Routes', () => {
         .put('/api/guardian/:guardianId')
         .set('Authorization', '')
         .expect(400)
+    })
+
+    it('Should return 406 (NotAcceptable) if invalid guardianId is provided', async () => {
+      await PrismaHelper.createGuardian()
+
+      const { body } = await request(app)
+        .post('/api/login')
+        .send({
+          email: 'johndoe@email.com',
+          password: 'Test@1234'
+        })
+
+      const response = await request(app)
+        .put('/api/guardian/b1e64ea1-0f6f-4cad-b3d6-434468cb2c5d')
+        .set('Authorization', body.accessToken)
+
+      expect(response.status).toBe(406)
     })
   })
 })
