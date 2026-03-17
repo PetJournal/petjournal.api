@@ -29,6 +29,7 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
   async loadByDate (params: LoadEventByDateRepository.Params): Promise<LoadEventByDateRepository.Result> {
     const event = await db.event.findFirst({
       where: {
+        schedulerId: params.schedulerId,
         start: params.date
       }
     })
