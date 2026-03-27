@@ -62,7 +62,7 @@ describe('DbSendEmail', () => {
       subject: 'Ative sua conta',
       text: `
           Olá any_first_name any_last_name,\n
-          Acesse o link para ativar sua conta: http://localhost:3333/api/guardian/email-confirmation/any_id
+          Acesse o link para ativar sua conta: ${env.host}/api/guardian/email-confirmation/any_id
         `
     })
   })
