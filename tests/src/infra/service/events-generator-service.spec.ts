@@ -46,7 +46,7 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDate')
       await sut.generate({ ...params, daysOfMonth: undefined, daily: false })
-      expect(loadSpy).toHaveBeenCalledWith({ date: params.startAt })
+      expect(loadSpy).toHaveBeenCalledWith({ schedulerId: params.schedulerId, date: params.startAt })
     })
 
     it('Should throw if loadByDate throws', async () => {
@@ -122,7 +122,7 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDate')
       await sut.generate({ ...params, daysOfWeek: undefined, daily: false })
-      expect(loadSpy).toHaveBeenCalledWith({ date: params.startAt })
+      expect(loadSpy).toHaveBeenCalledWith({ schedulerId: params.schedulerId, date: params.startAt })
     })
 
     it('Should throw if loadByDate throws', async () => {
@@ -198,7 +198,7 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDate')
       await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined })
-      expect(loadSpy).toHaveBeenCalledWith({ date: params.startAt })
+      expect(loadSpy).toHaveBeenCalledWith({ schedulerId: params.schedulerId, date: params.startAt })
     })
 
     it('Should throw if loadByDate throws', async () => {
@@ -285,7 +285,7 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDate')
       await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
-      expect(loadSpy).toHaveBeenCalledWith({ date: params.startAt })
+      expect(loadSpy).toHaveBeenCalledWith({ schedulerId: params.schedulerId, date: params.startAt })
     })
 
     it('Should throw if loadByDate throws', async () => {
