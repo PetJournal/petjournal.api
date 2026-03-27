@@ -15,7 +15,7 @@ export const makeCreateSchedulerValidation = (): ValidationComposite => {
   validations.push(new DescriptionValidation('description', new DescriptionValidatorAdapter()))
   validations.push(new NoteValidation('note', new NoteValidatorAdapter()))
   validations.push(new StartAtValidation('startAt', new StartAtValidatorAdapter()))
-  validations.push(new EndAtValidation('endAt', new EndAtValidatorAdapter()))
+  validations.push(new EndAtValidation('endAt', 'startAt', new EndAtValidatorAdapter()))
   validations.push(new PetsIdValidation('pets', new UuidValidatorAdapter()))
   validations.push(new OptionalFieldValidation('daysOfWeek', new DaysOfWeekValidation('daysOfWeek', new DaysOfWeekValidatorAdapter())))
   validations.push(new OptionalFieldValidation('daysOfMonth', new DaysOfMonthValidation('daysOfMonth', new DaysOfMonthValidatorAdapter())))
