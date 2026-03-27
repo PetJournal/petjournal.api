@@ -85,7 +85,7 @@ describe('Event Repository', () => {
     it('Should return null if non existent date is provided', async () => {
       const sut = makeSut()
       const fakeDate = new Date('01-01-2001')
-      const result = await sut.loadByDate({ date: fakeDate })
+      const result = await sut.loadByDate({ schedulerId: params.schedulerId, date: fakeDate })
       expect(result).toBe(null)
     })
 
@@ -93,7 +93,7 @@ describe('Event Repository', () => {
       const sut = makeSut()
       const fakeDate = new Date('01-01-2001')
       jest.spyOn(sut, 'loadByDate').mockRejectedValue(new Error())
-      const promise = sut.loadByDate({ date: fakeDate })
+      const promise = sut.loadByDate({ schedulerId: params.schedulerId, date: fakeDate })
       await expect(promise).rejects.toThrow()
     })
 
@@ -129,7 +129,7 @@ describe('Event Repository', () => {
           end: schedulerData.endAt
         }
       })
-      const result = await sut.loadByDate({ date: event.start })
+      const result = await sut.loadByDate({ schedulerId: event.schedulerId, date: event.start })
       expect(result).toEqual({
         id: expect.any(String),
         schedulerId: event.schedulerId,
