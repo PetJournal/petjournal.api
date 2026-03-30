@@ -3,6 +3,7 @@ import { type LoadSizeByNameRepository, type LoadBreedByNameRepository, type Loa
 import { type Breed } from '@/domain/models/breed'
 import { type Size } from '@/domain/models/size'
 import { type Specie } from '@/domain/models/specie'
+import { type ResultResponse } from '@/domain/types/result'
 import { type AppointPet } from '@/domain/use-cases'
 
 export class DbAppointPet implements AppointPet {
@@ -23,14 +24,14 @@ export class DbAppointPet implements AppointPet {
   async appoint (params: AppointPet.Params): Promise<AppointPet.Result> {
     const specieResult = await this.getSpecie(params.specieName)
     const breedResult = await this.getBreed(params.breedName, specieResult)
-    if (breedResult.error) {
+    if (!breedResult.isSuccess) {
       return {
         isSuccess: false,
         error: breedResult.error
       }
     }
     const sizeResult = await this.getSize(params.size, specieResult)
-    if (sizeResult.error) {
+    if (!sizeResult.isSuccess) {
       return {
         isSuccess: false,
         error: sizeResult.error
@@ -84,6 +85,7 @@ export class DbAppointPet implements AppointPet {
 
       const defaultBreed = await this.breedRepository.loadByName(defaultBreedName)
       return {
+        isSuccess: true,
         data: {
           breed: defaultBreed as Breed & { id: string },
           breedAlias: breedName,
@@ -93,11 +95,12 @@ export class DbAppointPet implements AppointPet {
     }
 
     if (breed.specieId !== specieResult.specie.id) {
-      return { error: new NotAcceptableError('breed') }
+      return { isSuccess: false, error: new NotAcceptableError('breed') }
     }
     const isOtherBreed = breed.name.startsWith('Outra raça')
 
     return {
+      isSuccess: true,
       data: {
         breed: breed as Breed & { id: string },
         breedAlias: isOtherBreed ? breed.name : '',
@@ -117,14 +120,15 @@ export class DbAppointPet implements AppointPet {
     const size = await this.sizeRepository.loadByName(sizeName)
 
     if (!size) {
-      return { error: new NotAcceptableError('size') }
+      return { isSuccess: false, error: new NotAcceptableError('size') }
     }
 
     if (size.specieId !== specieResult.specie.id) {
-      return { error: new NotAcceptableError('size') }
+      return { isSuccess: false, error: new NotAcceptableError('size') }
     }
 
     return {
+      isSuccess: true,
       data: {
         size: size as Size & { id: string },
         specieId: size.specieId
@@ -144,26 +148,13 @@ type SpecieResult = {
   specie: Specie & { id: string }
   specieAlias: string | undefined
 }
+type BreedResult = ResultResponse<{
+  breed: Breed & { id: string }
+  breedAlias: string
+  specieId: string
+}>
 
-type BreedResult = {
-  error: Error
-  data?: never
-} | {
-  error?: never
-  data: {
-    breed: Breed & { id: string }
-    breedAlias: string
-    specieId: string
-  }
-}
-
-type SizeResult = {
-  error: Error
-  data?: never
-} | {
-  error?: never
-  data: {
-    size: Size & { id: string }
-    specieId: string
-  }
-}
+type SizeResult = ResultResponse<{
+  size: Size & { id: string }
+  specieId: string
+}>

@@ -41,7 +41,7 @@ export class DbAddPet implements AddPet {
       size: petData.size,
       castrated: petData.castrated
     })
-    if (appointResult.error) {
+    if (!appointResult.isSuccess) {
       return {
         isSuccess: false,
         error: appointResult.error
