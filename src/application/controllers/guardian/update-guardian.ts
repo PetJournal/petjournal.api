@@ -4,11 +4,11 @@ import { type UpdateGuardian } from '@/domain/use-cases'
 
 export class UpdateGuardianController implements Controller {
   private readonly validation: Validation
-  private readonly UpdateGuardian: UpdateGuardian
+  private readonly updateGuardian: UpdateGuardian
 
   constructor ({ validation, updateGuardian }: UpdateGuardianController.Dependencies) {
     this.validation = validation
-    this.UpdateGuardian = updateGuardian
+    this.updateGuardian = updateGuardian
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -20,7 +20,7 @@ export class UpdateGuardianController implements Controller {
       const { guardianId } = httpRequest.params
       const image = httpRequest.file ?? null
       const updateData = { ...httpRequest.body, guardianId, image }
-      const result = await this.UpdateGuardian.update(updateData)
+      const result = await this.updateGuardian.update(updateData)
       if (!result.isSuccess) {
         return notAcceptable(result.error as Error)
       }
