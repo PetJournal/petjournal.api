@@ -1,9 +1,12 @@
 export interface LoadPetByIdRepository {
-  loadById: (petId: LoadPetByIdRepository.Params) => Promise<LoadPetByIdRepository.Result>
+  loadById: (params: LoadPetByIdRepository.Params) => Promise<LoadPetByIdRepository.Result>
 }
 
 export namespace LoadPetByIdRepository {
-  export type Params = string
+  export type Params = {
+    petId: string
+    guardianId: string
+  }
 
   export type Result = {
     id: string
