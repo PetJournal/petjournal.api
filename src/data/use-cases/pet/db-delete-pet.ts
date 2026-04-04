@@ -19,7 +19,7 @@ export class DbDeletePet implements DeletePet {
         error: new NotAcceptableError('userId')
       }
     }
-    const pet = await this.petRepository.loadById(petId)
+    const pet = await this.petRepository.loadById({ guardianId, petId })
     if (!pet) {
       return {
         isSuccess: false,

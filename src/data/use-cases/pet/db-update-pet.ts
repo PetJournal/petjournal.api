@@ -38,7 +38,7 @@ export class DbUpdatePet implements UpdatePet {
         error: new NotAcceptableError('userId')
       }
     }
-    const pet = await this.petRepository.loadById(petData.petId)
+    const pet = await this.petRepository.loadById({ guardianId: petData.guardianId, petId: petData.petId })
     if (!pet) {
       return {
         isSuccess: false,

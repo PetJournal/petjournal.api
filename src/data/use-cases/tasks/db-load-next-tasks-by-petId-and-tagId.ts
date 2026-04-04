@@ -14,14 +14,14 @@ export class DbLoadNextTasksByPetIdAndTagId implements LoadNextTasksByPetIdAndTa
   }
 
   async load (params: LoadNextTasksByPetIdAndTagId.Params): Promise<LoadNextTasksByPetIdAndTagId.Result> {
-    const pet = await this.petRepository.loadById(params.petId)
+    const pet = await this.petRepository.loadById({ guardianId: params.guardianId, petId: params.petId })
     if (!pet) {
       return {
         isSuccess: false,
         error: new NotFoundError('petId')
       }
     }
-    const tag = await this.tagRepository.loadById(params.tagId)
+    const tag = await this.tagRepository.loadById({ guardianId: params.guardianId, tagId: params.tagId })
     if (!tag) {
       return {
         isSuccess: false,

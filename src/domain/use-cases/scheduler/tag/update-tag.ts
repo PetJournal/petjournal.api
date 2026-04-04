@@ -7,6 +7,7 @@ export interface UpdateTag {
 export namespace UpdateTag {
   export type Params = {
     id: string
+    guardianId: string
     name: string
   }
 

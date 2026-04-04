@@ -9,8 +9,8 @@ export class DbUpdateTag implements UpdateTag {
     this.tagRepository = tagRepository
   }
 
-  async update ({ id, name }: UpdateTag.Params): Promise<UpdateTag.Result> {
-    const tag = await this.tagRepository.loadById(id)
+  async update ({ id, name, guardianId }: UpdateTag.Params): Promise<UpdateTag.Result> {
+    const tag = await this.tagRepository.loadById({ guardianId, tagId: id })
     if (!tag) {
       return {
         isSuccess: false,

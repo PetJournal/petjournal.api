@@ -25,9 +25,11 @@ export class LoadPreviousTasksByPetIdController implements Controller {
       }
 
       const { petId } = httpRequest.params
+      const guardianId = httpRequest.userId as string
       const { page = 1, limit = 10 } = httpRequest.query
 
       const result = await this.loadPreviousTasksByPetId.load({
+        guardianId,
         petId,
         page: Number(page),
         limit: Number(limit)

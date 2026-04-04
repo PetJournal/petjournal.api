@@ -9,11 +9,12 @@ export class DbLoadPreviousTasksByPetId implements LoadPreviousTasksByPetId {
   ) {}
 
   async load ({
+    guardianId,
     petId,
     page,
     limit
   }: LoadPreviousTasksByPetId.Params): Promise<LoadPreviousTasksByPetId.Result> {
-    const petExists = await this.petRepository.loadById(petId)
+    const petExists = await this.petRepository.loadById({ guardianId, petId })
 
     if (!petExists) {
       return {
