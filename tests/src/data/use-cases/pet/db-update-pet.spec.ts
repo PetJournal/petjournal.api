@@ -80,7 +80,7 @@ describe('DbUpdatePet Use Case', () => {
       const { sut, petRepositoryStub } = makeSut()
       const loadByIdSpy = jest.spyOn(petRepositoryStub, 'loadById')
       await sut.update(params)
-      expect(loadByIdSpy).toHaveBeenCalledWith(params.petId)
+      expect(loadByIdSpy).toHaveBeenCalledWith({ guardianId: params.guardianId, petId: params.petId })
     })
 
     it('Should return Not Acceptable error if incorrect petId is provided', async () => {

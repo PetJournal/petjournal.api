@@ -21,13 +21,20 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbLoadTagById use case', () => {
-  const param: LoadTagByIdRepository.Param = 'any_id'
+  const param: LoadTagByIdRepository.Param = {
+    tagId: 'any_id',
+    guardianId: 'any_guardian_id'
+  }
+
   describe('TagRepository', () => {
     it('Should call loadById method with correct value', async () => {
       const { sut, tagRepositoryStub } = makeSut()
       const loadTagSpy = jest.spyOn(tagRepositoryStub, 'loadById')
       await sut.loadById(param)
-      expect(loadTagSpy).toHaveBeenCalledWith('any_id')
+      expect(loadTagSpy).toHaveBeenCalledWith({
+        tagId: 'any_id',
+        guardianId: 'any_guardian_id'
+      })
     })
 
     it('Should return null if tagRepository returns null', async () => {
