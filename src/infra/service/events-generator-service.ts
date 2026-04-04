@@ -16,7 +16,7 @@ export class EventsGeneratorService implements EventsGenerator {
       const events = []
       while (currentDate <= endAtDateTime) {
         if (daysOfWeek.includes(currentDate.getDay())) {
-          const event = await this.eventRepository.loadByDate({ date: currentDate })
+          const event = await this.eventRepository.loadByDate({ schedulerId, date: currentDate })
           if (event) {
             return {
               isSuccess: false,
@@ -57,7 +57,7 @@ export class EventsGeneratorService implements EventsGenerator {
       const events = []
       while (currentDate <= endAtDateTime) {
         if (daysOfMonth.includes(currentDate.getDate())) {
-          const event = await this.eventRepository.loadByDate({ date: currentDate })
+          const event = await this.eventRepository.loadByDate({ schedulerId, date: currentDate })
           if (event) {
             return {
               isSuccess: false,
@@ -97,7 +97,7 @@ export class EventsGeneratorService implements EventsGenerator {
     if (daily) {
       const events = []
       while (currentDate <= endAtDateTime) {
-        const event = await this.eventRepository.loadByDate({ date: currentDate })
+        const event = await this.eventRepository.loadByDate({ schedulerId, date: currentDate })
         if (event) {
           return {
             isSuccess: false,
@@ -133,7 +133,7 @@ export class EventsGeneratorService implements EventsGenerator {
       }
     }
 
-    const event = await this.eventRepository.loadByDate({ date: currentDate })
+    const event = await this.eventRepository.loadByDate({ schedulerId, date: currentDate })
     if (event) {
       return {
         isSuccess: false,
