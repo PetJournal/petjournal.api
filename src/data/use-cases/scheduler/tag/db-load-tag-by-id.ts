@@ -8,8 +8,8 @@ export class DbLoadTagById implements LoadTagById {
     this.tagRepository = tagRepository
   }
 
-  async loadById (tagId: LoadTagById.Param): Promise<LoadTagById.Result> {
-    const tag = await this.tagRepository.loadById(tagId)
+  async loadById (params: LoadTagById.Param): Promise<LoadTagById.Result> {
+    const tag = await this.tagRepository.loadById({ guardianId: params.guardianId, tagId: params.tagId })
     return tag
   }
 }
