@@ -8,7 +8,8 @@ import {
   mockFakePetByIdLoaded,
   mockFakePetUpdated,
   mockFakePetByIdDeleted,
-  mockFakeGuardianUpdated
+  mockFakeGuardianUpdated,
+  mockFakeGuardianImageUpdated
 } from '@/tests/utils'
 import {
   type EmailService,
@@ -49,7 +50,8 @@ import {
   type LoadSettingsRepository,
   type UpdateSettingsRepository,
   type LoadNextTasksByPetIdAndTagIdRepository,
-  type UpdateGuardianImageRepository
+  type UpdateGuardianImageRepository,
+  type UpdateGuardianRepository
 } from '@/data/protocols'
 import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
 import { type LoadDogSizesRepository } from '@/data/protocols/db/size/load-dog-sizes-repository'
@@ -72,7 +74,8 @@ UpdateAccessTokenRepository &
 UpdateGuardianPasswordRepository &
 UpdateVerificationTokenRepository &
 UpdateEmailConfirmationRepository &
-UpdateGuardianImageRepository => {
+UpdateGuardianImageRepository &
+UpdateGuardianRepository => {
   class GuardianRepositoryStub implements
   AddGuardianRepository,
   LoadGuardianByEmailRepository,
@@ -81,7 +84,8 @@ UpdateGuardianImageRepository => {
   UpdateGuardianPasswordRepository,
   UpdateVerificationTokenRepository,
   UpdateEmailConfirmationRepository,
-  UpdateGuardianImageRepository {
+  UpdateGuardianImageRepository,
+  UpdateGuardianRepository {
     async add (guardian: AddGuardianRepository.Params): Promise<AddGuardianRepository.Result> {
       return mockFakeGuardianAdded()
     }
@@ -111,6 +115,10 @@ UpdateGuardianImageRepository => {
     }
 
     async updateImage (params: UpdateGuardianImageRepository.Params): Promise<UpdateGuardianImageRepository.Result> {
+      return mockFakeGuardianImageUpdated()
+    }
+
+    async update (params: UpdateGuardianRepository.Params): Promise<UpdateGuardianRepository.Result> {
       return mockFakeGuardianUpdated()
     }
   }

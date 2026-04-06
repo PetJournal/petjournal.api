@@ -24,7 +24,8 @@ import {
   type LoadSettings,
   type UpdateSettings,
   type LoadPetById,
-  type LoadNextTasksByPetIdAndTagId
+  type LoadNextTasksByPetIdAndTagId,
+  type UpdateGuardian
 } from '@/domain/use-cases'
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
 import { mockFakeAppointPet, mockFakePetUpdated, mockFakePetByGuardianIdLoaded, mockFakeSpecieAdded, makeFakeGuardianData, mockFakeBreedAdded, mockFakeSizeAdded, mockFakePetByIdLoaded } from '../mocks'
@@ -58,6 +59,25 @@ const makeFakeAddGuardianUseCase = (): AddGuardian => {
     }
   }
   return new AddGuardianStub()
+}
+
+const makeFakeUpdateGuardianUseCase = (): UpdateGuardian => {
+  class UpdateGuardianStub implements UpdateGuardian {
+    async update (params: UpdateGuardian.Params): Promise<UpdateGuardian.Result> {
+      const result = {
+        id: mockGuardianUseCase.id,
+        firstName: mockGuardianUseCase.firstName,
+        lastName: mockGuardianUseCase.lastName,
+        phone: mockGuardianUseCase.phone,
+        image: mockGuardianUseCase.image
+      }
+      return {
+        isSuccess: true,
+        data: result
+      }
+    }
+  }
+  return new UpdateGuardianStub()
 }
 
 const makeFakeEmailConfirmationUseCase = (): EmailConfirmation => {
@@ -472,6 +492,7 @@ const makeFakeUpdateSettingsUseCase = (): UpdateSettings => {
 export {
   makeFakeAddGuardianUseCase,
   makeFakeAddPetUseCase,
+  makeFakeUpdateGuardianUseCase,
   makeFakeLoadPetsUseCase,
   makeFakeLoadPetByIdUseCase,
   makeFakeUpdatePetUseCase,

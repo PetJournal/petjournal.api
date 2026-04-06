@@ -28,7 +28,8 @@ import {
   loadPetByIdPath,
   loadNextTasksByPetIdPath,
   loadPreviousTasksByPetIdPath,
-  loadNextTasksByPetIdAndTagIdPath
+  loadNextTasksByPetIdAndTagIdPath,
+  updateGuardianPath
 } from './paths/'
 
 export default {
@@ -37,6 +38,7 @@ export default {
   '/forget-password': forgetPasswordPath,
   '/guardian/change-password': changePasswordPath,
   '/guardian/email-confirmation/{userId}': emailConfirmationPath,
+  '/guardian/{guardianId}': updateGuardianPath,
   '/waiting-code': waitingCodePath,
   '/pet': { ...petRegistryPath, ...loadPetsPath },
   '/pet/{petId}': { ...loadPetByIdPath, ...updatePetPath, ...deletePetPath },

@@ -16,5 +16,6 @@ export namespace LoadGuardianByIdRepository {
     verificationToken: string
     verificationTokenCreatedAt: Date
     emailConfirmation: boolean
+    image: string
   } | null
 }

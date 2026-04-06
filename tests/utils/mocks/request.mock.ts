@@ -12,7 +12,8 @@ import {
   type DeletePetRequest,
   type EmailConfirmationRequest,
   type AddTagRequest,
-  type AddSchedulerRequest
+  type AddSchedulerRequest,
+  type UpdateGuardianRequest
 } from '@/tests/utils'
 
 const mockGuardianRequest = {
@@ -124,6 +125,19 @@ const makeFakeUpdatePetRequest = (): UpdatePetRequest => {
   return { body, params, userId, file }
 }
 
+const makeFakeUpdateGuardianRequest = (): UpdateGuardianRequest => {
+  const body = {
+    firstName: 'any_first_name',
+    lastName: 'any_last_name',
+    phone: 'any_phone'
+  }
+  const params = {
+    guardianId: 'any_guardian_id'
+  }
+  const file = Buffer.from('any_image')
+  return { body, params, file }
+}
+
 const makeFakeDeletePetRequest = (): DeletePetRequest => {
   const userId = 'valid_guardian_id'
   const params = {
@@ -178,5 +192,6 @@ export {
   makeFakeDeletePetRequest,
   makeFakeEmailConfirmationRequest,
   makeFakeAddTagRequest,
-  makeFakeAddSchedulerRequest
+  makeFakeAddSchedulerRequest,
+  makeFakeUpdateGuardianRequest
 }
