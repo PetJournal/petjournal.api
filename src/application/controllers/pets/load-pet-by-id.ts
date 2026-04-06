@@ -12,7 +12,8 @@ export class LoadPetByIdController implements Controller {
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const { petId } = httpRequest.params
-      const result = await this.loadPet.loadById({ petId })
+      const guardianId = httpRequest.userId as string
+      const result = await this.loadPet.loadById({ guardianId, petId })
       if (!result.isSuccess) {
         return badRequest(result.error as Error)
       }

@@ -17,14 +17,14 @@ export class DbAddScheduler implements AddScheduler {
   }
 
   async add (params: AddScheduler.Params): Promise<AddScheduler.Result> {
-    const tag = await this.tagRepository.loadById(params.tagId)
+    const tag = await this.tagRepository.loadById({ guardianId: params.guardianId, tagId: params.tagId })
     if (!tag) {
       return {
         isSuccess: false,
         error: new NotAcceptableError('tagId')
       }
     }
-    if (!(await this.checkPets(params.pets))) {
+    if (!(await this.checkPets(params.guardianId, params.pets))) {
       return {
         isSuccess: false,
         error: new NotAcceptableError('petId')
@@ -53,6 +53,7 @@ export class DbAddScheduler implements AddScheduler {
 
     const eventGeneratorResult = await this.eventsGenerator.generate({
       schedulerId: scheduler.id,
+      guardianId: params.guardianId,
       startAt: params.startAt,
       endAt: params.endAt,
       daysOfWeek: params.daysOfWeek,
@@ -80,9 +81,9 @@ export class DbAddScheduler implements AddScheduler {
     }
   }
 
-  private async checkPets (pets: string[]): Promise<boolean> {
-    for (const pet of pets) {
-      const result = await this.petRepository.loadById(pet)
+  private async checkPets (guardianId: string, pets: string[]): Promise<boolean> {
+    for (const petId of pets) {
+      const result = await this.petRepository.loadById({ guardianId, petId })
       if (!result) {
         return false
       }

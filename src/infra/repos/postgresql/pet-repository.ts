@@ -122,9 +122,14 @@ DeletePetByIdRepository {
     return pets
   }
 
-  async loadById (petId: LoadPetByIdRepository.Params): Promise<LoadPetByIdRepository.Result> {
+  async loadById (params: LoadPetByIdRepository.Params): Promise<LoadPetByIdRepository.Result> {
     const pet = await db.pet.findFirst({
-      where: { id: petId },
+      where: {
+        id: params.petId,
+        guardian: {
+          id: params.guardianId
+        }
+      },
       select: {
         id: true,
         guardianId: true,

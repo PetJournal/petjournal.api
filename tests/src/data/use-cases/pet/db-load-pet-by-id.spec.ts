@@ -22,27 +22,26 @@ const makeSut = (): SutTypes => {
 }
 describe('DbLoadPetsByGuardianId', () => {
   describe('petRepository', () => {
+    const params = { guardianId: 'any_guardian_id', petId: 'any_pet_id' }
+
     it('Should throw if petRepository throws', async () => {
       const { sut, petRepositoryStub } = makeSut()
-      const petId = { petId: 'any_pet_id' }
       jest.spyOn(petRepositoryStub, 'loadById').mockRejectedValueOnce(new Error())
-      const promise = sut.loadById(petId)
+      const promise = sut.loadById(params)
       await expect(promise).rejects.toThrow()
     })
 
     it('Should call loadById method with correct value', async () => {
       const { sut, petRepositoryStub } = makeSut()
-      const petId = { petId: 'any_pet_id' }
       const loadSpy = jest.spyOn(petRepositoryStub, 'loadById')
-      await sut.loadById(petId)
-      expect(loadSpy).toHaveBeenCalledWith('any_pet_id')
+      await sut.loadById(params)
+      expect(loadSpy).toHaveBeenCalledWith({ guardianId: params.guardianId, petId: params.petId })
     })
 
     it('Should petRepository return NotFoundError if no pet registered', async () => {
       const { sut, petRepositoryStub } = makeSut()
-      const petId = { petId: 'any_pet_id' }
       jest.spyOn(petRepositoryStub, 'loadById').mockResolvedValueOnce(null)
-      const httpResponse = await sut.loadById(petId)
+      const httpResponse = await sut.loadById(params)
       expect(httpResponse).toEqual({
         isSuccess: false,
         error: new NotFoundError('petId')
@@ -51,8 +50,7 @@ describe('DbLoadPetsByGuardianId', () => {
 
     it('Should return a pet on success', async () => {
       const { sut } = makeSut()
-      const petId = { petId: 'any_pet_id' }
-      const result = await sut.loadById(petId)
+      const result = await sut.loadById(params)
       expect(result).toEqual({
         isSuccess: true,
         data: {

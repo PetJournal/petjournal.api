@@ -6,6 +6,7 @@ export interface LoadPreviousTasksByPetId {
 
 export namespace LoadPreviousTasksByPetId {
   export type Params = {
+    guardianId: string
     petId: string
     page?: number
     limit?: number

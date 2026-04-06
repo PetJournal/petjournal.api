@@ -9,8 +9,8 @@ export class DbLoadPetById implements LoadPetById {
     this.petRepository = petRepository
   }
 
-  async loadById ({ petId }: LoadPetById.Params): Promise<LoadPetById.Result> {
-    const result = await this.petRepository.loadById(petId)
+  async loadById ({ petId, guardianId }: LoadPetById.Params): Promise<LoadPetById.Result> {
+    const result = await this.petRepository.loadById({ guardianId, petId })
     if (!result) {
       return {
         isSuccess: false,

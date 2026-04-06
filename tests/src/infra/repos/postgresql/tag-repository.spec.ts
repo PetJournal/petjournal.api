@@ -46,8 +46,9 @@ describe('TagRepository', () => {
   describe('LoadById method', () => {
     it('Should return null if a invalid tag id is provided', async () => {
       const sut = makeSut()
+      const guardian = await PrismaHelper.createGuardian()
       const invalidId = 'invalid_id'
-      const tag = await sut.loadById(invalidId)
+      const tag = await sut.loadById({ guardianId: guardian.id, tagId: invalidId })
       expect(tag).toBeNull()
     })
 
@@ -56,7 +57,7 @@ describe('TagRepository', () => {
       const guardian = await PrismaHelper.createGuardian()
       const tagAdded = await sut.add({ ...params, guardianId: guardian.id })
       const id = tagAdded?.id as string
-      const tag = await sut.loadById(id)
+      const tag = await sut.loadById({ guardianId: guardian.id, tagId: id })
       expect(tag).toEqual({
         id: expect.any(String),
         guardianId: expect.any(String),

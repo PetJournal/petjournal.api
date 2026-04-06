@@ -1,13 +1,15 @@
 import { InvalidParamError } from '@/application/errors'
 import { type Validation } from '@/application/protocols'
-import { type DateValidator } from '../protocols'
+import { type EndAtDateValidator } from '../protocols'
 
 export class EndAtValidation implements Validation {
   private readonly fieldEndAt: string
-  private readonly endAtValidator: DateValidator
+  private readonly fieldStartAt: string
+  private readonly endAtValidator: EndAtDateValidator
 
-  constructor (fieldEndAt: string, validator: DateValidator) {
+  constructor (fieldEndAt: string, fieldStartAt: string, validator: EndAtDateValidator) {
     this.fieldEndAt = fieldEndAt
+    this.fieldStartAt = fieldStartAt
     this.endAtValidator = validator
   }
 
@@ -16,7 +18,7 @@ export class EndAtValidation implements Validation {
       return new InvalidParamError(this.fieldEndAt)
     }
 
-    const isValid = this.endAtValidator.isValid(input[this.fieldEndAt])
+    const isValid = this.endAtValidator.isValid(input[this.fieldStartAt], input[this.fieldEndAt])
     if (!isValid) {
       return new InvalidParamError(this.fieldEndAt)
     }

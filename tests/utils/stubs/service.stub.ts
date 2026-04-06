@@ -149,7 +149,7 @@ DeletePetByIdRepository => {
       return mockFakePetByGuardianIdLoaded()
     }
 
-    async loadById (petId: string): Promise<LoadPetByIdRepository.Result> {
+    async loadById (params: LoadPetByIdRepository.Params): Promise<LoadPetByIdRepository.Result> {
       return mockFakePetByIdLoaded()
     }
 
@@ -301,7 +301,7 @@ const makeFakeLoadPetByGuardianIdRepository = (): LoadPetByGuardianIdRepository 
 
 const makeFakeLoadPetByIdRepository = (): LoadPetByIdRepository => {
   class LoadPetByGuardianIdRepositoryStub implements LoadPetByIdRepository {
-    async loadById (petId: string): Promise<LoadPetByIdRepository.Result> {
+    async loadById (params: LoadPetByIdRepository.Params): Promise<LoadPetByIdRepository.Result> {
       return mockFakePetByIdLoaded()
     }
   }

@@ -18,10 +18,11 @@ export class TagRepository implements AddTagRepository, LoadTagByIdRepository, U
     }
   }
 
-  async loadById (tagId: LoadTagByIdRepository.Param): Promise<LoadTagByIdRepository.Result> {
+  async loadById (params: LoadTagByIdRepository.Param): Promise<LoadTagByIdRepository.Result> {
     const tag = await db.tag.findFirst({
       where: {
-        id: tagId
+        id: params.tagId,
+        guardianId: params.guardianId
       }
     })
     return tag
@@ -40,7 +41,7 @@ export class TagRepository implements AddTagRepository, LoadTagByIdRepository, U
     return tag
   }
 
-  async loadAll (guardianId: LoadTagByIdRepository.Param): Promise<LoadTagsRepository.Result> {
+  async loadAll (guardianId: LoadTagsRepository.Param): Promise<LoadTagsRepository.Result> {
     const tags = await db.tag.findMany({
       where: {
         guardianId
