@@ -2,7 +2,7 @@ import app from '@/main/config/app'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 import request from 'supertest'
 
-describe('LoadGuardianName route', () => {
+describe('LoadGuardian route', () => {
   let accessToken = ''
 
   beforeAll(async () => {
@@ -24,21 +24,21 @@ describe('LoadGuardianName route', () => {
 
   it('Should return 200 on success', async () => {
     await request(app)
-      .get('/api/guardian/name')
+      .get('/api/guardian')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(200)
   })
 
   it('Should return 400 if no access token is provided', async () => {
     await request(app)
-      .get('/api/guardian/name')
+      .get('/api/guardian')
       .set('Authorization', '')
       .expect(400)
   })
 
   it('Should return 401 if invalid access token is provided', async () => {
     await request(app)
-      .get('/api/guardian/name')
+      .get('/api/guardian')
       .set('Authorization', 'Bearer invalid_token')
       .expect(401)
   })
