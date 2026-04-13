@@ -1,8 +1,8 @@
 import { DocBuilder } from '../utils/doc-builder'
 
-export const loadGuardianNamePath = DocBuilder.getBuilder()
+export const loadGuardianPath = DocBuilder.getBuilder()
   .addTags(['guardian'])
-  .addSummary('Load guardian name')
+  .addSummary('Load guardian data')
   .addJwtAuthSecurity()
   .addResponse(200, {
     description: 'Success',
@@ -20,7 +20,10 @@ export const loadGuardianNamePath = DocBuilder.getBuilder()
           },
           example: {
             firstName: 'John',
-            lastName: 'Doe'
+            lastName: 'Doe',
+            email: 'email@email.com',
+            phone: '21988435780',
+            image: 'image.jpg'
           }
         }
       }
