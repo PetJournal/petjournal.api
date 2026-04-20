@@ -28,7 +28,7 @@ export class DbLoadNextTasksByPetIdAndTagId implements LoadNextTasksByPetIdAndTa
         error: new NotFoundError('tagId')
       }
     }
-    const result = await this.eventRepository.loadByPetIdAndTagId({ petId: pet.id, tagId: tag.id })
+    const result = await this.eventRepository.loadByPetIdAndTagId({ guardianId: params.guardianId, petId: pet.id, tagId: tag.id })
     return {
       isSuccess: true,
       data: {

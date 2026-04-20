@@ -27,6 +27,7 @@ export class DbLoadNextTasksByPetId implements LoadNextTasksByPetId {
     }
 
     const tasks = await this.eventRepository.loadNextByPetId({
+      guardianId,
       petId,
       page,
       limit

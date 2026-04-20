@@ -6,7 +6,7 @@ export class DbLoadCurrentMonthTasks implements LoadCurrentMonthTasks {
     private readonly eventRepository: LoadTasksByIntervalRepository
   ) {}
 
-  async load ({ date, tagId, page, limit }: LoadCurrentMonthTasks.Params): Promise<LoadCurrentMonthTasks.Result> {
+  async load ({ guardianId, date, tagId, page, limit }: LoadCurrentMonthTasks.Params): Promise<LoadCurrentMonthTasks.Result> {
     const start = new Date(date)
     start.setUTCHours(0, 0, 0, 0)
 
@@ -16,6 +16,7 @@ export class DbLoadCurrentMonthTasks implements LoadCurrentMonthTasks {
     return await this.eventRepository.loadAllByInterval({
       start,
       end,
+      guardianId,
       tagId,
       page,
       limit
