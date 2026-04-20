@@ -29,13 +29,14 @@ export class TagRepository implements AddTagRepository, LoadTagByIdRepository, U
   }
 
   async update (params: UpdateTagRepository.Params): Promise<UpdateTagRepository.Result> {
-    const { name, id } = params
+    const { guardianId, name, id } = params
     const tag = await db.tag.update({
       data: {
         name
       },
       where: {
-        id
+        id,
+        guardianId
       }
     })
     return tag
@@ -50,9 +51,9 @@ export class TagRepository implements AddTagRepository, LoadTagByIdRepository, U
     return tags
   }
 
-  async deleteById (tagId: DeleteTagRepository.Param): Promise<DeleteTagRepository.Result> {
+  async deleteById (params: DeleteTagRepository.Param): Promise<DeleteTagRepository.Result> {
     try {
-      await db.tag.delete({ where: { id: tagId } })
+      await db.tag.delete({ where: { id: params.tagId, guardianId: params.guardianId } })
       return true
     } catch (error) {
       return false

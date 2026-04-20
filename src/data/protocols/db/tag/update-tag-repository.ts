@@ -5,6 +5,7 @@ export interface UpdateTagRepository {
 export namespace UpdateTagRepository {
   export type Params = {
     id: string
+    guardianId: string
     name: string
   }
 
