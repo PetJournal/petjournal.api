@@ -17,7 +17,7 @@ export class DbUpdateTag implements UpdateTag {
         error: new NotAcceptableError('tagId')
       }
     }
-    const tagResult = await this.tagRepository.update({ id, name })
+    const tagResult = await this.tagRepository.update({ guardianId, id, name })
     return {
       isSuccess: true,
       data: tagResult
