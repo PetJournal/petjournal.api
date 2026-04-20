@@ -25,14 +25,15 @@ describe('LoadTagById Controller', () => {
   const httpRequest = {
     params: {
       tagId: 'any_id'
-    }
+    },
+    userId: 'any_guardian_id'
   }
   describe('LoadTag', () => {
     it('Should call LoadTag with correct value', async () => {
       const { sut, loadTagStub } = makeSut()
       const loadTagSpy = jest.spyOn(loadTagStub, 'loadById')
       await sut.handle(httpRequest)
-      expect(loadTagSpy).toHaveBeenCalledWith('any_id')
+      expect(loadTagSpy).toHaveBeenCalledWith({ guardianId: 'any_guardian_id', tagId: 'any_id' })
     })
 
     it('Should return 500(serverError) if loadTag throws', async () => {
