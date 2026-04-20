@@ -25,12 +25,14 @@ export class LoadCurrentMonthTasksController implements Controller {
       }
 
       const { tagId, page = 1, limit = 10 } = httpRequest.query
+      const guardianId = httpRequest.userId as string
 
       const now = new Date()
       now.setUTCHours(0, 0, 0, 0)
 
       const result = await this.loadCurrentMonthTasks.load({
         date: now,
+        guardianId,
         tagId,
         page: Number(page),
         limit: Number(limit)
