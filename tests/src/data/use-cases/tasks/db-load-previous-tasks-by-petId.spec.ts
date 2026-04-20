@@ -74,6 +74,7 @@ describe('DbLoadPreviousTasksByPetId', () => {
     await sut.load({ guardianId: 'any_guardian_id', petId: 'pet_1', page: 3, limit: 15 })
 
     expect(spy).toHaveBeenCalledWith({
+      guardianId: 'any_guardian_id',
       petId: 'pet_1',
       page: 3,
       limit: 15
