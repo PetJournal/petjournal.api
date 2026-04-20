@@ -23,10 +23,18 @@ describe('LoadGuardian route', () => {
   afterAll(async () => { await PrismaHelper.disconnect() })
 
   it('Should return 200 on success', async () => {
-    await request(app)
+    const response = await request(app)
       .get('/api/guardian')
       .set('Authorization', `Bearer ${accessToken}`)
-      .expect(200)
+
+    expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual({
+      email: 'johndoe@email.com',
+      firstName: 'John',
+      lastName: 'Doe',
+      phone: '11987654321',
+      image: ''
+    })
   })
 
   it('Should return 400 if no access token is provided', async () => {
