@@ -38,7 +38,7 @@ describe('DbLoadTagById use case', () => {
       })
     })
 
-    it('Should return null if tagRepository returns null', async () => {
+    it('Should return NotAcceptableError if invalid tagId is provided', async () => {
       const { sut, tagRepositoryStub } = makeSut()
       jest.spyOn(tagRepositoryStub, 'loadById').mockResolvedValueOnce(null)
       const tag = await sut.loadById(param)
