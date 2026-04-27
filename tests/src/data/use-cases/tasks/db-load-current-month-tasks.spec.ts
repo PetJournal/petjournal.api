@@ -68,7 +68,7 @@ describe('DbLoadCurrentMonthTasks', () => {
     const loadSpy = jest.spyOn(taskRepositoryStub, 'loadAllByInterval')
     const inputDate = new Date('2024-04-15T00:00:00Z')
 
-    await sut.load({ date: inputDate, tagId: 'tag123' })
+    await sut.load({ guardianId: 'any_guardian_id', date: inputDate, tagId: 'tag123' })
 
     const start = new Date(inputDate)
     start.setUTCHours(0, 0, 0, 0)
@@ -77,6 +77,7 @@ describe('DbLoadCurrentMonthTasks', () => {
     end.setUTCHours(23, 59, 59, 999)
 
     expect(loadSpy).toHaveBeenCalledWith({
+      guardianId: 'any_guardian_id',
       start,
       end,
       tagId: 'tag123'
@@ -87,7 +88,7 @@ describe('DbLoadCurrentMonthTasks', () => {
     const { sut } = makeSut()
     const inputDate = new Date('2024-04-15T00:00:00Z')
 
-    const result = await sut.load({ date: inputDate })
+    const result = await sut.load({ guardianId: 'any_guardian_id', date: inputDate })
 
     const expectedTasks = makeFakeTasks().filter(task => {
       const time = task.date.getTime()
@@ -102,14 +103,14 @@ describe('DbLoadCurrentMonthTasks', () => {
   it('Should return an empty array if repository returns an empty array', async () => {
     const { sut, taskRepositoryStub } = makeSut()
     jest.spyOn(taskRepositoryStub, 'loadAllByInterval').mockResolvedValueOnce([])
-    const tasks = await sut.load({ date: new Date('2024-04-01') })
+    const tasks = await sut.load({ guardianId: 'any_guardian_id', date: new Date('2024-04-01') })
     expect(tasks).toEqual([])
   })
 
   it('Should throw if repository throws', async () => {
     const { sut, taskRepositoryStub } = makeSut()
     jest.spyOn(taskRepositoryStub, 'loadAllByInterval').mockRejectedValueOnce(new Error('fail'))
-    const promise = sut.load({ date: new Date() })
+    const promise = sut.load({ guardianId: 'any_guardian_id', date: new Date() })
     await expect(promise).rejects.toThrow('fail')
   })
 
@@ -117,7 +118,7 @@ describe('DbLoadCurrentMonthTasks', () => {
     const { sut } = makeSut()
     const inputDate = new Date('2024-04-02T00:00:00Z')
 
-    const result = await sut.load({ date: inputDate, limit: 1, page: 0 })
+    const result = await sut.load({ guardianId: 'any_guardian_id', date: inputDate, limit: 1, page: 0 })
 
     expect(result).toHaveLength(1)
     expect(result[0].id).toBe('task1')
@@ -127,7 +128,7 @@ describe('DbLoadCurrentMonthTasks', () => {
     const { sut } = makeSut()
     const inputDate = new Date('2024-04-02T00:00:00Z')
 
-    const result = await sut.load({ date: inputDate, limit: 1, page: 1 })
+    const result = await sut.load({ guardianId: 'any_guardian_id', date: inputDate, limit: 1, page: 1 })
 
     expect(result).toHaveLength(1)
     expect(result[0].id).toBe('task2')

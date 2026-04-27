@@ -45,11 +45,11 @@ describe('DbLoadCurrentDateTasks', () => {
   it('Should call loadByDate with correct UTC start and end of day', async () => {
     const { sut, taskRepositoryStub } = makeSut()
     const loadByDateSpy = jest.spyOn(taskRepositoryStub, 'loadAllByInterval')
-    const inputDate = new Date('2024-04-01T12:34:56Z')
 
-    await sut.load({ date: inputDate })
+    await sut.load({ guardianId: 'any_guardian_id', date: new Date('2024-04-01T12:34:56Z') })
 
     expect(loadByDateSpy).toHaveBeenCalledWith({
+      guardianId: 'any_guardian_id',
       start: new Date(Date.UTC(2024, 3, 1, 0, 0, 0, 0)),
       end: new Date(Date.UTC(2024, 3, 1, 23, 59, 59, 999))
     })
@@ -57,21 +57,21 @@ describe('DbLoadCurrentDateTasks', () => {
 
   it('Should return tasks from repository', async () => {
     const { sut } = makeSut()
-    const tasks = await sut.load({ date: new Date('2024-04-01') })
+    const tasks = await sut.load({ guardianId: 'any_guardian_id', date: new Date('2024-04-01') })
     expect(tasks).toEqual(makeFakeTasks())
   })
 
   it('Should return an empty array if repository returns an empty array', async () => {
     const { sut, taskRepositoryStub } = makeSut()
     jest.spyOn(taskRepositoryStub, 'loadAllByInterval').mockResolvedValueOnce([])
-    const tasks = await sut.load({ date: new Date('2024-04-01') })
+    const tasks = await sut.load({ guardianId: 'any_guardian_id', date: new Date('2024-04-01') })
     expect(tasks).toEqual([])
   })
 
   it('Should throw if repository throws', async () => {
     const { sut, taskRepositoryStub } = makeSut()
     jest.spyOn(taskRepositoryStub, 'loadAllByInterval').mockRejectedValueOnce(new Error('fail'))
-    const promise = sut.load({ date: new Date() })
+    const promise = sut.load({ guardianId: 'any_guardian_id', date: new Date() })
     await expect(promise).rejects.toThrow('fail')
   })
 
@@ -81,10 +81,12 @@ describe('DbLoadCurrentDateTasks', () => {
 
     const date = new Date('2024-04-01T12:00:00Z')
     const tagId = 'tag-123'
+    const guardianId = 'any_guardian_id'
 
-    await sut.load({ date, tagId })
+    await sut.load({ guardianId, date, tagId })
 
     expect(loadSpy).toHaveBeenCalledWith({
+      guardianId: 'any_guardian_id',
       start: new Date(Date.UTC(2024, 3, 1, 0, 0, 0, 0)),
       end: new Date(Date.UTC(2024, 3, 1, 23, 59, 59, 999)),
       tagId

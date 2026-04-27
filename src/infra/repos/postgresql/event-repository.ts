@@ -51,13 +51,16 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
   }
 
   async loadAllByInterval (params: LoadTasksByIntervalRepository.Params): Promise<LoadTasksByIntervalRepository.Result> {
-    const { start, end, tagId, page = 1, limit = 10 } = params
+    const { guardianId, start, end, tagId, page = 1, limit = 10 } = params
 
     const offset = (page - 1) * limit
     const events = await db.event.findMany({
       where: {
         start: { gte: start, lte: end },
-        scheduler: tagId ? { tagId } : undefined
+        scheduler: {
+          tagId: tagId ?? undefined,
+          guardianId
+        }
       },
       orderBy: { start: 'asc' },
       skip: offset,
@@ -76,7 +79,7 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
   }
 
   async loadByPetIdAndTagId (params: LoadNextTasksByPetIdAndTagIdRepository.Params): Promise<LoadNextTasksByPetIdAndTagIdRepository.Result> {
-    const { petId, tagId, page = 1, limit = 10 } = params
+    const { guardianId, petId, tagId, page = 1, limit = 10 } = params
     const offset = (page - 1) * limit
 
     const today = new Date()
@@ -87,7 +90,8 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
         where: {
           scheduler: {
             pets: { some: { id: petId } },
-            tagId
+            tagId,
+            guardianId
           },
           start: { gte: today }
         }
@@ -97,7 +101,8 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
         where: {
           scheduler: {
             pets: { some: { id: petId } },
-            tagId
+            tagId,
+            guardianId
           },
           start: { gte: today }
         },
@@ -126,7 +131,7 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
   async loadNextByPetId (
     params: LoadNextTasksByPetIdRepository.Params
   ): Promise<LoadNextTasksByPetIdRepository.Result> {
-    const { petId, page = 1, limit = 10 } = params
+    const { guardianId, petId, page = 1, limit = 10 } = params
     const offset = (page - 1) * limit
 
     const today = new Date()
@@ -135,14 +140,20 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
     const [total, nextEvents] = await Promise.all([
       db.event.count({
         where: {
-          scheduler: { pets: { some: { id: petId } } },
+          scheduler: {
+            pets: { some: { id: petId } },
+            guardianId
+          },
           start: { gte: today }
         }
       }),
 
       db.event.findMany({
         where: {
-          scheduler: { pets: { some: { id: petId } } },
+          scheduler: {
+            pets: { some: { id: petId } },
+            guardianId
+          },
           start: { gte: today }
         },
         orderBy: { start: 'asc' },
@@ -170,7 +181,7 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
   async loadPreviousByPetId (
     params: LoadPreviousTasksByPetIdRepository.Params
   ): Promise<LoadPreviousTasksByPetIdRepository.Result> {
-    const { petId, page = 1, limit = 10 } = params
+    const { guardianId, petId, page = 1, limit = 10 } = params
     const offset = (page - 1) * limit
 
     const today = new Date()
@@ -179,14 +190,20 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
     const [total, history] = await Promise.all([
       db.event.count({
         where: {
-          scheduler: { pets: { some: { id: petId } } },
+          scheduler: {
+            pets: { some: { id: petId } },
+            guardianId
+          },
           start: { lt: today }
         }
       }),
 
       db.event.findMany({
         where: {
-          scheduler: { pets: { some: { id: petId } } },
+          scheduler: {
+            pets: { some: { id: petId } },
+            guardianId
+          },
           start: { lt: today }
         },
         orderBy: { start: 'desc' },

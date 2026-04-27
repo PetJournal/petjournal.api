@@ -24,6 +24,7 @@ export class DbLoadPreviousTasksByPetId implements LoadPreviousTasksByPetId {
     }
 
     const tasks = await this.eventRepository.loadPreviousByPetId({
+      guardianId,
       petId,
       page,
       limit

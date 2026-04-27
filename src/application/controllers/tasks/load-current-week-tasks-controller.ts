@@ -24,10 +24,11 @@ export class LoadCurrentWeekTasksController implements Controller {
         return badRequest(error)
       }
       const { tagId, page = 1, limit = 10 } = httpRequest.query
+      const guardianId = httpRequest.userId as string
       const now = new Date()
       now.setUTCHours(0, 0, 0, 0)
 
-      const result = await this.loadCurrentWeekTasks.load({ date: now, tagId, page: Number(page), limit: Number(limit) })
+      const result = await this.loadCurrentWeekTasks.load({ date: now, guardianId, tagId, page: Number(page), limit: Number(limit) })
       return success({
         data: result,
         page,

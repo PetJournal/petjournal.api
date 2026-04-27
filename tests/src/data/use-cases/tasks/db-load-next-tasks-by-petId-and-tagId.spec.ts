@@ -95,7 +95,7 @@ describe('DbLoadNextTasksByPetIdAndTagId', () => {
       const { sut, eventRepositoryStub } = makeSut()
       const eventRepositorySpy = jest.spyOn(eventRepositoryStub, 'loadByPetIdAndTagId')
       await sut.load(params)
-      expect(eventRepositorySpy).toHaveBeenCalledWith({ petId: params.petId, tagId: params.tagId })
+      expect(eventRepositorySpy).toHaveBeenCalledWith({ guardianId: params.guardianId, petId: params.petId, tagId: params.tagId })
     })
 
     it('Should throw if event repository throws', async () => {
