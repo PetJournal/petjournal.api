@@ -6,7 +6,7 @@ import {
   type ValidateVerificationToken,
   type ChangePassword,
   type AppointSpecie,
-  type LoadGuardianName,
+  type LoadGuardian,
   type AddPet,
   type UpdatePet,
   type AppointPet,
@@ -243,12 +243,15 @@ const makeFakeAppointPetUseCase = (): AppointPet => {
   return new AppointPetStub()
 }
 
-const makeLoadGuardianNameUseCase = (): LoadGuardianName => {
-  class LoadGuardianNameStub implements LoadGuardianName {
-    async load (userId: string): Promise<LoadGuardianName.Result> {
+const makeLoadGuardianNameUseCase = (): LoadGuardian => {
+  class LoadGuardianNameStub implements LoadGuardian {
+    async load (userId: string): Promise<LoadGuardian.Result> {
       return {
         firstName: 'any_first_name',
-        lastName: 'any_last_name'
+        lastName: 'any_last_name',
+        email: 'email@email.com',
+        phone: 'any_phone',
+        image: 'image.jpg'
       }
     }
   }
