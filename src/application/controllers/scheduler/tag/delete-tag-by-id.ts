@@ -12,7 +12,8 @@ export class DeleteTagByIdController implements Controller {
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const { tagId } = httpRequest.params
-      const result = await this.deleteTag.deleteById(tagId)
+      const guardianId = httpRequest.userId as string
+      const result = await this.deleteTag.deleteById({ guardianId, tagId })
       if (!result.isSuccess) {
         return notAcceptable(result.error as Error)
       }

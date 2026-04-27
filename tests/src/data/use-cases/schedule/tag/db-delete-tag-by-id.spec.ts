@@ -22,11 +22,16 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbDeleteTagById use case', () => {
+  const param: DeleteTagRepository.Param = {
+    tagId: 'invalid_id',
+    guardianId: 'any_guardian_id'
+  }
+
   describe('TagRepository', () => {
     it('Should return NotFoundError if invalid tag id is provided', async () => {
       const { sut, tagRepositoryStub } = makeSut()
       jest.spyOn(tagRepositoryStub, 'deleteById').mockResolvedValueOnce(false)
-      const result = await sut.deleteById('invalid_id')
+      const result = await sut.deleteById(param)
       expect(result).toEqual({
         isSuccess: false,
         error: new NotFoundError('tagId')
@@ -35,7 +40,7 @@ describe('DbDeleteTagById use case', () => {
 
     it('Should return true on success', async () => {
       const { sut } = makeSut()
-      const result = await sut.deleteById('any_id')
+      const result = await sut.deleteById(param)
       expect(result).toEqual({
         isSuccess: true
       })

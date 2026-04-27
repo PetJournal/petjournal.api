@@ -372,10 +372,13 @@ const makeFakeLoadTagByIdUseCase = (): LoadTagById => {
   class LoadTagByIdStub implements LoadTagById {
     async loadById (tagId: LoadTagById.Param): Promise<LoadTagById.Result> {
       return {
-        id: 'any_id',
-        guardianId: 'any_guardian_id',
-        name: 'any_name',
-        color: 'any_color'
+        isSuccess: true,
+        data: {
+          id: 'any_id',
+          guardianId: 'any_guardian_id',
+          name: 'any_name',
+          color: 'any_color'
+        }
       }
     }
   }

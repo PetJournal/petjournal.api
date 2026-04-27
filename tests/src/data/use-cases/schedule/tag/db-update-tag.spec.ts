@@ -57,6 +57,7 @@ describe('DbUpdateTag use case', () => {
       const updateTagSpy = jest.spyOn(tagRepositoryStub, 'update')
       await sut.update(params)
       expect(updateTagSpy).toHaveBeenCalledWith({
+        guardianId: 'any_guardian_id',
         id: 'any_id',
         name: 'any_name'
       })

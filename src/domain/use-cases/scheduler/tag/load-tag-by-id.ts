@@ -10,11 +10,15 @@ export namespace LoadTagById {
     guardianId: string
   }
   export type Result = {
-    id: string
-    guardianId: string
-    name: string
-    color: string
-  } | null
+    isSuccess: boolean
+    data?: {
+      id: string
+      guardianId: string
+      name: string
+      color: string
+    }
+    error?: Error
+  }
 
   export type Dependencies = {
     tagRepository: LoadTagByIdRepository
