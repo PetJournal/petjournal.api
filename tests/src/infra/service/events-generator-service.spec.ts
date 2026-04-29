@@ -32,9 +32,11 @@ const generateDate = (): any => {
 }
 
 describe('Events Generator Service', () => {
+  const guardianId = 'any_guardian_id'
+
   const daysOfWeekParams: EventsGenerator.Params = {
     schedulerId: 'any_scheduler_id',
-    guardianId: 'any_guardian_id',
+    guardianId,
     startAt: generateDate().startAt,
     endAt: generateDate().endAt,
     daysOfWeek: [new Date().getDay()],
@@ -48,7 +50,8 @@ describe('Events Generator Service', () => {
     endAt: generateDate().endAt,
     daysOfWeek: undefined,
     daysOfMonth: [new Date().getDate()],
-    daily: false
+    daily: false,
+    guardianId
   }
 
   const dailyParams: EventsGenerator.Params = {
@@ -57,7 +60,8 @@ describe('Events Generator Service', () => {
     endAt: generateDate().endAt,
     daysOfWeek: undefined,
     daysOfMonth: undefined,
-    daily: true
+    daily: true,
+    guardianId
   }
 
   const punctualParams: EventsGenerator.Params = {
@@ -66,15 +70,16 @@ describe('Events Generator Service', () => {
     endAt: generateDate().endAt,
     daysOfWeek: undefined,
     daysOfMonth: undefined,
-    daily: false
+    daily: false,
+    guardianId
   }
 
   describe('Days of Week', () => {
     it('Should call loadByDate with the correct value', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDate')
-      await sut.generate({ ...params, daysOfMonth: undefined, daily: false })
-      expect(loadSpy).toHaveBeenCalledWith({ guardianId: params.guardianId, date: params.startAt })
+      await sut.generate({ ...daysOfWeekParams, daysOfMonth: undefined, daily: false })
+      expect(loadSpy).toHaveBeenCalledWith({ guardianId: daysOfWeekParams.guardianId, date: daysOfWeekParams.startAt })
     })
 
     it('Should throw if loadByDate throws', async () => {
@@ -151,8 +156,8 @@ describe('Events Generator Service', () => {
     it('Should call loadByDate with the correct value', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDate')
-      await sut.generate({ ...params, daysOfWeek: undefined, daily: false })
-      expect(loadSpy).toHaveBeenCalledWith({ guardianId: params.guardianId, date: params.startAt })
+      await sut.generate({ ...daysOfMonthParams, daysOfWeek: undefined, daily: false })
+      expect(loadSpy).toHaveBeenCalledWith({ guardianId: daysOfMonthParams.guardianId, date: daysOfMonthParams.startAt })
     })
 
     it('Should throw if loadByDate throws', async () => {
@@ -230,8 +235,8 @@ describe('Events Generator Service', () => {
     it('Should call loadByDate with the correct value', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDate')
-      await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined })
-      expect(loadSpy).toHaveBeenCalledWith({ guardianId: params.guardianId, date: params.startAt })
+      await sut.generate({ ...dailyParams, daysOfWeek: undefined, daysOfMonth: undefined })
+      expect(loadSpy).toHaveBeenCalledWith({ guardianId: dailyParams.guardianId, date: dailyParams.startAt })
     })
 
     it('Should throw if loadByDate throws', async () => {
@@ -324,8 +329,8 @@ describe('Events Generator Service', () => {
     it('Should call loadByDate with the correct value', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDate')
-      await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
-      expect(loadSpy).toHaveBeenCalledWith({ guardianId: params.guardianId, date: params.startAt })
+      await sut.generate({ ...punctualParams, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
+      expect(loadSpy).toHaveBeenCalledWith({ guardianId: punctualParams.guardianId, date: punctualParams.startAt })
     })
 
     it('Should throw if loadByDate throws', async () => {

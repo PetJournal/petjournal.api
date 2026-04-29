@@ -57,13 +57,8 @@ export class EventsGeneratorService implements EventsGenerator {
       const events = []
       while (currentDate <= endAtDateTime) {
         if (daysOfMonth.includes(currentDate.getDate())) {
-<<<<<<< HEAD
-          const eventAlreadyExists = await this.eventRepository.loadByDate({ date: new Date(currentDate) })
-          if (eventAlreadyExists) {
-=======
           const event = await this.eventRepository.loadByDate({ guardianId, date: currentDate })
           if (event) {
->>>>>>> origin/develop
             return {
               isSuccess: false,
               error: new NotAcceptableError('Conflict start event')
@@ -102,11 +97,7 @@ export class EventsGeneratorService implements EventsGenerator {
     if (daily) {
       const events = []
       while (currentDate <= endAtDateTime) {
-<<<<<<< HEAD
-        const event = await this.eventRepository.loadByDate({ date: new Date(currentDate) })
-=======
         const event = await this.eventRepository.loadByDate({ guardianId, date: currentDate })
->>>>>>> origin/develop
         if (event) {
           return {
             isSuccess: false,
@@ -142,13 +133,8 @@ export class EventsGeneratorService implements EventsGenerator {
       }
     }
 
-<<<<<<< HEAD
-    const eventAlreadyExists = await this.eventRepository.loadByDate({ date: new Date(currentDate) })
-    if (eventAlreadyExists) {
-=======
     const event = await this.eventRepository.loadByDate({ guardianId, date: currentDate })
     if (event) {
->>>>>>> origin/develop
       return {
         isSuccess: false,
         error: new NotAcceptableError('Conflict start event')
