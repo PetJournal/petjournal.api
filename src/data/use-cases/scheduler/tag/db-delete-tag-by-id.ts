@@ -9,8 +9,8 @@ export class DbDeleteTagById implements DeleteTagById {
     this.tagRepository = tagRepository
   }
 
-  async deleteById (tagId: DeleteTagById.Param): Promise<DeleteTagById.Result> {
-    const tag = await this.tagRepository.deleteById(tagId)
+  async deleteById (params: DeleteTagById.Param): Promise<DeleteTagById.Result> {
+    const tag = await this.tagRepository.deleteById({ tagId: params.tagId, guardianId: params.guardianId })
     if (!tag) {
       return {
         isSuccess: false,

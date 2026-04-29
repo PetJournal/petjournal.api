@@ -46,8 +46,9 @@ describe('TagRepository', () => {
   describe('LoadById method', () => {
     it('Should return null if a invalid tag id is provided', async () => {
       const sut = makeSut()
+      const guardian = await PrismaHelper.createGuardian()
       const invalidId = 'invalid_id'
-      const tag = await sut.loadById(invalidId)
+      const tag = await sut.loadById({ guardianId: guardian.id, tagId: invalidId })
       expect(tag).toBeNull()
     })
 
@@ -56,7 +57,7 @@ describe('TagRepository', () => {
       const guardian = await PrismaHelper.createGuardian()
       const tagAdded = await sut.add({ ...params, guardianId: guardian.id })
       const id = tagAdded?.id as string
-      const tag = await sut.loadById(id)
+      const tag = await sut.loadById({ guardianId: guardian.id, tagId: id })
       expect(tag).toEqual({
         id: expect.any(String),
         guardianId: expect.any(String),
@@ -71,7 +72,7 @@ describe('TagRepository', () => {
       const sut = makeSut()
       jest.spyOn(sut, 'update').mockResolvedValueOnce(undefined)
       await sut.add(params)
-      const tag = await sut.update({ id: 'invalid_id', name: 'updated_name' })
+      const tag = await sut.update({ guardianId: 'any_guardian_id', id: 'invalid_id', name: 'updated_name' })
       expect(tag).toBeUndefined()
     })
 
@@ -80,7 +81,7 @@ describe('TagRepository', () => {
       const guardian = await PrismaHelper.createGuardian()
       const addedTag = await sut.add({ ...params, guardianId: guardian.id })
       const id = addedTag?.id as string
-      const updatedTag = await sut.update({ id, name: 'updated_name' })
+      const updatedTag = await sut.update({ guardianId: guardian.id, id, name: 'updated_name' })
       expect(updatedTag).toEqual({
         id: expect.any(String),
         guardianId: expect.any(String),
@@ -116,7 +117,7 @@ describe('TagRepository', () => {
     it('Should return false if an invalid tag id is provided', async () => {
       const sut = makeSut()
       jest.spyOn(sut, 'deleteById').mockResolvedValueOnce(false)
-      const result = await sut.deleteById('any_id')
+      const result = await sut.deleteById({ guardianId: 'any_guardian_id', tagId: 'any_tag_id' })
       expect(result).toBe(false)
     })
 
@@ -125,7 +126,7 @@ describe('TagRepository', () => {
       const guardian = await PrismaHelper.createGuardian()
       const tag = await sut.add({ ...params, guardianId: guardian.id })
       const tagId = tag?.id as string
-      const result = await sut.deleteById(tagId)
+      const result = await sut.deleteById({ guardianId: guardian.id, tagId })
       expect(result).toBe(true)
     })
   })

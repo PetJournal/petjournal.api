@@ -24,6 +24,7 @@ const makeSut = (): SutTypes => {
 describe('DbUpdateTag use case', () => {
   describe('TagRepository', () => {
     const params: UpdateTag.Params = {
+      guardianId: 'any_guardian_id',
       id: 'any_id',
       name: 'any_name'
     }
@@ -31,13 +32,13 @@ describe('DbUpdateTag use case', () => {
       const { sut, tagRepositoryStub } = makeSut()
       const loadTagSpy = jest.spyOn(tagRepositoryStub, 'loadById')
       await sut.update(params)
-      expect(loadTagSpy).toHaveBeenCalledWith('any_id')
+      expect(loadTagSpy).toHaveBeenCalledWith({ guardianId: 'any_guardian_id', tagId: 'any_id' })
     })
 
     it('Should return NotAcceptableError if incorrect tagId is provided', async () => {
       const { sut, tagRepositoryStub } = makeSut()
       jest.spyOn(tagRepositoryStub, 'loadById').mockResolvedValueOnce(null)
-      const tag = await sut.update({ id: 'invalid_id', name: 'updated_name' })
+      const tag = await sut.update({ id: 'invalid_id', name: 'updated_name', guardianId: 'any_guardian_id' })
       expect(tag).toEqual({
         isSuccess: false,
         error: new NotAcceptableError('tagId')
@@ -56,6 +57,7 @@ describe('DbUpdateTag use case', () => {
       const updateTagSpy = jest.spyOn(tagRepositoryStub, 'update')
       await sut.update(params)
       expect(updateTagSpy).toHaveBeenCalledWith({
+        guardianId: 'any_guardian_id',
         id: 'any_id',
         name: 'any_name'
       })

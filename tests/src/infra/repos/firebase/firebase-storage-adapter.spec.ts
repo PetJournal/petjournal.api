@@ -1,15 +1,28 @@
 import { FirebaseStorageAdapter } from '@/infra/repos/firebase'
-import firebase from 'firebase/storage'
 
-jest.mock('firebase/app', () => ({
-  initializeApp: jest.fn().mockReturnValue({ fakeApp: true })
-}))
+const mockSave = jest.fn().mockResolvedValue(undefined)
+const mockGetSignedUrl = jest.fn().mockResolvedValue(['any_url'])
+const mockDelete = jest.fn().mockResolvedValue(undefined)
 
-jest.mock('firebase/storage', () => ({
-  getStorage: jest.fn().mockReturnValue({ fakeStorage: true }),
-  ref: jest.fn().mockReturnValue({ fakeRef: true }),
-  uploadBytes: jest.fn(),
-  getDownloadURL: jest.fn()
+const mockFile = jest.fn().mockReturnValue({
+  save: mockSave,
+  getSignedUrl: mockGetSignedUrl,
+  delete: mockDelete
+})
+
+const mockBucket = jest.fn().mockReturnValue({
+  file: mockFile
+})
+
+jest.mock('firebase-admin', () => ({
+  apps: [],
+  initializeApp: jest.fn(),
+  credential: {
+    cert: jest.fn().mockReturnValue('any_cert')
+  },
+  storage: jest.fn().mockImplementation(() => ({
+    bucket: mockBucket
+  }))
 }))
 
 interface SutTypes {
@@ -19,57 +32,64 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const projectId = 'any_project_id'
   const storageBucket = 'any_storage_bucket'
-  const sut = new FirebaseStorageAdapter(projectId, storageBucket)
+  const fakeAccountJson = JSON.stringify({ project_id: 'fake_id' })
+  const firebaseServiceAccountBase64 = Buffer.from(fakeAccountJson).toString('base64')
+  const sut = new FirebaseStorageAdapter(projectId, storageBucket, firebaseServiceAccountBase64)
   return { sut }
 }
 
 describe('FirebaseStorageAdapter', () => {
-  const file = Buffer.from('any_file')
-  const fileName = 'any_file_name'
-  const params = { file, fileName }
-
-  it('Should call getStorage with correct value', async () => {
-    const { sut } = makeSut()
-    const getStorageSpy = jest.spyOn(firebase, 'getStorage')
-
-    await sut.save(params)
-
-    expect(getStorageSpy).toHaveBeenCalledWith({ fakeApp: true })
+  beforeEach(() => {
+    jest.clearAllMocks()
   })
 
-  it('Should call ref with correct value', async () => {
-    const { sut } = makeSut()
-    const refSpy = jest.spyOn(firebase, 'ref')
+  describe('Save method', () => {
+    const file = Buffer.from('any_file')
+    const fileName = 'any_file_name'
+    const params = { file, fileName }
 
-    await sut.save(params)
+    it('Should call bucket.file with correct fileName', async () => {
+      const { sut } = makeSut()
+      await sut.save(params)
+      expect(mockFile).toHaveBeenCalledWith(fileName)
+    })
 
-    expect(refSpy).toHaveBeenCalledWith({ fakeStorage: true }, fileName)
+    it('Should call file.save with correct file buffer', async () => {
+      const { sut } = makeSut()
+      await sut.save(params)
+      expect(mockSave).toHaveBeenCalledWith(file, expect.any(Object))
+    })
+
+    it('Should call getSignedUrl to generate file link', async () => {
+      const { sut } = makeSut()
+      await sut.save(params)
+      expect(mockGetSignedUrl).toHaveBeenCalledWith(expect.objectContaining({
+        action: 'read'
+      }))
+    })
+
+    it('Should throw if file.save throws', async () => {
+      const { sut } = makeSut()
+      mockSave.mockRejectedValueOnce(new Error('firebase_error'))
+
+      const promise = sut.save(params)
+      await expect(promise).rejects.toThrow(new Error('firebase_error'))
+    })
+
+    it('Should return a url on success', async () => {
+      const { sut } = makeSut()
+      const result = await sut.save(params)
+      expect(result).toBe('any_url')
+    })
   })
 
-  it('Should call uploadBytes with correct values', async () => {
-    const { sut } = makeSut()
-    const uploadBytesSpy = jest.spyOn(firebase, 'uploadBytes')
-
-    await sut.save(params)
-
-    expect(uploadBytesSpy).toHaveBeenCalledWith({ fakeRef: true }, file)
-  })
-
-  it('Should call getDownloadURL with correct value', async () => {
-    const { sut } = makeSut()
-    const getDownloadURLSpy = jest.spyOn(firebase, 'getDownloadURL')
-
-    await sut.save(params)
-
-    expect(getDownloadURLSpy).toHaveBeenCalledWith({ fakeRef: true })
-  })
-
-  it('Should return a url on success', async () => {
-    const { sut } = makeSut()
-    jest.spyOn(firebase, 'getDownloadURL').mockResolvedValueOnce('any_url')
-
-    const result = await sut.save(params)
-
-    expect(result).toBe('any_url')
+  describe('Delete Method', () => {
+    it('Should call file.delete with correct path', async () => {
+      const { sut } = makeSut()
+      const url = 'https://storage.googleapis.com/any_bucket/images/pet-123'
+      await sut.delete({ fileUrlOrPath: url })
+      expect(mockFile).toHaveBeenCalledWith('images/pet-123')
+      expect(mockDelete).toHaveBeenCalled()
+    })
   })
 })

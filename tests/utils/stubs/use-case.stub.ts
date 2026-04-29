@@ -6,7 +6,7 @@ import {
   type ValidateVerificationToken,
   type ChangePassword,
   type AppointSpecie,
-  type LoadGuardianName,
+  type LoadGuardian,
   type AddPet,
   type UpdatePet,
   type AppointPet,
@@ -24,7 +24,8 @@ import {
   type LoadSettings,
   type UpdateSettings,
   type LoadPetById,
-  type LoadNextTasksByPetIdAndTagId
+  type LoadNextTasksByPetIdAndTagId,
+  type UpdateGuardian
 } from '@/domain/use-cases'
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
 import { mockFakeAppointPet, mockFakePetUpdated, mockFakePetByGuardianIdLoaded, mockFakeSpecieAdded, makeFakeGuardianData, mockFakeBreedAdded, mockFakeSizeAdded, mockFakePetByIdLoaded } from '../mocks'
@@ -38,7 +39,8 @@ const mockGuardianUseCase = {
   email: 'any_email@mail.com',
   password: 'any_password',
   phone: 'any_phone',
-  accessToken: 'any_token'
+  accessToken: 'any_token',
+  image: ''
 }
 
 const makeFakeAddGuardianUseCase = (): AddGuardian => {
@@ -50,12 +52,32 @@ const makeFakeAddGuardianUseCase = (): AddGuardian => {
         lastName: mockGuardianUseCase.lastName,
         email: mockGuardianUseCase.email,
         password: mockGuardianUseCase.password,
-        phone: mockGuardianUseCase.phone
+        phone: mockGuardianUseCase.phone,
+        image: mockGuardianUseCase.image
       }
       return result
     }
   }
   return new AddGuardianStub()
+}
+
+const makeFakeUpdateGuardianUseCase = (): UpdateGuardian => {
+  class UpdateGuardianStub implements UpdateGuardian {
+    async update (params: UpdateGuardian.Params): Promise<UpdateGuardian.Result> {
+      const result = {
+        id: mockGuardianUseCase.id,
+        firstName: mockGuardianUseCase.firstName,
+        lastName: mockGuardianUseCase.lastName,
+        phone: mockGuardianUseCase.phone,
+        image: mockGuardianUseCase.image
+      }
+      return {
+        isSuccess: true,
+        data: result
+      }
+    }
+  }
+  return new UpdateGuardianStub()
 }
 
 const makeFakeEmailConfirmationUseCase = (): EmailConfirmation => {
@@ -220,12 +242,15 @@ const makeFakeAppointPetUseCase = (): AppointPet => {
   return new AppointPetStub()
 }
 
-const makeLoadGuardianNameUseCase = (): LoadGuardianName => {
-  class LoadGuardianNameStub implements LoadGuardianName {
-    async load (userId: string): Promise<LoadGuardianName.Result> {
+const makeLoadGuardianNameUseCase = (): LoadGuardian => {
+  class LoadGuardianNameStub implements LoadGuardian {
+    async load (userId: string): Promise<LoadGuardian.Result> {
       return {
         firstName: 'any_first_name',
-        lastName: 'any_last_name'
+        lastName: 'any_last_name',
+        email: 'email@email.com',
+        phone: 'any_phone',
+        image: 'image.jpg'
       }
     }
   }
@@ -347,10 +372,13 @@ const makeFakeLoadTagByIdUseCase = (): LoadTagById => {
   class LoadTagByIdStub implements LoadTagById {
     async loadById (tagId: LoadTagById.Param): Promise<LoadTagById.Result> {
       return {
-        id: 'any_id',
-        guardianId: 'any_guardian_id',
-        name: 'any_name',
-        color: 'any_color'
+        isSuccess: true,
+        data: {
+          id: 'any_id',
+          guardianId: 'any_guardian_id',
+          name: 'any_name',
+          color: 'any_color'
+        }
       }
     }
   }
@@ -470,6 +498,7 @@ const makeFakeUpdateSettingsUseCase = (): UpdateSettings => {
 export {
   makeFakeAddGuardianUseCase,
   makeFakeAddPetUseCase,
+  makeFakeUpdateGuardianUseCase,
   makeFakeLoadPetsUseCase,
   makeFakeLoadPetByIdUseCase,
   makeFakeUpdatePetUseCase,

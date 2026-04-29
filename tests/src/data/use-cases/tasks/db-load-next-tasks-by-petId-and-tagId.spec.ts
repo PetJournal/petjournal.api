@@ -31,6 +31,7 @@ const makeSut = (): SutTypes => {
 
 describe('DbLoadNextTasksByPetIdAndTagId', () => {
   const params: LoadNextTasksByPetIdAndTagId.Params = {
+    guardianId: 'any_guardian_id',
     petId: 'any_id',
     tagId: 'any_id',
     limit: 10,
@@ -42,7 +43,7 @@ describe('DbLoadNextTasksByPetIdAndTagId', () => {
       const { sut, petRepositoryStub } = makeSut()
       const petRepositorySpy = jest.spyOn(petRepositoryStub, 'loadById')
       await sut.load(params)
-      expect(petRepositorySpy).toHaveBeenCalledWith(params.petId)
+      expect(petRepositorySpy).toHaveBeenCalledWith({ guardianId: params.guardianId, petId: params.petId })
     })
 
     it('Should throw if pet repository throws', async () => {
@@ -68,7 +69,7 @@ describe('DbLoadNextTasksByPetIdAndTagId', () => {
       const { sut, tagRepositoryStub } = makeSut()
       const tagRepositorySpy = jest.spyOn(tagRepositoryStub, 'loadById')
       await sut.load(params)
-      expect(tagRepositorySpy).toHaveBeenCalledWith(params.tagId)
+      expect(tagRepositorySpy).toHaveBeenCalledWith({ guardianId: params.guardianId, tagId: params.tagId })
     })
 
     it('Should throw if tag repository throws', async () => {
@@ -94,7 +95,7 @@ describe('DbLoadNextTasksByPetIdAndTagId', () => {
       const { sut, eventRepositoryStub } = makeSut()
       const eventRepositorySpy = jest.spyOn(eventRepositoryStub, 'loadByPetIdAndTagId')
       await sut.load(params)
-      expect(eventRepositorySpy).toHaveBeenCalledWith({ petId: params.petId, tagId: params.tagId })
+      expect(eventRepositorySpy).toHaveBeenCalledWith({ guardianId: params.guardianId, petId: params.petId, tagId: params.tagId })
     })
 
     it('Should throw if event repository throws', async () => {

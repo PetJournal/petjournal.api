@@ -5,6 +5,7 @@ export interface LoadEventByDateRepository {
 export namespace LoadEventByDateRepository {
   export type Params = {
     date: Date
+    guardianId: string
   }
 
   export type Result = {

@@ -150,6 +150,7 @@ describe('Pet Routes', () => {
     Reflect.deleteProperty(fakeUser, 'accessToken')
     Reflect.deleteProperty(fakeUser, 'verificationToken')
     Reflect.deleteProperty(fakeUser, 'verificationTokenCreatedAt')
+    Reflect.deleteProperty(fakeUser, 'image')
   })
 
   beforeEach(async () => { await prisma.pet.deleteMany() })

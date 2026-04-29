@@ -28,7 +28,7 @@ export class DbUpdatePet implements UpdatePet {
         error: new NotAcceptableError('userId')
       }
     }
-    const pet = await this.petRepository.loadById(petData.petId)
+    const pet = await this.petRepository.loadById({ guardianId: petData.guardianId, petId: petData.petId })
     if (!pet) {
       return {
         isSuccess: false,
@@ -47,19 +47,26 @@ export class DbUpdatePet implements UpdatePet {
         error: appointResult.error
       }
     }
+
+    let finalImage: string = ''
     if (petData.image) {
-      const urlOldImage = pet.image
-      const newImage = await this.fileStorage.save({ file: petData.image, fileName: `images/pet-${pet?.id}-${Math.trunc(Date.now() / 1000)}` })
-      if (!newImage) {
+      const currentImage = pet.image
+      const updatedImage = await this.fileStorage.save({ file: petData.image, fileName: `images/pet-${pet?.id}-${Math.trunc(Date.now() / 1000)}` })
+      if (!updatedImage) {
         return {
           isSuccess: false,
           error: new NotAcceptableError('update image failed')
         }
       }
-      if (urlOldImage) {
-        await this.fileStorage.delete({ fileUrlOrPath: urlOldImage })
+      if (currentImage) {
+        await this.fileStorage.delete({ fileUrlOrPath: currentImage })
       }
+      finalImage = updatedImage
     }
+    if (!petData.image) {
+      finalImage = pet.image
+    }
+
     const petUpdateResult = await this.petRepository.update({
       guardianId: guardian.id,
       petId: pet.id,
@@ -71,7 +78,8 @@ export class DbUpdatePet implements UpdatePet {
       breedAlias: appointResult.data.breedAlias,
       sizeId: appointResult.data.size.id,
       castrated: appointResult.data.castrated,
-      dateOfBirth: petData.dateOfBirth ? petData.dateOfBirth : pet.dateOfBirth
+      dateOfBirth: petData.dateOfBirth ? petData.dateOfBirth : pet.dateOfBirth,
+      image: finalImage
     })
     if (!petUpdateResult) {
       return {

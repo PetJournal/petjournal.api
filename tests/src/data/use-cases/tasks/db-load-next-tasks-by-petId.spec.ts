@@ -50,16 +50,16 @@ describe('DbLoadNextTasksByPetId', () => {
     const { sut, petRepositoryStub } = makeSut()
     const spy = jest.spyOn(petRepositoryStub, 'loadById')
 
-    await sut.load({ petId: 'pet_1', page: 1, limit: 10 })
+    await sut.load({ guardianId: 'any_guardian_id', petId: 'pet_1', page: 1, limit: 10 })
 
-    expect(spy).toHaveBeenCalledWith('pet_1')
+    expect(spy).toHaveBeenCalledWith({ guardianId: 'any_guardian_id', petId: 'pet_1' })
   })
 
   it('Should return NotFoundError if pet does not exist', async () => {
     const { sut, petRepositoryStub } = makeSut()
     jest.spyOn(petRepositoryStub, 'loadById').mockResolvedValueOnce(null)
 
-    const result = await sut.load({ petId: 'invalid_pet' })
+    const result = await sut.load({ guardianId: 'any_guardian_id', petId: 'invalid_pet' })
 
     expect(result).toEqual({
       isSuccess: false,
@@ -71,9 +71,10 @@ describe('DbLoadNextTasksByPetId', () => {
     const { sut, tasksRepositoryStub } = makeSut()
     const spy = jest.spyOn(tasksRepositoryStub, 'loadNextByPetId')
 
-    await sut.load({ petId: 'pet_1', page: 2, limit: 20 })
+    await sut.load({ guardianId: 'any_guardian_id', petId: 'pet_1', page: 2, limit: 20 })
 
     expect(spy).toHaveBeenCalledWith({
+      guardianId: 'any_guardian_id',
       petId: 'pet_1',
       page: 2,
       limit: 20
@@ -83,7 +84,7 @@ describe('DbLoadNextTasksByPetId', () => {
   it('Should return tasks on success', async () => {
     const { sut } = makeSut()
 
-    const result = await sut.load({ petId: 'pet_1', page: 1, limit: 10 })
+    const result = await sut.load({ guardianId: 'any_guardian_id', petId: 'pet_1', page: 1, limit: 10 })
 
     expect(result).toEqual({
       isSuccess: true,
@@ -106,7 +107,7 @@ describe('DbLoadNextTasksByPetId', () => {
       .mockRejectedValueOnce(new Error('repo_error'))
 
     await expect(
-      sut.load({ petId: 'pet_1', page: 1, limit: 10 })
+      sut.load({ guardianId: 'any_guardian_id', petId: 'pet_1', page: 1, limit: 10 })
     ).rejects.toThrow('repo_error')
   })
 })

@@ -63,7 +63,7 @@ describe('DbDeletePet  Use Case', () => {
         const { sut, petRepositoryStub } = makeSut()
         const loadByIdSpy = jest.spyOn(petRepositoryStub, 'loadById')
         await sut.delete(params)
-        expect(loadByIdSpy).toHaveBeenLastCalledWith(params.petId)
+        expect(loadByIdSpy).toHaveBeenLastCalledWith({ guardianId: params.guardianId, petId: params.petId })
       })
 
       it('Should return Not Acceptable error if incorrect petId is provided', async () => {

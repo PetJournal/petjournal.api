@@ -6,7 +6,10 @@ export interface DeleteTagById {
 }
 
 export namespace DeleteTagById {
-  export type Param = string
+  export type Param = {
+    tagId: string
+    guardianId: string
+  }
   export type Result = ResultResponse<undefined>
 
   export type Dependencies = {

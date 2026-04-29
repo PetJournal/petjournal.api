@@ -22,9 +22,11 @@ export class LoadNextTaskByPetIdAndTagIdController implements Controller {
       }
 
       const { petId, tagId } = httpRequest.params
+      const guardianId = httpRequest.userId as string
       const { page = 1, limit = 10 } = httpRequest.query
 
       const result = await this.loadNextTasksByPetIdAndTagId.load({
+        guardianId,
         petId,
         tagId,
         page: Number(page),

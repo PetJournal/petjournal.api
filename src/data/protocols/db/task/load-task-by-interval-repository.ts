@@ -6,6 +6,7 @@ export namespace LoadTasksByIntervalRepository {
   export type Params = {
     start: Date
     end: Date
+    guardianId: string
     tagId?: string
     page?: number
     limit?: number

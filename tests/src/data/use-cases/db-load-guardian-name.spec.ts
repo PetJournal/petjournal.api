@@ -1,22 +1,22 @@
 import { type LoadGuardianByIdRepository } from '@/data/protocols'
-import { DbLoadGuardianName } from '@/data/use-cases'
+import { DbLoadGuardian } from '@/data/use-cases'
 import { makeFakeGuardianRepository } from '@/tests/utils'
 
 interface SutTypes {
-  sut: DbLoadGuardianName
+  sut: DbLoadGuardian
   guardianRepositoryStub: LoadGuardianByIdRepository
 }
 
 const makeSut = (): SutTypes => {
   const guardianRepositoryStub = makeFakeGuardianRepository()
-  const sut = new DbLoadGuardianName({ guardianRepository: guardianRepositoryStub })
+  const sut = new DbLoadGuardian({ guardianRepository: guardianRepositoryStub })
   return {
     sut,
     guardianRepositoryStub
   }
 }
 
-describe('DbLoadGuardianName', () => {
+describe('DbLoadGuardian', () => {
   describe('GuardianRepository', () => {
     it('Should call loadById method with correct value', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
@@ -43,6 +43,12 @@ describe('DbLoadGuardianName', () => {
   it('Should return a guardian name on success', async () => {
     const { sut } = makeSut()
     const guardianName = await sut.load('any_id')
-    expect(guardianName).toEqual({ firstName: 'any_first_name', lastName: 'any_last_name' })
+    expect(guardianName).toEqual({
+      firstName: 'any_first_name',
+      lastName: 'any_last_name',
+      email: 'any_email@mail.com',
+      phone: 'any_phone',
+      image: 'any_image'
+    })
   })
 })

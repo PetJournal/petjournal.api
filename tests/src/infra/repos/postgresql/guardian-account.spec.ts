@@ -218,4 +218,49 @@ describe('GuardianAccountRepository', () => {
       expect(response).toBe(true)
     })
   })
+
+  describe('UpdateImage', () => {
+    it('Should return a guardian when image is updated', async () => {
+      const sut = makeSut()
+      const { id } = await sut.add(input) as any
+      const response = await sut.updateImage({ guardianId: id, image: 'any_image' })
+      expect(response).toEqual({
+        id: expect.any(String),
+        firstName: 'any_first_name',
+        lastName: 'any_last_name',
+        phone: 'any_phone',
+        email: 'any_email@gmail.com',
+        image: 'any_image'
+      })
+    })
+
+    it('Should return undefined if a invalid guardian id is provided', async () => {
+      const sut = makeSut()
+      const invalidId = 'invalid_id'
+      const response = await sut.updateImage({ guardianId: invalidId, image: 'any_image' })
+      expect(response).toBeUndefined()
+    })
+  })
+
+  describe('Update', () => {
+    it('Should return a guardian when update success', async () => {
+      const sut = makeSut()
+      const guardian = await sut.add(input)
+      const updateGuardianInput = {
+        guardianId: guardian?.id as string,
+        firstName: input.firstName,
+        lastName: input.lastName,
+        phone: input.phone,
+        image: 'any_image'
+      }
+      const response = await sut.update(updateGuardianInput)
+      expect(response).toEqual({
+        id: expect.any(String),
+        firstName: 'any_first_name',
+        lastName: 'any_last_name',
+        phone: 'any_phone',
+        image: 'any_image'
+      })
+    })
+  })
 })

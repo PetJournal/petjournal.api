@@ -8,6 +8,7 @@ export interface LoadPetById {
 export namespace LoadPetById {
   export type Params = {
     petId: string
+    guardianId: string
   }
 
   interface Data {

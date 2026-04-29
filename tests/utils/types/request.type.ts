@@ -18,6 +18,7 @@ interface SignUpRequest {
     passwordConfirmation: string
     phone: string
   }
+  file?: Buffer
 }
 
 interface ForgetPasswordRequest {
@@ -73,6 +74,18 @@ interface UpdatePetRequest {
   file?: Buffer
 }
 
+interface UpdateGuardianRequest {
+  body: {
+    firstName: string
+    lastName: string
+    phone: string
+  }
+  params: {
+    guardianId: string
+  }
+  file?: Buffer
+}
+
 interface DeletePetRequest {
   userId: string
   params: {
@@ -121,5 +134,6 @@ export {
   type DeletePetRequest,
   type EmailConfirmationRequest,
   type AddTagRequest,
-  type AddSchedulerRequest
+  type AddSchedulerRequest,
+  type UpdateGuardianRequest
 }

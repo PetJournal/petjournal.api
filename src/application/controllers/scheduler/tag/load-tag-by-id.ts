@@ -1,4 +1,4 @@
-import { serverError, success, type HttpRequest, type HttpResponse } from '@/application/helpers'
+import { notAcceptable, serverError, success, type HttpRequest, type HttpResponse } from '@/application/helpers'
 import { type Controller } from '@/application/protocols'
 import { type LoadTagById } from '@/domain/use-cases/scheduler/tag'
 
@@ -12,8 +12,12 @@ export class LoadTagByIdController implements Controller {
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const { tagId } = httpRequest.params
-      const result = await this.loadTag.loadById(tagId)
-      return success(result)
+      const guardianId = httpRequest.userId as string
+      const result = await this.loadTag.loadById({ guardianId, tagId })
+      if (!result.isSuccess) {
+        return notAcceptable(result.error as Error)
+      }
+      return success(result.data)
     } catch (error) {
       return serverError(error as Error)
     }

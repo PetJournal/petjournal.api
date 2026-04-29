@@ -5,7 +5,7 @@ import {
   changePasswordPath,
   waitingCodePath,
   loadPetsPath,
-  loadGuardianNamePath,
+  loadGuardianPath,
   loadCatBreedsPath,
   loadDogBreedsPath,
   loadCatSizesPath,
@@ -28,7 +28,8 @@ import {
   loadPetByIdPath,
   loadNextTasksByPetIdPath,
   loadPreviousTasksByPetIdPath,
-  loadNextTasksByPetIdAndTagIdPath
+  loadNextTasksByPetIdAndTagIdPath,
+  updateGuardianPath
 } from './paths/'
 
 export default {
@@ -37,10 +38,11 @@ export default {
   '/forget-password': forgetPasswordPath,
   '/guardian/change-password': changePasswordPath,
   '/guardian/email-confirmation/{userId}': emailConfirmationPath,
+  '/guardian/{guardianId}': updateGuardianPath,
   '/waiting-code': waitingCodePath,
   '/pet': { ...petRegistryPath, ...loadPetsPath },
   '/pet/{petId}': { ...loadPetByIdPath, ...updatePetPath, ...deletePetPath },
-  '/guardian/name': loadGuardianNamePath,
+  '/guardian': loadGuardianPath,
   '/breeds/cat': loadCatBreedsPath,
   '/breeds/dog': loadDogBreedsPath,
   '/sizes/cat': loadCatSizesPath,

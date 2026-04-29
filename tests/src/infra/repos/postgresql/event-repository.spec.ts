@@ -85,7 +85,7 @@ describe('Event Repository', () => {
     it('Should return null if non existent date is provided', async () => {
       const sut = makeSut()
       const fakeDate = new Date('01-01-2001')
-      const result = await sut.loadByDate({ date: fakeDate })
+      const result = await sut.loadByDate({ guardianId: 'any_guardian_id', date: fakeDate })
       expect(result).toBe(null)
     })
 
@@ -93,7 +93,7 @@ describe('Event Repository', () => {
       const sut = makeSut()
       const fakeDate = new Date('01-01-2001')
       jest.spyOn(sut, 'loadByDate').mockRejectedValue(new Error())
-      const promise = sut.loadByDate({ date: fakeDate })
+      const promise = sut.loadByDate({ guardianId: 'any_guardian_id', date: fakeDate })
       await expect(promise).rejects.toThrow()
     })
 
@@ -129,7 +129,7 @@ describe('Event Repository', () => {
           end: schedulerData.endAt
         }
       })
-      const result = await sut.loadByDate({ date: event.start })
+      const result = await sut.loadByDate({ guardianId: guardian.id, date: event.start })
       expect(result).toEqual({
         id: expect.any(String),
         schedulerId: event.schedulerId,
@@ -199,6 +199,7 @@ describe('Event Repository', () => {
     it('Should return an empty array if no events are found', async () => {
       const sut = makeSut()
       const result = await sut.loadAllByInterval({
+        guardianId: 'any_guardian_id',
         start: new Date('2000-01-01T00:00:00Z'),
         end: new Date('2000-01-02T00:00:00Z')
       })
@@ -209,6 +210,7 @@ describe('Event Repository', () => {
       const sut = makeSut()
       jest.spyOn(sut, 'loadAllByInterval').mockRejectedValue(new Error())
       const promise = sut.loadAllByInterval({
+        guardianId: 'any_guardian_id',
         start: new Date(),
         end: new Date()
       })
@@ -243,6 +245,7 @@ describe('Event Repository', () => {
         data: { schedulerId: scheduler.id, start: startAt, end: endAt }
       })
       const result = await sut.loadAllByInterval({
+        guardianId: guardian.id,
         start: new Date('2025-06-25T00:00:00Z'),
         end: new Date('2025-06-25T23:59:59Z')
       })
@@ -296,6 +299,7 @@ describe('Event Repository', () => {
       })
 
       const result = await sut.loadAllByInterval({
+        guardianId: guardian.id,
         start: new Date('2025-07-01T00:00:00Z'),
         end: new Date('2025-07-01T23:59:59Z')
       })
@@ -347,6 +351,7 @@ describe('Event Repository', () => {
       })
 
       const result = await sut.loadAllByInterval({
+        guardianId: guardian.id,
         start: new Date('2025-06-30T00:00:00Z'),
         end: new Date('2025-07-06T23:59:59Z')
       })
@@ -391,6 +396,7 @@ describe('Event Repository', () => {
       })
 
       const result = await sut.loadAllByInterval({
+        guardianId: guardian.id,
         start: new Date('2025-08-01T00:00:00Z'),
         end: new Date('2025-08-01T23:59:59Z'),
         limit: 2,
@@ -411,7 +417,7 @@ describe('Event Repository', () => {
       const pet = await PrismaHelper.createPet(guardian.id)
       const tag = await PrismaHelper.createTag(guardian.id)
 
-      const result = await sut.loadByPetIdAndTagId({ petId: pet.id, tagId: tag.id })
+      const result = await sut.loadByPetIdAndTagId({ guardianId: 'any_guardian_id', petId: pet.id, tagId: tag.id })
       expect(result.events).toEqual([])
     })
 
@@ -447,7 +453,7 @@ describe('Event Repository', () => {
         ]
       })
 
-      const result = await sut.loadByPetIdAndTagId({ petId: pet.id, tagId: tag.id, limit: 1, page: 1 })
+      const result = await sut.loadByPetIdAndTagId({ guardianId: guardian.id, petId: pet.id, tagId: tag.id, limit: 1, page: 1 })
 
       expect(result.page).toBe(1)
       expect(result.limit).toBe(1)
@@ -488,7 +494,7 @@ describe('Event Repository', () => {
         ]
       })
 
-      const result = await sut.loadByPetIdAndTagId({ petId: pet.id, tagId: tag.id, limit: 3, page: 1 })
+      const result = await sut.loadByPetIdAndTagId({ guardianId: guardian.id, petId: pet.id, tagId: tag.id, limit: 3, page: 1 })
 
       expect(result.events).toHaveLength(2)
     })
@@ -496,7 +502,7 @@ describe('Event Repository', () => {
     it('Should throw if loadBypetIdAndTagId throws', async () => {
       const sut = makeSut()
       jest.spyOn(sut, 'loadByPetIdAndTagId').mockRejectedValue(new Error())
-      const promise = sut.loadByPetIdAndTagId({ petId: 'any_id', tagId: 'any_id', limit: 1, page: 1 })
+      const promise = sut.loadByPetIdAndTagId({ guardianId: 'any_guardian_id', petId: 'any_id', tagId: 'any_id', limit: 1, page: 1 })
       await expect(promise).rejects.toThrow()
     })
   })
@@ -508,7 +514,7 @@ describe('Event Repository', () => {
       const guardian = await PrismaHelper.createGuardian()
       const pet = await PrismaHelper.createPet(guardian.id)
 
-      const result = await sut.loadNextByPetId({ petId: pet.id })
+      const result = await sut.loadNextByPetId({ guardianId: guardian.id, petId: pet.id })
       expect(result.nextEvents).toEqual([])
     })
 
@@ -546,7 +552,7 @@ describe('Event Repository', () => {
         ]
       })
 
-      const result = await sut.loadNextByPetId({ petId: pet.id })
+      const result = await sut.loadNextByPetId({ guardianId: guardian.id, petId: pet.id })
 
       expect(result.nextEvents).toHaveLength(2)
       expect(result.nextEvents[0].start).toEqual(future1)
@@ -561,7 +567,7 @@ describe('Event Repository', () => {
       const guardian = await PrismaHelper.createGuardian()
       const pet = await PrismaHelper.createPet(guardian.id)
 
-      const result = await sut.loadPreviousByPetId({ petId: pet.id })
+      const result = await sut.loadPreviousByPetId({ guardianId: guardian.id, petId: pet.id })
       expect(result.history).toEqual([])
     })
 
@@ -599,7 +605,7 @@ describe('Event Repository', () => {
         ]
       })
 
-      const result = await sut.loadPreviousByPetId({ petId: pet.id })
+      const result = await sut.loadPreviousByPetId({ guardianId: guardian.id, petId: pet.id })
 
       expect(result.history[0].start).toEqual(past2)
       expect(result.history[1].start).toEqual(past1)

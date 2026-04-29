@@ -19,6 +19,7 @@ model Guardian {
   verificationToken          String   @map("verification_token")
   verificationTokenCreatedAt DateTime @default(now()) @map("verification_token_created_at")
   emailConfirmation          Boolean  @default(false) @map("email_confirmation")
+  image                      String   @default("")
   pets                       Pet[]
   tags                       Tag[]
   scheduler                  Scheduler[]

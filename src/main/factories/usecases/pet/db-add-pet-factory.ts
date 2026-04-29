@@ -9,14 +9,14 @@ export const makeDbAddPet = (): AddPet => {
   const guardianRepository = new GuardianAccountRepository()
   const petRepository = new PetRepository()
   const appointPet = makeDbAppointPet()
-  const fileStorage = new FirebaseStorageAdapter(env.firebase.projectId, env.firebase.storageBucket)
-  const defaultImageUrl = env.firebase.defaultImageUrl
+  const fileStorage = new FirebaseStorageAdapter(env.firebase.projectId, env.firebase.storageBucket, env.firebase.serviceAccount)
+  const defaultPetImageUrl = env.firebase.defaultPetImageUrl
   const addPet = new DbAddPet({
     guardianRepository,
     petRepository,
     appointPet,
     fileStorage,
-    defaultImageUrl
+    defaultPetImageUrl
   })
   return addPet
 }

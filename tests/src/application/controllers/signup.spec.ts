@@ -59,7 +59,8 @@ describe('SignUp Controller', () => {
         email: httpRequest.body.email,
         password: httpRequest.body.password,
         phone: httpRequest.body.phone,
-        verificationToken: ''
+        verificationToken: '',
+        image: httpRequest.file
       })
     })
   })

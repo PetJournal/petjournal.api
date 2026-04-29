@@ -25,7 +25,8 @@ describe('DeleteTagById Controller', () => {
   const httpRequest = {
     params: {
       tagId: 'any_id'
-    }
+    },
+    userId: 'any_guardian_id'
   }
   describe('DeleteTagById', () => {
     it('Should return 406(NotAcceptable) if a invalid tagId is provided', async () => {
@@ -42,7 +43,7 @@ describe('DeleteTagById Controller', () => {
       const { sut, deleteTagStub } = makeSut()
       const deleteTagSpy = jest.spyOn(deleteTagStub, 'deleteById')
       await sut.handle(httpRequest)
-      expect(deleteTagSpy).toHaveBeenCalledWith('any_id')
+      expect(deleteTagSpy).toHaveBeenCalledWith({ guardianId: 'any_guardian_id', tagId: 'any_id' })
     })
 
     it('Should return 500(serverError) if deleteTag throws', async () => {

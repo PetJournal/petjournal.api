@@ -1,17 +1,24 @@
 import { type LoadTagByIdRepository } from '@/data/protocols'
 
 export interface LoadTagById {
-  loadById: (tagId: LoadTagById.Param) => Promise<LoadTagById.Result>
+  loadById: (params: LoadTagById.Param) => Promise<LoadTagById.Result>
 }
 
 export namespace LoadTagById {
-  export type Param = string
-  export type Result = {
-    id: string
+  export type Param = {
+    tagId: string
     guardianId: string
-    name: string
-    color: string
-  } | null
+  }
+  export type Result = {
+    isSuccess: boolean
+    data?: {
+      id: string
+      guardianId: string
+      name: string
+      color: string
+    }
+    error?: Error
+  }
 
   export type Dependencies = {
     tagRepository: LoadTagByIdRepository

@@ -75,7 +75,8 @@ export const PrismaHelper = {
         password: await bcryptAdapter.encrypt({ value: 'Test@1234' }),
         phone: '11987654321',
         emailConfirmation: true,
-        verificationToken: ''
+        verificationToken: '',
+        image: ''
       }
     })
   },

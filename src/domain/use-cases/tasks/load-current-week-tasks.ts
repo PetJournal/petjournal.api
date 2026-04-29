@@ -5,6 +5,7 @@ export interface LoadCurrentWeekTasks {
 export namespace LoadCurrentWeekTasks {
   export type Params = {
     date: Date
+    guardianId: string
     tagId?: string
     page?: number
     limit?: number

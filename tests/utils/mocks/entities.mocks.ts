@@ -10,7 +10,9 @@ import {
   type LoadDogBreedsRepository,
   type LoadPetByGuardianIdRepository,
   type LoadPetByIdRepository,
-  type DeletePetByIdRepository
+  type DeletePetByIdRepository,
+  type UpdateGuardianImageRepository,
+  type UpdateGuardianRepository
 } from '@/data/protocols'
 import { type AppointPet } from '@/domain/use-cases'
 import { type Guardian } from '@/tests/utils/types'
@@ -38,6 +40,27 @@ const mockFakeGuardianAdded = (): Exclude<AddGuardianRepository.Result, undefine
     lastName: 'any_last_name',
     email: 'any_email@mail.com',
     phone: 'any_phone'
+  }
+}
+
+const mockFakeGuardianImageUpdated = (): Exclude<UpdateGuardianImageRepository.Result, undefined> => {
+  return {
+    id: 'any_id',
+    firstName: 'any_first_name',
+    lastName: 'any_last_name',
+    email: 'any_email@mail.com',
+    phone: 'any_phone',
+    image: 'any_image'
+  }
+}
+
+const mockFakeGuardianUpdated = (): Exclude<UpdateGuardianRepository.Result, undefined> => {
+  return {
+    id: 'any_id',
+    firstName: 'any_first_name',
+    lastName: 'any_last_name',
+    phone: 'any_phone',
+    image: ''
   }
 }
 
@@ -185,6 +208,7 @@ const mockFakeGuardianLoaded = (): Exclude<LoadGuardianByIdRepository.Result, un
     email: 'any_email@mail.com',
     password: 'any_hashed_password',
     phone: 'any_phone',
+    image: 'any_image',
     accessToken: 'any_hashed_token',
     verificationToken: 'any_verification_token',
     verificationTokenCreatedAt: new Date(),
@@ -195,6 +219,8 @@ const mockFakeGuardianLoaded = (): Exclude<LoadGuardianByIdRepository.Result, un
 export {
   makeFakeGuardianData,
   mockFakeGuardianAdded,
+  mockFakeGuardianUpdated,
+  mockFakeGuardianImageUpdated,
   mockFakeGuardianLoaded,
   mockFakePetAdded,
   mockFakePetByGuardianIdLoaded,

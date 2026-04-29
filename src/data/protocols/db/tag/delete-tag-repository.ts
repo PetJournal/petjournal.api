@@ -3,7 +3,10 @@ export interface DeleteTagRepository {
 }
 
 export namespace DeleteTagRepository {
-  export type Param = string
+  export type Param = {
+    tagId: string
+    guardianId: string
+  }
   export type Result = boolean
 
 }

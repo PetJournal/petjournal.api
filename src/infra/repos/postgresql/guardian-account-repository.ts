@@ -1,3 +1,4 @@
+import { type UpdateGuardianImageRepository } from '@/data/protocols/db/guardian/update-guardian-image-repository'
 import { prisma as db } from './prisma'
 import {
   type AddGuardianRepository,
@@ -8,6 +9,7 @@ import {
   type UpdateVerificationTokenRepository,
   type UpdateEmailConfirmationRepository
 } from '@/data/protocols'
+import { type UpdateGuardianRepository } from '@/data/protocols/db/guardian/update-guardian-repository'
 
 export class GuardianAccountRepository
 implements AddGuardianRepository, LoadGuardianByEmailRepository,
@@ -15,7 +17,9 @@ implements AddGuardianRepository, LoadGuardianByEmailRepository,
     UpdateAccessTokenRepository,
     UpdateGuardianPasswordRepository,
     UpdateVerificationTokenRepository,
-  UpdateEmailConfirmationRepository {
+  UpdateEmailConfirmationRepository,
+  UpdateGuardianImageRepository,
+  UpdateGuardianRepository {
   async add (
     guardianData: AddGuardianRepository.Params
   ): Promise<AddGuardianRepository.Result> {
@@ -135,5 +139,46 @@ implements AddGuardianRepository, LoadGuardianByEmailRepository,
     })
 
     return result.emailConfirmation
+  }
+
+  async updateImage (params: UpdateGuardianImageRepository.Params): Promise<UpdateGuardianImageRepository.Result> {
+    try {
+      const { guardianId, image } = params
+      const result = await db.guardian.update({
+        where: { id: guardianId },
+        data: { image },
+        omit: {
+          password: true,
+          verificationToken: true,
+          verificationTokenCreatedAt: true,
+          emailConfirmation: true,
+          accessToken: true
+        }
+      })
+      return result
+    } catch (error) {
+      return undefined
+    }
+  }
+
+  async update (params: UpdateGuardianRepository.Params): Promise<UpdateGuardianRepository.Result> {
+    try {
+      const { guardianId, ...updateData } = params
+      const result = await db.guardian.update({
+        where: { id: guardianId },
+        data: updateData,
+        omit: {
+          password: true,
+          verificationToken: true,
+          verificationTokenCreatedAt: true,
+          accessToken: true,
+          email: true,
+          emailConfirmation: true
+        }
+      })
+      return result
+    } catch (error) {
+      return undefined
+    }
   }
 }

@@ -10,7 +10,7 @@ export class StartAtValidatorAdapter implements DateValidator {
 
     const dateOfValidation = DateTime.fromISO(date, { zone: 'utc' })
     const dateNow = DateTime.fromISO(DateTime.now().toFormat('HH:mm:ss'), { zone: 'utc' })
-    if (dateOfValidation < dateNow) {
+    if (dateOfValidation.ordinal < (dateNow.ordinal - 1)) {
       return false
     }
 

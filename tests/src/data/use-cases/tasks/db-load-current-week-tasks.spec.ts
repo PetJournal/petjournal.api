@@ -68,7 +68,7 @@ describe('DbLoadCurrentWeekTasks', () => {
   it('Should return only tasks from the current day to Saturday of the same week', async () => {
     const { sut } = makeSut()
     const inputDate = new Date('2024-04-03T12:00:00Z')
-    const result = await sut.load({ date: inputDate })
+    const result = await sut.load({ guardianId: 'any_guardian_id', date: inputDate })
 
     const expectedTasks = makeFakeTasks().filter(task => {
       const time = task.date.getTime()
@@ -83,14 +83,14 @@ describe('DbLoadCurrentWeekTasks', () => {
   it('Should return an empty array if repository returns an empty array', async () => {
     const { sut, taskRepositoryStub } = makeSut()
     jest.spyOn(taskRepositoryStub, 'loadAllByInterval').mockResolvedValueOnce([])
-    const tasks = await sut.load({ date: new Date('2024-04-01') })
+    const tasks = await sut.load({ guardianId: 'any_guardian_id', date: new Date('2024-04-01') })
     expect(tasks).toEqual([])
   })
 
   it('Should throw if repository throws', async () => {
     const { sut, taskRepositoryStub } = makeSut()
     jest.spyOn(taskRepositoryStub, 'loadAllByInterval').mockRejectedValueOnce(new Error('fail'))
-    const promise = sut.load({ date: new Date() })
+    const promise = sut.load({ guardianId: 'any_guardian_id', date: new Date() })
     await expect(promise).rejects.toThrow('fail')
   })
 })

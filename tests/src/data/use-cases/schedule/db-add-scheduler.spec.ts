@@ -53,7 +53,7 @@ describe('DbAddScheduler Use case', () => {
       const { sut, tagRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(tagRepositoryStub, 'loadById')
       await sut.add(params)
-      expect(loadSpy).toHaveBeenCalledWith('any_tag_id')
+      expect(loadSpy).toHaveBeenCalledWith({ guardianId: params.guardianId, tagId: params.tagId })
     })
 
     it('Should throw if loadById throws', async () => {
@@ -79,7 +79,7 @@ describe('DbAddScheduler Use case', () => {
       const { sut, petRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(petRepositoryStub, 'loadById')
       await sut.add(params)
-      expect(loadSpy).toHaveBeenCalledWith('any_pet_id')
+      expect(loadSpy).toHaveBeenCalledWith({ guardianId: params.guardianId, petId: params.pets[0] })
     })
 
     it('Should throw if loadById throws', async () => {
@@ -183,6 +183,7 @@ describe('DbAddScheduler Use case', () => {
       await sut.add(params)
       expect(loadSpy).toHaveBeenCalledWith({
         schedulerId: 'any_id',
+        guardianId: 'any_guardian_id',
         startAt: new Date('2024-04-04T15:00:00Z'),
         endAt: new Date('2025-04-04T17:00:00Z'),
         daysOfWeek: [],

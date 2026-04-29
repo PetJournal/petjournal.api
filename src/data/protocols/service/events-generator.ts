@@ -9,6 +9,7 @@ export interface EventsGenerator {
 export namespace EventsGenerator {
   export type Params = {
     schedulerId: string
+    guardianId: string
     startAt: Date
     endAt: Date
     daysOfWeek?: number[]
