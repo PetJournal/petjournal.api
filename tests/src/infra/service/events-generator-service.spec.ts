@@ -89,7 +89,7 @@ describe('Events Generator Service', () => {
       await expect(promise).rejects.toThrow()
     })
 
-    it('Should return NotAcceptableError if loadByDate not returns null because date conflits', async () => {
+    it('Should return NotAcceptableError if loadByDate returns an existing event (conflict)', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce({
         schedulerId: 'any_scheduler_id',
@@ -167,7 +167,7 @@ describe('Events Generator Service', () => {
       await expect(promise).rejects.toThrow()
     })
 
-    it('Should return NotAcceptableError if loadByDate not returns null because date conflits', async () => {
+    it('Should return NotAcceptableError if loadByDate returns an existing event (conflict)', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce({
         schedulerId: 'any_scheduler_id',
@@ -246,7 +246,7 @@ describe('Events Generator Service', () => {
       await expect(promise).rejects.toThrow()
     })
 
-    it('Should return NotAcceptableError if loadByDate returns null because date conflits', async () => {
+    it('Should return NotAcceptableError if loadByDate returns an existing event (conflict)', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce({
         schedulerId: 'any_scheduler_id',
@@ -340,7 +340,7 @@ describe('Events Generator Service', () => {
       await expect(promise).rejects.toThrow()
     })
 
-    it('Should return NotAcceptableError if loadByDate not returns null because date conflits', async () => {
+    it('Should return NotAcceptableError if loadByDate returns an existing event (conflict)', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce({
         schedulerId: 'any_scheduler_id',
