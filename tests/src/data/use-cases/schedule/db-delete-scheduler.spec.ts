@@ -108,4 +108,15 @@ describe('DbDeleteScheduler Use case', () => {
       })
     })
   })
+
+  describe('EventRepository', () => {
+    describe('Delete', () => {
+      it('Should call delete with correct values', async () => {
+        const { sut, eventRepositoryStub } = makeSut()
+        const spyDeleteEvent = jest.spyOn(eventRepositoryStub, 'delete')
+        await sut.delete(params)
+        expect(spyDeleteEvent).toHaveBeenCalledWith({ guardianId: 'any_id', schedulerId: params.schedulerId })
+      })
+    })
+  })
 })
