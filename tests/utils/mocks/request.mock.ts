@@ -13,7 +13,8 @@ import {
   type EmailConfirmationRequest,
   type AddTagRequest,
   type AddSchedulerRequest,
-  type UpdateGuardianRequest
+  type UpdateGuardianRequest,
+  type DeleteSchedulerRequest
 } from '@/tests/utils'
 
 const mockGuardianRequest = {
@@ -179,6 +180,14 @@ const makeFakeAddSchedulerRequest = (): AddSchedulerRequest => {
   return { body, userId }
 }
 
+const makeFakeDeleteSchedulerRequest = (): DeleteSchedulerRequest => {
+  const params = {
+    schedulerId: 'any_scheduler_id'
+  }
+  const userId = 'any_guardian_id'
+  return { params, userId }
+}
+
 export {
   makeFakeSignUpRequest,
   makeFakeLoginRequest,
@@ -193,5 +202,6 @@ export {
   makeFakeEmailConfirmationRequest,
   makeFakeAddTagRequest,
   makeFakeAddSchedulerRequest,
+  makeFakeDeleteSchedulerRequest,
   makeFakeUpdateGuardianRequest
 }
