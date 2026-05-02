@@ -229,5 +229,12 @@ describe('Scheduler Routes', () => {
         .set('Authorization', '')
         .expect(400)
     })
+
+    it('Should return 406 (NotAcceptable) if invalid schedulerId is Provided', async () => {
+      await request(app)
+        .delete('/api/scheduler/b1e64ea1-0f6f-4cad-b3d6-434468cb2c5d')
+        .set('Authorization', accessToken)
+        .expect(406)
+    })
   })
 })
