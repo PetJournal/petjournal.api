@@ -1,6 +1,6 @@
 import { DeleteSchedulerController } from '@/application/controllers'
 import { NotAcceptableError, ServerError } from '@/application/errors'
-import { notAcceptable, serverError } from '@/application/helpers'
+import { badRequest, notAcceptable, serverError } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type DeleteScheduler } from '@/domain/use-cases'
 import { makeFakeDeleteSchedulerRequest, makeFakeDeleteSchedulerUseCase, makeFakeValidation } from '@/tests/utils'
@@ -51,6 +51,15 @@ describe('DeleteScheduler Controller', () => {
       const spyDeleteScheduler = jest.spyOn(deleteSchedulerStub, 'delete')
       await sut.handle(httpRequest)
       expect(spyDeleteScheduler).toHaveBeenCalledWith({ schedulerId: 'any_scheduler_id', guardianId: 'any_guardian_id' })
+    })
+  })
+
+  describe('Validations', () => {
+    it('Should return 400 (BadRequest) if validation returns error', async () => {
+      const { sut, validationStub } = makeSut()
+      jest.spyOn(validationStub, 'validate').mockReturnValue(new Error())
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(badRequest(new Error()))
     })
   })
 })
