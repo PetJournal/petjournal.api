@@ -61,5 +61,12 @@ describe('DeleteScheduler Controller', () => {
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(badRequest(new Error()))
     })
+
+    it('Should call validation with correct values', async () => {
+      const { sut, validationStub } = makeSut()
+      const validationSpy = jest.spyOn(validationStub, 'validate')
+      await sut.handle(httpRequest)
+      expect(validationSpy).toHaveBeenCalledWith(httpRequest.params)
+    })
   })
 })
