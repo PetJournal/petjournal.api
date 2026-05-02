@@ -51,7 +51,9 @@ import {
   type UpdateSettingsRepository,
   type LoadNextTasksByPetIdAndTagIdRepository,
   type UpdateGuardianImageRepository,
-  type UpdateGuardianRepository
+  type UpdateGuardianRepository,
+  type LoadSchedulerByIdRepository,
+  type DeleteEventsBySchedulerIdRepository
 } from '@/data/protocols'
 import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
 import { type LoadDogSizesRepository } from '@/data/protocols/db/size/load-dog-sizes-repository'
@@ -365,8 +367,8 @@ const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & Upd
   return new TagRepositoryStub()
 }
 
-const makeFakeEventRepository = (): AddEventRepository & LoadEventByDateRepository & AddManyEventsRepository & LoadNextTasksByPetIdAndTagIdRepository => {
-  class EventRepositoryStub implements AddEventRepository, LoadEventByDateRepository, AddManyEventsRepository, LoadNextTasksByPetIdAndTagIdRepository {
+const makeFakeEventRepository = (): AddEventRepository & LoadEventByDateRepository & AddManyEventsRepository & LoadNextTasksByPetIdAndTagIdRepository & DeleteEventsBySchedulerIdRepository => {
+  class EventRepositoryStub implements AddEventRepository, LoadEventByDateRepository, AddManyEventsRepository, LoadNextTasksByPetIdAndTagIdRepository, DeleteEventsBySchedulerIdRepository {
     async add (params: AddEventRepository.Params): Promise<AddEventRepository.Result> {
       return {
         id: 'any_id',
@@ -420,12 +422,16 @@ const makeFakeEventRepository = (): AddEventRepository & LoadEventByDateReposito
         }]
       }
     }
+
+    async delete (params: DeleteEventsBySchedulerIdRepository.Params): Promise<DeleteEventsBySchedulerIdRepository.Result> {
+      return true
+    }
   }
   return new EventRepositoryStub()
 }
 
-const makeFakeSchedulerRepository = (): AddSchedulerRepository & DeleteSchedulerByIdRepository => {
-  class SchedulerRepositoryStub implements AddSchedulerRepository, DeleteSchedulerByIdRepository {
+const makeFakeSchedulerRepository = (): AddSchedulerRepository & DeleteSchedulerByIdRepository & LoadSchedulerByIdRepository => {
+  class SchedulerRepositoryStub implements AddSchedulerRepository, DeleteSchedulerByIdRepository, LoadSchedulerByIdRepository {
     async add (params: AddSchedulerRepository.Params): Promise<AddSchedulerRepository.Result> {
       return {
         id: 'any_id',
@@ -456,8 +462,29 @@ const makeFakeSchedulerRepository = (): AddSchedulerRepository & DeleteScheduler
       }
     }
 
-    async delete (param: DeleteSchedulerByIdRepository.Param): Promise<DeleteSchedulerByIdRepository.Result> {
+    async delete (params: DeleteSchedulerByIdRepository.Params): Promise<DeleteSchedulerByIdRepository.Result> {
       return true
+    }
+
+    async load (params: LoadSchedulerByIdRepository.Params): Promise<LoadSchedulerByIdRepository.Result> {
+      return {
+        id: 'any_scheduler_id',
+        tagId: 'any_tag_id',
+        guardianId: 'any_guardian_id',
+        title: 'any_title',
+        description: 'any_description',
+        note: 'any_note',
+        startAt: new Date('2024-04-04T15:00:00Z'),
+        endAt: new Date('2025-04-04T17:00:00Z'),
+        daysOfWeek: [],
+        daysOfMonth: [],
+        daily: false,
+        pets: [{
+          id: 'any_id',
+          petName: 'any_pet_name',
+          image: ''
+        }]
+      }
     }
   }
   return new SchedulerRepositoryStub()
