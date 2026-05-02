@@ -117,6 +117,16 @@ describe('DbDeleteScheduler Use case', () => {
         await sut.delete(params)
         expect(spyDeleteEvent).toHaveBeenCalledWith({ guardianId: 'any_id', schedulerId: params.schedulerId })
       })
+
+      it('Should return ServerError if an invalid schedulerId is provided', async () => {
+        const { sut, eventRepositoryStub } = makeSut()
+        jest.spyOn(eventRepositoryStub, 'delete').mockResolvedValueOnce(false)
+        const result = await sut.delete({ schedulerId: 'invalid_scheduler_id', guardianId: params.guardianId })
+        expect(result).toEqual({
+          isSuccess: false,
+          error: new ServerError('delete error')
+        })
+      })
     })
   })
 })
