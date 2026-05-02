@@ -1,9 +1,12 @@
 export interface DeleteSchedulerByIdRepository {
-  delete: (param: DeleteSchedulerByIdRepository.Param) => Promise<DeleteSchedulerByIdRepository.Result>
+  delete: (params: DeleteSchedulerByIdRepository.Params) => Promise<DeleteSchedulerByIdRepository.Result>
 }
 
 export namespace DeleteSchedulerByIdRepository {
-  export type Param = string
+  export type Params = {
+    schedulerId: string
+    guardianId: string
+  }
 
   export type Result = boolean
 }
