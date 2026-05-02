@@ -611,4 +611,13 @@ describe('Event Repository', () => {
       expect(result.history[1].start).toEqual(past1)
     })
   })
+
+  describe('delete()', () => {
+    it('Should return false if delete fails', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'delete').mockResolvedValueOnce(false)
+      const result = await sut.delete({ schedulerId: 'any_scheduler_id', guardianId: 'any_guardian_id' })
+      expect(result).toBe(false)
+    })
+  })
 })
