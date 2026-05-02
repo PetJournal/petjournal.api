@@ -77,6 +77,16 @@ describe('DbDeleteScheduler Use case', () => {
         const promise = sut.delete(params)
         await expect(promise).rejects.toThrow()
       })
+
+      it('Should return NotAcceptableError if an invalid schedulerId is provided', async () => {
+        const { sut, schedulerRepositoryStub } = makeSut()
+        jest.spyOn(schedulerRepositoryStub, 'load').mockResolvedValueOnce(null)
+        const result = await sut.delete(params)
+        expect(result).toEqual({
+          isSuccess: false,
+          error: new NotAcceptableError('SchedulerId')
+        })
+      })
     })
   })
 })
