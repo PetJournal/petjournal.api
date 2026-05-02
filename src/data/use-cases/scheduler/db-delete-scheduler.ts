@@ -28,14 +28,14 @@ export class DbDeleteScheduler implements DeleteScheduler {
         error: new NotAcceptableError('SchedulerId')
       }
     }
-    const deleteEventResult = this.eventRepository.delete({ guardianId: guardian.id, schedulerId: scheduler.id })
+    const deleteEventResult = await this.eventRepository.delete({ guardianId: guardian.id, schedulerId: scheduler.id })
     if (!deleteEventResult) {
       return {
         isSuccess: false,
         error: new ServerError('delete error')
       }
     }
-    const deleteSchedulerResult = this.schedulerRepository.delete({ guardianId: guardian.id, schedulerId: scheduler.id })
+    const deleteSchedulerResult = await this.schedulerRepository.delete({ guardianId: guardian.id, schedulerId: scheduler.id })
     if (!deleteSchedulerResult) {
       return {
         isSuccess: false,
