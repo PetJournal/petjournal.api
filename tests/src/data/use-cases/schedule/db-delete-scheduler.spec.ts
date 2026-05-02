@@ -129,4 +129,12 @@ describe('DbDeleteScheduler Use case', () => {
       })
     })
   })
+
+  it('Should return true on success', async () => {
+    const { sut } = makeSut()
+    const result = await sut.delete(params)
+    expect(result).toEqual({
+      isSuccess: true
+    })
+  })
 })
