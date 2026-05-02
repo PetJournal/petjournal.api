@@ -1,4 +1,4 @@
-import { NotAcceptableError } from '@/application/errors'
+import { NotAcceptableError, ServerError } from '@/application/errors'
 import { type DeleteEventsBySchedulerIdRepository, type DeleteSchedulerByIdRepository, type LoadGuardianByIdRepository, type LoadSchedulerByIdRepository } from '@/data/protocols'
 import { DbDeleteScheduler } from '@/data/use-cases'
 import { type DeleteScheduler } from '@/domain/use-cases'
@@ -95,6 +95,16 @@ describe('DbDeleteScheduler Use case', () => {
         const spyDeleteScheduler = jest.spyOn(schedulerRepositoryStub, 'delete')
         await sut.delete(params)
         expect(spyDeleteScheduler).toHaveBeenCalledWith({ guardianId: 'any_id', schedulerId: params.schedulerId })
+      })
+
+      it('Should return ServerError if an invalid schedulerId is provided', async () => {
+        const { sut, schedulerRepositoryStub } = makeSut()
+        jest.spyOn(schedulerRepositoryStub, 'delete').mockResolvedValueOnce(false)
+        const result = await sut.delete({ schedulerId: 'invalid_scheduler_id', guardianId: params.guardianId })
+        expect(result).toEqual({
+          isSuccess: false,
+          error: new ServerError('delete error')
+        })
       })
     })
   })
