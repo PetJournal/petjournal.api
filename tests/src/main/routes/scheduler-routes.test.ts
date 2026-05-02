@@ -222,5 +222,12 @@ describe('Scheduler Routes', () => {
         schedulerId: scheduler.body.id
       })
     })
+
+    it('Should return 400 if no access token is provided', async () => {
+      await request(app)
+        .delete('/api/scheduler/any_id')
+        .set('Authorization', '')
+        .expect(400)
+    })
   })
 })
