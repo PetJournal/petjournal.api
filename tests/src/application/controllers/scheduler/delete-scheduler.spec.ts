@@ -45,5 +45,12 @@ describe('DeleteScheduler Controller', () => {
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(serverError(new ServerError('Internal Server Error')))
     })
+
+    it('Should call delete with correct values', async () => {
+      const { sut, deleteSchedulerStub } = makeSut()
+      const spyDeleteScheduler = jest.spyOn(deleteSchedulerStub, 'delete')
+      await sut.handle(httpRequest)
+      expect(spyDeleteScheduler).toHaveBeenCalledWith({ schedulerId: 'any_scheduler_id', guardianId: 'any_guardian_id' })
+    })
   })
 })
