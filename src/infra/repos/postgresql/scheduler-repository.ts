@@ -32,14 +32,14 @@ export class SchedulerRepository implements AddSchedulerRepository, DeleteSchedu
   }
 
   async delete (params: DeleteSchedulerByIdRepository.Params): Promise<DeleteSchedulerByIdRepository.Result> {
-    const scheduler = await db.scheduler.deleteMany({
+    const scheduler = await db.scheduler.delete({
       where: {
         id: params.schedulerId,
         guardianId: params.guardianId
       }
     })
 
-    if (!scheduler.count) {
+    if (!scheduler) {
       return false
     }
     return true
