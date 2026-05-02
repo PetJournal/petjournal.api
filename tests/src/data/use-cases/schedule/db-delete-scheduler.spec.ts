@@ -1,3 +1,4 @@
+import { NotAcceptableError } from '@/application/errors'
 import { type DeleteEventsBySchedulerIdRepository, type DeleteSchedulerByIdRepository, type LoadGuardianByIdRepository, type LoadSchedulerByIdRepository } from '@/data/protocols'
 import { DbDeleteScheduler } from '@/data/use-cases'
 import { type DeleteScheduler } from '@/domain/use-cases'
@@ -47,6 +48,16 @@ describe('DbDeleteScheduler Use case', () => {
         jest.spyOn(guardianRepositoryStub, 'loadById').mockRejectedValue(new Error())
         const promise = sut.delete(params)
         await expect(promise).rejects.toThrow()
+      })
+
+      it('Should return NotAcceptableError if an invalid guardianId is provided', async () => {
+        const { sut, guardianRepositoryStub } = makeSut()
+        jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValueOnce(null)
+        const result = await sut.delete(params)
+        expect(result).toEqual({
+          isSuccess: false,
+          error: new NotAcceptableError('UserId')
+        })
       })
     })
   })
