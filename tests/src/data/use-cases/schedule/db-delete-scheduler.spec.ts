@@ -41,6 +41,13 @@ describe('DbDeleteScheduler Use case', () => {
         await sut.delete(params)
         expect(spyLoadGuardian).toHaveBeenCalledWith('any_guardian_id')
       })
+
+      it('Should throw if LoadById throws', async () => {
+        const { sut, guardianRepositoryStub } = makeSut()
+        jest.spyOn(guardianRepositoryStub, 'loadById').mockRejectedValue(new Error())
+        const promise = sut.delete(params)
+        await expect(promise).rejects.toThrow()
+      })
     })
   })
 })
