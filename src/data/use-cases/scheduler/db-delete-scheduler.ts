@@ -1,11 +1,11 @@
 import { NotAcceptableError, ServerError } from '@/application/errors'
-import { type LoadGuardianByIdRepository, type DeleteSchedulerByIdRepository, type LoadSchedulerByIdRepository } from '@/data/protocols'
+import { type LoadGuardianByIdRepository, type DeleteSchedulerByIdRepository, type LoadSchedulerByIdRepository, type DeleteEventsBySchedulerIdRepository } from '@/data/protocols'
 import { type DeleteScheduler } from '@/domain/use-cases'
 
 export class DbDeleteScheduler implements DeleteScheduler {
   private readonly schedulerRepository: DeleteSchedulerByIdRepository & LoadSchedulerByIdRepository
   private readonly guardianRepository: LoadGuardianByIdRepository
-  private readonly eventRepository: DeleteSchedulerByIdRepository
+  private readonly eventRepository: DeleteEventsBySchedulerIdRepository
 
   constructor ({ schedulerRepository, guardianRepository, eventRepository }: DeleteScheduler.Dependencies) {
     this.schedulerRepository = schedulerRepository

@@ -1,4 +1,4 @@
-import { type LoadGuardianByIdRepository, type DeleteSchedulerByIdRepository, type LoadSchedulerByIdRepository } from '@/data/protocols'
+import { type LoadGuardianByIdRepository, type DeleteSchedulerByIdRepository, type LoadSchedulerByIdRepository, type DeleteEventsBySchedulerIdRepository } from '@/data/protocols'
 
 export interface DeleteScheduler {
   delete: (params: DeleteScheduler.Params) => Promise<DeleteScheduler.Result>
@@ -18,7 +18,7 @@ export namespace DeleteScheduler {
   export type Dependencies = {
     schedulerRepository: DeleteSchedulerByIdRepository & LoadSchedulerByIdRepository
     guardianRepository: LoadGuardianByIdRepository
-    eventRepository: DeleteSchedulerByIdRepository
+    eventRepository: DeleteEventsBySchedulerIdRepository
   }
 
 }
