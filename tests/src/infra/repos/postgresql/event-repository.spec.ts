@@ -619,5 +619,12 @@ describe('Event Repository', () => {
       const result = await sut.delete({ schedulerId: 'any_scheduler_id', guardianId: 'any_guardian_id' })
       expect(result).toBe(false)
     })
+
+    it('Should throw if delete throws', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'delete').mockRejectedValue(new Error())
+      const promise = sut.delete({ schedulerId: 'any_scheduler_id', guardianId: 'any_guardian_id' })
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
