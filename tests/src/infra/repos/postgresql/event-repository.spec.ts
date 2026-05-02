@@ -626,5 +626,51 @@ describe('Event Repository', () => {
       const promise = sut.delete({ schedulerId: 'any_scheduler_id', guardianId: 'any_guardian_id' })
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should return true on delete success', async () => {
+      const sut = makeSut()
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
+      const tag = await prisma.tag.create({
+        data: { guardianId: guardian.id, name: 'next', color: 'blue' }
+      })
+
+      const date1 = new Date('2020-01-01T10:00:00Z')
+      const date2 = new Date('2020-01-01T12:00:00Z')
+
+      const scheduler = await prisma.scheduler.create({
+        data: {
+          guardianId: guardian.id,
+          tagId: tag.id,
+          title: 'future',
+          description: '',
+          note: '',
+          startAt: date1,
+          endAt: date2,
+          daysOfWeek: [],
+          daysOfMonth: [],
+          daily: false,
+          pets: { connect: [{ id: pet.id }] }
+        }
+      })
+
+      await prisma.event.createMany({
+        data: [
+          {
+            schedulerId: scheduler.id,
+            start: date1,
+            end: date2
+          },
+          {
+            schedulerId: scheduler.id,
+            start: date2,
+            end: date2
+          }
+        ]
+      })
+
+      const result = await sut.delete({ guardianId: guardian.id, schedulerId: scheduler.id })
+      expect(result).toBe(true)
+    })
   })
 })
