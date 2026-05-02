@@ -1,6 +1,6 @@
 import { DeleteSchedulerController } from '@/application/controllers'
 import { NotAcceptableError, ServerError } from '@/application/errors'
-import { badRequest, notAcceptable, serverError } from '@/application/helpers'
+import { badRequest, notAcceptable, serverError, success } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type DeleteScheduler } from '@/domain/use-cases'
 import { makeFakeDeleteSchedulerRequest, makeFakeDeleteSchedulerUseCase, makeFakeValidation } from '@/tests/utils'
@@ -68,5 +68,14 @@ describe('DeleteScheduler Controller', () => {
       await sut.handle(httpRequest)
       expect(validationSpy).toHaveBeenCalledWith(httpRequest.params)
     })
+  })
+
+  it('Should return 200(success) if scheduler was deleted', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(success({
+      message: 'Scheduler and events deleted',
+      schedulerId: 'any_scheduler_id'
+    }))
   })
 })
