@@ -1,6 +1,6 @@
 import { DeleteSchedulerController } from '@/application/controllers'
-import { NotAcceptableError } from '@/application/errors'
-import { notAcceptable } from '@/application/helpers'
+import { NotAcceptableError, ServerError } from '@/application/errors'
+import { notAcceptable, serverError } from '@/application/helpers'
 import { type Validation } from '@/application/protocols'
 import { type DeleteScheduler } from '@/domain/use-cases'
 import { makeFakeDeleteSchedulerRequest, makeFakeDeleteSchedulerUseCase, makeFakeValidation } from '@/tests/utils'
@@ -37,6 +37,13 @@ describe('DeleteScheduler Controller', () => {
       })
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(notAcceptable(new NotAcceptableError('schedulerId')))
+    })
+
+    it('Should return 500(serverError) if delete throws', async () => {
+      const { sut, deleteSchedulerStub } = makeSut()
+      jest.spyOn(deleteSchedulerStub, 'delete').mockRejectedValue(new Error())
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(serverError(new ServerError('Internal Server Error')))
     })
   })
 })
