@@ -100,14 +100,14 @@ describe('Scheduler Repository', () => {
     it('Should return false if delete fails', async () => {
       const sut = makeSut()
       jest.spyOn(sut, 'delete').mockResolvedValueOnce(false)
-      const result = await sut.delete('any_scheduler_id')
+      const result = await sut.delete({ schedulerId: 'any_scheduler_id', guardianId: 'any_guardian_id' })
       expect(result).toBe(false)
     })
 
     it('Should throw if delete throws', async () => {
       const sut = makeSut()
       jest.spyOn(sut, 'delete').mockRejectedValue(new Error())
-      const promise = sut.delete('any_scheduler_id')
+      const promise = sut.delete({ schedulerId: 'any_scheduler_id', guardianId: 'any_guardian_id' })
       await expect(promise).rejects.toThrow()
     })
 
@@ -136,7 +136,7 @@ describe('Scheduler Repository', () => {
         pets: { connect: [{ id: pet.id }] }
       }
       const scheduler = await prisma.scheduler.create({ data })
-      const result = await sut.delete(scheduler.id)
+      const result = await sut.delete({ schedulerId: scheduler.id, guardianId: guardian.id })
       expect(result).toBe(true)
     })
   })
