@@ -1,4 +1,5 @@
 import { type DeleteTagRepository } from '@/data/protocols'
+import { type ResultResponse } from '@/domain/types/result'
 
 export interface DeleteTagById {
   deleteById: (tagId: DeleteTagById.Param) => Promise<DeleteTagById.Result>
@@ -9,11 +10,7 @@ export namespace DeleteTagById {
     tagId: string
     guardianId: string
   }
-
-  export type Result = {
-    isSuccess: boolean
-    error?: Error
-  }
+  export type Result = ResultResponse<undefined>
 
   export type Dependencies = {
     tagRepository: DeleteTagRepository

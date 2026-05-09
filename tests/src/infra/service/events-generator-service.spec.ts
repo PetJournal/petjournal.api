@@ -32,49 +32,74 @@ const generateDate = (): any => {
 }
 
 describe('Events Generator Service', () => {
-  const params: EventsGenerator.Params = {
+  const guardianId = 'any_guardian_id'
+
+  const daysOfWeekParams: EventsGenerator.Params = {
     schedulerId: 'any_scheduler_id',
-    guardianId: 'any_guardian_id',
+    guardianId,
     startAt: generateDate().startAt,
     endAt: generateDate().endAt,
     daysOfWeek: [new Date().getDay()],
+    daysOfMonth: undefined,
+    daily: false
+  }
+
+  const daysOfMonthParams: EventsGenerator.Params = {
+    schedulerId: 'any_scheduler_id',
+    startAt: generateDate().startAt,
+    endAt: generateDate().endAt,
+    daysOfWeek: undefined,
     daysOfMonth: [new Date().getDate()],
-    daily: true
+    daily: false,
+    guardianId
+  }
+
+  const dailyParams: EventsGenerator.Params = {
+    schedulerId: 'any_scheduler_id',
+    startAt: generateDate().startAt,
+    endAt: generateDate().endAt,
+    daysOfWeek: undefined,
+    daysOfMonth: undefined,
+    daily: true,
+    guardianId
+  }
+
+  const punctualParams: EventsGenerator.Params = {
+    schedulerId: 'any_scheduler_id',
+    startAt: generateDate().startAt,
+    endAt: generateDate().endAt,
+    daysOfWeek: undefined,
+    daysOfMonth: undefined,
+    daily: false,
+    guardianId
   }
 
   describe('Days of Week', () => {
     it('Should call loadByDate with the correct value', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDate')
-      await sut.generate({ ...params, daysOfMonth: undefined, daily: false })
-      expect(loadSpy).toHaveBeenCalledWith({ guardianId: params.guardianId, date: params.startAt })
+      await sut.generate({ ...daysOfWeekParams, daysOfMonth: undefined, daily: false })
+      expect(loadSpy).toHaveBeenCalledWith({ guardianId: daysOfWeekParams.guardianId, date: daysOfWeekParams.startAt })
     })
 
     it('Should throw if loadByDate throws', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockRejectedValue(() => { throw new Error() })
-      const promise = sut.generate({ ...params, daysOfMonth: undefined, daily: false })
+      const promise = sut.generate(daysOfWeekParams)
       await expect(promise).rejects.toThrow()
     })
 
-    it('Should return NotAcceptableError if loadByDate returns null because date conflits', async () => {
+    it('Should return NotAcceptableError if loadByDate returns an existing event (conflict)', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce({
         schedulerId: 'any_scheduler_id',
         start: new Date('2025-06-01T10:30:00Z'),
         end: new Date('2025-07-01T11:30:00Z')
-
       })
-      const result = await sut.generate({ ...params, daysOfMonth: undefined, daily: false })
+      const result = await sut.generate(daysOfWeekParams)
       expect(result).toEqual({
         isSuccess: false,
-        error: new NotAcceptableError('Conflict start event'),
-        data: {
-          schedulerId: 'any_scheduler_id',
-          start: new Date('2025-06-01T10:30:00Z'),
-          end: new Date('2025-07-01T11:30:00Z')
-
-        }
+        error: new NotAcceptableError('Conflict start event')
       })
     })
 
@@ -82,7 +107,7 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       const addSpy = jest.spyOn(eventRepositoryStub, 'addMany')
-      await sut.generate({ ...params, daysOfMonth: undefined, daily: false })
+      await sut.generate(daysOfWeekParams)
       expect(addSpy).toHaveBeenCalledWith([{
         schedulerId: 'any_scheduler_id',
         start: expect.any(Date),
@@ -94,7 +119,7 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'addMany').mockRejectedValue(() => { throw new Error() })
-      const promise = sut.generate({ ...params, daysOfMonth: undefined, daily: false })
+      const promise = sut.generate(daysOfWeekParams)
       await expect(promise).rejects.toThrow()
     })
 
@@ -102,7 +127,7 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'addMany').mockResolvedValueOnce(false)
-      const result = await sut.generate({ ...params, daysOfMonth: undefined, daily: false })
+      const result = await sut.generate(daysOfWeekParams)
       expect(result).toEqual({
         isSuccess: false,
         error: new ServerError('Internal Server Error!')
@@ -113,8 +138,17 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'addMany').mockResolvedValueOnce(true)
-      const result = await sut.generate({ ...params, daysOfMonth: undefined, daily: false })
-      expect(result).toEqual({ isSuccess: true })
+      const result = await sut.generate(daysOfWeekParams)
+      expect(result).toEqual({
+        isSuccess: true,
+        data: [
+          {
+            schedulerId: 'any_scheduler_id',
+            start: expect.any(Date),
+            end: expect.any(Date)
+          }
+        ]
+      })
     })
   })
 
@@ -122,18 +156,18 @@ describe('Events Generator Service', () => {
     it('Should call loadByDate with the correct value', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDate')
-      await sut.generate({ ...params, daysOfWeek: undefined, daily: false })
-      expect(loadSpy).toHaveBeenCalledWith({ guardianId: params.guardianId, date: params.startAt })
+      await sut.generate({ ...daysOfMonthParams, daysOfWeek: undefined, daily: false })
+      expect(loadSpy).toHaveBeenCalledWith({ guardianId: daysOfMonthParams.guardianId, date: daysOfMonthParams.startAt })
     })
 
     it('Should throw if loadByDate throws', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockRejectedValue(() => { throw new Error() })
-      const promise = sut.generate({ ...params, daysOfWeek: undefined, daily: false })
+      const promise = sut.generate(daysOfMonthParams)
       await expect(promise).rejects.toThrow()
     })
 
-    it('Should return NotAcceptableError if loadByDate returns null because date conflits', async () => {
+    it('Should return NotAcceptableError if loadByDate returns an existing event (conflict)', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce({
         schedulerId: 'any_scheduler_id',
@@ -141,16 +175,10 @@ describe('Events Generator Service', () => {
         end: new Date('2025-07-01T11:30:00Z')
 
       })
-      const result = await sut.generate({ ...params, daysOfWeek: undefined, daily: false })
+      const result = await sut.generate(daysOfMonthParams)
       expect(result).toEqual({
         isSuccess: false,
-        error: new NotAcceptableError('Conflict start event'),
-        data: {
-          schedulerId: 'any_scheduler_id',
-          start: new Date('2025-06-01T10:30:00Z'),
-          end: new Date('2025-07-01T11:30:00Z')
-
-        }
+        error: new NotAcceptableError('Conflict start event')
       })
     })
 
@@ -158,7 +186,7 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       const addSpy = jest.spyOn(eventRepositoryStub, 'addMany')
-      await sut.generate({ ...params, daysOfMonth: [new Date().getDate()], daysOfWeek: undefined, daily: false })
+      await sut.generate(daysOfMonthParams)
       expect(addSpy).toHaveBeenCalledWith([{
         schedulerId: 'any_scheduler_id',
         start: expect.any(Date),
@@ -170,7 +198,7 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'addMany').mockRejectedValue(() => { throw new Error() })
-      const promise = sut.generate({ ...params, daysOfWeek: undefined, daily: false })
+      const promise = sut.generate(daysOfMonthParams)
       await expect(promise).rejects.toThrow()
     })
 
@@ -178,7 +206,7 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'addMany').mockResolvedValueOnce(false)
-      const result = await sut.generate({ ...params, daysOfWeek: undefined, daily: false })
+      const result = await sut.generate(daysOfMonthParams)
       expect(result).toEqual({
         isSuccess: false,
         error: new ServerError('Internal Server Error!')
@@ -189,8 +217,17 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'addMany').mockResolvedValueOnce(true)
-      const result = await sut.generate({ ...params, daysOfWeek: undefined, daily: false })
-      expect(result).toEqual({ isSuccess: true })
+      const result = await sut.generate(daysOfMonthParams)
+      expect(result).toEqual({
+        isSuccess: true,
+        data: [
+          {
+            schedulerId: 'any_scheduler_id',
+            start: expect.any(Date),
+            end: expect.any(Date)
+          }
+        ]
+      })
     })
   })
 
@@ -198,35 +235,28 @@ describe('Events Generator Service', () => {
     it('Should call loadByDate with the correct value', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDate')
-      await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined })
-      expect(loadSpy).toHaveBeenCalledWith({ guardianId: params.guardianId, date: params.startAt })
+      await sut.generate({ ...dailyParams, daysOfWeek: undefined, daysOfMonth: undefined })
+      expect(loadSpy).toHaveBeenCalledWith({ guardianId: dailyParams.guardianId, date: dailyParams.startAt })
     })
 
     it('Should throw if loadByDate throws', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockRejectedValue(() => { throw new Error() })
-      const promise = sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined })
+      const promise = sut.generate(dailyParams)
       await expect(promise).rejects.toThrow()
     })
 
-    it('Should return NotAcceptableError if loadByDate returns null because date conflits', async () => {
+    it('Should return NotAcceptableError if loadByDate returns an existing event (conflict)', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce({
         schedulerId: 'any_scheduler_id',
         start: new Date('2025-06-01T10:30:00Z'),
         end: new Date('2025-07-01T11:30:00Z')
-
       })
-      const result = await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined })
+      const result = await sut.generate(dailyParams)
       expect(result).toEqual({
         isSuccess: false,
-        error: new NotAcceptableError('Conflict start event'),
-        data: {
-          schedulerId: 'any_scheduler_id',
-          start: new Date('2025-06-01T10:30:00Z'),
-          end: new Date('2025-07-01T11:30:00Z')
-
-        }
+        error: new NotAcceptableError('Conflict start event')
       })
     })
 
@@ -235,7 +265,7 @@ describe('Events Generator Service', () => {
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       const addSpy = jest.spyOn(eventRepositoryStub, 'addMany')
-      await sut.generate({ ...params, daysOfMonth: undefined, daysOfWeek: undefined })
+      await sut.generate(dailyParams)
       expect(addSpy).toHaveBeenCalledWith([
         {
           schedulerId: 'any_scheduler_id',
@@ -255,7 +285,7 @@ describe('Events Generator Service', () => {
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'addMany').mockRejectedValue(() => { throw new Error() })
-      const promise = sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined })
+      const promise = sut.generate(dailyParams)
       await expect(promise).rejects.toThrow()
     })
 
@@ -264,7 +294,7 @@ describe('Events Generator Service', () => {
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'addMany').mockResolvedValueOnce(false)
-      const result = await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined })
+      const result = await sut.generate(dailyParams)
       expect(result).toEqual({
         isSuccess: false,
         error: new ServerError('Internal Server Error!')
@@ -276,8 +306,22 @@ describe('Events Generator Service', () => {
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'addMany').mockResolvedValueOnce(true)
-      const result = await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined })
-      expect(result).toEqual({ isSuccess: true })
+      const result = await sut.generate(dailyParams)
+      expect(result).toEqual({
+        isSuccess: true,
+        data: [
+          {
+            schedulerId: 'any_scheduler_id',
+            start: expect.any(Date),
+            end: expect.any(Date)
+          },
+          {
+            schedulerId: 'any_scheduler_id',
+            start: expect.any(Date),
+            end: expect.any(Date)
+          }
+        ]
+      })
     })
   })
 
@@ -285,18 +329,18 @@ describe('Events Generator Service', () => {
     it('Should call loadByDate with the correct value', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(eventRepositoryStub, 'loadByDate')
-      await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
-      expect(loadSpy).toHaveBeenCalledWith({ guardianId: params.guardianId, date: params.startAt })
+      await sut.generate({ ...punctualParams, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
+      expect(loadSpy).toHaveBeenCalledWith({ guardianId: punctualParams.guardianId, date: punctualParams.startAt })
     })
 
     it('Should throw if loadByDate throws', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockRejectedValue(() => { throw new Error() })
-      const promise = sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
+      const promise = sut.generate(punctualParams)
       await expect(promise).rejects.toThrow()
     })
 
-    it('Should return NotAcceptableError if loadByDate returns null because date conflits', async () => {
+    it('Should return NotAcceptableError if loadByDate returns an existing event (conflict)', async () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce({
         schedulerId: 'any_scheduler_id',
@@ -304,16 +348,10 @@ describe('Events Generator Service', () => {
         end: new Date('2025-07-01T11:30:00Z')
 
       })
-      const result = await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
+      const result = await sut.generate(punctualParams)
       expect(result).toEqual({
         isSuccess: false,
-        error: new NotAcceptableError('Conflict start event'),
-        data: {
-          schedulerId: 'any_scheduler_id',
-          start: new Date('2025-06-01T10:30:00Z'),
-          end: new Date('2025-07-01T11:30:00Z')
-
-        }
+        error: new NotAcceptableError('Conflict start event')
       })
     })
 
@@ -321,11 +359,11 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       const addSpy = jest.spyOn(eventRepositoryStub, 'add')
-      await sut.generate({ ...params, daysOfMonth: undefined, daysOfWeek: undefined, daily: false })
+      await sut.generate(punctualParams)
       expect(addSpy).toHaveBeenCalledWith({
         schedulerId: 'any_scheduler_id',
-        start: params.startAt,
-        end: params.endAt
+        start: punctualParams.startAt,
+        end: punctualParams.endAt
       })
     })
 
@@ -333,7 +371,7 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'add').mockRejectedValue(() => { throw new Error() })
-      const promise = sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
+      const promise = sut.generate(punctualParams)
       await expect(promise).rejects.toThrow()
     })
 
@@ -341,7 +379,7 @@ describe('Events Generator Service', () => {
       const { sut, eventRepositoryStub } = makeSut()
       jest.spyOn(eventRepositoryStub, 'loadByDate').mockResolvedValueOnce(null)
       jest.spyOn(eventRepositoryStub, 'add').mockResolvedValueOnce(undefined)
-      const result = await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
+      const result = await sut.generate(punctualParams)
       expect(result).toEqual({
         isSuccess: false,
         error: new ServerError('Internal Server Error!')
@@ -354,17 +392,17 @@ describe('Events Generator Service', () => {
       jest.spyOn(eventRepositoryStub, 'add').mockResolvedValue({
         id: 'any_id',
         schedulerId: 'any_scheduler_id',
-        start: params.startAt,
-        end: params.endAt
+        start: punctualParams.startAt,
+        end: punctualParams.endAt
       })
-      const result = await sut.generate({ ...params, daysOfWeek: undefined, daysOfMonth: undefined, daily: false })
+      const result = await sut.generate(punctualParams)
       expect(result).toEqual({
         isSuccess: true,
         data: {
           id: 'any_id',
           schedulerId: 'any_scheduler_id',
-          start: params.startAt,
-          end: params.endAt
+          start: punctualParams.startAt,
+          end: punctualParams.endAt
         }
       })
     })

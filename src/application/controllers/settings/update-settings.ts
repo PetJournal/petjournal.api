@@ -21,7 +21,7 @@ export class UpdateSettingsController implements Controller {
       const updateData = { ...httpRequest.body, guardianId }
       const result = await this.updateSettings.update(updateData)
       if (!result.isSuccess) {
-        return notAcceptable(result.error as Error)
+        return notAcceptable(result.error)
       }
       return success({
         guardianId: result.data?.guardianId,

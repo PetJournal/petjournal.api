@@ -1,17 +1,7 @@
 import { NotAcceptableError } from '@/application/errors'
 import { type UpdatePetRepository, type LoadGuardianByIdRepository, type LoadPetByIdRepository, type FileStorage, type DeleteFileStorage } from '@/data/protocols'
-import {
-  type PetGender,
-  type Guardian,
-  type Specie,
-  type Breed,
-  type Size
-} from '@/domain/models'
-import {
-  type UpdatePet,
-  type AppointPet
-} from '@/domain/use-cases'
-
+import { type PetGender } from '@/domain/models'
+import { type UpdatePet, type AppointPet } from '@/domain/use-cases'
 export class DbUpdatePet implements UpdatePet {
   private readonly guardianRepository: LoadGuardianByIdRepository
   private readonly petRepository: UpdatePetRepository & LoadPetByIdRepository
@@ -51,7 +41,7 @@ export class DbUpdatePet implements UpdatePet {
       size: petData.size ? petData.size : pet.size.name,
       castrated: typeof petData.castrated === 'boolean' ? petData.castrated : pet.castrated
     })
-    if (appointResult.error) {
+    if (!appointResult.isSuccess) {
       return {
         isSuccess: false,
         error: appointResult.error
@@ -80,33 +70,39 @@ export class DbUpdatePet implements UpdatePet {
     const petUpdateResult = await this.petRepository.update({
       guardianId: guardian.id,
       petId: pet.id,
-      specieId: appointResult.data?.specie.id as string,
-      specieAlias: appointResult.data?.specieAlias,
+      specieId: appointResult.data.specie.id,
+      specieAlias: appointResult.data.specieAlias,
       petName: petData.petName ? petData.petName : pet.petName,
       gender: petData.gender ? petData.gender : pet.gender as PetGender,
-      breedId: appointResult.data?.breed.id as string,
-      breedAlias: appointResult.data?.breedAlias as string,
-      sizeId: appointResult.data?.size.id as string,
-      castrated: appointResult.data?.castrated as boolean,
+      breedId: appointResult.data.breed.id,
+      breedAlias: appointResult.data.breedAlias,
+      sizeId: appointResult.data.size.id,
+      castrated: appointResult.data.castrated,
       dateOfBirth: petData.dateOfBirth ? petData.dateOfBirth : pet.dateOfBirth,
       image: finalImage
     })
+    if (!petUpdateResult) {
+      return {
+        isSuccess: false,
+        error: new NotAcceptableError('update error')
+      }
+    }
 
     return {
       isSuccess: true,
       data: {
-        id: petUpdateResult?.id as string,
-        guardian: petUpdateResult?.guardian as Guardian & { id: string },
-        specie: petUpdateResult?.specie as Specie & { id: string },
-        specieAlias: petUpdateResult?.specieAlias,
-        petName: petUpdateResult?.petName as string,
-        gender: petUpdateResult?.gender as PetGender,
-        breed: petUpdateResult?.breed as Breed & { id: string },
-        breedAlias: petUpdateResult?.breedAlias as string,
-        size: petUpdateResult?.size as Size & { id: string },
-        castrated: petUpdateResult?.castrated as boolean,
-        dateOfBirth: petUpdateResult?.dateOfBirth as Date,
-        image: petUpdateResult?.image as string
+        id: petUpdateResult.id,
+        guardian: petUpdateResult.guardian,
+        specie: petUpdateResult.specie,
+        specieAlias: petUpdateResult.specieAlias,
+        petName: petUpdateResult.petName,
+        gender: petUpdateResult.gender,
+        breed: petUpdateResult.breed,
+        breedAlias: petUpdateResult.breedAlias,
+        size: petUpdateResult.size,
+        castrated: petUpdateResult.castrated,
+        dateOfBirth: petUpdateResult.dateOfBirth,
+        image: petUpdateResult.image
       }
     }
   }

@@ -20,8 +20,7 @@ export class EventsGeneratorService implements EventsGenerator {
           if (event) {
             return {
               isSuccess: false,
-              error: new NotAcceptableError('Conflict start event'),
-              data: event
+              error: new NotAcceptableError('Conflict start event')
             }
           }
           const start = new Date(currentDate)
@@ -49,7 +48,8 @@ export class EventsGeneratorService implements EventsGenerator {
       }
 
       return {
-        isSuccess: true
+        isSuccess: true,
+        data: events
       }
     }
 
@@ -61,8 +61,7 @@ export class EventsGeneratorService implements EventsGenerator {
           if (event) {
             return {
               isSuccess: false,
-              error: new NotAcceptableError('Conflict start event'),
-              data: event
+              error: new NotAcceptableError('Conflict start event')
             }
           }
           const start = new Date(currentDate)
@@ -90,7 +89,8 @@ export class EventsGeneratorService implements EventsGenerator {
       }
 
       return {
-        isSuccess: true
+        isSuccess: true,
+        data: events
       }
     }
 
@@ -101,8 +101,7 @@ export class EventsGeneratorService implements EventsGenerator {
         if (event) {
           return {
             isSuccess: false,
-            error: new NotAcceptableError('Conflict start event'),
-            data: event
+            error: new NotAcceptableError('Conflict start event')
           }
         }
         const start = new Date(currentDate)
@@ -129,7 +128,8 @@ export class EventsGeneratorService implements EventsGenerator {
       }
 
       return {
-        isSuccess: true
+        isSuccess: true,
+        data: events
       }
     }
 
@@ -137,8 +137,7 @@ export class EventsGeneratorService implements EventsGenerator {
     if (event) {
       return {
         isSuccess: false,
-        error: new NotAcceptableError('Conflict start event'),
-        data: event
+        error: new NotAcceptableError('Conflict start event')
       }
     }
 

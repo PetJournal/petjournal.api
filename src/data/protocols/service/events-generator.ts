@@ -1,3 +1,4 @@
+import { type ResultResponse } from '@/domain/types/result'
 import { type AddEventRepository, type LoadEventByDateRepository } from '../db'
 import { type AddManyEventsRepository } from '../db/event/add-many-events-repository'
 
@@ -16,19 +17,13 @@ export namespace EventsGenerator {
     daily: boolean | undefined
   }
 
-  export type Result = {
-    isSuccess: boolean
-    error?: Error
-    data?: Array<{
-      schedulerId: string
-      start: Date
-      end: Date
-    }> | {
-      schedulerId: string
-      start: Date
-      end: Date
-    }
+  type Data = {
+    schedulerId: string
+    start: Date
+    end: Date
   }
+
+  export type Result = ResultResponse<Data[] | Data>
   export type Dependencies = {
     eventRepository: AddEventRepository & LoadEventByDateRepository & AddManyEventsRepository
   }

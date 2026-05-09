@@ -6,10 +6,13 @@ export interface LoadSettings {
 
 export namespace LoadSettings {
   export type Param = string
-  export type Result = Array<{
+
+  type Settings = {
     notificationEmail: boolean
     notificationMobile: boolean
-  }>
+  }
+
+  export type Result = Settings[]
 
   export type Dependencies = {
     settingsRepository: LoadSettingsRepository

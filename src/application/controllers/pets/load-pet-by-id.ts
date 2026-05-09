@@ -15,7 +15,7 @@ export class LoadPetByIdController implements Controller {
       const guardianId = httpRequest.userId as string
       const result = await this.loadPet.loadById({ guardianId, petId })
       if (!result.isSuccess) {
-        return badRequest(result.error as Error)
+        return badRequest(result.error)
       }
       return success(result.data)
     } catch (error) {

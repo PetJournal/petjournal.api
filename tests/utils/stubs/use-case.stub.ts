@@ -199,11 +199,10 @@ const makeFakeLoadPetByIdUseCase = (): LoadPetById => {
 const makeFakeUpdatePetUseCase = (): UpdatePet => {
   class UpdatePetStub implements UpdatePet {
     async update (petData: UpdatePet.Params): Promise<UpdatePet.Result> {
-      const result = {
+      return {
         isSuccess: true,
         data: mockFakePetUpdated()
       }
-      return result
     }
   }
   return new UpdatePetStub()
@@ -330,7 +329,8 @@ const makeFakeDeleteTagByIdUseCase = (): DeleteTagById => {
   class DeleteTagByIdStub implements DeleteTagById {
     async deleteById (tagId: DeleteTagById.Param): Promise<DeleteTagById.Result> {
       return {
-        isSuccess: true
+        isSuccess: true,
+        data: undefined
       }
     }
   }

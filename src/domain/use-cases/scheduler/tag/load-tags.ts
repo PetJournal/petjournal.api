@@ -6,12 +6,15 @@ export interface LoadTags {
 
 export namespace LoadTags {
   export type Param = string
-  export type Result = Array<{
+
+  type Data = {
     id: string
     guardianId: string
     name: string
     color: string
-  }>
+  }
+
+  export type Result = Data[]
 
   export type Dependencies = {
     tagRepository: LoadTagsRepository

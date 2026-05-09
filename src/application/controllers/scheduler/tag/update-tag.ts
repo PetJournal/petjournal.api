@@ -22,7 +22,7 @@ export class UpdateTagController implements Controller {
       const guardianId = httpRequest.userId as string
       const result = await this.updateTag.update({ id: tagId, name, guardianId })
       if (!result.isSuccess) {
-        return notAcceptable(result.error as Error)
+        return notAcceptable(result.error)
       }
       return success(result)
     } catch (error) {
