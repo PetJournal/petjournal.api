@@ -175,4 +175,66 @@ describe('Scheduler Routes', () => {
       expect(response.body).toStrictEqual(createSchedulerData.expect)
     })
   })
+
+  describe('DELETE - /api/scheduler/{schedulerId}', () => {
+    it('Should return a message when scheduler are successfully deleted', async () => {
+      const pet = await request(app)
+        .post('/api/pet')
+        .set('Authorization', accessToken)
+        .field('specieName', createPetData.input.specieName)
+        .field('petName', createPetData.input.petName)
+        .field('gender', createPetData.input.gender)
+        .field('breedName', createPetData.input.breedName)
+        .field('size', createPetData.input.size)
+        .field('dateOfBirth', createPetData.input.dateOfBirth)
+        .field('castrated', createPetData.input.castrated)
+        .attach('image', createPetData.input.image)
+
+      const tag = await request(app)
+        .post('/api/tag')
+        .set('Authorization', accessToken)
+        .send({
+          name: 'Vacina',
+          color: '#3e32a8'
+        })
+
+      const scheduler = await request(app)
+        .post('/api/scheduler')
+        .set('Authorization', accessToken)
+        .send({
+          tagId: tag.body.id,
+          title: createSchedulerData.input.title,
+          description: createSchedulerData.input.description,
+          note: createSchedulerData.input.note,
+          startAt: createSchedulerData.input.startAt,
+          endAt: createSchedulerData.input.endAt,
+          daily: createSchedulerData.input.daily,
+          pets: [pet.body.id as string]
+        })
+
+      const response = await request(app)
+        .delete(`/api/scheduler/${scheduler.body.id as string}`)
+        .set('Authorization', accessToken)
+
+      expect(response.status).toBe(200)
+      expect(response.body).toStrictEqual({
+        message: 'Scheduler and events deleted',
+        schedulerId: scheduler.body.id
+      })
+    })
+
+    it('Should return 400 if no access token is provided', async () => {
+      await request(app)
+        .delete('/api/scheduler/any_id')
+        .set('Authorization', '')
+        .expect(400)
+    })
+
+    it('Should return 406 (NotAcceptable) if invalid schedulerId is Provided', async () => {
+      await request(app)
+        .delete('/api/scheduler/b1e64ea1-0f6f-4cad-b3d6-434468cb2c5d')
+        .set('Authorization', accessToken)
+        .expect(406)
+    })
+  })
 })

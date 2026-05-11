@@ -122,6 +122,13 @@ interface AddSchedulerRequest {
   userId: string
 }
 
+interface DeleteSchedulerRequest {
+  params: {
+    schedulerId: string
+  }
+  userId: string
+}
+
 export {
   type AuthMiddlewareRequest,
   type LoginRequest,
@@ -135,5 +142,6 @@ export {
   type EmailConfirmationRequest,
   type AddTagRequest,
   type AddSchedulerRequest,
+  type DeleteSchedulerRequest,
   type UpdateGuardianRequest
 }
