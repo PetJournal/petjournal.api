@@ -1,12 +1,12 @@
-import { type Authentication } from '@/domain/use-cases'
+import { UnauthorizedError } from '@/application/errors'
 import {
   type HashComparer,
   type HashGenerator,
+  type LoadGuardianByEmailRepository,
   type TokenGenerator,
-  type UpdateAccessTokenRepository,
-  type LoadGuardianByEmailRepository
+  type UpdateAccessTokenRepository
 } from '@/data/protocols'
-import { NotFoundError, UnauthorizedError } from '@/application/errors'
+import { type Authentication } from '@/domain/use-cases'
 
 export class DbAuthentication implements Authentication {
   private readonly guardianRepository: LoadGuardianByEmailRepository & UpdateAccessTokenRepository
@@ -27,7 +27,7 @@ export class DbAuthentication implements Authentication {
   async auth (credentialsData: Authentication.Params): Promise<Authentication.Result> {
     const account = await this.guardianRepository.loadByEmail(credentialsData.email)
     if (!account) {
-      return new NotFoundError('email')
+      return new UnauthorizedError()
     }
 
     const isValid = await this.hashService.compare({

@@ -16,7 +16,7 @@ import {
   mockHashService,
   mockFakeGuardianLoaded
 } from '@/tests/utils'
-import { NotFoundError, UnauthorizedError } from '@/application/errors'
+import { UnauthorizedError } from '@/application/errors'
 
 interface SutTypes {
   sut: DbAuthentication
@@ -120,11 +120,11 @@ describe('DbAuthentication UseCase', () => {
       await expect(promise).rejects.toThrow()
     })
 
-    it('Should return not found error if email does not exist', async () => {
+    it('Should return unauthorized error if email does not exist', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
       jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValue(null)
       const result = await sut.auth(params)
-      expect(result).toEqual(new NotFoundError('email'))
+      expect(result).toEqual(new UnauthorizedError())
     })
 
     it('Should call updateAccessToken method with correct subject (userId)', async () => {
