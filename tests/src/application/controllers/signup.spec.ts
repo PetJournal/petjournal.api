@@ -1,8 +1,9 @@
-import { type AddGuardian } from '@/domain/use-cases'
+import { type SendEmail, type AddGuardian } from '@/domain/use-cases'
 import { type Validation } from '@/application/protocols'
 import { SignUpController } from '@/application/controllers'
 import {
   makeFakeAddGuardianUseCase,
+  makeFakeSendEmailUseCase,
   makeFakeServerError,
   makeFakeSignUpRequest,
   makeFakeValidation
@@ -14,23 +15,27 @@ interface SutTypes {
   sut: SignUpController
   addGuardianStub: AddGuardian
   validationStub: Validation
+  sendEmailStub: SendEmail
 }
 
 const makeSut = (): SutTypes => {
   const addGuardianStub = makeFakeAddGuardianUseCase()
+  const sendEmailStub = makeFakeSendEmailUseCase()
   const validationStub = makeFakeValidation()
   const dependencies: SignUpController.Dependencies = {
     addGuardian: addGuardianStub,
-    validation: validationStub
+    validation: validationStub,
+    sendEmail: sendEmailStub
   }
   const sut = new SignUpController(dependencies)
-  return { sut, addGuardianStub, validationStub }
+  return { sut, addGuardianStub, validationStub, sendEmailStub }
 }
 
 describe('SignUp Controller', () => {
   const httpRequest = makeFakeSignUpRequest()
+
   describe('AddGuardian', () => {
-    it('Should return 409 (Conflict) if AddGuardian returns undefined', async () => {
+    it('Should return 409 (Conflict) if AddGuardian returns null', async () => {
       const { sut, addGuardianStub } = makeSut()
       jest.spyOn(addGuardianStub, 'add').mockResolvedValue(undefined)
       const httpResponse = await sut.handle(httpRequest)
@@ -54,7 +59,8 @@ describe('SignUp Controller', () => {
         email: httpRequest.body.email,
         password: httpRequest.body.password,
         phone: httpRequest.body.phone,
-        verificationToken: ''
+        verificationToken: '',
+        image: httpRequest.file
       })
     })
   })
@@ -79,6 +85,22 @@ describe('SignUp Controller', () => {
         password: httpRequest.body.password,
         passwordConfirmation: httpRequest.body.passwordConfirmation
       })
+    })
+  })
+
+  describe('SendEmail', () => {
+    it('Should call SendEmail with correct value', async () => {
+      const { sut, sendEmailStub } = makeSut()
+      const sendSpy = jest.spyOn(sendEmailStub, 'send')
+      await sut.handle(httpRequest)
+      expect(sendSpy).toHaveBeenCalledWith({ email: httpRequest.body.email })
+    })
+
+    it('Should return 500 (ServerError) if SendEmail throws', async () => {
+      const { sut, sendEmailStub } = makeSut()
+      jest.spyOn(sendEmailStub, 'send').mockRejectedValue(new Error())
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(makeFakeServerError())
     })
   })
 

@@ -40,7 +40,7 @@ describe('DbCreateAccessToken UseCase', () => {
   describe('GuardianRepository', () => {
     it('Should return NotFoundError if not found email is provided', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValueOnce(undefined)
+      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValueOnce(null)
 
       const result = await sut.validate(fakeValidation)
 
@@ -52,7 +52,7 @@ describe('DbCreateAccessToken UseCase', () => {
       jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValueOnce({
         ...mockFakeGuardianLoaded(),
         verificationTokenCreatedAt: new Date(2023, 0, 0, 0, 0, 0)
-      })
+      } as any)
 
       const result = await sut.validate(fakeValidation)
 
@@ -62,18 +62,14 @@ describe('DbCreateAccessToken UseCase', () => {
     it('Should throw if loadByEmail throws', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
       jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockRejectedValueOnce(new Error())
-
       const promise = sut.validate(fakeValidation)
-
       await expect(promise).rejects.toThrow()
     })
 
     it('Should call loadByEmail with correct email', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
       const loadSpy = jest.spyOn(guardianRepositoryStub, 'loadByEmail')
-
       await sut.validate(fakeValidation)
-
       expect(loadSpy).toHaveBeenCalledWith(fakeValidation.email)
     })
   })
@@ -82,28 +78,22 @@ describe('DbCreateAccessToken UseCase', () => {
     it('Should return VerificationTokenError if invalid code is provided', async () => {
       const { sut, hashServiceStub } = makeSut()
       jest.spyOn(hashServiceStub, 'compare').mockResolvedValueOnce(false)
-
       const result = await sut.validate(fakeValidation)
-
       expect(result).toStrictEqual(new VerificationTokenError())
     })
 
     it('Should throw if compare throws', async () => {
       const { sut, hashServiceStub } = makeSut()
       jest.spyOn(hashServiceStub, 'compare').mockRejectedValueOnce(new Error())
-
       const promise = sut.validate(fakeValidation)
-
       await expect(promise).rejects.toThrow()
     })
 
     it('Should call compare with correct values', async () => {
       const { sut, hashServiceStub } = makeSut()
       const spyHashComparer = jest.spyOn(hashServiceStub, 'compare')
-      const { verificationToken } = mockFakeGuardianLoaded()
-
+      const { verificationToken } = mockFakeGuardianLoaded() as any
       await sut.validate(fakeValidation)
-
       expect(spyHashComparer).toHaveBeenCalledWith({
         value: fakeValidation.verificationToken,
         hash: verificationToken
@@ -114,9 +104,7 @@ describe('DbCreateAccessToken UseCase', () => {
   describe('When success', () => {
     it('Should return true if a valid access token is provided', async () => {
       const { sut } = makeSut()
-
       const result = await sut.validate(fakeValidation)
-
       expect(result).toBeTruthy()
     })
   })

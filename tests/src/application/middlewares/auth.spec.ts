@@ -10,7 +10,8 @@ import {
   makeFakeHashService,
   makeFakeGuardianRepository,
   makeFakeServerError,
-  makeFakeAuthorizationRequest
+  makeFakeAuthorizationRequest,
+  mockTokenService
 } from '@/tests/utils'
 import { InvalidTokenError, MissingParamError, NotFoundError } from '@/application/errors'
 
@@ -88,7 +89,7 @@ describe('Auth Middleware', () => {
   describe('GuardianRepository', () => {
     it('Should return 401 (Unauthorized) if hash and value do not match', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValue(undefined)
+      jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValue(null)
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(unauthorized(new NotFoundError('User not found')))
     })
@@ -103,10 +104,9 @@ describe('Auth Middleware', () => {
     it('Should call loadById method with correct userId', async () => {
       const { sut, guardianRepositoryStub, tokenServiceStub } = makeSut()
       const loadByIdSpy = jest.spyOn(guardianRepositoryStub, 'loadById')
-      const sub = 'any_id'
-      jest.spyOn(tokenServiceStub, 'decode').mockResolvedValue({ sub })
+      jest.spyOn(tokenServiceStub, 'decode').mockResolvedValue(mockTokenService.validId)
       await sut.handle(httpRequest)
-      expect(loadByIdSpy).toHaveBeenCalledWith(sub)
+      expect(loadByIdSpy).toHaveBeenCalledWith(mockTokenService.validId.sub)
     })
   })
 
@@ -135,6 +135,6 @@ describe('Auth Middleware', () => {
   test('Should return 200 (OK) and userId', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(success({ userId: 'valid_id' }))
+    expect(httpResponse).toEqual(success({ userId: mockTokenService.validId.sub }))
   })
 })

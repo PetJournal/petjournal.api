@@ -1,7 +1,7 @@
 export const guardianSchema = {
   type: 'object',
   properties: {
-    id: { type: 'number' },
+    id: { type: 'string' },
     firstName: {
       type: 'string'
     },
@@ -13,6 +13,9 @@ export const guardianSchema = {
     },
     phone: {
       type: 'string'
+    },
+    image: {
+      type: 'binary'
     }
   }
 }

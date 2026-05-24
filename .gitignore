@@ -10,3 +10,5 @@ coverage
 node_modules
 .env*
 !.env.example
+src/infra/repos/postgresql/prisma/generated
+firebase-service-account.json

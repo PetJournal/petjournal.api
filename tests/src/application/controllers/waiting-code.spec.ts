@@ -8,7 +8,8 @@ import {
   makeFakeServerError,
   makeFakeValidation,
   makeFakeWaitingCodeRequest,
-  makeFakeValidateVerificationTokenUseCase
+  makeFakeValidateVerificationTokenUseCase,
+  mockTokenService
 } from '@/tests/utils'
 
 interface SutTypes {
@@ -62,27 +63,21 @@ describe('WaitingCode Controller', () => {
       const { sut, validateVerificationTokenStub } = makeSut()
       const unauthorizedError = new UnauthorizedError('Verification token mismatch or expired')
       jest.spyOn(validateVerificationTokenStub, 'validate').mockResolvedValueOnce(unauthorizedError)
-
       const httpResponse = await sut.handle(makeFakeWaitingCodeRequest())
-
       expect(httpResponse).toEqual(unauthorized(unauthorizedError))
     })
 
     it('should return 500 (ServerError) if verificationToken throws', async () => {
       const { sut, validateVerificationTokenStub } = makeSut()
       jest.spyOn(validateVerificationTokenStub, 'validate').mockRejectedValueOnce(new Error())
-
       const httpResponse = await sut.handle(makeFakeWaitingCodeRequest())
-
       expect(httpResponse).toEqual(makeFakeServerError())
     })
 
     it('should call validateVerificationToken with correct values', async () => {
       const { sut, validateVerificationTokenStub } = makeSut()
       const codeAuthSpy = jest.spyOn(validateVerificationTokenStub, 'validate')
-
       await sut.handle(httpRequest)
-
       expect(codeAuthSpy).toHaveBeenCalledWith(httpRequest.body)
     })
   })
@@ -91,9 +86,7 @@ describe('WaitingCode Controller', () => {
     it('should return 500 (ServerError) if CreateAccessToken throws', async () => {
       const { sut, createAccessTokenStub } = makeSut()
       jest.spyOn(createAccessTokenStub, 'create').mockRejectedValueOnce(new Error())
-
       const httpResponse = await sut.handle(httpRequest)
-
       expect(httpResponse).toEqual(makeFakeServerError())
     })
 
@@ -102,18 +95,14 @@ describe('WaitingCode Controller', () => {
       const httpRequest = makeFakeWaitingCodeRequest()
       jest.spyOn(validateVerificationTokenStub, 'validate').mockResolvedValueOnce(true)
       const createAccessTokenSpy = jest.spyOn(createAccessTokenStub, 'create')
-
       await sut.handle(httpRequest)
-
       expect(createAccessTokenSpy).toHaveBeenCalledWith(httpRequest.body.email)
     })
 
     it('Should return 200 (Success) if valid email is provide', async () => {
       const { sut } = makeSut()
-
       const httpResponse = await sut.handle(httpRequest)
-
-      expect(httpResponse).toEqual(success({ accessToken: 'valid_token' }))
+      expect(httpResponse).toEqual(success({ accessToken: mockTokenService.anyToken }))
     })
   })
 })

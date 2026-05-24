@@ -7,7 +7,7 @@ import {
 } from '@/data/protocols'
 
 export interface ForgetPassword {
-  forgetPassword: (params: ForgetPassword.Params) => Promise<ForgetPassword.Result>
+  forgetPassword: (guardianData: ForgetPassword.Params) => Promise<ForgetPassword.Result>
 }
 
 export namespace ForgetPassword {
@@ -17,7 +17,7 @@ export namespace ForgetPassword {
 
   export type Result = boolean
 
-  export interface Dependencies {
+  export type Dependencies = {
     guardianRepository: LoadGuardianByEmailRepository & UpdateVerificationTokenRepository
     emailService: EmailService
     tokenService: TokenGenerator

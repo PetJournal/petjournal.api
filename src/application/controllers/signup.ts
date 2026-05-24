@@ -1,4 +1,4 @@
-import { type AddGuardian } from '@/domain/use-cases'
+import { type SendEmail, type AddGuardian } from '@/domain/use-cases'
 import { type Validation, type Controller } from '@/application/protocols'
 import { ConflictGuardianError } from '@/application/errors'
 import {
@@ -13,9 +13,11 @@ import {
 export class SignUpController implements Controller {
   private readonly addGuardian: AddGuardian
   private readonly validation: Validation
+  private readonly sendEmail: SendEmail
 
-  constructor ({ addGuardian, validation }: SignUpController.Dependencies) {
+  constructor ({ addGuardian, validation, sendEmail }: SignUpController.Dependencies) {
     this.addGuardian = addGuardian
+    this.sendEmail = sendEmail
     this.validation = validation
   }
 
@@ -27,18 +29,22 @@ export class SignUpController implements Controller {
       }
 
       const { firstName, lastName, email, phone, password } = httpRequest.body
+      const image = httpRequest.file ?? null
       const guardian = await this.addGuardian.add({
         firstName,
         lastName,
         email,
         phone,
         password,
-        verificationToken: ''
+        verificationToken: '',
+        image
       })
 
       if (!guardian) {
         return conflict(new ConflictGuardianError())
       }
+
+      await this.sendEmail.send({ email: guardian.email })
 
       return create(guardian)
     } catch (error) {
@@ -50,6 +56,7 @@ export class SignUpController implements Controller {
 export namespace SignUpController {
   export interface Dependencies {
     addGuardian: AddGuardian
+    sendEmail: SendEmail
     validation: Validation
   }
 }

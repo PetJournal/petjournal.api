@@ -7,18 +7,19 @@ import {
 } from '@/data/protocols'
 
 export interface Authentication {
-  auth: (credentials: Authentication.Params) => Promise<Authentication.Result>
+  auth: (credentialsData: Authentication.Params) => Promise<Authentication.Result>
 }
 
 export namespace Authentication {
 
-  export interface Params {
+  export type Params = {
     email: string
     sensitiveData: { field: string, value: string }
   }
 
   export type Result = Error | string
-  export interface Dependencies {
+
+  export type Dependencies = {
     guardianRepository: LoadGuardianByEmailRepository & UpdateAccessTokenRepository
     hashService: HashGenerator & HashComparer
     tokenService: TokenGenerator

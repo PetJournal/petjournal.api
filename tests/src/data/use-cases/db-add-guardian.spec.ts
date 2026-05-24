@@ -1,7 +1,7 @@
 import { type AddGuardian } from '@/domain/use-cases'
 import { type AddGuardianRepository, type HashGenerator } from '@/data/protocols'
 import { DbAddGuardian } from '@/data/use-cases'
-import { makeFakeGuardianRepository, makeFakeHashService } from '@/tests/utils'
+import { makeFakeFileStorage, makeFakeGuardianRepository, makeFakeHashService, mockHashService } from '@/tests/utils'
 
 interface SutTypes {
   sut: DbAddGuardian
@@ -12,9 +12,13 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const guardianRepositoryStub = makeFakeGuardianRepository()
   const hashServiceStub = makeFakeHashService()
+  const defaultGuardianImageUrlStub = 'any_url'
+  const fileStorageStub = makeFakeFileStorage()
   const dependencies: AddGuardian.Dependencies = {
     hashService: hashServiceStub,
-    guardianRepository: guardianRepositoryStub
+    guardianRepository: guardianRepositoryStub,
+    fileStorage: fileStorageStub,
+    defaultGuardianImageUrl: defaultGuardianImageUrlStub
   }
   const sut = new DbAddGuardian(dependencies)
   return {
@@ -25,13 +29,14 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbAddGuardian use case', () => {
-  const params: AddGuardianRepository.Params = {
+  const params: AddGuardian.Params = {
     firstName: 'any_first_name',
     lastName: 'any_last_name',
     email: 'any_email@mail.com',
     password: 'any_password',
     phone: 'any_phone',
-    verificationToken: 'any_verification'
+    verificationToken: 'any_verification',
+    image: null
   }
 
   describe('HashService', () => {
@@ -59,9 +64,10 @@ describe('DbAddGuardian use case', () => {
         firstName: params.firstName,
         lastName: params.lastName,
         email: params.email,
-        password: 'hashed_value',
+        password: mockHashService.hashedValue,
         phone: params.phone,
-        verificationToken: params.verificationToken
+        verificationToken: params.verificationToken,
+        image: ''
       })
     })
 
@@ -80,16 +86,16 @@ describe('DbAddGuardian use case', () => {
     })
   })
 
-  test('Should return a guardian when saving the user successfully', async () => {
+  it('Should return a guardian when saving the user successfully', async () => {
     const { sut } = makeSut()
-    const result = await sut.add(params)
-    expect(result).toHaveProperty('id')
-    expect(result?.id).toBeDefined()
-    expect(result).toMatchObject({
+    const result = await sut.add(params) as any
+    expect(result).toEqual({
+      id: expect.any(String),
       firstName: params.firstName,
       lastName: params.lastName,
       email: params.email,
-      phone: params.phone
+      phone: params.phone,
+      image: ''
     })
   })
 })

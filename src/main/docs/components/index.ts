@@ -1,5 +1,6 @@
 export * from './bad-request'
 export * from './conflict'
+export * from './not-acceptable'
 export * from './server-error'
 export * from './unauthorized'
 export * from './password-mismatch-error'

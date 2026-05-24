@@ -1,0 +1,84 @@
+import { PrismaHelper, prisma } from '@/tests/helpers/prisma-helper'
+import request from 'supertest'
+import app from '@/main/config/app'
+
+describe('Settings Routes', () => {
+  let accessToken = ''
+
+  beforeAll(async () => {
+    await PrismaHelper.connect()
+
+    const guardian = await PrismaHelper.createGuardian()
+    await prisma.settings.create({
+      data: {
+        guardianId: guardian.id,
+        notificationEmail: false,
+        notificationMobile: false
+      }
+    })
+
+    const { body } = await request(app)
+      .post('/api/login')
+      .send({
+        email: 'johndoe@email.com',
+        password: 'Test@1234'
+      })
+
+    accessToken = body.accessToken
+  })
+
+  afterAll(async () => {
+    await PrismaHelper.disconnect()
+  })
+
+  describe('GET /api/settings', () => {
+    it('Should return 200 and a list of settings on success', async () => {
+      const response = await request(app)
+        .get('/api/settings')
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual([
+        {
+          notificationEmail: false,
+          notificationMobile: false
+        }
+      ])
+    })
+
+    it('Should return 400 if no access token is provided', async () => {
+      const response = await request(app)
+        .get('/api/settings')
+
+      expect(response.status).toBe(400)
+    })
+
+    it('Should return 401 if invalid access token is provided', async () => {
+      const response = await request(app)
+        .get('/api/settings')
+        .set('Authorization', 'Bearer invalid_token')
+
+      expect(response.status).toBe(401)
+    })
+  })
+
+  describe('PUT /api/settings', () => {
+    it('Should return 200 and a updated settings on success', async () => {
+      const response = await request(app)
+        .put('/api/settings')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({
+          notificationEmail: false,
+          notificationMobile: false
+        })
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual({
+        guardianId: expect.any(String),
+        notificationEmail: false,
+        notificationMobile: false
+      }
+      )
+    })
+  })
+})

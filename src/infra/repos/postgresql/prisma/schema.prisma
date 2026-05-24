@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "./generated"
 }
 
 datasource db {
@@ -9,16 +10,115 @@ datasource db {
 
 model Guardian {
   id                         String   @id @default(uuid())
-  firstName                  String
-  lastName                   String
+  firstName                  String   @map("first_name")
+  lastName                   String   @map("last_name")
   email                      String   @unique
   password                   String
   phone                      String   @unique
-  accessToken                String?
-  verificationToken          String
-  verificationTokenCreatedAt DateTime @default(now())
+  accessToken                String?  @map("access_token")
+  verificationToken          String   @map("verification_token")
+  verificationTokenCreatedAt DateTime @default(now()) @map("verification_token_created_at")
+  emailConfirmation          Boolean  @default(false) @map("email_confirmation")
+  image                      String   @default("")
+  pets                       Pet[]
+  tags                       Tag[]
+  scheduler                  Scheduler[]
+  settings                   Settings?
 
-  @@map("guardian")
+  @@map("guardians")
+}
+
+model Pet {
+  id          String   @id @default(uuid())
+  guardian    Guardian @relation(fields: [guardianId], references: [id])
+  guardianId  String   @map("guardian_id")
+  specie      Specie   @relation(fields: [specieId], references: [id])
+  specieId    String   @map("specie_id")
+  specieAlias String?  @map("specie_alias")
+  petName     String   @map("pet_name")
+  gender      String
+  breedAlias  String   @map("breed_alias")
+  breed       Breed    @relation(fields: [breedId], references: [id])
+  breedId     String   @map("breed_id")
+  size        Size     @relation(fields: [sizeId], references: [id])
+  sizeId      String   @map("size_id")
+  castrated   Boolean  @default(false)
+  dateOfBirth DateTime @map("date_of_birth")
+  image       String   @default("")
+  scheduler Scheduler[] @relation("PetScheduler")
+
+  @@map("pets")
+}
+
+model Specie {
+  id    String  @id @default(uuid())
+  name  String  @unique
+  Pet   Pet[]
+  Size  Size[]
+  Breed Breed[]
+
+  @@map("species")
+}
+
+model Size {
+  id       String @id @default(uuid())
+  specie   Specie @relation(fields: [specieId], references: [id])
+  specieId String @map("specie_id")
+  name     String @unique
+  Pet      Pet[]
+
+  @@map("sizes")
+}
+
+model Breed {
+  id       String @id @default(uuid())
+  specie   Specie @relation(fields: [specieId], references: [id])
+  specieId String @map("specie_id")
+  name     String @unique
+  Pet      Pet[]
+
+  @@map("breeds")
+}
+
+model Tag {
+  id    String @id @default(uuid())
+  guardian    Guardian @relation(fields: [guardianId], references: [id])
+  guardianId  String   @map("guardian_id")
+  name  String
+  color String
+  scheduler Scheduler[]
+
+  @@map("tags")
+}
+
+model Scheduler {
+  id String @id @default(uuid())
+  tag Tag @relation(fields: [tagId], references: [id])
+  tagId String @map("tag_id")
+  guardian Guardian @relation(fields: [guardianId], references: [id])
+  guardianId String @map("guardian_id")
+  title String
+  description String
+  note String
+  startAt DateTime @map("start_at")
+  endAt DateTime @map("end_at")
+  daysOfWeek Int[] @map("days_of_week")
+  daysOfMonth Int[] @map("days_of_month")
+  daily Boolean
+  pets Pet[] @relation("PetScheduler")
+  event Event[]
+
+  @@map("schedulers")
+}
+
+model Event {
+  id String @id @default(uuid())
+  scheduler Scheduler @relation(fields: [schedulerId], references: [id])
+  schedulerId String @map("scheduler_id")
+  start DateTime
+  end DateTime
+
+  @@map("events")
 }
 
 model LogError {
@@ -27,4 +127,14 @@ model LogError {
   date  DateTime
 
   @@map("log_error")
+}
+
+model Settings {
+  id                  String   @id @default(uuid())
+  guardian   Guardian  @relation(fields: [guardianId], references: [id], onDelete: Cascade)
+  guardianId          String   @unique @map("guardian_id")
+  notificationEmail  Boolean   @map("notification_email") @default(false)
+  notificationMobile Boolean   @map("notification_mobile") @default(false)
+
+  @@map("settings")
 }

@@ -1,0 +1,55 @@
+import { InvalidParamError } from '@/application/errors'
+import { DescriptionValidation, type DescriptionValidator } from '@/application/validation'
+import { makeFakeDescriptionValidator } from '@/tests/utils'
+
+interface SutTypes {
+  sut: DescriptionValidation
+  fakeFieldDescription: string
+  validatorStub: DescriptionValidator
+}
+
+const makeSut = (): SutTypes => {
+  const fakeFieldDescription = 'description'
+  const validatorStub = makeFakeDescriptionValidator()
+  const sut = new DescriptionValidation(fakeFieldDescription, validatorStub)
+  return {
+    sut,
+    fakeFieldDescription,
+    validatorStub
+  }
+}
+
+describe('Description Validation', () => {
+  it('Should return InvalidParamError if description is not a string', () => {
+    const { sut, fakeFieldDescription } = makeSut()
+    const invalidDescriptionField = 11
+    const isValid = sut.validate(invalidDescriptionField)
+    expect(isValid).toEqual(new InvalidParamError(fakeFieldDescription))
+  })
+
+  it('Should throw if validator throws', () => {
+    const { sut, validatorStub } = makeSut()
+    jest.spyOn(validatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
+    expect(() => { sut.validate({ description: 'any_description' }) }).toThrow()
+  })
+
+  it('Should call validator with correct value', () => {
+    const { sut, validatorStub } = makeSut()
+    const validatorSpy = jest.spyOn(validatorStub, 'isValid')
+    sut.validate({ description: 'any_description' })
+    expect(validatorSpy).toHaveBeenCalledWith('any_description')
+  })
+
+  it('Should return InvalidParamError if description is not valid', () => {
+    const { sut, fakeFieldDescription, validatorStub } = makeSut()
+    jest.spyOn(validatorStub, 'isValid').mockReturnValueOnce(false)
+    const isValid = sut.validate({ description: 'any_description' })
+    expect(isValid).toEqual(new InvalidParamError(fakeFieldDescription))
+  })
+
+  it('Should return void if description is valid', () => {
+    const { sut } = makeSut()
+    const isValid = sut.validate({ description: 'any_description' })
+    expect(isValid).toBeFalsy()
+  })
+})

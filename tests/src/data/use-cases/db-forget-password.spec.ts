@@ -7,11 +7,14 @@ import {
 } from '@/data/protocols'
 import { DbForgetPassword } from '@/data/use-cases'
 import { type ForgetPassword } from '@/domain/use-cases'
+import env from '@/main/config/env'
 import {
   makeFakeEmailService,
   makeFakeGuardianRepository,
   makeFakeHashService,
-  makeFakeTokenService
+  makeFakeTokenService,
+  makeFakeGuardianData,
+  mockHashService
 } from '@/tests/utils'
 
 interface SutTypes {
@@ -53,7 +56,7 @@ describe('DbForgetPassword UseCase', () => {
       const { sut, tokenServiceStub } = makeSut()
       const tokenGeneratorSpy = jest.spyOn(tokenServiceStub, 'generate')
       await sut.forgetPassword(params)
-      expect(tokenGeneratorSpy).toHaveBeenCalledWith('any_id')
+      expect(tokenGeneratorSpy).toHaveBeenCalledWith(makeFakeGuardianData().id)
     })
 
     it('Should throw if generate method throws', async () => {
@@ -71,15 +74,25 @@ describe('DbForgetPassword UseCase', () => {
 
       await sut.forgetPassword(params)
       expect(sendSpy).toHaveBeenCalledWith({
-        from: 'contato.petjournal@gmail.com',
-        to: 'any_email@mail.com',
+        from: {
+          email: env.emailPetJournal,
+          name: 'Pet Journal'
+        },
+        to: {
+          email: 'any_email@mail.com',
+          name: 'any_last_name'
+        },
         subject: 'any_first_name any_last_name, aqui está seu código',
         text: `
-          Olá any_first_name any_last_name,\n
-          Recebemos uma solicitação para redefinir a senha de sua conta PetJournal.\n
-          any_token\n
-          Insira este código para concluir a redefinição.\n
-          Obrigado por nos ajudar a manter sua conta segura.\n
+          Olá any_first_name any_last_name,
+          Recebemos uma solicitação para redefinir a senha de sua conta PetJournal.
+
+          any_token
+
+          Insira este código para concluir a redefinição.
+
+
+          Obrigado por nos ajudar a manter sua conta segura.
           Equipe PetJournal
         `
       })
@@ -111,9 +124,9 @@ describe('DbForgetPassword UseCase', () => {
 
     it('Should return false if email does not exist', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValue(undefined)
+      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValue(null)
       const result = await sut.forgetPassword(params)
-      expect(result).toBeFalsy()
+      expect(result).toBe(false)
     })
 
     it('Should call updateVerificationToken method with correct value', async () => {
@@ -121,8 +134,8 @@ describe('DbForgetPassword UseCase', () => {
       const updateVerificationTokenSpy = jest.spyOn(guardianRepositoryStub, 'updateVerificationToken')
       await sut.forgetPassword(params)
       expect(updateVerificationTokenSpy).toHaveBeenCalledWith({
-        userId: 'any_id',
-        token: 'hashed_value'
+        userId: makeFakeGuardianData().id,
+        token: mockHashService.hashedValue
       })
     })
 
@@ -135,10 +148,9 @@ describe('DbForgetPassword UseCase', () => {
 
     it('Should return false if userId does not exist', async () => {
       const { sut, guardianRepositoryStub } = makeSut()
-      jest.spyOn(guardianRepositoryStub, 'updateVerificationToken').mockResolvedValue(false)
-      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValue(undefined)
+      jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValue(null)
       const result = await sut.forgetPassword(params)
-      expect(result).toBeFalsy()
+      expect(result).toBe(false)
     })
   })
 

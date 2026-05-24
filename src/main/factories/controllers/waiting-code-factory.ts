@@ -1,7 +1,7 @@
 import { WaitingCodeController } from '@/application/controllers'
 import { type Controller } from '@/application/protocols'
 import { LoggerPgRepository } from '@/infra/repos/postgresql'
-import { LoggerControllerDecorator } from '@/main/decorators'
+import { DevLoggerControllerDecorator, LoggerControllerDecorator } from '@/main/decorators'
 import { makeWaitingCodeValidation } from '@/main/factories/validations'
 import {
   makeDbCreateAccessToken,
@@ -18,5 +18,6 @@ export const makeWaitingCodeController = (): Controller => {
     validateVerificationToken,
     createAccessToken
   })
-  return new LoggerControllerDecorator(waitingCodeController, loggerPgRepository)
+  const loggerControllerDecorator = new LoggerControllerDecorator(waitingCodeController, loggerPgRepository)
+  return new DevLoggerControllerDecorator(loggerControllerDecorator)
 }

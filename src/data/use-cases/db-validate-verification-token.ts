@@ -19,23 +19,27 @@ export class DbValidateVerificationToken implements ValidateVerificationToken {
     this.hashService = hashService
   }
 
-  async validate (input: ValidateVerificationToken.Params): Promise<ValidateVerificationToken.Result> {
-    const guardian = await this.guardianRepository.loadByEmail(input.email)
+  async validate (guardianData: ValidateVerificationToken.Params): Promise<ValidateVerificationToken.Result> {
+    const guardian = await this.guardianRepository.loadByEmail(guardianData.email)
     if (!guardian) {
       return new NotFoundError('email')
     }
+
     const limitExpiresDate = new Date(guardian.verificationTokenCreatedAt)
     limitExpiresDate.setSeconds(limitExpiresDate.getSeconds() + Number(env.expiryTimeSeconds))
     if (limitExpiresDate < new Date()) {
       return new VerificationTokenError()
     }
+
     const isValid = await this.hashService.compare({
-      value: input.verificationToken,
+      value: guardianData.verificationToken,
       hash: guardian.verificationToken
     })
+
     if (!isValid) {
       return new VerificationTokenError()
     }
+
     return isValid
   }
 }

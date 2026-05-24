@@ -1,7 +1,7 @@
 import { type Controller } from '@/application/protocols'
 import { LoginController } from '@/application/controllers'
 import { LoggerPgRepository } from '@/infra/repos/postgresql'
-import { LoggerControllerDecorator } from '@/main/decorators'
+import { DevLoggerControllerDecorator, LoggerControllerDecorator } from '@/main/decorators'
 import { makeLoginValidation, makeDbAuthentication } from '@/main/factories'
 
 export const makeLoginController = (): Controller => {
@@ -13,5 +13,6 @@ export const makeLoginController = (): Controller => {
   }
   const loginController = new LoginController(dependencies)
   const loggerPgRepository = new LoggerPgRepository()
-  return new LoggerControllerDecorator(loginController, loggerPgRepository)
+  const loggerControllerDecorator = new LoggerControllerDecorator(loginController, loggerPgRepository)
+  return new DevLoggerControllerDecorator(loggerControllerDecorator)
 }

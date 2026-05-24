@@ -1,47 +1,56 @@
-export const signUpPath = {
-  post: {
-    tags: ['guardian'],
-    summary: 'adds a new guardian',
-    description: '',
-    requestBody: {
-      required: true,
-      content: {
-        'application/json': {
-          schema: {
-            $ref: '#/schemas/signUpParams'
-          },
-          example: {
-            firstName: 'John',
-            lastName: 'Doe',
-            email: 'johndoe@email.com',
-            password: 'Teste@123',
-            passwordConfirmation: 'Teste@123',
-            phone: '11987654321',
-            isPrivacyPolicyAccepted: true
-          }
-        }
-      }
-    },
-    responses: {
-      201: {
-        description: 'Success',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/schemas/guardian'
-            }
-          }
-        }
+import { DocBuilder } from '../utils/doc-builder'
+
+export const signUpPath = DocBuilder.postBuilder()
+  .addTags(['guardian'])
+  .addSummary('adds a new guardian')
+  .addMultipartFormDataBody({
+    type: 'object',
+    properties: {
+      firstName: {
+        type: 'string',
+        example: 'John'
       },
-      400: {
-        $ref: '#/components/badRequest'
+      lastName: {
+        type: 'string',
+        example: 'Doe'
       },
-      409: {
-        $ref: '#/components/conflict'
+      email: {
+        type: 'string',
+        example: 'johndoe@email.com'
       },
-      500: {
-        $ref: '#/components/serverError'
+      password: {
+        type: 'string',
+        example: 'Teste@123'
+      },
+      passwordConfirmation: {
+        type: 'string',
+        example: 'Teste@123'
+      },
+      phone: {
+        type: 'string',
+        example: '11987654321'
+      },
+      isPrivacyPolicyAccepted: {
+        type: 'boolean',
+        example: true
+      },
+      image: {
+        type: 'string',
+        format: 'binary'
       }
     }
-  }
-}
+  })
+  .addResponse(201, {
+    description: 'Success',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: '#/schemas/guardian'
+        }
+      }
+    }
+  })
+  .addConflictResponse()
+  .addBadRequestResponse()
+  .addServerErrorResponse()
+  .build()

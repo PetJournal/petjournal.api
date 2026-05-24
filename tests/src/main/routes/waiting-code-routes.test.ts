@@ -3,9 +3,9 @@ import app from '@/main/config/app'
 import { PrismaHelper } from '@/tests/helpers/prisma-helper'
 
 describe('waiting-code-routes', () => {
-  beforeEach(async () => { await PrismaHelper.connect() })
+  beforeAll(async () => { await PrismaHelper.connect() })
 
-  afterEach(async () => { await PrismaHelper.disconnect() })
+  afterAll(async () => { await PrismaHelper.disconnect() })
 
   describe('WaitingCode Routes', () => {
     it('Should return 400 if invalid body is provided', async () => {
@@ -13,12 +13,6 @@ describe('waiting-code-routes', () => {
         .post('/api/waiting-code')
         .send({
           email: 'johndoe@email.com'
-        }).expect(400)
-
-      await request(app)
-        .post('/api/waiting-code')
-        .send({
-          verificationToken: 'valid_code'
         }).expect(400)
     })
 

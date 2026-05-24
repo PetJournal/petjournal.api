@@ -1,17 +1,19 @@
-import { type AddGuardianRepository, type HashGenerator } from '@/data/protocols'
+import { type FileStorage, type AddGuardianRepository, type HashGenerator } from '@/data/protocols'
+import { type UpdateGuardianImageRepository } from '@/data/protocols/db/guardian/update-guardian-image-repository'
 
 export interface AddGuardian {
   add: (guardianData: AddGuardian.Params) => Promise<AddGuardian.Result>
 }
 
 export namespace AddGuardian {
-  export interface Params {
+  export type Params = {
     firstName: string
     lastName: string
     email: string
     phone: string
     password: string
     verificationToken: string
+    image: Buffer | null
   }
 
   export type Result = {
@@ -20,10 +22,13 @@ export namespace AddGuardian {
     lastName: string
     email: string
     phone: string
+    image: string
   } | undefined
 
-  export interface Dependencies {
-    guardianRepository: AddGuardianRepository
+  export type Dependencies = {
+    guardianRepository: AddGuardianRepository & UpdateGuardianImageRepository
     hashService: HashGenerator
+    fileStorage: FileStorage
+    defaultGuardianImageUrl: string
   }
 }
