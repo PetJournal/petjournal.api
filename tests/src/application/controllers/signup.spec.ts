@@ -93,7 +93,12 @@ describe('SignUp Controller', () => {
       const { sut, sendEmailStub } = makeSut()
       const sendSpy = jest.spyOn(sendEmailStub, 'send')
       await sut.handle(httpRequest)
-      expect(sendSpy).toHaveBeenCalledWith({ email: httpRequest.body.email })
+      expect(sendSpy).toHaveBeenCalledWith({
+        id: 'any_id',
+        firstName: 'any_first_name',
+        lastName: 'any_last_name',
+        email: 'any_email@mail.com'
+      })
     })
 
     it('Should return 500 (ServerError) if SendEmail throws', async () => {

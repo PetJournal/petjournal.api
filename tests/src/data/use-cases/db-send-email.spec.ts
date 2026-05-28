@@ -1,50 +1,30 @@
-import { NotFoundError } from '@/application/errors'
-import { type EmailService, type LoadGuardianByEmailRepository } from '@/data/protocols'
+import { type EmailService } from '@/data/protocols'
 import { DbSendEmail } from '@/data/use-cases'
 import env from '@/main/config/env'
-import { makeFakeEmailService, makeFakeGuardianRepository } from '@/tests/utils'
+import { makeFakeEmailService } from '@/tests/utils'
 
 interface SutTypes {
   sut: DbSendEmail
-  guardianRepositoryStub: LoadGuardianByEmailRepository
   emailServiceStub: EmailService
 }
 
 const makeSut = (): SutTypes => {
-  const guardianRepositoryStub = makeFakeGuardianRepository()
   const emailServiceStub = makeFakeEmailService()
-  const sut = new DbSendEmail({ guardianRepository: guardianRepositoryStub, emailService: emailServiceStub })
+  const sut = new DbSendEmail({ emailService: emailServiceStub })
 
   return {
     sut,
-    guardianRepositoryStub,
     emailServiceStub
   }
 }
 
 describe('DbSendEmail', () => {
-  const data = { email: 'any_email' }
-
-  it('Should call GuardianRepository with correct value', async () => {
-    const { sut, guardianRepositoryStub } = makeSut()
-    const loadByEmailSpy = jest.spyOn(guardianRepositoryStub, 'loadByEmail')
-    await sut.send(data)
-    expect(loadByEmailSpy).toHaveBeenCalledWith('any_email')
-  })
-
-  it('Should throw if GuardianRepository throws', async () => {
-    const { sut, guardianRepositoryStub } = makeSut()
-    jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockRejectedValueOnce(new Error())
-    const promise = sut.send(data)
-    await expect(promise).rejects.toThrow()
-  })
-
-  it('Should throw NotFoundError if GuardianRepository returns null', async () => {
-    const { sut, guardianRepositoryStub } = makeSut()
-    jest.spyOn(guardianRepositoryStub, 'loadByEmail').mockResolvedValueOnce(null)
-    const promise = sut.send(data)
-    await expect(promise).rejects.toThrow(new NotFoundError('guardian'))
-  })
+  const data = {
+    id: 'any_id',
+    firstName: 'any_first_name',
+    lastName: 'any_last_name',
+    email: 'any_email@mail.com'
+  }
 
   it('Should call EmailService with correct value', async () => {
     const { sut, emailServiceStub } = makeSut()
@@ -61,7 +41,7 @@ describe('DbSendEmail', () => {
       },
       subject: 'Ative sua conta',
       text: `
-          Olá any_first_name any_last_name,\n
+          Olá any_first_name any_last_name,\\n
           Acesse o link para ativar sua conta: ${env.host}/api/guardian/email-confirmation/any_id
         `
     })
