@@ -44,6 +44,10 @@ export class SignUpController implements Controller {
         return conflict(new ConflictGuardianError())
       }
 
+      // Email is intentionally sent before returning the success response.
+      // This ensures that if email delivery fails, the client receives a 500
+      // error and can retry — rather than receiving a 201 and later discovering
+      // the confirmation email was never sent.
       await this.sendEmail.send({ email: guardian.email })
 
       return create(guardian)
