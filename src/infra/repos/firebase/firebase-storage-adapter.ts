@@ -3,23 +3,35 @@ import * as admin from 'firebase-admin'
 import * as mime from 'mime-types'
 
 export class FirebaseStorageAdapter implements FileStorage, DeleteFileStorage {
-  private readonly bucket: any
+  private bucket: any
 
-  constructor (projectId: string, storageBucket: string, firebaseServiceAccount: string) {
-    if (!admin.apps.length) {
-      const buffer = Buffer.from(firebaseServiceAccount, 'base64')
-      const firebaseServiceAccountJson = JSON.parse(buffer.toString('utf-8'))
-      admin.initializeApp({
-        credential: admin.credential.cert(firebaseServiceAccountJson),
-        projectId,
-        storageBucket
-      })
+  constructor (
+    private readonly projectId: string,
+    private readonly storageBucket: string,
+    private readonly firebaseServiceAccount: string
+  ) {}
+
+  private getBucket (): any {
+    if (!this.bucket) {
+      if (!admin.apps.length) {
+        if (!this.firebaseServiceAccount) {
+          throw new Error('Firebase credentials are not configured.')
+        }
+        const buffer = Buffer.from(this.firebaseServiceAccount, 'base64')
+        const firebaseServiceAccountJson = JSON.parse(buffer.toString('utf-8'))
+        admin.initializeApp({
+          credential: admin.credential.cert(firebaseServiceAccountJson),
+          projectId: this.projectId,
+          storageBucket: this.storageBucket
+        })
+      }
+      this.bucket = admin.storage().bucket(this.storageBucket)
     }
-    this.bucket = admin.storage().bucket(storageBucket)
+    return this.bucket
   }
 
   async save ({ file, fileName }: FileStorage.Params): Promise<FileStorage.Result> {
-    const fileRef = this.bucket.file(fileName)
+    const fileRef = this.getBucket().file(fileName)
     const mimeType = mime.lookup(fileName) || 'application/octet-stream'
     await fileRef.save(file, {
       metadata: {
@@ -37,7 +49,7 @@ export class FirebaseStorageAdapter implements FileStorage, DeleteFileStorage {
 
   async delete ({ fileUrlOrPath }: DeleteFileStorage.Params): Promise<DeleteFileStorage.Result> {
     const path = this.getPathFromUrl(fileUrlOrPath) ?? fileUrlOrPath
-    const fileRef = this.bucket.file(path)
+    const fileRef = this.getBucket().file(path)
 
     try {
       await fileRef.delete()
