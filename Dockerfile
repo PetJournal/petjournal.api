@@ -20,7 +20,7 @@ ENV MAIL_PASS=$MAIL_PASS
 COPY . .
 
 RUN yarn install
-RUN yarn build
+RUN yarn build && test -f dist/main/server.js || (echo "Build failed: dist/main/server.js not found" && exit 1)
 RUN yarn prisma generate
 
 EXPOSE 3333
