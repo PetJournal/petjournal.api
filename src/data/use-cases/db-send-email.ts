@@ -23,9 +23,9 @@ export class DbSendEmail implements SendEmail {
         },
         subject: 'Ative sua conta',
         text: `
-            Olá ${firstName} ${lastName},\\n
-            Acesse o link para ativar sua conta: ${env.host}/api/guardian/email-confirmation/${id}
-          `
+          Olá ${firstName} ${lastName},\\n
+          Acesse o link para ativar sua conta: ${env.host}/api/guardian/email-confirmation/${id}
+        `
       })
     } catch (error) {
       throw new EmailServiceError((error as Error).stack)
