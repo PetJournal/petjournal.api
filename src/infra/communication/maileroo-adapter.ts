@@ -19,18 +19,25 @@ export class MailerooAdapter implements EmailService {
       html: `<h1>${message.text}</h1>`
     }
 
-    const response = await fetch(this.apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.apiKey}`
-      },
-      body: JSON.stringify(body)
-    })
-    if (!response.ok) {
-      const errorbody = await response.text()
-      throw new Error(`Email service error ${response.status}: ${errorbody}`)
+    try {
+      const response = await fetch(this.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.apiKey}`
+        },
+        body: JSON.stringify(body)
+      })
+      if (!response.ok) {
+        const errorbody = await response.text()
+        throw new Error(`Email service error ${response.status}: ${errorbody}`)
+      }
+      return true
+    } catch (error) {
+      if ((error as Error).message.startsWith('Email service error')) {
+        throw error
+      }
+      throw new Error(`Email service failed: ${(error as Error).message}`)
     }
-    return true
   }
 }

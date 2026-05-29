@@ -1,12 +1,13 @@
 import { type SendEmail, type AddGuardian } from '@/domain/use-cases'
 import { type Validation, type Controller } from '@/application/protocols'
-import { ConflictGuardianError } from '@/application/errors'
+import { ConflictGuardianError, EmailServiceError } from '@/application/errors'
 import {
   type HttpRequest,
   type HttpResponse,
   conflict,
   serverError,
   create,
+  createWithWarning,
   badRequest
 } from '@/application/helpers'
 
@@ -45,15 +46,25 @@ export class SignUpController implements Controller {
       }
 
       // Email is intentionally sent before returning the success response.
-      // This ensures that if email delivery fails, the client receives a 500
-      // error and can retry — rather than receiving a 201 and later discovering
-      // the confirmation email was never sent.
-      await this.sendEmail.send({
-        id: guardian.id,
-        firstName: guardian.firstName,
-        lastName: guardian.lastName,
-        email: guardian.email
-      })
+      // This ensures that if email delivery fails, the client receives a 201 with warning
+      // rather than receiving a 201 success and silently missing the confirmation email.
+      try {
+        await this.sendEmail.send({
+          id: guardian.id,
+          firstName: guardian.firstName,
+          lastName: guardian.lastName,
+          email: guardian.email
+        })
+      } catch (error) {
+        if (error instanceof EmailServiceError) {
+          return createWithWarning(
+            guardian,
+            'email_failed',
+            'O cadastro foi realizado com sucesso, mas ocorreu uma falha ao enviar o e-mail de confirmação.'
+          )
+        }
+        throw error
+      }
 
       return create(guardian)
     } catch (error) {

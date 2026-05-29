@@ -49,6 +49,15 @@ export const create = (data: any): HttpResponse => ({
   body: data
 })
 
+export const createWithWarning = (data: any, warning: string, message: string): HttpResponse => ({
+  statusCode: 201,
+  body: {
+    ...data,
+    warning,
+    message
+  }
+})
+
 export const noContent = (): HttpResponse => ({
   statusCode: 204,
   body: null

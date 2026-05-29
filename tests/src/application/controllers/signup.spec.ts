@@ -8,8 +8,8 @@ import {
   makeFakeSignUpRequest,
   makeFakeValidation
 } from '@/tests/utils'
-import { badRequest, conflict, create } from '@/application/helpers'
-import { ConflictGuardianError, MissingParamError } from '@/application/errors'
+import { badRequest, conflict, create, createWithWarning } from '@/application/helpers'
+import { ConflictGuardianError, MissingParamError, EmailServiceError } from '@/application/errors'
 
 interface SutTypes {
   sut: SignUpController
@@ -101,11 +101,26 @@ describe('SignUp Controller', () => {
       })
     })
 
-    it('Should return 500 (ServerError) if SendEmail throws', async () => {
+    it('Should return 500 (ServerError) if SendEmail throws generic Error', async () => {
       const { sut, sendEmailStub } = makeSut()
       jest.spyOn(sendEmailStub, 'send').mockRejectedValue(new Error())
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(makeFakeServerError())
+    })
+
+    it('Should return 201 (Created) with warning if SendEmail throws EmailServiceError', async () => {
+      const { sut, sendEmailStub } = makeSut()
+      jest.spyOn(sendEmailStub, 'send').mockRejectedValue(new EmailServiceError())
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(createWithWarning({
+        id: 'any_id',
+        firstName: 'any_first_name',
+        lastName: 'any_last_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        phone: 'any_phone',
+        image: ''
+      }, 'email_failed', 'O cadastro foi realizado com sucesso, mas ocorreu uma falha ao enviar o e-mail de confirmação.'))
     })
   })
 

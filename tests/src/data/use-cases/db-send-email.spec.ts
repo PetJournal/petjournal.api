@@ -2,6 +2,7 @@ import { type EmailService } from '@/data/protocols'
 import { DbSendEmail } from '@/data/use-cases'
 import env from '@/main/config/env'
 import { makeFakeEmailService } from '@/tests/utils'
+import { EmailServiceError } from '@/application/errors'
 
 interface SutTypes {
   sut: DbSendEmail
@@ -47,10 +48,10 @@ describe('DbSendEmail', () => {
     })
   })
 
-  it('Should throw if EmailService throws', async () => {
+  it('Should throw EmailServiceError if EmailService throws', async () => {
     const { sut, emailServiceStub } = makeSut()
     jest.spyOn(emailServiceStub, 'send').mockRejectedValueOnce(new Error())
     const promise = sut.send(data)
-    await expect(promise).rejects.toThrow()
+    await expect(promise).rejects.toThrow(new EmailServiceError())
   })
 })
