@@ -78,9 +78,5 @@
     "uuid": "^9.0.0",
     "validator": "^13.9.0"
   },
-  "packageManager": "yarn@3.5.0",
-  "prisma": {
-    "schema": "./src/infra/repos/postgresql/prisma/schema.prisma",
-    "seed": "sucrase-node ./src/infra/repos/postgresql/prisma/seed.ts"
-  }
+  "packageManager": "yarn@3.5.0"
 }
