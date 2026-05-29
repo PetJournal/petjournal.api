@@ -18,5 +18,6 @@ module.exports = {
   preset: 'ts-jest',
   transform: {
     '\\.ts$': 'ts-jest'
-  }
+  },
+  setupFilesAfterEnv: ['<rootDir>/tests/helpers/integration-setup.ts']
 }
