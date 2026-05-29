@@ -1,6 +1,10 @@
 {
   "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src"
+  },
   "exclude": [
-    "tests"
+    "tests",
+    "prisma.config.ts"
   ]
 }
