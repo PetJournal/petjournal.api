@@ -1,7 +1,7 @@
 import { type LoadTagByIdRepository, type AddSchedulerRepository, type AddTagRepository, type LoadPetByIdRepository, type DeleteSchedulerByIdRepository } from '@/data/protocols'
 import { type EventsGenerator } from '@/data/protocols/service'
 import { type ResultResponse } from '@/domain/types/result'
-import { type Pet } from '@/infra/repos/postgresql/prisma/generated'
+import { type Pet } from '@/infra/repos/postgresql/prisma/generated/client'
 
 export interface AddScheduler {
   add: (params: AddScheduler.Params) => Promise<AddScheduler.Result>

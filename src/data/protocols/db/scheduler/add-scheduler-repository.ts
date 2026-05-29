@@ -1,4 +1,4 @@
-import { type Pet } from '@/infra/repos/postgresql/prisma/generated'
+import { type Pet } from '@/infra/repos/postgresql/prisma/generated/client'
 
 export interface AddSchedulerRepository {
   add: (params: AddSchedulerRepository.Params) => Promise<AddSchedulerRepository.Result>
