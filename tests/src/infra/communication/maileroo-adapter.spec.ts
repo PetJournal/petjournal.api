@@ -40,7 +40,7 @@ describe('MailerooAdapter', () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${env.mailerooApiKey}`
+          'X-API-Key': env.mailerooApiKey
         },
         body: JSON.stringify({
           from: {

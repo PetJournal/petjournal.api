@@ -24,7 +24,7 @@ export class MailerooAdapter implements EmailService {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.apiKey}`
+          'X-API-Key': this.apiKey
         },
         body: JSON.stringify(body)
       })
