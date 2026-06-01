@@ -89,7 +89,7 @@ describe('Scheduler Repository', () => {
           breedId: expect.any(String),
           sizeId: expect.any(String),
           castrated: false,
-          dateOfBirth: new Date('2000-11-23T02:00:00.000Z'),
+          dateOfBirth: new Date(2000, 10, 23),
           image: ''
         }]
       })
