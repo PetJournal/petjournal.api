@@ -40,7 +40,7 @@ describe('DbDeleteScheduler Use case', () => {
         const { sut, guardianRepositoryStub } = makeSut()
         const spyLoadGuardian = jest.spyOn(guardianRepositoryStub, 'loadById')
         await sut.delete(params)
-        expect(spyLoadGuardian).toHaveBeenCalledWith('any_guardian_id')
+        expect(spyLoadGuardian).toHaveBeenCalledWith(params.guardianId)
       })
 
       it('Should throw if LoadById throws', async () => {
