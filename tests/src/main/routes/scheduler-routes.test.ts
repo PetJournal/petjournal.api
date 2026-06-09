@@ -130,6 +130,8 @@ describe('Scheduler Routes', () => {
   })
 
   beforeEach(async () => {
+    await prisma.event.deleteMany()
+    await prisma.scheduler.deleteMany()
     await prisma.pet.deleteMany()
     await prisma.tag.deleteMany()
   })
