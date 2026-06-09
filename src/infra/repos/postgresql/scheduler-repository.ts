@@ -52,18 +52,7 @@ export class SchedulerRepository implements AddSchedulerRepository, DeleteSchedu
         id: schedulerId,
         guardianId
       },
-      select: {
-        id: true,
-        tagId: true,
-        guardianId: true,
-        title: true,
-        description: true,
-        note: true,
-        startAt: true,
-        endAt: true,
-        daysOfWeek: true,
-        daysOfMonth: true,
-        daily: true,
+      include: {
         pets: {
           select: {
             id: true,
