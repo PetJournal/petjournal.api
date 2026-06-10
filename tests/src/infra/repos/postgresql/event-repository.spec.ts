@@ -675,18 +675,57 @@ describe('Event Repository', () => {
   })
 
   describe('DeleteById', () => {
-    it('Should return false if delete fails', async () => {
+    it('Should return false if deleteById fails', async () => {
       const sut = makeSut()
       jest.spyOn(sut, 'deleteById').mockResolvedValueOnce(false)
       const result = await sut.deleteById({ eventId: 'any_event_id', guardianId: 'any_guardian_id' })
       expect(result).toBe(false)
     })
 
-    it('Should throw if delete throws', async () => {
+    it('Should throw if deleteById throws', async () => {
       const sut = makeSut()
       jest.spyOn(sut, 'deleteById').mockRejectedValue(new Error())
       const promise = sut.deleteById({ eventId: 'any_scheduler_id', guardianId: 'any_guardian_id' })
       await expect(promise).rejects.toThrow()
+    })
+
+    it('Should return true on deleteById success', async () => {
+      const sut = makeSut()
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
+      const tag = await prisma.tag.create({
+        data: { guardianId: guardian.id, name: 'next', color: 'blue' }
+      })
+
+      const date1 = new Date('2020-01-01T10:00:00Z')
+      const date2 = new Date('2020-01-01T12:00:00Z')
+
+      const scheduler = await prisma.scheduler.create({
+        data: {
+          guardianId: guardian.id,
+          tagId: tag.id,
+          title: 'future',
+          description: '',
+          note: '',
+          startAt: date1,
+          endAt: date2,
+          daysOfWeek: [],
+          daysOfMonth: [],
+          daily: false,
+          pets: { connect: [{ id: pet.id }] }
+        }
+      })
+
+      const event = await prisma.event.create({
+        data: {
+          schedulerId: scheduler.id,
+          start: date1,
+          end: date2
+        }
+      })
+
+      const result = await sut.deleteById({ guardianId: guardian.id, eventId: event.id })
+      expect(result).toBe(true)
     })
   })
 })
