@@ -147,7 +147,7 @@ describe('DbAddScheduler Use case', () => {
         })
         const deleteSpy = jest.spyOn(schedulerRepositoryStub, 'delete')
         await sut.add(params)
-        expect(deleteSpy).toHaveBeenCalledWith('any_id')
+        expect(deleteSpy).toHaveBeenCalledWith({ guardianId: 'any_guardian_id', schedulerId: 'any_id' })
       })
 
       it('Should throw if delete throws', async () => {

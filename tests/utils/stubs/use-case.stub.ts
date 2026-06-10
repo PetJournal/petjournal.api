@@ -25,7 +25,8 @@ import {
   type UpdateSettings,
   type LoadPetById,
   type LoadNextTasksByPetIdAndTagId,
-  type UpdateGuardian
+  type UpdateGuardian,
+  type DeleteScheduler
 } from '@/domain/use-cases'
 import { mockTokenService } from '@/tests/utils/stubs/service.stub'
 import { mockFakeAppointPet, mockFakePetUpdated, mockFakePetByGuardianIdLoaded, mockFakeSpecieAdded, makeFakeGuardianData, mockFakeBreedAdded, mockFakeSizeAdded, mockFakePetByIdLoaded } from '../mocks'
@@ -464,6 +465,17 @@ const makeFakeAddSchedulerUseCase = (): AddScheduler => {
   return new AddSchedulerStub()
 }
 
+const makeFakeDeleteSchedulerUseCase = (): DeleteScheduler => {
+  class DeleteSchedulerStub implements DeleteScheduler {
+    async delete (params: DeleteScheduler.Params): Promise<DeleteScheduler.Result> {
+      return {
+        isSuccess: true
+      }
+    }
+  }
+  return new DeleteSchedulerStub()
+}
+
 const makeFakeLoadSettingsUseCase = (): LoadSettings => {
   class LoadSettingsStub implements LoadSettings {
     async loadAll (param: LoadSettings.Param): Promise<LoadSettings.Result> {
@@ -523,6 +535,7 @@ export {
   makeFakeAddTagUseCase,
   makeFakeLoadTagByIdUseCase,
   makeFakeAddSchedulerUseCase,
+  makeFakeDeleteSchedulerUseCase,
   makeFakeLoadSettingsUseCase,
   makeFakeUpdateSettingsUseCase,
   makeFakeLoadNextTasksByPetIdAndTagIdUseCase

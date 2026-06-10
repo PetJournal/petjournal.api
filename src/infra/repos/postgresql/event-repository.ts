@@ -6,11 +6,12 @@ import {
   type AddManyEventsRepository,
   type LoadPreviousTasksByPetIdRepository,
   type LoadNextTasksByPetIdRepository,
-  type LoadNextTasksByPetIdAndTagIdRepository
+  type LoadNextTasksByPetIdAndTagIdRepository,
+  type DeleteEventsBySchedulerIdRepository
 } from '@/data/protocols'
 import { prisma as db } from './prisma'
 
-export class EventRepository implements AddEventRepository, AddManyEventsRepository, LoadEventByDateRepository, LoadTasksByIntervalRepository, LoadNextTasksByPetIdRepository, LoadPreviousTasksByPetIdRepository, LoadNextTasksByPetIdAndTagIdRepository {
+export class EventRepository implements AddEventRepository, AddManyEventsRepository, LoadEventByDateRepository, LoadTasksByIntervalRepository, LoadNextTasksByPetIdRepository, LoadPreviousTasksByPetIdRepository, LoadNextTasksByPetIdAndTagIdRepository, DeleteEventsBySchedulerIdRepository {
   async add (params: AddEventRepository.Params): Promise<AddEventRepository.Result> {
     try {
       const event = await db.event.create({
@@ -226,5 +227,14 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
       history,
       totalPages: Math.ceil(total / limit)
     }
+  }
+
+  async delete (params: DeleteEventsBySchedulerIdRepository.Params): Promise<DeleteEventsBySchedulerIdRepository.Result> {
+    const { guardianId, schedulerId } = params
+    const events = await db.event.deleteMany({ where: { schedulerId, scheduler: { guardianId } } })
+    if (!events.count) {
+      return false
+    }
+    return true
   }
 }
