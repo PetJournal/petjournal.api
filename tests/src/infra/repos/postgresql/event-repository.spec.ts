@@ -742,5 +742,46 @@ describe('Event Repository', () => {
       const promise = sut.loadById({ guardianId: 'any_guardian_id', eventId: 'any_event_id' })
       await expect(promise).rejects.toThrow()
     })
+
+    it('Should return an event on success', async () => {
+      const sut = makeSut()
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
+      const tag = await prisma.tag.create({
+        data: {
+          guardianId: guardian.id,
+          name: 'any_name',
+          color: 'any_color'
+        }
+      })
+      const schedulerData = {
+        tagId: tag.id,
+        guardianId: guardian.id,
+        title: 'any_title',
+        description: 'any_description',
+        note: 'any_note',
+        startAt: new Date('2024-04-04T15:00:00Z'),
+        endAt: new Date('2025-04-04T17:00:00Z'),
+        daysOfWeek: [],
+        daysOfMonth: [],
+        daily: false,
+        pets: { connect: [{ id: pet.id }] }
+      }
+      const scheduler = await prisma.scheduler.create({ data: schedulerData })
+      const event = await prisma.event.create({
+        data: {
+          schedulerId: scheduler.id,
+          start: schedulerData.startAt,
+          end: schedulerData.endAt
+        }
+      })
+      const result = await sut.loadById({ guardianId: guardian.id, eventId: event.id })
+      expect(result).toEqual({
+        id: expect.any(String),
+        schedulerId: event.schedulerId,
+        start: event.start,
+        end: event.end
+      })
+    })
   })
 })
