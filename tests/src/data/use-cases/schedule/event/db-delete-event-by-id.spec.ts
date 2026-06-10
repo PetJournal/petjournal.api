@@ -38,6 +38,13 @@ describe('DbDeleteEvent Use case', () => {
         await sut.deleteById(params)
         expect(spyLoadGuardian).toHaveBeenCalledWith(params.guardianId)
       })
+
+      it('Should throw if LoadById throws', async () => {
+        const { sut, guardianRepositoryStub } = makeSut()
+        jest.spyOn(guardianRepositoryStub, 'loadById').mockRejectedValue(new Error())
+        const promise = sut.deleteById(params)
+        await expect(promise).rejects.toThrow()
+      })
     })
   })
 })
