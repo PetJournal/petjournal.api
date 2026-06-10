@@ -62,7 +62,7 @@ export class DbAddScheduler implements AddScheduler {
     })
 
     if (!eventGeneratorResult.isSuccess) {
-      const schedulerDeleted = await this.schedulerRepository.delete(scheduler.id)
+      const schedulerDeleted = await this.schedulerRepository.delete({ guardianId: scheduler.guardianId, schedulerId: scheduler.id })
       if (!schedulerDeleted) {
         return {
           isSuccess: false,
