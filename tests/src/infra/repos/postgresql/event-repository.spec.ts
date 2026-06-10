@@ -728,4 +728,12 @@ describe('Event Repository', () => {
       expect(result).toBe(true)
     })
   })
+
+  describe('LoadById', () => {
+    it('Should return null if an invalid eventId is provided', async () => {
+      const sut = makeSut()
+      const result = await sut.loadById({ guardianId: 'any_guardian_id', eventId: 'invalid_event_id' })
+      expect(result).toBe(null)
+    })
+  })
 })
