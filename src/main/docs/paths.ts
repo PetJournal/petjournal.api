@@ -30,7 +30,8 @@ import {
   loadNextTasksByPetIdPath,
   loadPreviousTasksByPetIdPath,
   loadNextTasksByPetIdAndTagIdPath,
-  updateGuardianPath
+  updateGuardianPath,
+  deleteTaskByIdPath
 } from './paths/'
 
 export default {
@@ -58,6 +59,7 @@ export default {
   '/settings': { ...loadSettingsPath, ...updateSettingsPath },
   '/tasks/pet/next/{petId}': loadNextTasksByPetIdPath,
   '/tasks/pet/history/{petId}': loadPreviousTasksByPetIdPath,
-  '/tasks/pet/{petId}/tag/{tagId}': loadNextTasksByPetIdAndTagIdPath
+  '/tasks/pet/{petId}/tag/{tagId}': loadNextTasksByPetIdAndTagIdPath,
+  '/tasks/{eventId}': deleteTaskByIdPath
 
 }
