@@ -1,3 +1,4 @@
+import { NotAcceptableError } from '@/application/errors'
 import { type DeleteEventByIdRepository, type LoadEventByIdRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 import { DbDeleteEventById } from '@/data/use-cases'
 import { type DeleteEventById } from '@/domain/use-cases'
@@ -44,6 +45,16 @@ describe('DbDeleteEvent Use case', () => {
         jest.spyOn(guardianRepositoryStub, 'loadById').mockRejectedValue(new Error())
         const promise = sut.deleteById(params)
         await expect(promise).rejects.toThrow()
+      })
+
+      it('Should return NotAcceptableError if an invalid guardianId is provided', async () => {
+        const { sut, guardianRepositoryStub } = makeSut()
+        jest.spyOn(guardianRepositoryStub, 'loadById').mockResolvedValueOnce(null)
+        const result = await sut.deleteById(params)
+        expect(result).toEqual({
+          isSuccess: false,
+          error: new NotAcceptableError('userId')
+        })
       })
     })
   })
