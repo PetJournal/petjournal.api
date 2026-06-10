@@ -1,7 +1,7 @@
 import { type Router } from 'express'
 import { auth, accountConfirmation } from '../middlewares'
 import { adaptRoute } from '../adapters'
-import { makeLoadCurrentDateTasksController, makeLoadCurrentWeekTasksController, makeLoadCurrentMonthTasksController, makeLoadNextTasksByPetIdController, makeLoadPreviousTasksByPetIdController, makeLoadNextTasksByPetIdAndTagIdController } from '../factories'
+import { makeLoadCurrentDateTasksController, makeLoadCurrentWeekTasksController, makeLoadCurrentMonthTasksController, makeLoadNextTasksByPetIdController, makeLoadPreviousTasksByPetIdController, makeLoadNextTasksByPetIdAndTagIdController, makeDeleteEventByIdController } from '../factories'
 
 export default (router: Router): void => {
   router.get(
@@ -42,5 +42,12 @@ export default (router: Router): void => {
     auth,
     accountConfirmation,
     adaptRoute(makeLoadNextTasksByPetIdAndTagIdController())
+  )
+
+  router.delete(
+    '/tasks/:eventId',
+    auth,
+    accountConfirmation,
+    adaptRoute(makeDeleteEventByIdController())
   )
 }
