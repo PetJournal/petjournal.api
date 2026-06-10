@@ -735,5 +735,12 @@ describe('Event Repository', () => {
       const result = await sut.loadById({ guardianId: 'any_guardian_id', eventId: 'invalid_event_id' })
       expect(result).toBe(null)
     })
+
+    it('Should throw if loadById throws', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'loadById').mockRejectedValue(new Error())
+      const promise = sut.loadById({ guardianId: 'any_guardian_id', eventId: 'any_event_id' })
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
