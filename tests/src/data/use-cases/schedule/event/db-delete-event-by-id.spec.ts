@@ -1,4 +1,4 @@
-import { NotAcceptableError } from '@/application/errors'
+import { NotAcceptableError, ServerError } from '@/application/errors'
 import { type DeleteEventByIdRepository, type LoadEventByIdRepository, type LoadGuardianByIdRepository } from '@/data/protocols'
 import { DbDeleteEventById } from '@/data/use-cases'
 import { type DeleteEventById } from '@/domain/use-cases'
@@ -91,6 +91,16 @@ describe('DbDeleteEvent Use case', () => {
           const spyDeleteEvent = jest.spyOn(eventRepositoryStub, 'deleteById')
           await sut.deleteById(params)
           expect(spyDeleteEvent).toHaveBeenCalledWith({ eventId: params.eventId, guardianId: params.guardianId })
+        })
+
+        it('Should return ServerError if deleteById fails', async () => {
+          const { sut, eventRepositoryStub } = makeSut()
+          jest.spyOn(eventRepositoryStub, 'deleteById').mockResolvedValueOnce(false)
+          const result = await sut.deleteById({ eventId: 'invalid_event_id', guardianId: params.guardianId })
+          expect(result).toEqual({
+            isSuccess: false,
+            error: new ServerError('delete error')
+          })
         })
       })
     })
