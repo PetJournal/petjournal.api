@@ -129,6 +129,13 @@ interface DeleteSchedulerRequest {
   userId: string
 }
 
+interface DeleteEventByIdRequest {
+  params: {
+    eventId: string
+  }
+  userId: string
+}
+
 export {
   type AuthMiddlewareRequest,
   type LoginRequest,
@@ -143,5 +150,6 @@ export {
   type AddTagRequest,
   type AddSchedulerRequest,
   type DeleteSchedulerRequest,
-  type UpdateGuardianRequest
+  type UpdateGuardianRequest,
+  type DeleteEventByIdRequest
 }
