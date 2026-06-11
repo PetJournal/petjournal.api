@@ -84,6 +84,15 @@ describe('DbDeleteEvent Use case', () => {
           })
         })
       })
+
+      describe('DeleteById', () => {
+        it('Should call deleteById with correct value', async () => {
+          const { sut, eventRepositoryStub } = makeSut()
+          const spyDeleteEvent = jest.spyOn(eventRepositoryStub, 'deleteById')
+          await sut.deleteById(params)
+          expect(spyDeleteEvent).toHaveBeenCalledWith({ eventId: params.eventId, guardianId: params.guardianId })
+        })
+      })
     })
   })
 })
