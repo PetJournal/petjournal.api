@@ -1,6 +1,6 @@
 import { DeleteEventByIdController } from '@/application/controllers'
 import { NotAcceptableError, ServerError } from '@/application/errors'
-import { notAcceptable, serverError } from '@/application/helpers'
+import { notAcceptable, serverError, success } from '@/application/helpers'
 import { type DeleteEventById } from '@/domain/use-cases'
 import { makeFakeDeleteEventByIdRequest, makeFakeDeleteEventByIdUseCase } from '@/tests/utils'
 
@@ -47,5 +47,14 @@ describe('DeleteEventById Controller', () => {
       await sut.handle(httpRequest)
       expect(spyDeleteEvent).toHaveBeenCalledWith({ eventId: 'any_event_id', guardianId: 'any_guardian_id' })
     })
+  })
+
+  it('Should return 200(success) if event was deleted', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(success({
+      message: 'event deleted',
+      eventId: 'any_event_id'
+    }))
   })
 })
