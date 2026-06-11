@@ -26,7 +26,7 @@ export class DbDeleteEventById implements DeleteEventById {
         error: new NotAcceptableError('eventId')
       }
     }
-    const eventDeletedResult = this.eventRepository.deleteById({ eventId, guardianId })
+    const eventDeletedResult = await this.eventRepository.deleteById({ eventId, guardianId })
     if (!eventDeletedResult) {
       return {
         isSuccess: false,
