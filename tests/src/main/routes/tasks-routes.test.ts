@@ -239,4 +239,11 @@ describe('LoadTasks Routes', () => {
         .expect(200)
     })
   })
+
+  it('Should return 400 if no access token is provided', async () => {
+    await request(app)
+      .delete('/api/tasks/any_id')
+      .set('Authorization', '')
+      .expect(400)
+  })
 })
