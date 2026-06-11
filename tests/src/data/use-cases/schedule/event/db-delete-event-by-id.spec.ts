@@ -73,6 +73,16 @@ describe('DbDeleteEvent Use case', () => {
           const promise = sut.deleteById(params)
           await expect(promise).rejects.toThrow()
         })
+
+        it('Should return NotAcceptableError if an invalid eventId is provided', async () => {
+          const { sut, eventRepositoryStub } = makeSut()
+          jest.spyOn(eventRepositoryStub, 'loadById').mockResolvedValueOnce(null)
+          const result = await sut.deleteById(params)
+          expect(result).toEqual({
+            isSuccess: false,
+            error: new NotAcceptableError('eventId')
+          })
+        })
       })
     })
   })
