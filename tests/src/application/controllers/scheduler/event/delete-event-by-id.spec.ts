@@ -24,7 +24,7 @@ const makeSut = (): SutTypes => {
 describe('DeleteEventById Controller', () => {
   const httpRequest = makeFakeDeleteEventByIdRequest()
   describe('DeleteById Use case', () => {
-    it('Should return 406(NotAcceptable) if an invalid data is provided', async () => {
+    it('Should return 406(NotAcceptable) if an invalid eventId is provided', async () => {
       const { sut, deleteEventStub } = makeSut()
       jest.spyOn(deleteEventStub, 'deleteById').mockResolvedValue({
         isSuccess: false,
