@@ -40,5 +40,12 @@ describe('DeleteEventById Controller', () => {
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(serverError(new ServerError('Internal Server Error')))
     })
+
+    it('Should call deleteEvent with correct values', async () => {
+      const { sut, deleteEventStub } = makeSut()
+      const spyDeleteEvent = jest.spyOn(deleteEventStub, 'deleteById')
+      await sut.handle(httpRequest)
+      expect(spyDeleteEvent).toHaveBeenCalledWith({ eventId: 'any_event_id', guardianId: 'any_guardian_id' })
+    })
   })
 })
