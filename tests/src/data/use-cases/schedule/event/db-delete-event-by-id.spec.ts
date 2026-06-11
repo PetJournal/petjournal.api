@@ -105,4 +105,11 @@ describe('DbDeleteEvent Use case', () => {
       })
     })
   })
+  it('Should return true on success', async () => {
+    const { sut } = makeSut()
+    const result = await sut.deleteById(params)
+    expect(result).toEqual({
+      isSuccess: true
+    })
+  })
 })
