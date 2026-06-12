@@ -15,7 +15,7 @@ export class DeleteEventByIdController implements Controller {
       const eventId = httpRequest.params.eventId as string
       const result = await this.deleteEvent.deleteById({ eventId, guardianId })
       if (!result.isSuccess) {
-        return notAcceptable(result.error as Error)
+        return notAcceptable(result.error)
       }
       return success({
         message: 'event deleted',

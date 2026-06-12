@@ -8,5 +8,5 @@ export namespace DeleteEventByIdRepository {
     guardianId: string
   }
 
-  export type Result = boolean | undefined
+  export type Result = boolean
 }
