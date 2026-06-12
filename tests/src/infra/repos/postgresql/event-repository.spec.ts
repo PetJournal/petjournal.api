@@ -86,7 +86,7 @@ describe('Event Repository', () => {
       const sut = makeSut()
       const fakeDate = new Date('01-01-2001')
       const result = await sut.loadByDate({ guardianId: 'any_guardian_id', date: fakeDate })
-      expect(result).toBe(null)
+      expect(result).toBeNull()
     })
 
     it('Should throw if load throws', async () => {
@@ -733,7 +733,7 @@ describe('Event Repository', () => {
     it('Should return null if an invalid eventId is provided', async () => {
       const sut = makeSut()
       const result = await sut.loadById({ guardianId: 'any_guardian_id', eventId: 'invalid_event_id' })
-      expect(result).toBe(null)
+      expect(result).toBeNull()
     })
 
     it('Should throw if loadById throws', async () => {
