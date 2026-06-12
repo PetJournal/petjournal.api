@@ -34,7 +34,8 @@ export class DbDeleteEventById implements DeleteEventById {
       }
     }
     return {
-      isSuccess: true
+      isSuccess: true,
+      data: undefined
     }
   }
 }

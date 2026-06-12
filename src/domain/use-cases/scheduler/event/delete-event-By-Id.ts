@@ -1,4 +1,5 @@
 import { type LoadGuardianByIdRepository, type DeleteEventByIdRepository, type LoadEventByIdRepository } from '@/data/protocols'
+import { type ResultResponse } from '@/domain/types/result'
 
 export interface DeleteEventById {
   deleteById: (params: DeleteEventById.Params) => Promise<DeleteEventById.Result>
@@ -10,10 +11,7 @@ export namespace DeleteEventById {
     guardianId: string
   }
 
-  export type Result = {
-    isSuccess: boolean
-    error?: Error
-  }
+  export type Result = ResultResponse<undefined>
 
   export type Dependencies = {
     eventRepository: DeleteEventByIdRepository & LoadEventByIdRepository

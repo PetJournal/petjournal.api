@@ -481,7 +481,8 @@ const makeFakeDeleteEventByIdUseCase = (): DeleteEventById => {
   class DeleteEventByIdStub implements DeleteEventById {
     async deleteById (params: DeleteEventById.Params): Promise<DeleteEventById.Result> {
       return {
-        isSuccess: true
+        isSuccess: true,
+        data: undefined
       }
     }
   }
