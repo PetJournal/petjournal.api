@@ -64,7 +64,7 @@ describe('DbDeleteEvent Use case', () => {
           const { sut, eventRepositoryStub } = makeSut()
           const spyLoadEvent = jest.spyOn(eventRepositoryStub, 'loadById')
           await sut.deleteById(params)
-          expect(spyLoadEvent).toHaveBeenCalledWith({ eventId: params.eventId, guardianId: params.guardianId })
+          expect(spyLoadEvent).toHaveBeenCalledWith(params)
         })
 
         it('Should throw if LoadById throws', async () => {
@@ -90,13 +90,13 @@ describe('DbDeleteEvent Use case', () => {
           const { sut, eventRepositoryStub } = makeSut()
           const spyDeleteEvent = jest.spyOn(eventRepositoryStub, 'deleteById')
           await sut.deleteById(params)
-          expect(spyDeleteEvent).toHaveBeenCalledWith({ eventId: params.eventId, guardianId: params.guardianId })
+          expect(spyDeleteEvent).toHaveBeenCalledWith(params)
         })
 
         it('Should return ServerError if deleteById fails', async () => {
           const { sut, eventRepositoryStub } = makeSut()
           jest.spyOn(eventRepositoryStub, 'deleteById').mockResolvedValueOnce(false)
-          const result = await sut.deleteById({ eventId: 'invalid_event_id', guardianId: params.guardianId })
+          const result = await sut.deleteById(params)
           expect(result).toEqual({
             isSuccess: false,
             error: new ServerError('delete error')
