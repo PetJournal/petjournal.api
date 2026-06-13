@@ -53,7 +53,9 @@ import {
   type UpdateGuardianImageRepository,
   type UpdateGuardianRepository,
   type LoadSchedulerByIdRepository,
-  type DeleteEventsBySchedulerIdRepository
+  type DeleteEventsBySchedulerIdRepository,
+  type DeleteEventByIdRepository,
+  type LoadEventByIdRepository
 } from '@/data/protocols'
 import { type LoadCatSizesRepository } from '@/data/protocols/db/size/load-cat-sizes-repository'
 import { type LoadDogSizesRepository } from '@/data/protocols/db/size/load-dog-sizes-repository'
@@ -367,8 +369,8 @@ const makeFakeTagRepository = (): AddTagRepository & LoadTagByIdRepository & Upd
   return new TagRepositoryStub()
 }
 
-const makeFakeEventRepository = (): AddEventRepository & LoadEventByDateRepository & AddManyEventsRepository & LoadNextTasksByPetIdAndTagIdRepository & DeleteEventsBySchedulerIdRepository => {
-  class EventRepositoryStub implements AddEventRepository, LoadEventByDateRepository, AddManyEventsRepository, LoadNextTasksByPetIdAndTagIdRepository, DeleteEventsBySchedulerIdRepository {
+const makeFakeEventRepository = (): AddEventRepository & LoadEventByDateRepository & DeleteEventByIdRepository & LoadEventByIdRepository & AddManyEventsRepository & LoadNextTasksByPetIdAndTagIdRepository & DeleteEventsBySchedulerIdRepository => {
+  class EventRepositoryStub implements AddEventRepository, LoadEventByDateRepository, DeleteEventByIdRepository, LoadEventByIdRepository, AddManyEventsRepository, LoadNextTasksByPetIdAndTagIdRepository, DeleteEventsBySchedulerIdRepository {
     async add (params: AddEventRepository.Params): Promise<AddEventRepository.Result> {
       return {
         id: 'any_id',
@@ -425,6 +427,19 @@ const makeFakeEventRepository = (): AddEventRepository & LoadEventByDateReposito
 
     async delete (params: DeleteEventsBySchedulerIdRepository.Params): Promise<DeleteEventsBySchedulerIdRepository.Result> {
       return true
+    }
+
+    async deleteById (params: DeleteEventByIdRepository.Params): Promise<DeleteEventByIdRepository.Result> {
+      return true
+    }
+
+    async loadById (params: LoadEventByIdRepository.Params): Promise<LoadEventByIdRepository.Result> {
+      return {
+        id: 'any_event_id',
+        schedulerId: 'any_scheduler_id',
+        start: new Date('2025-06-01T10:30:00Z'),
+        end: new Date('2025-07-01T11:30:00Z')
+      }
     }
   }
   return new EventRepositoryStub()

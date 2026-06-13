@@ -86,7 +86,7 @@ describe('Event Repository', () => {
       const sut = makeSut()
       const fakeDate = new Date('01-01-2001')
       const result = await sut.loadByDate({ guardianId: 'any_guardian_id', date: fakeDate })
-      expect(result).toBe(null)
+      expect(result).toBeNull()
     })
 
     it('Should throw if load throws', async () => {
@@ -671,6 +671,117 @@ describe('Event Repository', () => {
 
       const result = await sut.delete({ guardianId: guardian.id, schedulerId: scheduler.id })
       expect(result).toBe(true)
+    })
+  })
+
+  describe('DeleteById', () => {
+    it('Should return false if deleteById fails', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'deleteById').mockResolvedValueOnce(false)
+      const result = await sut.deleteById({ eventId: 'any_event_id', guardianId: 'any_guardian_id' })
+      expect(result).toBe(false)
+    })
+
+    it('Should throw if deleteById throws', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'deleteById').mockRejectedValue(new Error())
+      const promise = sut.deleteById({ eventId: 'any_scheduler_id', guardianId: 'any_guardian_id' })
+      await expect(promise).rejects.toThrow()
+    })
+
+    it('Should return true on deleteById success', async () => {
+      const sut = makeSut()
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
+      const tag = await prisma.tag.create({
+        data: { guardianId: guardian.id, name: 'next', color: 'blue' }
+      })
+
+      const date1 = new Date('2020-01-01T10:00:00Z')
+      const date2 = new Date('2020-01-01T12:00:00Z')
+
+      const scheduler = await prisma.scheduler.create({
+        data: {
+          guardianId: guardian.id,
+          tagId: tag.id,
+          title: 'future',
+          description: '',
+          note: '',
+          startAt: date1,
+          endAt: date2,
+          daysOfWeek: [],
+          daysOfMonth: [],
+          daily: false,
+          pets: { connect: [{ id: pet.id }] }
+        }
+      })
+
+      const event = await prisma.event.create({
+        data: {
+          schedulerId: scheduler.id,
+          start: date1,
+          end: date2
+        }
+      })
+
+      const result = await sut.deleteById({ guardianId: guardian.id, eventId: event.id })
+      expect(result).toBe(true)
+    })
+  })
+
+  describe('LoadById', () => {
+    it('Should return null if an invalid eventId is provided', async () => {
+      const sut = makeSut()
+      const result = await sut.loadById({ guardianId: 'any_guardian_id', eventId: 'invalid_event_id' })
+      expect(result).toBeNull()
+    })
+
+    it('Should throw if loadById throws', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'loadById').mockRejectedValue(new Error())
+      const promise = sut.loadById({ guardianId: 'any_guardian_id', eventId: 'any_event_id' })
+      await expect(promise).rejects.toThrow()
+    })
+
+    it('Should return an event on success', async () => {
+      const sut = makeSut()
+      const guardian = await PrismaHelper.createGuardian()
+      const pet = await PrismaHelper.createPet(guardian.id)
+      const tag = await prisma.tag.create({
+        data: {
+          guardianId: guardian.id,
+          name: 'any_name',
+          color: 'any_color'
+        }
+      })
+      const schedulerData = {
+        tagId: tag.id,
+        guardianId: guardian.id,
+        title: 'any_title',
+        description: 'any_description',
+        note: 'any_note',
+        startAt: new Date('2024-04-04T15:00:00Z'),
+        endAt: new Date('2025-04-04T17:00:00Z'),
+        daysOfWeek: [],
+        daysOfMonth: [],
+        daily: false,
+        pets: { connect: [{ id: pet.id }] }
+      }
+      const scheduler = await prisma.scheduler.create({ data: schedulerData })
+      const event = await prisma.event.create({
+        data: {
+          schedulerId: scheduler.id,
+          start: schedulerData.startAt,
+          end: schedulerData.endAt
+        }
+      })
+      const result = await sut.loadById({ guardianId: guardian.id, eventId: event.id })
+      expect(result).toEqual({
+        id: expect.any(String),
+        schedulerId: event.schedulerId,
+        start: event.start,
+        end: event.end
+      })
     })
   })
 })

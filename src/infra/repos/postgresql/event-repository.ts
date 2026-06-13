@@ -7,11 +7,13 @@ import {
   type LoadPreviousTasksByPetIdRepository,
   type LoadNextTasksByPetIdRepository,
   type LoadNextTasksByPetIdAndTagIdRepository,
+  type LoadEventByIdRepository,
+  type DeleteEventByIdRepository,
   type DeleteEventsBySchedulerIdRepository
 } from '@/data/protocols'
 import { prisma as db } from './prisma'
 
-export class EventRepository implements AddEventRepository, AddManyEventsRepository, LoadEventByDateRepository, LoadTasksByIntervalRepository, LoadNextTasksByPetIdRepository, LoadPreviousTasksByPetIdRepository, LoadNextTasksByPetIdAndTagIdRepository, DeleteEventsBySchedulerIdRepository {
+export class EventRepository implements AddEventRepository, AddManyEventsRepository, LoadEventByDateRepository, LoadEventByIdRepository, DeleteEventByIdRepository, DeleteEventsBySchedulerIdRepository, LoadTasksByIntervalRepository, LoadNextTasksByPetIdRepository, LoadPreviousTasksByPetIdRepository, LoadNextTasksByPetIdAndTagIdRepository {
   async add (params: AddEventRepository.Params): Promise<AddEventRepository.Result> {
     try {
       const event = await db.event.create({
@@ -229,6 +231,22 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
     }
   }
 
+  async deleteById (params: DeleteEventByIdRepository.Params): Promise<DeleteEventByIdRepository.Result> {
+    const { eventId, guardianId } = params
+    const event = await db.event.delete({
+      where: {
+        id: eventId,
+        scheduler: {
+          guardianId
+        }
+      }
+    })
+    if (!event) {
+      return false
+    }
+    return true
+  }
+
   async delete (params: DeleteEventsBySchedulerIdRepository.Params): Promise<DeleteEventsBySchedulerIdRepository.Result> {
     const { guardianId, schedulerId } = params
     const events = await db.event.deleteMany({ where: { schedulerId, scheduler: { guardianId } } })
@@ -236,5 +254,18 @@ export class EventRepository implements AddEventRepository, AddManyEventsReposit
       return false
     }
     return true
+  }
+
+  async loadById (params: LoadEventByIdRepository.Params): Promise<LoadEventByIdRepository.Result> {
+    const { eventId, guardianId } = params
+    const event = await db.event.findFirst({
+      where: {
+        id: eventId,
+        scheduler: {
+          guardianId
+        }
+      }
+    })
+    return event
   }
 }

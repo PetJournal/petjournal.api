@@ -14,7 +14,8 @@ import {
   type AddTagRequest,
   type AddSchedulerRequest,
   type UpdateGuardianRequest,
-  type DeleteSchedulerRequest
+  type DeleteSchedulerRequest,
+  type DeleteEventByIdRequest
 } from '@/tests/utils'
 
 const mockGuardianRequest = {
@@ -188,6 +189,14 @@ const makeFakeDeleteSchedulerRequest = (): DeleteSchedulerRequest => {
   return { params, userId }
 }
 
+const makeFakeDeleteEventByIdRequest = (): DeleteEventByIdRequest => {
+  const params = {
+    eventId: 'any_event_id'
+  }
+  const userId = 'any_guardian_id'
+  return { params, userId }
+}
+
 export {
   makeFakeSignUpRequest,
   makeFakeLoginRequest,
@@ -203,5 +212,6 @@ export {
   makeFakeAddTagRequest,
   makeFakeAddSchedulerRequest,
   makeFakeDeleteSchedulerRequest,
-  makeFakeUpdateGuardianRequest
+  makeFakeUpdateGuardianRequest,
+  makeFakeDeleteEventByIdRequest
 }
